@@ -1,65 +1,214 @@
-import Image from "next/image";
+import Image from "next/image"
+import WhatsAppFloat from "../components/WhatsAppFloat"
+import ContactForm from "../components/ContactForm"
+import {
+  FaInstagram,
+  FaLinkedinIn,
+  FaFacebookF
+} from "react-icons/fa"
+import {
+  FaThreads,
+  FaTiktok
+} from "react-icons/fa6"
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen bg-[#f5f7f6] text-neutral-900">
+
+      {/* HEADER */}
+      <header className="max-w-6xl mx-auto px-8 py-8 flex justify-between items-center">
+        <div className="flex flex-col">
+          <Image
+            src="/logo-orbi.png"
+            alt="ORBI IA"
+            width={240}
+            height={70}
+            priority
+          />
+          <span className="mt-2 text-sm text-neutral-500 tracking-wide">
+            Inteligência de Operações Autônomas
+          </span>
+        </div>
+
+        <div className="flex gap-5 text-neutral-500 text-lg">
+          <a href="https://instagram.com/agenciaorbi.ia/" target="_blank">
+            <FaInstagram />
+          </a>
+          <a href="https://www.linkedin.com/in/orbi-ia-869408186" target="_blank">
+            <FaLinkedinIn />
+          </a>
+          <a href="https://www.facebook.com/share/1HhQ7G9WZC/" target="_blank">
+            <FaFacebookF />
+          </a>
+          <a href="https://www.threads.com/@agenciaorbi.ia" target="_blank">
+            <FaThreads />
+          </a>
+          <a href="https://tiktok.com/@orbi.ia" target="_blank">
+            <FaTiktok />
+          </a>
+        </div>
+      </header>
+
+
+      {/* HERO */}
+      <section className="bg-[#1F2933] text-white">
+        <div className="max-w-6xl mx-auto px-8 py-32 space-y-10">
+          <div className="max-w-3xl space-y-6">
+            <h1 className="text-5xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
+              Arquitetura decisória para operações que não podem errar.
+            </h1>
+            <p className="text-xl text-neutral-300 leading-relaxed">
+              A ORBI IA estrutura previsibilidade antes da automação.
+              Criamos arquitetura estratégica que sustenta agentes de IA,
+              reduz risco operacional e orienta decisão sob método proprietário.
+            </p>
+          </div>
+
+          <a
+            href="#contato"
+            className="bg-[#3FAE69] text-white px-6 py-3 rounded-md font-medium hover:opacity-90 transition"
+          >
+            Solicitar diagnóstico estrutural
+          </a>
+        </div>
+      </section>
+
+
+      {/* TESE */}
+      <section className="bg-white border-y border-neutral-200">
+        <div className="max-w-6xl mx-auto px-8 py-24 space-y-10">
+          <h2 className="text-3xl font-semibold tracking-tight max-w-3xl">
+            Tecnologia sem arquitetura gera complexidade.
+            Arquitetura antes da automação gera controle.
+          </h2>
+          <p className="text-lg text-neutral-600 max-w-3xl leading-relaxed">
+            Implementar ferramentas antes de organizar decisão aumenta ruído.
+            Estrutura decisória é o que sustenta previsibilidade real.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+
+      {/* ARQUITETURA */}
+      <section className="bg-[#f5f7f6]">
+        <div className="max-w-6xl mx-auto px-8 py-24 space-y-16">
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Estrutura antes da automação
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-12 text-neutral-700">
+            <div>
+              <h3 className="font-semibold text-neutral-900">
+                Diagnóstico Estrutural
+              </h3>
+              <p>Mapeamento de variáveis críticas e instabilidades.</p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-neutral-900">
+                Modelagem Decisória
+              </h3>
+              <p>Organização de regras e critérios estratégicos.</p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-neutral-900">
+                Implementação Orientada
+              </h3>
+              <p>Automação aplicada sob arquitetura definida.</p>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
-  );
+      </section>
+
+
+      {/* FRAMEWORK P3-IA */}
+      <section className="bg-white border-y border-neutral-200">
+        <div className="max-w-6xl mx-auto px-8 py-24 space-y-16">
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Framework P³-IA
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-12 text-neutral-700">
+            <div>
+              <h3 className="text-xl font-semibold">P¹ — Previsão</h3>
+              <p>Antecipação e redução de incerteza operacional.</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold">P² — Processos</h3>
+              <p>Estruturação de fluxos antes da execução.</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold">P³ — Performance</h3>
+              <p>Métricas orientadas à margem e previsibilidade.</p>
+            </div>
+          </div>
+
+          <p className="text-neutral-500 max-w-3xl">
+            Aplicação sob contrato e confidencialidade.
+          </p>
+        </div>
+      </section>
+
+
+      {/* AGENTES */}
+      <section className="bg-[#f5f7f6]">
+        <div className="max-w-6xl mx-auto px-8 py-24 space-y-10">
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Agentes que executam. Arquitetura que decide.
+          </h2>
+          <ul className="space-y-3 text-neutral-700">
+            <li>• Captura estruturada de dados</li>
+            <li>• Monitoramento contínuo</li>
+            <li>• Automação orientada por regra</li>
+            <li>• Aprendizado com histórico operacional</li>
+          </ul>
+        </div>
+      </section>
+
+
+      {/* PERFIL IDEAL */}
+      <section className="bg-[#1F2933] text-white">
+        <div className="max-w-6xl mx-auto px-8 py-24 space-y-10">
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Para operações que exigem previsibilidade real.
+          </h2>
+          <ul className="space-y-3 text-neutral-300">
+            <li>• Empresas com sistemas desconectados</li>
+            <li>• Operações com alto volume e baixa previsibilidade</li>
+            <li>• Gestores que precisam decidir com dados confiáveis</li>
+          </ul>
+        </div>
+      </section>
+
+
+      {/* FORM */}
+      <section id="contato" className="max-w-6xl mx-auto px-8 py-24 space-y-10">
+        <h2 className="text-3xl font-semibold tracking-tight">
+          Avaliar aderência estratégica
+        </h2>
+        <ContactForm />
+      </section>
+
+
+      {/* FAIXA VERDE */}
+      <section className="bg-[#3FAE69] py-6 flex justify-center">
+        <Image
+          src="/roda-pe-orbi.png"
+          alt="ORBI IA"
+          width={200}
+          height={50}
+        />
+      </section>
+
+
+      {/* FAIXA AZUL FINAL */}
+      <section className="bg-[#1F2933] py-4 text-center text-white text-sm opacity-70">
+        2026 ORBI IA — Direitos reservados
+      </section>
+
+      <WhatsAppFloat />
+
+    </main>
+  )
 }
