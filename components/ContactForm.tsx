@@ -14,8 +14,6 @@ type FormData = {
 }
 
 export default function ContactForm() {
-  const [loadedAt] = useState(() => Date.now())
-
   const [formData, setFormData] = useState<FormData>({
     nome: "",
     empresa: "",
@@ -46,10 +44,7 @@ export default function ContactForm() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          ts: loadedAt,
-        }),
+        body: JSON.stringify(formData),
       })
 
       const data = await response.json()
@@ -71,8 +66,7 @@ export default function ContactForm() {
         hp: "",
       })
     } catch (error: any) {
-      console.error("Erro ORBI IA:", error)
-      alert(error.message || "Erro ao enviar. Tente novamente.")
+      alert(error.message || "Erro ao enviar.")
     } finally {
       setLoading(false)
     }
@@ -81,14 +75,13 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
 
+      {/* Honeypot */}
       <input
         type="text"
         name="hp"
         value={formData.hp}
         onChange={handleChange}
         style={{ display: "none" }}
-        autoComplete="off"
-        tabIndex={-1}
       />
 
       <div className="grid md:grid-cols-3 gap-6">
@@ -98,7 +91,7 @@ export default function ContactForm() {
           onChange={handleChange}
           placeholder="Nome"
           required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
         />
 
         <input
@@ -107,7 +100,7 @@ export default function ContactForm() {
           onChange={handleChange}
           placeholder="Empresa"
           required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
         />
 
         <input
@@ -116,7 +109,7 @@ export default function ContactForm() {
           onChange={handleChange}
           placeholder="Cargo"
           required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
         />
       </div>
 
@@ -126,7 +119,7 @@ export default function ContactForm() {
         onChange={handleChange}
         placeholder="Principal desafio"
         required
-        className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition resize-none"
+        className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 resize-none"
       />
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -137,7 +130,7 @@ export default function ContactForm() {
           onChange={handleChange}
           placeholder="E-mail"
           required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
         />
 
         <input
@@ -145,30 +138,31 @@ export default function ContactForm() {
           value={formData.telefone}
           onChange={handleChange}
           placeholder="WhatsApp (opcional)"
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
         />
       </div>
 
-      <div>
-        <select
-          name="canal_preferido"
-          value={formData.canal_preferido}
-          onChange={handleChange}
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+      <select
+        name="canal_preferido"
+        value={formData.canal_preferido}
+        onChange={handleChange}
+        className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
+      >
+        <option value="email">Prefiro contato por E-mail</option>
+        <option value="whatsapp">Prefiro contato por WhatsApp</option>
+        <option value="ligacao">Prefiro ligação</option>
+      </select>
+
+      <div className="flex justify-end pt-4">
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-[#3FAE69] text-white px-8 py-3 rounded-md hover:opacity-90 transition"
         >
-          <option value="email">Prefiro contato por E-mail</option>
-          <option value="whatsapp">Prefiro contato por WhatsApp</option>
-          <option value="ligacao">Prefiro ligação</option>
-        </select>
+          {loading ? "Enviando..." : "Solicitar análise"}
+        </button>
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-[#3FAE69] text-white px-8 py-3 rounded-md hover:opacity-90 transition"
-      >
-        {loading ? "Enviando..." : "Solicitar análise"}
-      </button>
     </form>
   )
 }
