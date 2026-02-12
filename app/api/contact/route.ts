@@ -18,7 +18,9 @@ const leadSchema = z.object({
   empresa: z.string().min(2),
   cargo: z.string().min(2),
   desafio: z.string().min(5),
-  contato: z.string().min(5),
+  email: z.string().email().optional(),
+  telefone: z.string().min(8).optional(),
+  canal_preferido: z.enum(["email", "whatsapp", "ligacao"]),
 })
 
 export async function POST(req: Request) {
@@ -26,6 +28,7 @@ export async function POST(req: Request) {
     const body = await req.json()
 
     const parsed = leadSchema.safeParse(body)
+
     if (!parsed.success) {
       return NextResponse.json(
         { success: false, error: "Dados inválidos" },
@@ -33,16 +36,37 @@ export async function POST(req: Request) {
       )
     }
 
-    const { nome, empresa, cargo, desafio, contato } = parsed.data
-
-    const { error } = await supabase.from("leads").insert({
+    const {
       nome,
       empresa,
       cargo,
       desafio,
-      contato,
-      contato_tipo: contato.includes("@") ? "email" : "whatsapp",
-    })
+      email,
+      telefone,
+      canal_preferido,
+    } = parsed.data
+
+    // 🚨 Validação extra: precisa ter pelo menos um meio de contato
+    if (!email && !telefone) {
+      return NextResponse.json(
+        { success: false, error: "Informe email ou telefone." },
+        { status: 400 }
+      )
+    }
+
+    // ===== SALVA LEAD =====
+    const { data: lead, error } = await supabase
+      .from("leads")
+      .insert({
+        nome,
+        empresa,
+        cargo,
+        desafio,
+        contato: email || telefone,
+        contato_tipo: canal_preferido,
+      })
+      .select()
+      .single()
 
     if (error) {
       console.error("Supabase error:", error)
@@ -51,6 +75,14 @@ export async function POST(req: Request) {
         { status: 500 }
       )
     }
+
+    // ===== LOG DO EVENTO =====
+    await supabase.from("lead_events").insert({
+      lead_id: lead.id,
+      event_type: "lead_created",
+      ok: true,
+      message: "Lead criado via landing page",
+    })
 
     return NextResponse.json({ success: true })
 
