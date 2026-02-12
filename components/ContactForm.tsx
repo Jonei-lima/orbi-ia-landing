@@ -2,22 +2,36 @@
 
 import { useState } from "react"
 
-export default function ContactForm() {
-  // Timestamp de quando a página carregou para evitar bots
-  const [loadedAt] = useState(() => Date.now());
+type FormData = {
+  nome: string
+  empresa: string
+  cargo: string
+  desafio: string
+  email: string
+  telefone: string
+  canal_preferido: "email" | "whatsapp" | "ligacao"
+  hp: string
+}
 
-  const [formData, setFormData] = useState({
+export default function ContactForm() {
+  const [loadedAt] = useState(() => Date.now())
+
+  const [formData, setFormData] = useState<FormData>({
     nome: "",
     empresa: "",
     cargo: "",
     desafio: "",
-    contato: "",
+    email: "",
+    telefone: "",
+    canal_preferido: "email",
+    hp: "",
   })
 
   const [loading, setLoading] = useState(false)
 
-  // Tipagem correta para evitar erros bobos no VS Code
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -28,27 +42,20 @@ export default function ContactForm() {
     e.preventDefault()
     setLoading(true)
 
-    // Validação "pulo do gato": Se enviou em menos de 3 segundos, provavelmente é bot
-    const timeSpent = (Date.now() - loadedAt) / 1000;
-    if (timeSpent < 3) {
-      console.warn("Envio muito rápido detectado.");
-      // Não bloqueamos aqui para não frustrar o usuário, mas enviamos pro log
-    }
-
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // Enviamos o formData + o tempo de carregamento para a API validar
-        body: JSON.stringify({ ...formData, timeSpent }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          ts: loadedAt,
+        }),
       })
 
       const data = await response.json()
 
       if (!response.ok || !data.success) {
-        throw new Error(data.message || "Erro no servidor")
+        throw new Error(data.error || "Erro no servidor")
       }
 
       alert("Obrigado! Em breve retornaremos.")
@@ -58,9 +65,11 @@ export default function ContactForm() {
         empresa: "",
         cargo: "",
         desafio: "",
-        contato: "",
+        email: "",
+        telefone: "",
+        canal_preferido: "email",
+        hp: "",
       })
-
     } catch (error: any) {
       console.error("Erro ORBI IA:", error)
       alert(error.message || "Erro ao enviar. Tente novamente.")
@@ -71,21 +80,95 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {/* O RESTO DO SEU JSX CONTINUA IGUAL */}
+
+      <input
+        type="text"
+        name="hp"
+        value={formData.hp}
+        onChange={handleChange}
+        style={{ display: "none" }}
+        autoComplete="off"
+        tabIndex={-1}
+      />
+
       <div className="grid md:grid-cols-3 gap-6">
-        <input name="nome" value={formData.nome} onChange={handleChange} placeholder="Nome" required className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition" />
-        <input name="empresa" value={formData.empresa} onChange={handleChange} placeholder="Empresa" required className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition" />
-        <input name="cargo" value={formData.cargo} onChange={handleChange} placeholder="Cargo" required className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition" />
+        <input
+          name="nome"
+          value={formData.nome}
+          onChange={handleChange}
+          placeholder="Nome"
+          required
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+        />
+
+        <input
+          name="empresa"
+          value={formData.empresa}
+          onChange={handleChange}
+          placeholder="Empresa"
+          required
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+        />
+
+        <input
+          name="cargo"
+          value={formData.cargo}
+          onChange={handleChange}
+          placeholder="Cargo"
+          required
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+        />
       </div>
 
-      <textarea name="desafio" value={formData.desafio} onChange={handleChange} placeholder="Principal desafio" required className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition resize-none" />
+      <textarea
+        name="desafio"
+        value={formData.desafio}
+        onChange={handleChange}
+        placeholder="Principal desafio"
+        required
+        className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition resize-none"
+      />
 
-      <div className="flex flex-col md:flex-row md:items-center gap-6">
-        <input name="contato" value={formData.contato} onChange={handleChange} placeholder="WhatsApp ou e-mail" required className="flex-1 border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition" />
-        <button type="submit" disabled={loading} className="bg-[#3FAE69] text-white px-8 py-3 rounded-md hover:opacity-90 transition whitespace-nowrap">
-          {loading ? "Enviando..." : "Solicitar análise"}
-        </button>
+      <div className="grid md:grid-cols-2 gap-6">
+        <input
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="E-mail"
+          required
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+        />
+
+        <input
+          name="telefone"
+          value={formData.telefone}
+          onChange={handleChange}
+          placeholder="WhatsApp (opcional)"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+        />
       </div>
+
+      <div>
+        <select
+          name="canal_preferido"
+          value={formData.canal_preferido}
+          onChange={handleChange}
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 transition"
+        >
+          <option value="email">Prefiro contato por E-mail</option>
+          <option value="whatsapp">Prefiro contato por WhatsApp</option>
+          <option value="ligacao">Prefiro ligação</option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="bg-[#3FAE69] text-white px-8 py-3 rounded-md hover:opacity-90 transition"
+      >
+        {loading ? "Enviando..." : "Solicitar análise"}
+      </button>
     </form>
   )
 }
