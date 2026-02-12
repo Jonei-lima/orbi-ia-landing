@@ -28,11 +28,18 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false)
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    })
+  }
+
+  const handleRadioChange = (value: "email" | "whatsapp" | "ligacao") => {
+    setFormData({
+      ...formData,
+      canal_preferido: value,
     })
   }
 
@@ -91,7 +98,7 @@ export default function ContactForm() {
           onChange={handleChange}
           placeholder="Nome"
           required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
         />
 
         <input
@@ -100,7 +107,7 @@ export default function ContactForm() {
           onChange={handleChange}
           placeholder="Empresa"
           required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
         />
 
         <input
@@ -109,7 +116,7 @@ export default function ContactForm() {
           onChange={handleChange}
           placeholder="Cargo"
           required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
         />
       </div>
 
@@ -119,7 +126,7 @@ export default function ContactForm() {
         onChange={handleChange}
         placeholder="Principal desafio"
         required
-        className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900 resize-none"
+        className="w-full border-b border-neutral-300 py-3 focus:outline-none resize-none"
       />
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -130,7 +137,7 @@ export default function ContactForm() {
           onChange={handleChange}
           placeholder="E-mail"
           required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
         />
 
         <input
@@ -138,20 +145,44 @@ export default function ContactForm() {
           value={formData.telefone}
           onChange={handleChange}
           placeholder="WhatsApp (opcional)"
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
+          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
         />
       </div>
 
-      <select
-        name="canal_preferido"
-        value={formData.canal_preferido}
-        onChange={handleChange}
-        className="w-full border-b border-neutral-300 py-3 focus:outline-none focus:border-neutral-900"
-      >
-        <option value="email">Prefiro contato por E-mail</option>
-        <option value="whatsapp">Prefiro contato por WhatsApp</option>
-        <option value="ligacao">Prefiro ligação</option>
-      </select>
+      <div className="space-y-3">
+        <p className="text-sm font-medium text-neutral-700">
+          Escolha qual canal você prefere que entremos em contato:
+        </p>
+
+        <div className="flex gap-6 flex-wrap">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              checked={formData.canal_preferido === "email"}
+              onChange={() => handleRadioChange("email")}
+            />
+            Email
+          </label>
+
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              checked={formData.canal_preferido === "whatsapp"}
+              onChange={() => handleRadioChange("whatsapp")}
+            />
+            WhatsApp
+          </label>
+
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              checked={formData.canal_preferido === "ligacao"}
+              onChange={() => handleRadioChange("ligacao")}
+            />
+            Ligação
+          </label>
+        </div>
+      </div>
 
       <div className="flex justify-end pt-4">
         <button
