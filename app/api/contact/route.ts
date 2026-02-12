@@ -18,7 +18,7 @@ const leadSchema = z.object({
   empresa: z.string().min(2),
   cargo: z.string().min(2),
   desafio: z.string().min(5),
-  email: z.string().email().optional(),
+  email: z.string().email(),
   telefone: z.string().min(8).optional(),
   canal_preferido: z.enum(["email", "whatsapp", "ligacao"]),
 })
@@ -46,15 +46,14 @@ export async function POST(req: Request) {
       canal_preferido,
     } = parsed.data
 
-    // 🚨 Validação extra: precisa ter pelo menos um meio de contato
-    if (!email && !telefone) {
+    // Se preferir WhatsApp ou ligação, precisa ter telefone
+    if ((canal_preferido === "whatsapp" || canal_preferido === "ligacao") && !telefone) {
       return NextResponse.json(
-        { success: false, error: "Informe email ou telefone." },
+        { success: false, error: "Informe telefone para este canal." },
         { status: 400 }
       )
     }
 
-    // ===== SALVA LEAD =====
     const { data: lead, error } = await supabase
       .from("leads")
       .insert({
@@ -62,8 +61,9 @@ export async function POST(req: Request) {
         empresa,
         cargo,
         desafio,
-        contato: email || telefone,
-        contato_tipo: canal_preferido,
+        email: email || null,
+        telefone: telefone || null,
+        canal_preferido,
       })
       .select()
       .single()
@@ -76,7 +76,6 @@ export async function POST(req: Request) {
       )
     }
 
-    // ===== LOG DO EVENTO =====
     await supabase.from("lead_events").insert({
       lead_id: lead.id,
       event_type: "lead_created",
