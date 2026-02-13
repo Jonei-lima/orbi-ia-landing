@@ -1,95 +1,110 @@
-import { NextResponse } from "next/server"
-import { z } from "zod"
-import { createClient } from "@supabase/supabase-js"
+import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
-export const runtime = "nodejs"
-
-// ===== ENV =====
-const SUPABASE_URL = process.env.SUPABASE_URL!
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-  auth: { persistSession: false },
-})
-
-// ===== VALIDAÇÃO =====
-const leadSchema = z.object({
-  nome: z.string().min(3),
-  empresa: z.string().min(2),
-  cargo: z.string().min(2),
-  desafio: z.string().min(5),
-  email: z.string().email(),
-  telefone: z.string().min(8).optional(),
-  canal_preferido: z.enum(["email", "whatsapp", "ligacao"]),
-})
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json()
+    const body = await req.json();
+    const { nome, email, whatsapp, mensagem } = body;
 
-    const parsed = leadSchema.safeParse(body)
+    console.log("📥 Novo lead recebido:", body);
 
-    if (!parsed.success) {
+    if (!nome || !email || !whatsapp) {
       return NextResponse.json(
-        { success: false, error: "Dados inválidos" },
+        { success: false, error: "Campos obrigatórios ausentes." },
         { status: 400 }
-      )
+      );
     }
 
-    const {
-      nome,
-      empresa,
-      cargo,
-      desafio,
-      email,
-      telefone,
-      canal_preferido,
-    } = parsed.data
-
-    // Se preferir WhatsApp ou ligação, precisa ter telefone
-    if ((canal_preferido === "whatsapp" || canal_preferido === "ligacao") && !telefone) {
-      return NextResponse.json(
-        { success: false, error: "Informe telefone para este canal." },
-        { status: 400 }
-      )
-    }
-
-    const { data: lead, error } = await supabase
+    // =============================
+    // 1️⃣ SALVAR NO SUPABASE
+    // =============================
+    const { error: supabaseError } = await supabase
       .from("leads")
-      .insert({
-        nome,
-        empresa,
-        cargo,
-        desafio,
-        email: email || null,
-        telefone: telefone || null,
-        canal_preferido,
-      })
-      .select()
-      .single()
+      .insert([{ nome, email, whatsapp, mensagem }]);
 
-    if (error) {
-      console.error("Supabase error:", error)
-      return NextResponse.json(
-        { success: false, error: "Erro ao salvar lead." },
-        { status: 500 }
-      )
+    if (supabaseError) {
+      console.error("❌ Erro Supabase:", supabaseError);
+      throw new Error("Erro ao salvar no banco.");
     }
 
-    await supabase.from("lead_events").insert({
-      lead_id: lead.id,
-      event_type: "lead_created",
-      ok: true,
-      message: "Lead criado via landing page",
-    })
+    console.log("✅ Lead salvo no Supabase");
 
-    return NextResponse.json({ success: true })
+    // =============================
+    // 2️⃣ ENVIAR WHATSAPP (EVOLUTION)
+    // =============================
+    const evolutionResponse = await fetch(
+      "http://168.138.148.254:8080/message/sendText/orbi_ia_landing",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: process.env.EVOLUTION_API_KEY!,
+        },
+        body: JSON.stringify({
+          number: "5566981320667",
+          text: `🚀 Novo lead!
 
-  } catch (err) {
-    console.error("Erro na API:", err)
+Nome: ${nome}
+Email: ${email}
+WhatsApp: ${whatsapp}
+Mensagem: ${mensagem}`,
+        }),
+      }
+    );
+
+    const evolutionData = await evolutionResponse.text();
+
+    console.log("📲 Evolution status:", evolutionResponse.status);
+    console.log("📲 Evolution resposta:", evolutionData);
+
+    if (!evolutionResponse.ok) {
+      throw new Error("Erro ao enviar WhatsApp.");
+    }
+
+    // =============================
+    // 3️⃣ ENVIAR EMAIL (RESEND)
+    // =============================
+    const resendResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "contato@agenteorbiia.com",
+        to: ["contato@agenteorbiia.com"],
+        subject: "🚀 Novo Lead Recebido",
+        html: `
+          <h2>Novo Lead</h2>
+          <p><strong>Nome:</strong> ${nome}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>WhatsApp:</strong> ${whatsapp}</p>
+          <p><strong>Mensagem:</strong> ${mensagem}</p>
+        `,
+      }),
+    });
+
+    const resendData = await resendResponse.text();
+
+    console.log("📧 Resend status:", resendResponse.status);
+    console.log("📧 Resend resposta:", resendData);
+
+    if (!resendResponse.ok) {
+      throw new Error("Erro ao enviar email.");
+    }
+
+    return NextResponse.json({ success: true });
+
+  } catch (error: any) {
+    console.error("🔥 ERRO GERAL:", error.message);
     return NextResponse.json(
-      { success: false, error: "Erro interno." },
+      { success: false, error: error.message },
       { status: 500 }
-    )
+    );
   }
 }
