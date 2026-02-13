@@ -198,7 +198,7 @@ Canal: ${canal_preferido}`,
         },
         body: JSON.stringify({
           from: "onboarding@resend.dev",
-          to: ["jonei.lima@gmail.com"],
+          to: ["contato@agenteorbiia.com"],
           subject: "Novo Lead ORBI IA",
           html: `
             <h2>Novo Lead</h2>
