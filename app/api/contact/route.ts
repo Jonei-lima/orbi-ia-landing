@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+// 🔐 Cliente Supabase (server-side)
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -9,12 +10,27 @@ const supabase = createClient(
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log("BODY COMPLETO:", body);
-    const { nome, email, whatsapp, mensagem } = body;
 
-    console.log("📥 Novo lead recebido:", body);
+    console.log("📥 BODY RECEBIDO:", body);
 
+    // ⚠️ Ajuste aqui se os nomes vierem diferentes do front
+    const nome = body.nome || body.name;
+    const email = body.email;
+    const whatsapp = body.whatsapp || body.telefone;
+    const mensagem = body.mensagem || body.message;
+
+    console.log("📌 Campos tratados:", {
+      nome,
+      email,
+      whatsapp,
+      mensagem,
+    });
+
+    // =============================
+    // 🔎 Validação
+    // =============================
     if (!nome || !email || !whatsapp) {
+      console.log("❌ Campos obrigatórios ausentes");
       return NextResponse.json(
         { success: false, error: "Campos obrigatórios ausentes." },
         { status: 400 }
@@ -26,7 +42,14 @@ export async function POST(req: Request) {
     // =============================
     const { error: supabaseError } = await supabase
       .from("leads")
-      .insert([{ nome, email, whatsapp, mensagem }]);
+      .insert([
+        {
+          nome,
+          email,
+          whatsapp,
+          mensagem,
+        },
+      ]);
 
     if (supabaseError) {
       console.error("❌ Erro Supabase:", supabaseError);
