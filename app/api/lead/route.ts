@@ -5,7 +5,7 @@ const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
-    console.log("EVOLUTION_URL:", process.env.EVOLUTION_URL);
+
 function sanitizePhone(phone: string) {
   return phone.replace(/\D/g, "");
 }
@@ -18,55 +18,60 @@ export async function POST(req: Request) {
       cargo,
       desafio,
       email,
-      whatsapp,
+      telefone,
       canal_preferido
     } = await req.json();
 
-    if (!nome || !email || !whatsapp) {
+    // Validação básica
+    if (
+      !nome ||
+      !empresa ||
+      !cargo ||
+      !desafio ||
+      !email ||
+      !telefone ||
+      !canal_preferido
+    ) {
       return NextResponse.json(
-        { error: "Campos obrigatórios faltando" },
+        { success: false, error: "Campos obrigatórios ausentes." },
         { status: 400 }
       );
     }
 
-    const telefoneLimpo = sanitizePhone(whatsapp);
-
-    // 🔥 UPSERT (resolve duplicidade sozinho)
-    const { data: lead, error } = await supabase
-      .from("leads")
-      .upsert(
-        {
-          nome,
-          empresa,
-          cargo,
-          desafio,
-          email,
-          telefone: telefoneLimpo,
-          canal_preferido
-        },
-        {
-          onConflict: "telefone"
-        }
-      )
-      .select()
-      .single();
+    // =====================
+    // 1️⃣ SALVAR NO BANCO
+    // =====================
+    const { error } = await supabase.from("leads").insert([
+      {
+        nome,
+        empresa,
+        cargo,
+        desafio,
+        email,
+        telefone,
+        canal_preferido
+      }
+    ]);
 
     if (error) {
-      console.error("Erro Supabase:", error);
+      console.error("SUPABASE ERROR:", error);
       return NextResponse.json(
-        { error: "Erro ao salvar no banco." },
+        { success: false, error: "Erro banco." },
         { status: 500 }
       );
     }
 
-    const mensagem = `Olá ${lead.nome}, recebemos sua solicitação.
+    // =====================
+    // 2️⃣ ENVIAR WHATSAPP
+    // =====================
+    const telefoneLimpo = sanitizePhone(telefone);
 
-Responda:
-1 - Orçamento
-2 - Mais informações`;
+    const numeroFinal = telefoneLimpo.startsWith("55")
+      ? telefoneLimpo
+      : `55${telefoneLimpo}`;
 
-    const response = await fetch(
-      process.env.EVOLUTION_URL + "/message/sendText",
+    const evolutionResponse = await fetch(
+      `${process.env.EVOLUTION_URL}/message/sendText/orbi_ia_landing`,
       {
         method: "POST",
         headers: {
@@ -74,29 +79,52 @@ Responda:
           apikey: process.env.EVOLUTION_API_KEY!
         },
         body: JSON.stringify({
-          number: lead.telefone,
-          text: mensagem
+          number: numeroFinal,
+          text: `🚀 Novo Lead
+
+Nome: ${nome}
+Empresa: ${empresa}
+Email: ${email}
+Telefone: ${numeroFinal}`
         })
       }
     );
 
-    const result = await response.json();
+    console.log("EVOLUTION STATUS:", evolutionResponse.status);
+    console.log("EVOLUTION BODY:", await evolutionResponse.text());
 
-    await supabase.from("lead_events").insert([
-      {
-        lead_id: lead.id,
-        event_type: "lead_saved",
-        ok: response.ok,
-        message: result
-      }
-    ]);
+    // =====================
+    // 3️⃣ ENVIAR EMAIL
+    // =====================
+    const resendResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`
+      },
+      body: JSON.stringify({
+        from: "contato@agenteorbiia.com",
+        to: ["jonei.lima@gmail.com"],
+        subject: "Novo Lead ORBI IA",
+        html: `
+          <h2>Novo Lead</h2>
+          <p><strong>Nome:</strong> ${nome}</p>
+          <p><strong>Empresa:</strong> ${empresa}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Telefone:</strong> ${numeroFinal}</p>
+        `
+      })
+    });
 
-    return NextResponse.json({ ok: true });
+    console.log("RESEND STATUS:", resendResponse.status);
+    console.log("RESEND BODY:", await resendResponse.text());
 
-  } catch (err) {
-    console.error("Erro geral:", err);
+    return NextResponse.json({ success: true });
+
+  } catch (err: any) {
+    console.error("ERRO GERAL:", err);
     return NextResponse.json(
-      { error: "Erro interno" },
+      { success: false, error: "Erro interno" },
       { status: 500 }
     );
   }
