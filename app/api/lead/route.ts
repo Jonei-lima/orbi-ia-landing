@@ -28,11 +28,12 @@ export async function POST(req: Request) {
     const email = body?.email;
     const canal_preferido = body?.canal_preferido;
 
-    // ✅ aqui está o destrave: aceita telefone OU whatsapp
+    // aceita telefone OU whatsapp
     const telefoneRaw = body?.telefone ?? body?.whatsapp ?? "";
     const numeroFinal = asE164BR(telefoneRaw);
 
     const missing: string[] = [];
+
     if (!nome) missing.push("nome");
     if (!empresa) missing.push("empresa");
     if (!cargo) missing.push("cargo");
@@ -49,7 +50,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1) salvar no banco
+    // =========================
+    // 1️⃣ SALVAR NO SUPABASE
+    // =========================
+
     const { error: dbErr } = await supabase.from("leads").insert([
       {
         nome,
@@ -57,79 +61,101 @@ export async function POST(req: Request) {
         cargo,
         desafio,
         email,
-        telefone: numeroFinal, // salva normalizado
+        telefone: numeroFinal,
         canal_preferido,
       },
     ]);
 
     if (dbErr) {
-      console.error("SUPABASE ERROR:", dbErr);
+      console.error("❌ SUPABASE ERROR:", dbErr);
       return NextResponse.json(
         { success: false, error: "Erro banco." },
         { status: 500 }
       );
     }
 
-    // 2) WhatsApp (Evolution)
-    const evolutionUrl = process.env.EVOLUTION_URL;
-    if (!evolutionUrl) {
-      console.error("EVOLUTION_URL ausente no ambiente");
-      return NextResponse.json(
-        { success: false, error: "EVOLUTION_URL ausente." },
-        { status: 500 }
-      );
+    // =========================
+    // 2️⃣ WHATSAPP (EVOLUTION)
+    // =========================
+
+    try {
+      const evolutionUrl = process.env.EVOLUTION_URL;
+
+      if (!evolutionUrl) {
+        console.error("EVOLUTION_URL ausente");
+      } else {
+        const evo = await fetch(
+          `${evolutionUrl}/message/sendText/orbi_ia_landing`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: process.env.EVOLUTION_API_KEY!,
+            },
+            body: JSON.stringify({
+              number: numeroFinal,
+              text: `🚀 Novo Lead
+
+Nome: ${nome}
+Empresa: ${empresa}
+Email: ${email}
+Telefone: ${numeroFinal}
+Canal: ${canal_preferido}`,
+            }),
+          }
+        );
+
+        const evoBody = await evo.text();
+        console.log("EVOLUTION STATUS:", evo.status);
+        console.log("EVOLUTION BODY:", evoBody);
+      }
+    } catch (evoErr) {
+      console.error("❌ ERRO EVOLUTION:", evoErr);
     }
 
-    const evo = await fetch(
-      `${evolutionUrl}/message/sendText/orbi_ia_landing`,
-      {
+    // =========================
+    // 3️⃣ EMAIL (RESEND)
+    // =========================
+
+    try {
+      const resend = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          apikey: process.env.EVOLUTION_API_KEY!,
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          number: numeroFinal,
-          text: `🚀 Novo Lead\n\nNome: ${nome}\nEmpresa: ${empresa}\nEmail: ${email}\nTelefone: ${numeroFinal}\nCanal: ${canal_preferido}`,
+          from: "contato@agenteorbiia.com",
+          to: ["jonei.lima@gmail.com"],
+          subject: "Novo Lead ORBI IA",
+          html: `
+            <h2>Novo Lead</h2>
+            <p><strong>Nome:</strong> ${nome}</p>
+            <p><strong>Empresa:</strong> ${empresa}</p>
+            <p><strong>Cargo:</strong> ${cargo}</p>
+            <p><strong>Desafio:</strong> ${desafio}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Telefone:</strong> ${numeroFinal}</p>
+            <p><strong>Canal:</strong> ${canal_preferido}</p>
+          `,
         }),
-      }
-    );
+      });
 
-    const evoBody = await evo.text();
-    console.log("EVOLUTION STATUS:", evo.status);
-    console.log("EVOLUTION BODY:", evoBody);
+      const resendBody = await resend.text();
+      console.log("RESEND STATUS:", resend.status);
+      console.log("RESEND BODY:", resendBody);
+    } catch (resendErr) {
+      console.error("❌ ERRO RESEND:", resendErr);
+    }
 
-    // 3) Email (Resend)
-    const resend = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "contato@agenteorbiia.com",
-        to: ["jonei.lima@gmail.com"],
-        subject: "Novo Lead ORBI IA",
-        html: `
-          <h2>Novo Lead</h2>
-          <p><strong>Nome:</strong> ${nome}</p>
-          <p><strong>Empresa:</strong> ${empresa}</p>
-          <p><strong>Cargo:</strong> ${cargo}</p>
-          <p><strong>Desafio:</strong> ${desafio}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Telefone:</strong> ${numeroFinal}</p>
-          <p><strong>Canal:</strong> ${canal_preferido}</p>
-        `,
-      }),
+    // ✅ NUNCA deixa email derrubar a API
+    return NextResponse.json({
+      success: true,
+      numeroFinal,
     });
 
-    const resendBody = await resend.text();
-    console.log("RESEND STATUS:", resend.status);
-    console.log("RESEND BODY:", resendBody);
-
-    return NextResponse.json({ success: true, numeroFinal });
   } catch (err: any) {
-    console.error("ERRO GERAL:", err?.message || err);
+    console.error("❌ ERRO GERAL:", err?.message || err);
     return NextResponse.json(
       { success: false, error: "Erro interno" },
       { status: 500 }
