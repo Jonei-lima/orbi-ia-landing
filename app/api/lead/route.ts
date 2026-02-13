@@ -37,8 +37,11 @@ export async function POST(req: Request) {
       throw new Error("Erro ao salvar no banco.");
     }
 
-    // 2️⃣ Enviar WhatsApp via Evolution
-    await fetch(
+    // =========================================================
+    // 2️⃣ Enviar WhatsApp via Evolution (COM DEBUG)
+    // =========================================================
+
+    const whatsappResponse = await fetch(
       "http://168.138.148.254:8080/message/sendText/orbi_ia_landing",
       {
         method: "POST",
@@ -58,8 +61,20 @@ Mensagem: ${mensagem}`,
       }
     );
 
-    // 3️⃣ Enviar Email via Resend
-    await fetch("https://api.resend.com/emails", {
+    const whatsappResult = await whatsappResponse.text();
+
+    console.log("WhatsApp Status:", whatsappResponse.status);
+    console.log("WhatsApp Response:", whatsappResult);
+
+    if (!whatsappResponse.ok) {
+      console.error("Erro no envio WhatsApp");
+    }
+
+    // =========================================================
+    // 3️⃣ Enviar Email via Resend (COM DEBUG)
+    // =========================================================
+
+    const emailResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,6 +93,15 @@ Mensagem: ${mensagem}`,
         `,
       }),
     });
+
+    const emailResult = await emailResponse.text();
+
+    console.log("Email Status:", emailResponse.status);
+    console.log("Email Response:", emailResult);
+
+    if (!emailResponse.ok) {
+      console.error("Erro no envio de email");
+    }
 
     return NextResponse.json({ success: true });
 
