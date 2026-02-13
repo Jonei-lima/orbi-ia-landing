@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     let lead: any;
     let isReengaged = false;
 
-    // 🔹 Tenta inserir exatamente conforme sua tabela
+    // 🔹 Tenta inserir
     const { data, error } = await supabase
       .from("leads")
       .insert([
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
           .single();
 
         if (fetchError || !existingLead) {
-          console.error(fetchError);
+          console.error("Erro ao buscar lead existente:", fetchError);
           return NextResponse.json(
             { error: "Erro ao buscar lead existente." },
             { status: 500 }
@@ -87,7 +87,7 @@ export async function POST(req: Request) {
 
         lead = existingLead;
       } else {
-        console.error("Erro real:", error);
+        console.error("Erro real ao inserir:", error);
         return NextResponse.json(
           { error: "Erro ao salvar no banco." },
           { status: 500 }
@@ -97,6 +97,7 @@ export async function POST(req: Request) {
       lead = data;
     }
 
+    // 🔹 Mensagem
     const mensagem = isReengaged
       ? `Olá ${lead.nome}, recebemos novamente sua solicitação.
 
@@ -111,6 +112,7 @@ Responda:
 1 - Orçamento
 2 - Mais informações`;
 
+    // 🔹 Envia WhatsApp
     const response = await fetch(
       process.env.EVOLUTION_URL + "/message/sendText",
       {
@@ -128,6 +130,7 @@ Responda:
 
     const result = await response.json();
 
+    // 🔹 Registra evento
     await supabase.from("lead_events").insert([
       {
         lead_id: lead.id,
