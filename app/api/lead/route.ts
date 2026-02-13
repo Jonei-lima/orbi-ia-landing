@@ -31,13 +31,10 @@ export async function POST(req: Request) {
 
     const telefoneLimpo = sanitizePhone(whatsapp);
 
-    let lead: any;
-    let isReengaged = false;
-
-    // 🔹 Tenta inserir
-    const { data, error } = await supabase
+    // 🔥 UPSERT (resolve duplicidade sozinho)
+    const { data: lead, error } = await supabase
       .from("leads")
-      .insert([
+      .upsert(
         {
           nome,
           empresa,
@@ -46,73 +43,28 @@ export async function POST(req: Request) {
           email,
           telefone: telefoneLimpo,
           canal_preferido
+        },
+        {
+          onConflict: "telefone"
         }
-      ])
+      )
       .select()
       .single();
 
     if (error) {
-      const isDuplicate =
-        error.code === "23505" ||
-        error.message?.toLowerCase().includes("duplicate");
-
-      if (isDuplicate) {
-        isReengaged = true;
-
-        const { data: existingLead, error: fetchError } = await supabase
-          .from("leads")
-          .select("*")
-          .eq("telefone", telefoneLimpo)
-          .single();
-
-        if (fetchError || !existingLead) {
-          console.error("Erro ao buscar lead existente:", fetchError);
-          return NextResponse.json(
-            { error: "Erro ao buscar lead existente." },
-            { status: 500 }
-          );
-        }
-
-        await supabase
-          .from("leads")
-          .update({
-            nome,
-            empresa,
-            cargo,
-            desafio,
-            email,
-            canal_preferido
-          })
-          .eq("telefone", telefoneLimpo);
-
-        lead = existingLead;
-      } else {
-        console.error("Erro real ao inserir:", error);
-        return NextResponse.json(
-          { error: "Erro ao salvar no banco." },
-          { status: 500 }
-        );
-      }
-    } else {
-      lead = data;
+      console.error("Erro Supabase:", error);
+      return NextResponse.json(
+        { error: "Erro ao salvar no banco." },
+        { status: 500 }
+      );
     }
 
-    // 🔹 Mensagem
-    const mensagem = isReengaged
-      ? `Olá ${lead.nome}, recebemos novamente sua solicitação.
-
-Já estamos acompanhando seu atendimento.
-
-Responda:
-1 - Orçamento
-2 - Mais informações`
-      : `Olá ${lead.nome}, recebemos sua solicitação agora mesmo.
+    const mensagem = `Olá ${lead.nome}, recebemos sua solicitação.
 
 Responda:
 1 - Orçamento
 2 - Mais informações`;
 
-    // 🔹 Envia WhatsApp
     const response = await fetch(
       process.env.EVOLUTION_URL + "/message/sendText",
       {
@@ -130,13 +82,10 @@ Responda:
 
     const result = await response.json();
 
-    // 🔹 Registra evento
     await supabase.from("lead_events").insert([
       {
         lead_id: lead.id,
-        event_type: isReengaged
-          ? "lead_reengaged"
-          : "lead_created",
+        event_type: "lead_saved",
         ok: response.ok,
         message: result
       }
