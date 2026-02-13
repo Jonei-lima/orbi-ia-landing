@@ -13,6 +13,9 @@ export default function ContactForm() {
     canal_preferido: "Email"
   });
 
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -24,37 +27,54 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setStatus("idle");
 
-    console.log("📤 ENVIANDO:", formData);
+    try {
+      const response = await fetch("/api/lead", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
 
-    const response = await fetch("/api/lead", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formData)
-    });
+      const data = await response.json();
 
-    const data = await response.json();
+      if (!response.ok || !data.success) {
+        setStatus("error");
+        return;
+      }
 
-    console.log("📩 RESPOSTA:", data);
+      setStatus("success");
 
-    if (!response.ok) {
-      alert(data.error || "Erro ao enviar.");
-      return;
+      // limpa formulário
+      setFormData({
+        nome: "",
+        empresa: "",
+        cargo: "",
+        desafio: "",
+        email: "",
+        telefone: "",
+        canal_preferido: "Email"
+      });
+
+    } catch (err) {
+      setStatus("error");
+    } finally {
+      setLoading(false);
     }
-
-    alert("Enviado com sucesso!");
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input name="nome" placeholder="Nome" onChange={handleChange} required />
-      <input name="empresa" placeholder="Empresa" onChange={handleChange} required />
-      <input name="cargo" placeholder="Cargo" onChange={handleChange} required />
-      <textarea name="desafio" placeholder="Desafio" onChange={handleChange} required />
-      <input name="email" placeholder="Email" onChange={handleChange} required />
-      <input name="telefone" placeholder="Telefone" onChange={handleChange} required />
+
+      <input name="nome" placeholder="Nome" value={formData.nome} onChange={handleChange} required />
+      <input name="empresa" placeholder="Empresa" value={formData.empresa} onChange={handleChange} required />
+      <input name="cargo" placeholder="Cargo" value={formData.cargo} onChange={handleChange} required />
+      <textarea name="desafio" placeholder="Desafio" value={formData.desafio} onChange={handleChange} required />
+      <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+      <input name="telefone" placeholder="Telefone" value={formData.telefone} onChange={handleChange} required />
 
       <div>
         <label>
@@ -62,8 +82,8 @@ export default function ContactForm() {
             type="radio"
             name="canal_preferido"
             value="Email"
-            onChange={handleChange}
             checked={formData.canal_preferido === "Email"}
+            onChange={handleChange}
           />
           Email
         </label>
@@ -73,6 +93,7 @@ export default function ContactForm() {
             type="radio"
             name="canal_preferido"
             value="WhatsApp"
+            checked={formData.canal_preferido === "WhatsApp"}
             onChange={handleChange}
           />
           WhatsApp
@@ -83,13 +104,30 @@ export default function ContactForm() {
             type="radio"
             name="canal_preferido"
             value="Ligacao"
+            checked={formData.canal_preferido === "Ligacao"}
             onChange={handleChange}
           />
           Ligação
         </label>
       </div>
 
-      <button type="submit">Enviar</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Enviando..." : "Enviar"}
+      </button>
+
+      {/* ✅ Feedback elegante */}
+      {status === "success" && (
+        <div style={{ marginTop: 12, color: "green" }}>
+          Obrigado! Recebemos sua mensagem e entraremos em contato em breve.
+        </div>
+      )}
+
+      {status === "error" && (
+        <div style={{ marginTop: 12, color: "red" }}>
+          Ocorreu um erro ao enviar. Tente novamente.
+        </div>
+      )}
+
     </form>
   );
 }
