@@ -23,14 +23,17 @@ export async function POST(req: Request) {
 
     const telefoneLimpo = sanitizePhone(whatsapp);
 
-    // 1️⃣ Salva o lead (usando TELEFONE)
-    const { data: lead, error } = await supabase
+    let lead;
+    let isReengaged = false;
+
+    // 🔹 Tenta inserir novo lead
+    const { data, error } = await supabase
       .from("leads")
       .insert([
         {
           nome,
           email,
-          telefone: telefoneLimpo, // 👈 AQUI CORRIGIDO
+          telefone: telefoneLimpo,
           status: "new",
           origem: "landing"
         }
@@ -39,22 +42,61 @@ export async function POST(req: Request) {
       .single();
 
     if (error) {
-      return NextResponse.json(
-        { error: "Erro ao salvar lead" },
-        { status: 500 }
-      );
+      // 🔥 Se for erro de duplicidade
+      if (error.code === "23505") {
+        isReengaged = true;
+
+        // Busca lead existente
+        const { data: existingLead } = await supabase
+          .from("leads")
+          .select("*")
+          .eq("telefone", telefoneLimpo)
+          .single();
+
+        if (!existingLead) {
+          return NextResponse.json(
+            { error: "Erro ao buscar lead existente" },
+            { status: 500 }
+          );
+        }
+
+        // Atualiza dados
+        await supabase
+          .from("leads")
+          .update({
+            nome,
+            email,
+            updated_at: new Date()
+          })
+          .eq("telefone", telefoneLimpo);
+
+        lead = existingLead;
+      } else {
+        return NextResponse.json(
+          { error: "Erro ao salvar no banco." },
+          { status: 500 }
+        );
+      }
+    } else {
+      lead = data;
     }
 
-    // 2️⃣ Monta mensagem
-    const mensagem = `Olá ${lead.nome}, recebemos sua solicitação agora mesmo.
+    // 🔹 Monta mensagem
+    const mensagem = isReengaged
+      ? `Olá ${lead.nome}, recebemos novamente sua solicitação.
 
-Responda com:
+Já estamos acompanhando seu atendimento.
+
+Responda:
 1 - Orçamento
-2 - Mais informações
+2 - Mais informações`
+      : `Olá ${lead.nome}, recebemos sua solicitação agora mesmo.
 
-Nossa equipe já foi notificada.`;
+Responda:
+1 - Orçamento
+2 - Mais informações`;
 
-    // 3️⃣ Envia WhatsApp usando TELEFONE
+    // 🔹 Envia WhatsApp
     const response = await fetch(
       process.env.EVOLUTION_URL + "/message/sendText",
       {
@@ -64,7 +106,7 @@ Nossa equipe já foi notificada.`;
           apikey: process.env.EVOLUTION_API_KEY!
         },
         body: JSON.stringify({
-          number: lead.telefone, // 👈 AQUI CORRIGIDO
+          number: lead.telefone,
           text: mensagem
         })
       }
@@ -72,11 +114,13 @@ Nossa equipe já foi notificada.`;
 
     const result = await response.json();
 
-    // 4️⃣ Registra evento
+    // 🔹 Registra evento
     await supabase.from("lead_events").insert([
       {
         lead_id: lead.id,
-        event_type: "whatsapp_confirmation",
+        event_type: isReengaged
+          ? "lead_reengaged"
+          : "lead_created",
         ok: response.ok,
         message: result
       }
