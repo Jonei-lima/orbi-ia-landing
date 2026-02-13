@@ -28,7 +28,6 @@ export async function POST(req: Request) {
     const email = body?.email;
     const canal_preferido = body?.canal_preferido;
 
-    // aceita telefone OU whatsapp
     const telefoneRaw = body?.telefone ?? body?.whatsapp ?? "";
     const numeroFinal = asE164BR(telefoneRaw);
 
@@ -66,135 +65,157 @@ export async function POST(req: Request) {
       },
     ]);
 
-    // 🔎 Tratamento de duplicidade (telefone já existe)
-if (dbErr?.code === "23505") {
-  console.log("⚠️ TELEFONE JÁ EXISTE:", numeroFinal);
+    const evolutionUrl = process.env.EVOLUTION_URL!;
 
-  const evolutionUrl = process.env.EVOLUTION_URL!;
+    // =========================
+    // DUPLICADO (23505)
+    // =========================
 
-  // 🔔 1) Aviso interno (seu número admin)
-  await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: process.env.EVOLUTION_API_KEY!,
-    },
-    body: JSON.stringify({
-      number: "5566981320667",
-      text: `⚠️ Número repetido no formulário
+    if (dbErr?.code === "23505") {
+      console.log("⚠️ TELEFONE JÁ EXISTE:", numeroFinal);
+
+      // 🔔 Aviso interno
+      await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: process.env.EVOLUTION_API_KEY!,
+        },
+        body: JSON.stringify({
+          number: "5566981320667",
+          text: `⚠️ Lead repetido
 
 Telefone: ${numeroFinal}
 Nome: ${nome}
 Empresa: ${empresa}`,
-    }),
-  });
+        }),
+      });
 
-  // 📩 2) Mensagem para o próprio lead
-  await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: process.env.EVOLUTION_API_KEY!,
-    },
-    body: JSON.stringify({
-      number: numeroFinal,
-      text: `Obrigado por entrar em contato.
-Em breve retornaremos. ORBI IA.`,
-    }),
-  });
+      // 📩 Mensagem para o lead
+      await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: process.env.EVOLUTION_API_KEY!,
+        },
+        body: JSON.stringify({
+          number: numeroFinal,
+          text: `Obrigado por entrar em contato.
+Em breve retornaremos.
+ORBI IA`,
+        }),
+      });
 
-  return NextResponse.json({
-    success: true,
-    message: "Vamos entrar em contato em breve, obrigado! ORBI IA",
-  });
-}
+      // 📧 Email mesmo sendo duplicado
+      try {
+        const resend = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          },
+          body: JSON.stringify({
+            from: "onboarding@resend.dev",
+            to: ["jonei.lima@gmail.com"],
+            subject: "Lead repetido ORBI IA",
+            html: `
+              <h2>Lead repetido</h2>
+              <p><strong>Telefone:</strong> ${numeroFinal}</p>
+              <p><strong>Nome:</strong> ${nome}</p>
+            `,
+          }),
+        });
 
-// 🔴 Qualquer outro erro real de banco
-if (dbErr) {
-  console.error("❌ SUPABASE ERROR:", dbErr);
-  return NextResponse.json(
-    { success: false, error: "Erro banco." },
-    { status: 500 }
-  );
-}
+        console.log("RESEND STATUS:", resend.status);
+        console.log("RESEND BODY:", await resend.text());
+      } catch (err) {
+        console.error("❌ ERRO RESEND DUPLICADO:", err);
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "Vamos entrar em contato em breve, obrigado! ORBI IA",
+      });
+    }
 
     // =========================
-    // 2️⃣ WHATSAPP (EVOLUTION)
+    // ERRO REAL DE BANCO
+    // =========================
+
+    if (dbErr) {
+      console.error("❌ SUPABASE ERROR:", dbErr);
+      return NextResponse.json(
+        { success: false, error: "Erro banco." },
+        { status: 500 }
+      );
+    }
+
+    // =========================
+    // 2️⃣ WHATSAPP NOVO LEAD
     // =========================
 
     try {
-      const evolutionUrl = process.env.EVOLUTION_URL;
-
-      if (!evolutionUrl) {
-        console.error("EVOLUTION_URL ausente");
-      } else {
-        const evo = await fetch(
-          `${evolutionUrl}/message/sendText/orbi_ia_landing`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              apikey: process.env.EVOLUTION_API_KEY!,
-            },
-            body: JSON.stringify({
-              number: numeroFinal,
-              text: `🚀 Novo Lead
+      const evo = await fetch(
+        `${evolutionUrl}/message/sendText/orbi_ia_landing`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: process.env.EVOLUTION_API_KEY!,
+          },
+          body: JSON.stringify({
+            number: numeroFinal,
+            text: `🚀 Novo Lead
 
 Nome: ${nome}
 Empresa: ${empresa}
 Email: ${email}
 Telefone: ${numeroFinal}
 Canal: ${canal_preferido}`,
-            }),
-          }
-        );
+          }),
+        }
+      );
 
-        const evoBody = await evo.text();
-        console.log("EVOLUTION STATUS:", evo.status);
-        console.log("EVOLUTION BODY:", evoBody);
-      }
+      console.log("EVOLUTION STATUS:", evo.status);
+      console.log("EVOLUTION BODY:", await evo.text());
     } catch (evoErr) {
       console.error("❌ ERRO EVOLUTION:", evoErr);
     }
 
-    // 3) Email (Resend)
-try {
-  const resend = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({
-      from: "onboarding@resend.dev", // 🔥 TESTE COM ESSE PRIMEIRO
-      to: ["jonei.lima@gmail.com"],
-      subject: "Novo Lead ORBI IA",
-      html: `
-        <h2>Novo Lead</h2>
-        <p><strong>Nome:</strong> ${nome}</p>
-        <p><strong>Empresa:</strong> ${empresa}</p>
-        <p><strong>Cargo:</strong> ${cargo}</p>
-        <p><strong>Desafio:</strong> ${desafio}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Telefone:</strong> ${numeroFinal}</p>
-        <p><strong>Canal:</strong> ${canal_preferido}</p>
-      `,
-    }),
-  });
+    // =========================
+    // 3️⃣ EMAIL NOVO LEAD
+    // =========================
 
-  const resendBody = await resend.text();
+    try {
+      const resend = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: "onboarding@resend.dev",
+          to: ["jonei.lima@gmail.com"],
+          subject: "Novo Lead ORBI IA",
+          html: `
+            <h2>Novo Lead</h2>
+            <p><strong>Nome:</strong> ${nome}</p>
+            <p><strong>Empresa:</strong> ${empresa}</p>
+            <p><strong>Cargo:</strong> ${cargo}</p>
+            <p><strong>Desafio:</strong> ${desafio}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Telefone:</strong> ${numeroFinal}</p>
+            <p><strong>Canal:</strong> ${canal_preferido}</p>
+          `,
+        }),
+      });
 
-  console.log("RESEND STATUS:", resend.status);
-  console.log("RESEND BODY:", resendBody);
+      console.log("RESEND STATUS:", resend.status);
+      console.log("RESEND BODY:", await resend.text());
+    } catch (resendErr) {
+      console.error("❌ ERRO RESEND:", resendErr);
+    }
 
-  if (!resend.ok) {
-    console.error("❌ RESEND FALHOU");
-  }
-} catch (resendErr) {
-  console.error("❌ ERRO RESEND:", resendErr);
-}
-
-    // ✅ NUNCA deixa email derrubar a API
     return NextResponse.json({
       success: true,
       numeroFinal,
