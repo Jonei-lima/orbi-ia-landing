@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     const telefoneLimpo = sanitizePhone(whatsapp);
 
-    let lead;
+    let lead: any;
     let isReengaged = false;
 
     // 🔹 Tenta inserir novo lead
@@ -42,36 +42,40 @@ export async function POST(req: Request) {
       .single();
 
     if (error) {
-      // 🔥 Se for erro de duplicidade
-      if (error.code === "23505") {
+      const isDuplicate =
+        error.code === "23505" ||
+        error.message?.toLowerCase().includes("duplicate");
+
+      if (isDuplicate) {
         isReengaged = true;
 
-        // Busca lead existente
-        const { data: existingLead } = await supabase
+        // 🔹 Busca lead existente
+        const { data: existingLead, error: fetchError } = await supabase
           .from("leads")
           .select("*")
           .eq("telefone", telefoneLimpo)
           .single();
 
-        if (!existingLead) {
+        if (fetchError || !existingLead) {
+          console.error("Erro ao buscar lead existente:", fetchError);
           return NextResponse.json(
-            { error: "Erro ao buscar lead existente" },
+            { error: "Erro ao buscar lead existente." },
             { status: 500 }
           );
         }
 
-        // Atualiza dados
+        // 🔹 Atualiza dados básicos
         await supabase
           .from("leads")
           .update({
             nome,
-            email,
-            updated_at: new Date()
+            email
           })
           .eq("telefone", telefoneLimpo);
 
         lead = existingLead;
       } else {
+        console.error("Erro real ao inserir:", error);
         return NextResponse.json(
           { error: "Erro ao salvar no banco." },
           { status: 500 }
@@ -129,6 +133,7 @@ Responda:
     return NextResponse.json({ ok: true });
 
   } catch (err) {
+    console.error("Erro geral:", err);
     return NextResponse.json(
       { error: "Erro interno" },
       { status: 500 }
