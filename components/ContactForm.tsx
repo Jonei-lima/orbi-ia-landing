@@ -1,210 +1,108 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-
-type FormData = {
-  nome: string
-  empresa: string
-  cargo: string
-  desafio: string
-  email: string
-  telefone: string
-  canal_preferido: "email" | "whatsapp" | "ligacao"
-  hp: string
-}
+import { useState } from "react";
 
 export default function ContactForm() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     nome: "",
     empresa: "",
     cargo: "",
     desafio: "",
     email: "",
     telefone: "",
-    canal_preferido: "email",
-    hp: "",
-  })
-
-  const [loading, setLoading] = useState(false)
+    canal_preferido: ""
+  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
-    })
-  }
-
-  const handleRadioChange = (value: "email" | "whatsapp" | "ligacao") => {
-    setFormData({
-      ...formData,
-      canal_preferido: value,
-    })
-  }
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
 
-    try {
-      // 🔥 ENVIA PARA ROTA CORRETA
-      const response = await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nome: formData.nome,
-          empresa: formData.empresa,
-          cargo: formData.cargo,
-          desafio: formData.desafio,
-          email: formData.email,
-          whatsapp: formData.telefone, // 🔥 API espera "whatsapp"
-          canal_preferido: formData.canal_preferido
-        }),
-      })
+    const response = await fetch("/api/lead", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
 
-      const data = await response.json()
+    const data = await response.json();
 
-      if (!response.ok || !data.ok) {
-        throw new Error(data.error || "Erro no servidor")
-      }
-
-      alert("Obrigado! Em breve retornaremos.")
-
-      setFormData({
-        nome: "",
-        empresa: "",
-        cargo: "",
-        desafio: "",
-        email: "",
-        telefone: "",
-        canal_preferido: "email",
-        hp: "",
-      })
-
-    } catch (error: any) {
-      alert(error.message || "Erro ao enviar.")
-    } finally {
-      setLoading(false)
+    if (!response.ok) {
+      alert(data.error || "Erro ao enviar.");
+      return;
     }
-  }
+
+    alert("Enviado com sucesso!");
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-
-      {/* Honeypot */}
+    <form onSubmit={handleSubmit}>
       <input
-        type="text"
-        name="hp"
-        value={formData.hp}
+        name="nome"
+        placeholder="Nome"
+        value={formData.nome}
         onChange={handleChange}
-        style={{ display: "none" }}
+        required
       />
 
-      <div className="grid md:grid-cols-3 gap-6">
-        <input
-          name="nome"
-          value={formData.nome}
-          onChange={handleChange}
-          placeholder="Nome"
-          required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
-        />
+      <input
+        name="empresa"
+        placeholder="Empresa"
+        value={formData.empresa}
+        onChange={handleChange}
+        required
+      />
 
-        <input
-          name="empresa"
-          value={formData.empresa}
-          onChange={handleChange}
-          placeholder="Empresa"
-          required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
-        />
-
-        <input
-          name="cargo"
-          value={formData.cargo}
-          onChange={handleChange}
-          placeholder="Cargo"
-          required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
-        />
-      </div>
+      <input
+        name="cargo"
+        placeholder="Cargo"
+        value={formData.cargo}
+        onChange={handleChange}
+        required
+      />
 
       <textarea
         name="desafio"
+        placeholder="Desafio"
         value={formData.desafio}
         onChange={handleChange}
-        placeholder="Principal desafio"
         required
-        className="w-full border-b border-neutral-300 py-3 focus:outline-none resize-none"
       />
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <input
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="E-mail"
-          required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
-        />
+      <input
+        name="email"
+        placeholder="Email"
+        type="email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+      />
 
-        <input
-          name="telefone"
-          value={formData.telefone}
-          onChange={handleChange}
-          placeholder="WhatsApp"
-          required
-          className="w-full border-b border-neutral-300 py-3 focus:outline-none"
-        />
-      </div>
+      <input
+        name="telefone"
+        placeholder="Telefone"
+        value={formData.telefone}
+        onChange={handleChange}
+        required
+      />
 
-      <div className="space-y-3">
-        <p className="text-sm font-medium text-neutral-700">
-          Escolha qual canal você prefere que entremos em contato:
-        </p>
+      <input
+        name="canal_preferido"
+        placeholder="Canal"
+        value={formData.canal_preferido}
+        onChange={handleChange}
+        required
+      />
 
-        <div className="flex gap-6 flex-wrap">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              checked={formData.canal_preferido === "email"}
-              onChange={() => handleRadioChange("email")}
-            />
-            Email
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              checked={formData.canal_preferido === "whatsapp"}
-              onChange={() => handleRadioChange("whatsapp")}
-            />
-            WhatsApp
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              checked={formData.canal_preferido === "ligacao"}
-              onChange={() => handleRadioChange("ligacao")}
-            />
-            Ligação
-          </label>
-        </div>
-      </div>
-
-      <div className="flex justify-end pt-4">
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-[#3FAE69] text-white px-8 py-3 rounded-md hover:opacity-90 transition"
-        >
-          {loading ? "Enviando..." : "Solicitar análise"}
-        </button>
-      </div>
-
+      <button type="submit">Enviar</button>
     </form>
-  )
+  );
 }
