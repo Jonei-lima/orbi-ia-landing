@@ -13,18 +13,18 @@ function sanitizePhone(phone: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log("BODY RECEBIDO:", body);
+console.log("BODY RECEBIDO:", body);
 
+const {
+  nome,
+  empresa,
+  cargo,
+  desafio,
+  email,
+  telefone,
+  canal_preferido
+} = body;
 
-    const {
-      nome,
-      empresa,
-      cargo,
-      desafio,
-      email,
-      telefone,
-      canal_preferido
-    } = body;
 
     if (
       !nome ||
