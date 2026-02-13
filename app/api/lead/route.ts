@@ -19,20 +19,39 @@ function asE164BR(raw: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { nome, empresa, cargo, desafio, email, canal_preferido } = body;
+    console.log("BODY RECEBIDO:", body);
+
+    const {
+      nome,
+      empresa,
+      cargo,
+      desafio,
+      email,
+      canal_preferido,
+    } = body;
 
     const telefoneRaw = body?.telefone ?? body?.whatsapp ?? "";
     const numeroFinal = asE164BR(telefoneRaw);
 
-    if (!nome || !email || !numeroFinal) {
-      // Mesmo com campos faltando, retorna success pro front não quebrar
+    // 🔎 Validação
+    if (
+      !nome ||
+      !empresa ||
+      !cargo ||
+      !desafio ||
+      !email ||
+      !numeroFinal ||
+      !canal_preferido
+    ) {
       return NextResponse.json({ success: true });
     }
 
     const evolutionUrl = process.env.EVOLUTION_URL!;
-    const apiKey = process.env.EVOLUTION_API_KEY!;
 
-    // 1️⃣ Tenta salvar no banco
+    // =========================
+    // TENTA SALVAR
+    // =========================
+
     const { error: dbErr } = await supabase.from("leads").insert([
       {
         nome,
@@ -45,64 +64,108 @@ export async function POST(req: Request) {
       },
     ]);
 
-    const isDuplicado = dbErr?.code === "23505";
+    // =========================
+    // SE FOR DUPLICADO
+    // =========================
 
-    if (dbErr && !isDuplicado) {
-      console.error("ERRO BANCO (não crítico):", dbErr);
-    }
+    if (dbErr?.code === "23505") {
 
-    // 2️⃣ WhatsApp — aviso interno + resposta ao cliente
-    try {
-      // Aviso para ORBI IA (mensagem interna diferencia novo vs repetido)
+      // 🔔 Admin recebe aviso silencioso
       await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", apikey: apiKey },
+        headers: {
+          "Content-Type": "application/json",
+          apikey: process.env.EVOLUTION_API_KEY!,
+        },
         body: JSON.stringify({
           number: "5566981320667",
-          text: isDuplicado
-            ? `🔁 Lead Reenviado\n\nNome: ${nome}\nEmpresa: ${empresa}\nTelefone: ${numeroFinal}`
-            : `🚀 Novo Lead\n\nNome: ${nome}\nEmpresa: ${empresa}\nEmail: ${email}\nTelefone: ${numeroFinal}\nCanal: ${canal_preferido}`,
+          text: `🔁 Lead reenviado\n\nNome: ${nome}\nEmpresa: ${empresa}\nTelefone: ${numeroFinal}`,
         }),
       });
 
-      // Resposta ao cliente — SEMPRE a mesma mensagem, novo ou repetido
+      // 📩 Cliente recebe SEMPRE mesma mensagem padrão
       await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", apikey: apiKey },
+        headers: {
+          "Content-Type": "application/json",
+          apikey: process.env.EVOLUTION_API_KEY!,
+        },
         body: JSON.stringify({
           number: numeroFinal,
           text: `Obrigado! Logo entraremos em contato. ORBI IA`,
         }),
       });
-    } catch (waErr) {
-      console.error("Erro ao disparar WhatsApp:", waErr);
+
+      return NextResponse.json({ success: true });
     }
 
-    // 3️⃣ Email apenas para novos leads
-    if (!isDuplicado) {
-      try {
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          },
-          body: JSON.stringify({
-            from: "contato@agenteorbiia.com",
-            to: ["contato@agenteorbiia.com"],
-            subject: "Novo Lead ORBI IA",
-            html: `<h2>Novo Lead</h2><p><strong>Nome:</strong> ${nome}</p><p><strong>Telefone:</strong> ${numeroFinal}</p>`,
-          }),
-        });
-      } catch (emailErr) {
-        console.error("Erro ao enviar email:", emailErr);
-      }
+    // =========================
+    // ERRO REAL DE BANCO
+    // =========================
+
+    if (dbErr) {
+      console.error("SUPABASE ERROR:", dbErr);
+      return NextResponse.json({ success: true });
     }
+
+    // =========================
+    // NOVO LEAD
+    // =========================
+
+    // 🔔 Aviso interno
+    await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: process.env.EVOLUTION_API_KEY!,
+      },
+      body: JSON.stringify({
+        number: "5566981320667",
+        text: `🚀 Novo Lead\n\nNome: ${nome}\nEmpresa: ${empresa}\nEmail: ${email}\nTelefone: ${numeroFinal}\nCanal: ${canal_preferido}`,
+      }),
+    });
+
+    // 📩 Resposta automática para cliente
+    await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: process.env.EVOLUTION_API_KEY!,
+      },
+      body: JSON.stringify({
+        number: numeroFinal,
+        text: `Obrigado! Logo entraremos em contato. ORBI IA`,
+      }),
+    });
+
+    // 📧 Email interno
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "contato@agenteorbiia.com",
+        to: ["contato@agenteorbiia.com"],
+        subject: "Novo Lead ORBI IA",
+        html: `
+          <h2>Novo Lead</h2>
+          <p><strong>Nome:</strong> ${nome}</p>
+          <p><strong>Empresa:</strong> ${empresa}</p>
+          <p><strong>Cargo:</strong> ${cargo}</p>
+          <p><strong>Desafio:</strong> ${desafio}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Telefone:</strong> ${numeroFinal}</p>
+          <p><strong>Canal:</strong> ${canal_preferido}</p>
+        `,
+      }),
+    });
 
     return NextResponse.json({ success: true });
 
   } catch (err: any) {
-    console.error("ERRO GERAL API:", err?.message || err);
+    console.error("ERRO GERAL:", err?.message || err);
     return NextResponse.json({ success: true });
   }
 }
