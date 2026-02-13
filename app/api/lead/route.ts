@@ -70,27 +70,38 @@ export async function POST(req: Request) {
 if (dbErr?.code === "23505") {
   console.log("⚠️ TELEFONE JÁ EXISTE:", numeroFinal);
 
-  // 🔔 Aviso interno para você
-  await fetch(
-    `${process.env.EVOLUTION_URL}/message/sendText/orbi_ia_landing`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: process.env.EVOLUTION_API_KEY!,
-      },
-      body: JSON.stringify({
-        number: "5566981320667", // SEU número fixo
-        text: `⚠️ Número repetido no formulário
+  const evolutionUrl = process.env.EVOLUTION_URL!;
+
+  // 🔔 1) Aviso interno (seu número admin)
+  await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: process.env.EVOLUTION_API_KEY!,
+    },
+    body: JSON.stringify({
+      number: "5566981320667",
+      text: `⚠️ Número repetido no formulário
 
 Telefone: ${numeroFinal}
-Nome informado: ${nome}
-Empresa: ${empresa}
+Nome: ${nome}
+Empresa: ${empresa}`,
+    }),
+  });
 
-Esse número já havia preenchido antes.`,
-      }),
-    }
-  );
+  // 📩 2) Mensagem para o próprio lead
+  await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: process.env.EVOLUTION_API_KEY!,
+    },
+    body: JSON.stringify({
+      number: numeroFinal,
+      text: `Recebemos seu contato novamente 👍
+Vamos entrar em contato em breve.`,
+    }),
+  });
 
   return NextResponse.json({
     success: true,
