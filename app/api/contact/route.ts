@@ -5,12 +5,10 @@ const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
-  console.log("EVOLUTION_URL:", process.env.EVOLUTION_URL);
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-
-    console.log("BODY:", body);
 
     const {
       nome,
@@ -40,7 +38,7 @@ export async function POST(req: Request) {
     // =====================
     // 1️⃣ SALVAR NO BANCO
     // =====================
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("leads")
       .insert([{
         nome,
@@ -50,8 +48,7 @@ export async function POST(req: Request) {
         email,
         telefone,
         canal_preferido
-      }])
-      .select();
+      }]);
 
     if (error) {
       console.error("SUPABASE ERROR:", error);
@@ -61,10 +58,8 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("SALVO:", data);
-
     // =====================
-    // 2️⃣ TESTE RESEND DIRETO
+    // 2️⃣ ENVIAR EMAIL (RESEND)
     // =====================
     const resendResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -75,8 +70,17 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         from: "contato@agenteorbiia.com",
         to: ["jonei.lima@gmail.com"],
-        subject: "TESTE ORBI IA",
-        html: `<h1>Email funcionando</h1>`,
+        subject: "Novo Lead ORBI IA",
+        html: `
+          <h2>Novo Lead</h2>
+          <p><strong>Nome:</strong> ${nome}</p>
+          <p><strong>Empresa:</strong> ${empresa}</p>
+          <p><strong>Cargo:</strong> ${cargo}</p>
+          <p><strong>Desafio:</strong> ${desafio}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Telefone:</strong> ${telefone}</p>
+          <p><strong>Canal:</strong> ${canal_preferido}</p>
+        `,
       }),
     });
 
@@ -84,8 +88,15 @@ export async function POST(req: Request) {
     console.log("RESEND BODY:", await resendResponse.text());
 
     // =====================
-    // 3️⃣ TESTE EVOLUTION
+    // 3️⃣ ENVIAR WHATSAPP (EVOLUTION)
     // =====================
+
+    const telefoneLimpo = telefone.replace(/\D/g, "");
+
+    const numeroFinal = telefoneLimpo.startsWith("55")
+      ? telefoneLimpo
+      : `55${telefoneLimpo}`;
+
     const evolutionResponse = await fetch(
       `${process.env.EVOLUTION_URL}/message/sendText/orbi_ia_landing`,
       {
@@ -95,8 +106,12 @@ export async function POST(req: Request) {
           apikey: process.env.EVOLUTION_API_KEY!,
         },
         body: JSON.stringify({
-          number: `55${telefone}`,
-          text: `Novo lead: ${nome} - ${empresa}`,
+          number: numeroFinal,
+          text: `🚀 Novo Lead
+
+Nome: ${nome}
+Empresa: ${empresa}
+Telefone: ${numeroFinal}`,
         }),
       }
     );
