@@ -10,7 +10,7 @@ export default function ContactForm() {
     desafio: "",
     email: "",
     telefone: "",
-    canal_preferido: ""
+    canal_preferido: "Email"
   });
 
   const handleChange = (
@@ -25,6 +25,8 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log("📤 ENVIANDO:", formData);
+
     const response = await fetch("/api/lead", {
       method: "POST",
       headers: {
@@ -34,6 +36,8 @@ export default function ContactForm() {
     });
 
     const data = await response.json();
+
+    console.log("📩 RESPOSTA:", data);
 
     if (!response.ok) {
       alert(data.error || "Erro ao enviar.");
@@ -45,62 +49,45 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        name="nome"
-        placeholder="Nome"
-        value={formData.nome}
-        onChange={handleChange}
-        required
-      />
+      <input name="nome" placeholder="Nome" onChange={handleChange} required />
+      <input name="empresa" placeholder="Empresa" onChange={handleChange} required />
+      <input name="cargo" placeholder="Cargo" onChange={handleChange} required />
+      <textarea name="desafio" placeholder="Desafio" onChange={handleChange} required />
+      <input name="email" placeholder="Email" onChange={handleChange} required />
+      <input name="telefone" placeholder="Telefone" onChange={handleChange} required />
 
-      <input
-        name="empresa"
-        placeholder="Empresa"
-        value={formData.empresa}
-        onChange={handleChange}
-        required
-      />
+      <div>
+        <label>
+          <input
+            type="radio"
+            name="canal_preferido"
+            value="Email"
+            onChange={handleChange}
+            checked={formData.canal_preferido === "Email"}
+          />
+          Email
+        </label>
 
-      <input
-        name="cargo"
-        placeholder="Cargo"
-        value={formData.cargo}
-        onChange={handleChange}
-        required
-      />
+        <label>
+          <input
+            type="radio"
+            name="canal_preferido"
+            value="WhatsApp"
+            onChange={handleChange}
+          />
+          WhatsApp
+        </label>
 
-      <textarea
-        name="desafio"
-        placeholder="Desafio"
-        value={formData.desafio}
-        onChange={handleChange}
-        required
-      />
-
-      <input
-        name="email"
-        placeholder="Email"
-        type="email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
-
-      <input
-        name="telefone"
-        placeholder="Telefone"
-        value={formData.telefone}
-        onChange={handleChange}
-        required
-      />
-
-      <input
-        name="canal_preferido"
-        placeholder="Canal"
-        value={formData.canal_preferido}
-        onChange={handleChange}
-        required
-      />
+        <label>
+          <input
+            type="radio"
+            name="canal_preferido"
+            value="Ligacao"
+            onChange={handleChange}
+          />
+          Ligação
+        </label>
+      </div>
 
       <button type="submit">Enviar</button>
     </form>
