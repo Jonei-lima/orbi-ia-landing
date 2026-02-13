@@ -98,14 +98,14 @@ Empresa: ${empresa}`,
     },
     body: JSON.stringify({
       number: numeroFinal,
-      text: `Recebemos seu contato novamente 👍
-Vamos entrar em contato em breve.`,
+      text: `Obrigado por entrar em contato.
+Em breve retornaremos. ORBI IA.`,
     }),
   });
 
   return NextResponse.json({
     success: true,
-    message: "Vamos entrar em contato em breve, obrigado!",
+    message: "Vamos entrar em contato em breve, obrigado! ORBI IA",
   });
 }
 
@@ -157,40 +157,42 @@ Canal: ${canal_preferido}`,
       console.error("❌ ERRO EVOLUTION:", evoErr);
     }
 
-    // =========================
-    // 3️⃣ EMAIL (RESEND)
-    // =========================
+    // 3) Email (Resend)
+try {
+  const resend = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+    },
+    body: JSON.stringify({
+      from: "onboarding@resend.dev", // 🔥 TESTE COM ESSE PRIMEIRO
+      to: ["jonei.lima@gmail.com"],
+      subject: "Novo Lead ORBI IA",
+      html: `
+        <h2>Novo Lead</h2>
+        <p><strong>Nome:</strong> ${nome}</p>
+        <p><strong>Empresa:</strong> ${empresa}</p>
+        <p><strong>Cargo:</strong> ${cargo}</p>
+        <p><strong>Desafio:</strong> ${desafio}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Telefone:</strong> ${numeroFinal}</p>
+        <p><strong>Canal:</strong> ${canal_preferido}</p>
+      `,
+    }),
+  });
 
-    try {
-      const resend = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-        },
-        body: JSON.stringify({
-          from: "contato@agenteorbiia.com",
-          to: ["jonei.lima@gmail.com"],
-          subject: "Novo Lead ORBI IA",
-          html: `
-            <h2>Novo Lead</h2>
-            <p><strong>Nome:</strong> ${nome}</p>
-            <p><strong>Empresa:</strong> ${empresa}</p>
-            <p><strong>Cargo:</strong> ${cargo}</p>
-            <p><strong>Desafio:</strong> ${desafio}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Telefone:</strong> ${numeroFinal}</p>
-            <p><strong>Canal:</strong> ${canal_preferido}</p>
-          `,
-        }),
-      });
+  const resendBody = await resend.text();
 
-      const resendBody = await resend.text();
-      console.log("RESEND STATUS:", resend.status);
-      console.log("RESEND BODY:", resendBody);
-    } catch (resendErr) {
-      console.error("❌ ERRO RESEND:", resendErr);
-    }
+  console.log("RESEND STATUS:", resend.status);
+  console.log("RESEND BODY:", resendBody);
+
+  if (!resend.ok) {
+    console.error("❌ RESEND FALHOU");
+  }
+} catch (resendErr) {
+  console.error("❌ ERRO RESEND:", resendErr);
+}
 
     // ✅ NUNCA deixa email derrubar a API
     return NextResponse.json({
