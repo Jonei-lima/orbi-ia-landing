@@ -9,11 +9,23 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// =============================
+// UTIL
+// =============================
+function sanitizePhone(phone: string) {
+  return phone.replace(/\D/g, "");
+}
+
+function ensure55(phone: string) {
+  return phone.startsWith("55") ? phone : `55${phone}`;
+}
+
+// =============================
+// API
+// =============================
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-
-    console.log("📥 BODY RECEBIDO:", body);
 
     const {
       nome,
@@ -26,7 +38,7 @@ export async function POST(req: Request) {
     } = body;
 
     // =============================
-    // VALIDAÇÃO REAL (ALINHADA COM BANCO)
+    // VALIDAÇÃO
     // =============================
     if (
       !nome ||
@@ -37,19 +49,18 @@ export async function POST(req: Request) {
       !telefone ||
       !canal_preferido
     ) {
-      console.log("❌ Validação falhou");
       return NextResponse.json(
         { success: false, error: "Campos obrigatórios ausentes." },
         { status: 400 }
       );
     }
 
-    console.log("✅ Validação passou");
+    const telefoneLimpo = ensure55(sanitizePhone(telefone));
 
     // =============================
     // 1️⃣ SALVAR NO SUPABASE
     // =============================
-    const { data, error: supabaseError } = await supabase
+    const { data, error } = await supabase
       .from("leads")
       .insert([{
         nome,
@@ -57,97 +68,105 @@ export async function POST(req: Request) {
         cargo,
         desafio,
         email,
-        telefone,
+        telefone: telefoneLimpo,
         canal_preferido
       }])
-      .select();
+      .select()
+      .single();
 
-    if (supabaseError) {
-      console.error("❌ ERRO SUPABASE:", supabaseError);
-      throw new Error("Erro ao salvar no banco.");
+    if (error) {
+      console.error("Erro Supabase:", error);
+      return NextResponse.json(
+        { success: false, error: "Erro ao salvar no banco." },
+        { status: 500 }
+      );
     }
 
-    console.log("✅ Lead salvo:", data);
-
     // =============================
-    // 2️⃣ ENVIAR WHATSAPP (EVOLUTION)
+    // 2️⃣ ENVIAR WHATSAPP
     // =============================
-    const evolutionResponse = await fetch(
-      "http://168.138.148.254:8080/message/sendText/orbi_ia_landing",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: process.env.EVOLUTION_API_KEY!,
-        },
-        body: JSON.stringify({
-          number: "5566981320667",
-          text: `🚀 Novo Lead Recebido
+    if (!process.env.EVOLUTION_API_KEY) {
+      console.error("EVOLUTION_API_KEY não configurada");
+    } else {
+      try {
+        const evolutionResponse = await fetch(
+          "http://168.138.148.254:8080/message/sendText/orbi_ia_landing",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: process.env.EVOLUTION_API_KEY,
+            },
+            body: JSON.stringify({
+              number: "5566981320667",
+              text: `🚀 Novo Lead
 
 Nome: ${nome}
 Empresa: ${empresa}
 Cargo: ${cargo}
 Desafio: ${desafio}
 Email: ${email}
-Telefone: ${telefone}
-Canal Preferido: ${canal_preferido}`,
-        }),
+Telefone: ${telefoneLimpo}
+Canal: ${canal_preferido}`
+            }),
+          }
+        );
+
+        if (!evolutionResponse.ok) {
+          console.error("Erro Evolution:", await evolutionResponse.text());
+        }
+      } catch (err) {
+        console.error("Falha WhatsApp:", err);
       }
-    );
-
-    const evolutionData = await evolutionResponse.text();
-
-    console.log("📲 Evolution status:", evolutionResponse.status);
-    console.log("📲 Evolution resposta:", evolutionData);
-
-    if (!evolutionResponse.ok) {
-      console.error("❌ ERRO EVOLUTION");
-      throw new Error("Erro ao enviar WhatsApp.");
     }
 
     // =============================
     // 3️⃣ ENVIAR EMAIL (RESEND)
     // =============================
-    const resendResponse = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "contato@agenteorbiia.com",
-        to: ["contato@agenteorbiia.com"],
-        subject: "🚀 Novo Lead Recebido",
-        html: `
-          <h2>Novo Lead</h2>
-          <p><strong>Nome:</strong> ${nome}</p>
-          <p><strong>Empresa:</strong> ${empresa}</p>
-          <p><strong>Cargo:</strong> ${cargo}</p>
-          <p><strong>Desafio:</strong> ${desafio}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Telefone:</strong> ${telefone}</p>
-          <p><strong>Canal Preferido:</strong> ${canal_preferido}</p>
-        `,
-      }),
-    });
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY não configurada");
+    } else {
+      try {
+        const resendResponse = await fetch(
+          "https://api.resend.com/emails",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+            },
+            body: JSON.stringify({
+              from: "contato@agenteorbiia.com",
+              to: ["contato@agenteorbiia.com"],
+              subject: "🚀 Novo Lead Recebido",
+              html: `
+                <h2>Novo Lead</h2>
+                <p><strong>Nome:</strong> ${nome}</p>
+                <p><strong>Empresa:</strong> ${empresa}</p>
+                <p><strong>Cargo:</strong> ${cargo}</p>
+                <p><strong>Desafio:</strong> ${desafio}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Telefone:</strong> ${telefoneLimpo}</p>
+                <p><strong>Canal:</strong> ${canal_preferido}</p>
+              `
+            }),
+          }
+        );
 
-    const resendData = await resendResponse.text();
-
-    console.log("📧 Resend status:", resendResponse.status);
-    console.log("📧 Resend resposta:", resendData);
-
-    if (!resendResponse.ok) {
-      console.error("❌ ERRO RESEND");
-      throw new Error("Erro ao enviar email.");
+        if (!resendResponse.ok) {
+          console.error("Erro Resend:", await resendResponse.text());
+        }
+      } catch (err) {
+        console.error("Falha Email:", err);
+      }
     }
 
     return NextResponse.json({ success: true });
 
   } catch (error: any) {
-    console.error("🔥 ERRO GERAL:", error.message);
-
+    console.error("Erro geral:", error);
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: "Erro interno" },
       { status: 500 }
     );
   }
