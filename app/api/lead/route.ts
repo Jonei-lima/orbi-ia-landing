@@ -33,25 +33,26 @@ export async function POST(req: Request) {
     const telefoneRaw = body?.telefone ?? body?.whatsapp ?? "";
     const numeroFinal = asE164BR(telefoneRaw);
 
-    const missing: string[] = [];
-
-    if (!nome) missing.push("nome");
-    if (!empresa) missing.push("empresa");
-    if (!cargo) missing.push("cargo");
-    if (!desafio) missing.push("desafio");
-    if (!email) missing.push("email");
-    if (!numeroFinal) missing.push("telefone|whatsapp");
-    if (!canal_preferido) missing.push("canal_preferido");
-
-    if (missing.length) {
+    // 🔎 Validação
+    if (
+      !nome ||
+      !empresa ||
+      !cargo ||
+      !desafio ||
+      !email ||
+      !numeroFinal ||
+      !canal_preferido
+    ) {
       return NextResponse.json(
-        { success: false, error: "Campos obrigatórios ausentes.", missing },
+        { success: false, error: "Campos obrigatórios ausentes." },
         { status: 400 }
       );
     }
 
+    const evolutionUrl = process.env.EVOLUTION_URL!;
+
     // =========================
-    // 1️⃣ SALVAR NO BANCO
+    // TENTA SALVAR
     // =========================
 
     const { error: dbErr } = await supabase.from("leads").insert([
@@ -66,16 +67,13 @@ export async function POST(req: Request) {
       },
     ]);
 
-    const evolutionUrl = process.env.EVOLUTION_URL!;
-
     // =========================
-    // DUPLICADO
+    // SE FOR DUPLICADO
     // =========================
 
     if (dbErr?.code === "23505") {
-      console.log("⚠️ TELEFONE JÁ EXISTE:", numeroFinal);
 
-      // 🔔 AVISO INTERNO
+      // 🔔 Admin recebe aviso silencioso
       await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
         method: "POST",
         headers: {
@@ -84,15 +82,15 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `⚠️ Lead repetido
+          text: `🔁 Lead reenviado
 
-Telefone: ${numeroFinal}
 Nome: ${nome}
-Empresa: ${empresa}`,
+Empresa: ${empresa}
+Telefone: ${numeroFinal}`,
         }),
       });
 
-      // 📩 RESPOSTA PARA O LEAD
+      // 📩 Cliente recebe SEMPRE mesma mensagem padrão
       await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
         method: "POST",
         headers: {
@@ -108,10 +106,12 @@ ORBI IA`,
         }),
       });
 
-      return NextResponse.json({
-        success: true,
-      });
+      return NextResponse.json({ success: true });
     }
+
+    // =========================
+    // ERRO REAL DE BANCO
+    // =========================
 
     if (dbErr) {
       console.error("SUPABASE ERROR:", dbErr);
@@ -122,9 +122,10 @@ ORBI IA`,
     }
 
     // =========================
-    // 🔔 AVISO INTERNO (NOVO LEAD)
+    // NOVO LEAD
     // =========================
 
+    // 🔔 Aviso interno
     await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
       method: "POST",
       headers: {
@@ -143,7 +144,7 @@ Canal: ${canal_preferido}`,
       }),
     });
 
-    // 📩 RESPOSTA PARA O CLIENTE
+    // 📩 Resposta automática para cliente
     await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
       method: "POST",
       headers: {
@@ -159,10 +160,7 @@ ORBI IA`,
       }),
     });
 
-    // =========================
-    // EMAIL INTERNO
-    // =========================
-
+    // 📧 Email interno
     await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -186,9 +184,7 @@ ORBI IA`,
       }),
     });
 
-    return NextResponse.json({
-      success: true,
-    });
+    return NextResponse.json({ success: true });
 
   } catch (err: any) {
     console.error("ERRO GERAL:", err?.message || err);
