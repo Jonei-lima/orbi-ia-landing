@@ -5,7 +5,7 @@ const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
-
+  console.log("EVOLUTION_URL:", process.env.EVOLUTION_URL);
 export async function POST(req: Request) {
   try {
     const body = await req.json();
