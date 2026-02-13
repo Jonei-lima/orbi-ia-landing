@@ -24,12 +24,9 @@ export async function POST(req: Request) {
     const telefoneRaw = body?.telefone ?? body?.whatsapp ?? "";
     const numeroFinal = asE164BR(telefoneRaw);
 
-    // 🔎 Validação básica
     if (!nome || !email || !numeroFinal) {
-      return NextResponse.json(
-        { success: false, error: "Campos essenciais ausentes." },
-        { status: 400 }
-      );
+      // Mesmo com campos faltando, retorna success pro front não quebrar
+      return NextResponse.json({ success: true });
     }
 
     const evolutionUrl = process.env.EVOLUTION_URL!;
@@ -48,47 +45,40 @@ export async function POST(req: Request) {
       },
     ]);
 
-    // 2️⃣ Define se é novo ou repetido (23505 = Unique Violation)
     const isDuplicado = dbErr?.code === "23505";
 
-    // Se der erro no banco e NÃO for duplicado, loga o erro mas não para o processo
     if (dbErr && !isDuplicado) {
       console.error("ERRO BANCO (não crítico):", dbErr);
     }
 
-    // 3️⃣ Prepara as mensagens de WhatsApp (Aviso interno e resposta ao cliente)
-    // Usamos blocos try/catch individuais para que se o WhatsApp falhar, o cliente ainda receba o "Obrigado" no site.
-    
+    // 2️⃣ WhatsApp — aviso interno + resposta ao cliente
     try {
-      // Aviso para ORBI IA
+      // Aviso para ORBI IA (mensagem interna diferencia novo vs repetido)
       await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: apiKey },
         body: JSON.stringify({
           number: "5566981320667",
-          text: isDuplicado 
-            ? `🔁 Lead Reenviado\n\nNome: ${nome}\nEmpresa: ${empresa}\nTelefone: ${numeroFinal}` 
+          text: isDuplicado
+            ? `🔁 Lead Reenviado\n\nNome: ${nome}\nEmpresa: ${empresa}\nTelefone: ${numeroFinal}`
             : `🚀 Novo Lead\n\nNome: ${nome}\nEmpresa: ${empresa}\nEmail: ${email}\nTelefone: ${numeroFinal}\nCanal: ${canal_preferido}`,
         }),
       });
 
-      // Resposta Automática para o Cliente
+      // Resposta ao cliente — SEMPRE a mesma mensagem, novo ou repetido
       await fetch(`${evolutionUrl}/message/sendText/orbi_ia_landing`, {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: apiKey },
         body: JSON.stringify({
           number: numeroFinal,
-          text: `Recebemos sua mensagem.
-Em breve entraremos em contato.
-Obrigado.
-ORBI IA`,
+          text: `Obrigado! Logo entraremos em contato. ORBI IA`,
         }),
       });
     } catch (waErr) {
       console.error("Erro ao disparar WhatsApp:", waErr);
     }
 
-    // 4️⃣ Envio de Email (Apenas para novos leads, para não encher sua caixa)
+    // 3️⃣ Email apenas para novos leads
     if (!isDuplicado) {
       try {
         await fetch("https://api.resend.com/emails", {
@@ -109,12 +99,10 @@ ORBI IA`,
       }
     }
 
-    // 5️⃣ SUCESSO ABSOLUTO: Independente de tudo, o front-end recebe success: true
     return NextResponse.json({ success: true });
 
   } catch (err: any) {
     console.error("ERRO GERAL API:", err?.message || err);
-    // Mesmo em erro crítico de código, retornamos true para o front não mostrar erro ao cliente
-    return NextResponse.json({ success: true }); 
+    return NextResponse.json({ success: true });
   }
 }
