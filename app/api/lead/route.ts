@@ -12,7 +12,15 @@ function sanitizePhone(phone: string) {
 
 export async function POST(req: Request) {
   try {
-    const { nome, email, whatsapp } = await req.json();
+    const {
+      nome,
+      empresa,
+      cargo,
+      desafio,
+      email,
+      whatsapp,
+      canal_preferido
+    } = await req.json();
 
     if (!nome || !email || !whatsapp) {
       return NextResponse.json(
@@ -26,16 +34,18 @@ export async function POST(req: Request) {
     let lead: any;
     let isReengaged = false;
 
-    // 🔹 Tenta inserir novo lead
+    // 🔹 Tenta inserir exatamente conforme sua tabela
     const { data, error } = await supabase
       .from("leads")
       .insert([
         {
           nome,
+          empresa,
+          cargo,
+          desafio,
           email,
           telefone: telefoneLimpo,
-          status: "new",
-          origem: "landing"
+          canal_preferido
         }
       ])
       .select()
@@ -49,7 +59,6 @@ export async function POST(req: Request) {
       if (isDuplicate) {
         isReengaged = true;
 
-        // 🔹 Busca lead existente
         const { data: existingLead, error: fetchError } = await supabase
           .from("leads")
           .select("*")
@@ -57,25 +66,28 @@ export async function POST(req: Request) {
           .single();
 
         if (fetchError || !existingLead) {
-          console.error("Erro ao buscar lead existente:", fetchError);
+          console.error(fetchError);
           return NextResponse.json(
             { error: "Erro ao buscar lead existente." },
             { status: 500 }
           );
         }
 
-        // 🔹 Atualiza dados básicos
         await supabase
           .from("leads")
           .update({
             nome,
-            email
+            empresa,
+            cargo,
+            desafio,
+            email,
+            canal_preferido
           })
           .eq("telefone", telefoneLimpo);
 
         lead = existingLead;
       } else {
-        console.error("Erro real ao inserir:", error);
+        console.error("Erro real:", error);
         return NextResponse.json(
           { error: "Erro ao salvar no banco." },
           { status: 500 }
@@ -85,7 +97,6 @@ export async function POST(req: Request) {
       lead = data;
     }
 
-    // 🔹 Monta mensagem
     const mensagem = isReengaged
       ? `Olá ${lead.nome}, recebemos novamente sua solicitação.
 
@@ -100,7 +111,6 @@ Responda:
 1 - Orçamento
 2 - Mais informações`;
 
-    // 🔹 Envia WhatsApp
     const response = await fetch(
       process.env.EVOLUTION_URL + "/message/sendText",
       {
@@ -118,7 +128,6 @@ Responda:
 
     const result = await response.json();
 
-    // 🔹 Registra evento
     await supabase.from("lead_events").insert([
       {
         lead_id: lead.id,
