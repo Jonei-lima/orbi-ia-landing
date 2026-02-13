@@ -13,7 +13,7 @@ function sanitizePhone(phone: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log("BODY RECEBIDO NO BACKEND:", body);
+    console.log("BODY RECEBIDO:", body);
 
 
     const {
