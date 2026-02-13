@@ -48,15 +48,24 @@ export default function ContactForm() {
     setLoading(true)
 
     try {
-      const response = await fetch("/api/contact", {
+      // 🔥 ENVIA PARA ROTA CORRETA
+      const response = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          nome: formData.nome,
+          empresa: formData.empresa,
+          cargo: formData.cargo,
+          desafio: formData.desafio,
+          email: formData.email,
+          whatsapp: formData.telefone, // 🔥 API espera "whatsapp"
+          canal_preferido: formData.canal_preferido
+        }),
       })
 
       const data = await response.json()
 
-      if (!response.ok || !data.success) {
+      if (!response.ok || !data.ok) {
         throw new Error(data.error || "Erro no servidor")
       }
 
@@ -72,6 +81,7 @@ export default function ContactForm() {
         canal_preferido: "email",
         hp: "",
       })
+
     } catch (error: any) {
       alert(error.message || "Erro ao enviar.")
     } finally {
@@ -144,7 +154,8 @@ export default function ContactForm() {
           name="telefone"
           value={formData.telefone}
           onChange={handleChange}
-          placeholder="WhatsApp (opcional)"
+          placeholder="WhatsApp"
+          required
           className="w-full border-b border-neutral-300 py-3 focus:outline-none"
         />
       </div>
