@@ -107,30 +107,33 @@ ORBI IA`,
       });
 
       // 📧 Email mesmo sendo duplicado
-      try {
-        const resend = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          },
-          body: JSON.stringify({
-            from: "onboarding@resend.dev",
-            to: ["jonei.lima@gmail.com"],
-            subject: "Lead repetido ORBI IA",
-            html: `
-              <h2>Lead repetido</h2>
-              <p><strong>Telefone:</strong> ${numeroFinal}</p>
-              <p><strong>Nome:</strong> ${nome}</p>
-            `,
-          }),
-        });
+try {
+  const resend = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+    },
+    body: JSON.stringify({
+      from: "contato@agenteorbiia.com",
+      to: ["contato@agenteorbiia.com"], // ✅ agora vai pro seu e-mail oficial
+      subject: "Lead repetido ORBI IA",
+      html: `
+        <h2>Lead repetido</h2>
+        <p><strong>Telefone:</strong> ${numeroFinal}</p>
+        <p><strong>Nome:</strong> ${nome}</p>
+        <p><strong>Empresa:</strong> ${empresa}</p>
+        <p><strong>Email informado:</strong> ${email}</p>
+      `,
+    }),
+  });
 
-        console.log("RESEND STATUS:", resend.status);
-        console.log("RESEND BODY:", await resend.text());
-      } catch (err) {
-        console.error("❌ ERRO RESEND DUPLICADO:", err);
-      }
+  console.log("RESEND STATUS DUP:", resend.status);
+  console.log("RESEND BODY DUP:", await resend.text());
+
+} catch (err) {
+  console.error("❌ ERRO RESEND DUPLICADO:", err);
+}
 
       return NextResponse.json({
         success: true,
