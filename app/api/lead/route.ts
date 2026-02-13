@@ -12,6 +12,10 @@ function sanitizePhone(phone: string) {
 
 export async function POST(req: Request) {
   try {
+    const body = await req.json();
+    console.log("BODY RECEBIDO NO BACKEND:", body);
+
+
     const {
       nome,
       empresa,
@@ -20,9 +24,8 @@ export async function POST(req: Request) {
       email,
       telefone,
       canal_preferido
-    } = await req.json();
+    } = body;
 
-    // Validação básica
     if (
       !nome ||
       !empresa ||
@@ -32,15 +35,14 @@ export async function POST(req: Request) {
       !telefone ||
       !canal_preferido
     ) {
+      console.log("❌ VALIDAÇÃO FALHOU");
       return NextResponse.json(
         { success: false, error: "Campos obrigatórios ausentes." },
         { status: 400 }
       );
     }
 
-    // =====================
     // 1️⃣ SALVAR NO BANCO
-    // =====================
     const { error } = await supabase.from("leads").insert([
       {
         nome,
@@ -54,16 +56,14 @@ export async function POST(req: Request) {
     ]);
 
     if (error) {
-      console.error("SUPABASE ERROR:", error);
+      console.error("❌ ERRO SUPABASE:", error);
       return NextResponse.json(
         { success: false, error: "Erro banco." },
         { status: 500 }
       );
     }
 
-    // =====================
-    // 2️⃣ ENVIAR WHATSAPP
-    // =====================
+    // 2️⃣ WHATSAPP
     const telefoneLimpo = sanitizePhone(telefone);
 
     const numeroFinal = telefoneLimpo.startsWith("55")
@@ -90,12 +90,9 @@ Telefone: ${numeroFinal}`
       }
     );
 
-    console.log("EVOLUTION STATUS:", evolutionResponse.status);
-    console.log("EVOLUTION BODY:", await evolutionResponse.text());
+    console.log("📲 EVOLUTION STATUS:", evolutionResponse.status);
 
-    // =====================
-    // 3️⃣ ENVIAR EMAIL
-    // =====================
+    // 3️⃣ EMAIL
     const resendResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -105,27 +102,23 @@ Telefone: ${numeroFinal}`
       body: JSON.stringify({
         from: "contato@agenteorbiia.com",
         to: ["jonei.lima@gmail.com"],
-        subject: "Novo Lead ORBI IA",
+        subject: "Novo Lead ORBI",
         html: `
           <h2>Novo Lead</h2>
-          <p><strong>Nome:</strong> ${nome}</p>
-          <p><strong>Empresa:</strong> ${empresa}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Telefone:</strong> ${numeroFinal}</p>
+          <p><b>Nome:</b> ${nome}</p>
+          <p><b>Empresa:</b> ${empresa}</p>
+          <p><b>Email:</b> ${email}</p>
+          <p><b>Telefone:</b> ${numeroFinal}</p>
         `
       })
     });
 
-    console.log("RESEND STATUS:", resendResponse.status);
-    console.log("RESEND BODY:", await resendResponse.text());
+    console.log("📧 RESEND STATUS:", resendResponse.status);
 
     return NextResponse.json({ success: true });
 
   } catch (err: any) {
-    console.error("ERRO GERAL:", err);
-    return NextResponse.json(
-      { success: false, error: "Erro interno" },
-      { status: 500 }
-    );
+    console.error("🔥 ERRO GERAL:", err);
+    return NextResponse.json({ success: false }, { status: 500 });
   }
 }
