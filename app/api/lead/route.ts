@@ -66,13 +66,46 @@ export async function POST(req: Request) {
       },
     ]);
 
-    if (dbErr) {
-      console.error("❌ SUPABASE ERROR:", dbErr);
-      return NextResponse.json(
-        { success: false, error: "Erro banco." },
-        { status: 500 }
-      );
+    // 🔎 Tratamento de duplicidade (telefone já existe)
+if (dbErr?.code === "23505") {
+  console.log("⚠️ TELEFONE JÁ EXISTE:", numeroFinal);
+
+  // 🔔 Aviso interno para você
+  await fetch(
+    `${process.env.EVOLUTION_URL}/message/sendText/orbi_ia_landing`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: process.env.EVOLUTION_API_KEY!,
+      },
+      body: JSON.stringify({
+        number: "5566981320667", // SEU número fixo
+        text: `⚠️ Número repetido no formulário
+
+Telefone: ${numeroFinal}
+Nome informado: ${nome}
+Empresa: ${empresa}
+
+Esse número já havia preenchido antes.`,
+      }),
     }
+  );
+
+  return NextResponse.json({
+    success: true,
+    message: "Vamos entrar em contato em breve, obrigado!",
+  });
+}
+
+// 🔴 Qualquer outro erro real de banco
+if (dbErr) {
+  console.error("❌ SUPABASE ERROR:", dbErr);
+  return NextResponse.json(
+    { success: false, error: "Erro banco." },
+    { status: 500 }
+  );
+}
 
     // =========================
     // 2️⃣ WHATSAPP (EVOLUTION)
