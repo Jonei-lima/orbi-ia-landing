@@ -230,7 +230,7 @@ export default function Home() {
   <div className="mx-auto max-w-6xl px-6 py-6">
 
     {/* 🔽 FRASE ADICIONADA */}
-    <div className="text-sm text-gray-200 uppercase tracking-widest">
+    <div className="text-sm text-gray-500 uppercase tracking-widest">
       Desenvolvedor do
     </div>
 
