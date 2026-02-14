@@ -226,38 +226,46 @@ export default function Home() {
       </section>
 
       {/* BLOCO 2 - Framework */}
-      <section className="bg-[#22c55e]">
-        <div className="mx-auto max-w-6xl px-6 py-6">
-          <h2 className="text-5xl font-semibold">Desenvolvedor do Framework P³-IA</h2>
+<section className="bg-[#22c55e]">
+  <div className="mx-auto max-w-6xl px-6 py-6">
 
-          <div className="mt-10 grid gap-10 md:grid-cols-3">
-            <div>
-              <div className="text-3xl font-semibold">P1 — Previsão</div>
-              <div className="mt-2 text-neutral-600 text-white">
-                Antecipação e redução de incerteza operacional.
-              </div>
-            </div>
+    {/* 🔽 FRASE ADICIONADA */}
+    <div className="text-sm text-gray-200 uppercase tracking-widest">
+      Desenvolvedor do
+    </div>
 
-            <div>
-              <div className="text-3xl font-semibold">P2 — Processos</div>
-              <div className="mt-2 text-neutral-600 text-white">
-                Estruturação de fluxos antes da execução.
-              </div>
-            </div>
+    <h2 className="text-5xl font-semibold mt-2">
+      Framework P³-IA
+    </h2>
 
-            <div>
-              <div className="text-3xl font-semibold">P3 — Performance</div>
-              <div className="mt-2 text-neutral-600 text-white">
-                Métricas orientadas à margem e previsibilidade.
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-3 text-1xl text-neutral-1000 text-black">
-            Aplicação sob contrato e confidencialidade.
-          </div>
+    <div className="mt-10 grid gap-10 md:grid-cols-3">
+      <div>
+        <div className="text-3xl font-semibold">P1 — Previsão</div>
+        <div className="mt-2 text-white">
+          Antecipação e redução de incerteza operacional.
         </div>
-      </section>
+      </div>
+
+      <div>
+        <div className="text-3xl font-semibold">P2 — Processos</div>
+        <div className="mt-2 text-white">
+          Estruturação de fluxos antes da execução.
+        </div>
+      </div>
+
+      <div>
+        <div className="text-3xl font-semibold">P3 — Performance</div>
+        <div className="mt-2 text-white">
+          Métricas orientadas à margem e previsibilidade.
+        </div>
+      </div>
+    </div>
+
+    <div className="mt-6 text-black">
+      Aplicação sob contrato e confidencialidade.
+    </div>
+  </div>
+</section>
 
       {/* BLOCO 3 */}
       <section className="bg-white">
