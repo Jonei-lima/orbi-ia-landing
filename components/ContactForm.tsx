@@ -57,43 +57,60 @@ export default function ContactForm() {
 
   if (status === "success") {
     return (
-      <div style={{ padding: "40px", textAlign: "center" }}>
+      <div style={{ padding: "40px", textAlign: "left" }}>
         <h3>Recebemos sua mensagem.</h3>
         <p>Em breve entraremos em contato.</p>
       </div>
     );
   }
 
+  const inputStyle = {
+    width: "100%",
+    padding: "12px",
+    border: "1px solid #333",
+    outline: "none",
+    fontSize: "14px",
+  };
+
   return (
-    <>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "grid",
-          gap: "16px",
-          maxWidth: "700px",
-          margin: "0 auto",
-        }}
-      >
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        display: "grid",
+        gap: "18px",
+        maxWidth: "700px",
+        margin: "0",
+        textAlign: "left",
+      }}
+    >
+      <div>
+        <label>Nome</label>
         <input
           name="nome"
-          placeholder="Nome"
           onChange={handleChange}
           required
+          style={inputStyle}
         />
+      </div>
 
+      <div>
+        <label>Empresa</label>
         <input
           name="empresa"
-          placeholder="Empresa"
           onChange={handleChange}
           required
+          style={inputStyle}
         />
+      </div>
 
+      <div>
+        <label>Cargo</label>
         <select
           name="cargo"
           value={formData.cargo}
           onChange={handleChange}
           required
+          style={inputStyle}
         >
           <option value="">Selecione o cargo</option>
           <option>Sócio proprietário</option>
@@ -105,138 +122,88 @@ export default function ContactForm() {
           <option>Analista de TI</option>
           <option>Colaborador</option>
         </select>
+      </div>
 
+      <div>
+        <label>Desafio</label>
         <textarea
           name="desafio"
-          placeholder="Desafio"
           onChange={handleChange}
           required
+          rows={4}
+          style={inputStyle}
         />
+      </div>
 
+      <div>
+        <label>Email</label>
         <input
           name="email"
-          placeholder="Email"
           type="email"
           onChange={handleChange}
           required
+          style={inputStyle}
         />
+      </div>
 
+      <div>
+        <label>Telefone</label>
         <input
           name="telefone"
-          placeholder="Telefone"
           onChange={handleChange}
           required
+          style={inputStyle}
         />
+      </div>
 
-        <div style={{ display: "flex", gap: "20px" }}>
-          <label>
-            <input
-              type="radio"
-              name="canal_preferido"
-              value="Email"
-              checked={formData.canal_preferido === "Email"}
-              onChange={handleChange}
-            />
-            Email
-          </label>
+      <div style={{ display: "flex", gap: "20px" }}>
+        <label>
+          <input
+            type="radio"
+            name="canal_preferido"
+            value="Email"
+            checked={formData.canal_preferido === "Email"}
+            onChange={handleChange}
+          />
+          Email
+        </label>
 
-          <label>
-            <input
-              type="radio"
-              name="canal_preferido"
-              value="WhatsApp"
-              checked={formData.canal_preferido === "WhatsApp"}
-              onChange={handleChange}
-            />
-            WhatsApp
-          </label>
+        <label>
+          <input
+            type="radio"
+            name="canal_preferido"
+            value="WhatsApp"
+            checked={formData.canal_preferido === "WhatsApp"}
+            onChange={handleChange}
+          />
+          WhatsApp
+        </label>
 
-          <label>
-            <input
-              type="radio"
-              name="canal_preferido"
-              value="Ligacao"
-              checked={formData.canal_preferido === "Ligacao"}
-              onChange={handleChange}
-            />
-            Ligação
-          </label>
-        </div>
+        <label>
+          <input
+            type="radio"
+            name="canal_preferido"
+            value="Ligacao"
+            checked={formData.canal_preferido === "Ligacao"}
+            onChange={handleChange}
+          />
+          Ligação
+        </label>
+      </div>
 
-        <button
-          type="submit"
-          style={{
-            padding: "12px",
-            backgroundColor: "#1f7a4c",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Enviar
-        </button>
-      </form>
-
-      {/* 🔽 SEÇÃO ADICIONADA */}
-      <section
+      <button
+        type="submit"
         style={{
-          marginTop: "80px",
-          maxWidth: "800px",
-          marginLeft: "auto",
-          marginRight: "auto",
-          textAlign: "left",
+          padding: "14px",
+          backgroundColor: "#1f7a4c",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+          fontSize: "15px",
         }}
       >
-        <div style={{ marginBottom: "6px" }}>
-          <span
-            style={{
-              fontSize: "13px",
-              color: "#777",
-              letterSpacing: "1px",
-              textTransform: "uppercase",
-            }}
-          >
-            Desenvolvedor do
-          </span>
-        </div>
-
-        <h2 style={{ marginBottom: "24px" }}>
-          Framework P³-IA
-        </h2>
-
-        <div style={{ display: "grid", gap: "18px" }}>
-          <div>
-            <strong>P1 — Previsão</strong>
-            <p style={{ margin: "6px 0 0 0" }}>
-              Antecipação e redução de incerteza operacional.
-            </p>
-          </div>
-
-          <div>
-            <strong>P2 — Processos</strong>
-            <p style={{ margin: "6px 0 0 0" }}>
-              Estruturação de fluxos antes da execução.
-            </p>
-          </div>
-
-          <div>
-            <strong>P3 — Performance</strong>
-            <p style={{ margin: "6px 0 0 0" }}>
-              Métricas orientadas à margem e previsibilidade.
-            </p>
-          </div>
-        </div>
-
-        <p
-          style={{
-            marginTop: "28px",
-            fontSize: "14px",
-            color: "#555",
-          }}
-        >
-          Aplicação sob contrato e confidencialidade.
-        </p>
-      </section>
-    </>
+        Enviar
+      </button>
+    </form>
   );
 }
