@@ -43,7 +43,10 @@ export async function POST(req: Request) {
       !numeroFinal ||
       !canal_preferido
     ) {
-      return NextResponse.json({ success: true });
+      return NextResponse.json(
+        { success: false, error: "Campos obrigatórios ausentes." },
+        { status: 400 }
+      );
     }
 
     const evolutionUrl = process.env.EVOLUTION_URL!;
@@ -79,7 +82,11 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `🔁 Lead reenviado\n\nNome: ${nome}\nEmpresa: ${empresa}\nTelefone: ${numeroFinal}`,
+          text: `🔁 Lead reenviado
+
+Nome: ${nome}
+Empresa: ${empresa}
+Telefone: ${numeroFinal}`,
         }),
       });
 
@@ -92,7 +99,10 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           number: numeroFinal,
-          text: `Obrigado! Logo entraremos em contato. ORBI IA`,
+          text: `Recebemos sua mensagem.
+Em breve entraremos em contato.
+Obrigado.
+ORBI IA`,
         }),
       });
 
@@ -105,7 +115,10 @@ export async function POST(req: Request) {
 
     if (dbErr) {
       console.error("SUPABASE ERROR:", dbErr);
-      return NextResponse.json({ success: true });
+      return NextResponse.json(
+        { success: false, error: "Erro banco." },
+        { status: 500 }
+      );
     }
 
     // =========================
@@ -121,7 +134,13 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         number: "5566981320667",
-        text: `🚀 Novo Lead\n\nNome: ${nome}\nEmpresa: ${empresa}\nEmail: ${email}\nTelefone: ${numeroFinal}\nCanal: ${canal_preferido}`,
+        text: `🚀 Novo Lead
+
+Nome: ${nome}
+Empresa: ${empresa}
+Email: ${email}
+Telefone: ${numeroFinal}
+Canal: ${canal_preferido}`,
       }),
     });
 
@@ -134,7 +153,10 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         number: numeroFinal,
-        text: `Obrigado! Logo entraremos em contato. ORBI IA`,
+        text: `Recebemos sua mensagem.
+Em breve entraremos em contato.
+Obrigado.
+ORBI IA`,
       }),
     });
 
@@ -166,6 +188,9 @@ export async function POST(req: Request) {
 
   } catch (err: any) {
     console.error("ERRO GERAL:", err?.message || err);
-    return NextResponse.json({ success: true });
+    return NextResponse.json(
+      { success: false },
+      { status: 500 }
+    );
   }
 }
