@@ -16,7 +16,7 @@ export default function ContactForm() {
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setFormData({
       ...formData,
@@ -86,12 +86,23 @@ export default function ContactForm() {
         required
       />
 
-      <input
+      {/* 🔽 CARGO ALTERADO AQUI */}
+      <select
         name="cargo"
-        placeholder="Cargo"
+        value={formData.cargo}
         onChange={handleChange}
         required
-      />
+      >
+        <option value="">Selecione o cargo</option>
+        <option>Sócio proprietário</option>
+        <option>Founder</option>
+        <option>CEO</option>
+        <option>Diretor</option>
+        <option>Gerente</option>
+        <option>Gestor</option>
+        <option>Analista de TI</option>
+        <option>Colaborador</option>
+      </select>
 
       <textarea
         name="desafio"
