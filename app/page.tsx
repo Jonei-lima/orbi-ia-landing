@@ -228,7 +228,7 @@ export default function Home() {
       {/* BLOCO 2 - Framework */}
       <section className="bg-[#22c55e]">
         <div className="mx-auto max-w-6xl px-6 py-6">
-          <h2 className="text-5xl font-semibold">Framework P³-IA</h2>
+          <h2 className="text-5xl font-semibold">Desenvolvedor do Framework P³-IA</h2>
 
           <div className="mt-10 grid gap-10 md:grid-cols-3">
             <div>
@@ -354,8 +354,8 @@ export default function Home() {
 
       {/* RODAPÉ FINAL (azul, estreito) */}
       <footer className="bg-[#0b1220] py-6 text-center text-sm text-white/80">
-        ORBI IA — Agentes Inteligentes com Arquitetura de Estados. Transformando processos com tecnologia e criatividade.
-        © 2026 ORBI IA — Todos os direitos reservados.
+        © 2026 ORBI IA — Agentes Inteligentes com Arquitetura de Estados. Transformando processos com tecnologia e criatividade.
+         — Todos os direitos reservados.
       </footer>
 
       {/* WhatsApp flutuante */}
