@@ -21,6 +21,11 @@ export default function ClinicasPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+  console.log('ANON_KEY existe?', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  console.log('Form data:', formData);
+  
+  setIsSubmitting(true);
     setIsSubmitting(true);
     
     try {
