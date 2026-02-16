@@ -93,7 +93,7 @@ export default function ClinicasPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="inline-block px-4 py-1 bg-[#7BCB8E]/10 text-[#3D4449] rounded-full text-sm font-medium mb-6 border border-[#7BCB8E]/20">
-                Especialmente para Clínicas Médicas
+                Especialmente para sua Clínica Médica
               </div>
               
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
