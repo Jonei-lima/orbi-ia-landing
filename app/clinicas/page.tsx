@@ -21,11 +21,6 @@ export default function ClinicasPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-  console.log('ANON_KEY existe?', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-  console.log('Form data:', formData);
-  
-  setIsSubmitting(true);
     setIsSubmitting(true);
     
     try {
@@ -45,9 +40,6 @@ export default function ClinicasPage() {
 
       if (response.ok) {
         setSubmitStatus('success');
-        setTimeout(() => {
-          window.location.href = 'https://wa.me/5566981320667?text=Acabei%20de%20preencher%20o%20diagn%C3%B3stico.%20Quando%20podemos%20conversar%3F';
-        }, 2000);
       } else {
         setSubmitStatus('error');
       }
@@ -98,7 +90,7 @@ export default function ClinicasPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="inline-block px-4 py-1 bg-[#7BCB8E]/10 text-[#3D4449] rounded-full text-sm font-medium mb-6 border border-[#7BCB8E]/20">
-                Especialmente para sua Clínica Médica
+                Especialmente para Clínicas Médicas
               </div>
               
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
@@ -650,23 +642,22 @@ export default function ClinicasPage() {
         </div>
       </section>
 
-     {/* Footer */}
-<footer className="bg-[#3D4449] text-white py-12">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="grid md:grid-cols-3 gap-8 mb-8">
-      {/* Container Centralizado */}
-      <div className="flex flex-col items-center text-center">
-        <Image 
-          src="/logo-orbi-white.png" 
-          alt="ORBI IA" 
-          width={150} 
-          height={35}
-          className="h-20 w-auto" 
-        />
-        <p className="text-[10px] tracking-widest text-white/90 mt-2">
-          Inteligência de Operações Autônomas
-        </p>
-      </div>
+      {/* Footer */}
+      <footer className="bg-[#3D4449] text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
+            <div>
+              <Image 
+                src="/logo-orbi-white-cor.png" 
+                alt="ORBI IA" 
+                width={150} 
+                height={35}
+                className="h-8 w-auto mb-4"
+              />
+              <p className="text-sm text-white">
+                Inteligência de Operações Autônomas
+              </p>
+            </div>
             
             <div>
               <h3 className="text-white font-semibold mb-4">Contato</h3>
