@@ -492,50 +492,39 @@
 </a>
 
 <script>
-  // ── Supabase init ──
-  const { createClient } = supabase;
-  const sb = createClient(
-    'https://zmicmgkvemiyiztdvscq.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptaWNtZ2t2ZW1peWl6dGR2c2NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NDM5OTcsImV4cCI6MjA4ODExOTk5N30.bSGMNZsnTrHI_wzKd3272h7fuPpBwLfJZTzE3PJv82A'
-  );
-
-  window.handleSubmit = async function() {
-    const nome     = document.getElementById('nome').value.trim();
-    const cargo    = document.getElementById('cargo').value;
-    const estado   = document.getElementById('estado').value;
-    const whatsapp = document.getElementById('whatsapp').value.trim();
-    const partido  = document.getElementById('partido').value.trim();
-
-    if (!nome || !cargo || !estado || !whatsapp) {
-      alert('Por favor, preencha: nome, cargo, estado e WhatsApp.');
-      return;
-    }
-
-    const btn = document.getElementById('btn-submit');
-    btn.disabled = true;
-    btn.textContent = 'Enviando...';
-
-    const { error } = await sb.from('political_leads').insert([
-      { nome, cargo, estado, whatsapp, partido: partido || null }
-    ]);
-
-    if (error) {
-      console.error(error);
-      btn.disabled = false;
-      btn.textContent = 'Solicitar análise gratuita →';
-      alert('Erro ao enviar. Tente novamente ou chame direto no WhatsApp.');
-      return;
-    }
-
-    document.getElementById('form-container').style.display = 'none';
-    document.getElementById('success-msg').classList.add('show');
-
-    const msg = encodeURIComponent(
-      `Olá Jonei! Vim pelo site ORBI Político e quero solicitar minha análise gratuita.\n\n` +
-      `Nome: ${nome}\nCargo: ${cargo}\nEstado: ${estado}\nPartido: ${partido || 'Não informado'}\nWhatsApp: ${whatsapp}`
-    );
-    setTimeout(() => window.open(`https://wa.me/5566981320667?text=${msg}`, '_blank'), 1000);
+const { createClient } = supabase;
+const sb = createClient(
+  'https://zmicmgkvemiyiztdvscq.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptaWNtZ2t2ZW1peWl6dGR2c2NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NDM5OTcsImV4cCI6MjA4ODExOTk5N30.bSGMNZsnTrHI_wzKd3272h7fuPpBwLfJZTzE3PJv82A'
+);
+window.handleSubmit = async function() {
+  var nome = document.getElementById('nome').value.trim();
+  var cargo = document.getElementById('cargo').value;
+  var estado = document.getElementById('estado').value;
+  var whatsapp = document.getElementById('whatsapp').value.trim();
+  var partido = document.getElementById('partido').value.trim();
+  if (!nome || !cargo || !estado || !whatsapp) {
+    alert('Por favor, preencha: nome, cargo, estado e WhatsApp.');
+    return;
   }
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  var result = await sb.from('political_leads').insert([
+    { nome: nome, cargo: cargo, estado: estado, whatsapp: whatsapp, partido: partido || null }
+  ]);
+  if (result.error) {
+    console.error(result.error);
+    btn.disabled = false;
+    btn.textContent = 'Solicitar analise gratuita';
+    alert('Erro ao enviar. Tente novamente ou chame direto no WhatsApp.');
+    return;
+  }
+  document.getElementById('form-container').style.display = 'none';
+  document.getElementById('success-msg').classList.add('show');
+  var msg = encodeURIComponent('Ola Jonei! Vim pelo site ORBI Politico.\n\nNome: ' + nome + '\nCargo: ' + cargo + '\nEstado: ' + estado + '\nPartido: ' + (partido || 'Nao informado') + '\nWhatsApp: ' + whatsapp);
+  setTimeout(function() { window.open('https://wa.me/5566981320667?text=' + msg, '_blank'); }, 1000);
+};
 </script>
 
 </body>
