@@ -1,16 +1,20 @@
+import type { Metadata } from "next";
 import Script from "next/script";
+
+export const metadata: Metadata = {
+  title: "ORBI IA",
+  description: "Inteligência de Operações Autônomas",
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body className="antialiased bg-white text-neutral-900">
-
+      <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-17997912287"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
         />
-
-        <Script id="google-ads" strategy="beforeInteractive">
+        <Script id="google-ads" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -18,9 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', 'AW-17997912287');
           `}
         </Script>
-
+      </head>
+      <body className="antialiased bg-white text-neutral-900">
         {children}
-
       </body>
     </html>
   );
