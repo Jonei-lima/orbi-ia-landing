@@ -1,38 +1,26 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import Script from "next/script";
 
-export const metadata: Metadata = {
-  title: "ORBI IA | Inteligência de Operações Autônomas",
-  description:
-    "Camada estratégica de organização operacional. Conectamos sistemas, estruturamos informações e apoiamos decisões com mais previsibilidade.",
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <head>
+      <body className="antialiased bg-white text-neutral-900">
 
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17997912287"></script>
-
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'AW-17997912287');
-            `,
-          }}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17997912287"
+          strategy="beforeInteractive"
         />
 
-      </head>
+        <Script id="google-ads" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17997912287');
+          `}
+        </Script>
 
-      <body className="antialiased bg-white text-neutral-900">
         {children}
+
       </body>
     </html>
   );
