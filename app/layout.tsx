@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "ORBI IA",
@@ -10,18 +9,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <head>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=AW-17997912287"
-          strategy="afterInteractive"
-        />
-        <Script id="google-ads" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'AW-17997912287');
-          `}
-        </Script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17997912287" />
+        <script dangerouslySetInnerHTML={{__html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-17997912287');
+        `}} />
       </head>
       <body className="antialiased bg-white text-neutral-900">
         {children}
