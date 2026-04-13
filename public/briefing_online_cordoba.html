@@ -353,11 +353,11 @@ select option { background: var(--card); }
   <div class="group">
     <label>Formas de pagamento que quer aceitar</label>
     <div class="checks-grid">
-      <label class="check-item" onclick="toggleCheck(this)">
+      <label class="check-item" onclick="toggleCheck(this,event)">
         <input type="checkbox" name="pagamento[]" value="pix">
         <span class="cb"></span> PIX
       </label>
-      <label class="check-item" onclick="toggleCheck(this)">
+      <label class="check-item" onclick="toggleCheck(this,event)">
         <input type="checkbox" name="pagamento[]" value="boleto">
         <span class="cb"></span> Boleto
       </label>
@@ -414,12 +414,12 @@ select option { background: var(--card); }
   <div class="group">
     <label>Marcas que você trabalha</label>
     <div class="checks-grid">
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="marcas[]" value="Moura"><span class="cb"></span> Moura</label>
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="marcas[]" value="Heliar"><span class="cb"></span> Heliar</label>
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="marcas[]" value="Pioneiro"><span class="cb"></span> Pioneiro</label>
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="marcas[]" value="Bosch"><span class="cb"></span> Bosch</label>
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="marcas[]" value="Cral"><span class="cb"></span> Cral</label>
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="marcas[]" value="Freedom"><span class="cb"></span> Freedom</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="marcas[]" value="Moura"><span class="cb"></span> Moura</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="marcas[]" value="Heliar"><span class="cb"></span> Heliar</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="marcas[]" value="Pioneiro"><span class="cb"></span> Pioneiro</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="marcas[]" value="Bosch"><span class="cb"></span> Bosch</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="marcas[]" value="Cral"><span class="cb"></span> Cral</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="marcas[]" value="Freedom"><span class="cb"></span> Freedom</label>
     </div>
   </div>
   <div class="group">
@@ -465,15 +465,15 @@ select option { background: var(--card); }
   <div class="group">
     <label>Tem planilha de compatibilidade pronta?</label>
     <div class="check-group">
-      <label class="check-item radio" onclick="toggleRadio(this,'tem_planilha')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'tem_planilha')\">
         <input type="radio" name="tem_planilha" value="sim_wp">
         <span class="cb"></span> Sim — vou enviar pelo WhatsApp
       </label>
-      <label class="check-item radio" onclick="toggleRadio(this,'tem_planilha')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'tem_planilha')\">
         <input type="radio" name="tem_planilha" value="sim_drive">
         <span class="cb"></span> Sim — vou enviar por link
       </label>
-      <label class="check-item radio" onclick="toggleRadio(this,'tem_planilha')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'tem_planilha')\">
         <input type="radio" name="tem_planilha" value="nao">
         <span class="cb"></span> Não — vou preencher aqui
       </label>
@@ -528,15 +528,15 @@ select option { background: var(--card); }
   <div class="group">
     <label>Política de frete</label>
     <div class="check-group">
-      <label class="check-item radio" onclick="toggleRadio(this,'frete')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'frete')\">
         <input type="radio" name="frete" value="gratis_sempre">
         <span class="cb"></span> Frete grátis sempre
       </label>
-      <label class="check-item radio" onclick="toggleRadio(this,'frete')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'frete')\">
         <input type="radio" name="frete" value="gratis_acima">
         <span class="cb"></span> Grátis acima de um valor mínimo
       </label>
-      <label class="check-item radio" onclick="toggleRadio(this,'frete')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'frete')\">
         <input type="radio" name="frete" value="cobra_fora">
         <span class="cb"></span> Cobra frete fora de determinada área
       </label>
@@ -561,21 +561,21 @@ select option { background: var(--card); }
   <div class="group">
     <label>Dias de funcionamento</label>
     <div class="checks-grid">
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="dias[]" value="seg_sex"><span class="cb"></span> Seg a Sex</label>
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="dias[]" value="sabado"><span class="cb"></span> Sábado</label>
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="dias[]" value="domingo"><span class="cb"></span> Domingo</label>
-      <label class="check-item" onclick="toggleCheck(this)"><input type="checkbox" name="dias[]" value="feriados"><span class="cb"></span> Feriados</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="dias[]" value="seg_sex"><span class="cb"></span> Seg a Sex</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="dias[]" value="sabado"><span class="cb"></span> Sábado</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="dias[]" value="domingo"><span class="cb"></span> Domingo</label>
+      <label class="check-item" onclick="toggleCheck(this,event)"><input type="checkbox" name="dias[]" value="feriados"><span class="cb"></span> Feriados</label>
     </div>
   </div>
 
   <div class="group">
     <label>Aceita pedido fora do horário para entregar depois?</label>
     <div class="check-group">
-      <label class="check-item radio" onclick="toggleRadio(this,'pedido_fora')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'pedido_fora')\">
         <input type="radio" name="pedido_fora" value="sim">
         <span class="cb"></span> Sim — registra e entrega quando abrir
       </label>
-      <label class="check-item radio" onclick="toggleRadio(this,'pedido_fora')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'pedido_fora')\">
         <input type="radio" name="pedido_fora" value="nao">
         <span class="cb"></span> Não — informa que está fechado
       </label>
@@ -605,11 +605,11 @@ select option { background: var(--card); }
   <div class="group">
     <label>Tom de voz</label>
     <div class="check-group">
-      <label class="check-item radio" onclick="toggleRadio(this,'tom')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'tom')\">
         <input type="radio" name="tom" value="descontraido">
         <span class="cb"></span> Descontraído e amigável — "Oi! Tô aqui pra te ajudar 😊"
       </label>
-      <label class="check-item radio" onclick="toggleRadio(this,'tom')">
+      <label class="check-item radio" onclick=\"toggleRadio(this,event,'tom')\">
         <input type="radio" name="tom" value="formal">
         <span class="cb"></span> Formal e profissional — "Olá! Como posso ajudá-lo?"
       </label>
@@ -686,12 +686,14 @@ function goTo(n) {
 function next() { if(current < total-1) goTo(current+1); }
 function prev() { if(current > 0) goTo(current-1); }
 
-function toggleCheck(el) {
+function toggleCheck(el, e) {
+  if(e) e.preventDefault();
   el.classList.toggle('checked');
   const cb = el.querySelector('input[type=checkbox]');
   if(cb) cb.checked = el.classList.contains('checked');
 }
-function toggleRadio(el, name) {
+function toggleRadio(el, e, name) {
+  if(e) e.preventDefault();
   document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
     r.closest('.check-item').classList.remove('checked');
   });
