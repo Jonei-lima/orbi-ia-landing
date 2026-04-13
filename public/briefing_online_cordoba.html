@@ -134,10 +134,10 @@ main {
 .section-header h2 {
   font-family: var(--fh);
   font-size: 26px; font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 8px; color: #ffffff;
 }
 .section-header p {
-  font-size: 13px; color: var(--lgray); line-height: 1.65;
+  font-size: 14px; color: #a8bccf; line-height: 1.7;
 }
 
 /* ── NOTICE ── */
@@ -145,8 +145,8 @@ main {
   background: #0d2015; border: 1px solid #1a3a20;
   border-left: 3px solid var(--green);
   border-radius: 4px; padding: 14px 16px;
-  font-size: 12.5px; color: var(--lgray);
-  line-height: 1.65; margin-bottom: 24px;
+  font-size: 13px; color: #c5d8c8;
+  line-height: 1.7; margin-bottom: 24px;
 }
 .notice strong { color: var(--green); }
 .notice.blue { background: #0d1428; border-color: #1a2d5a; border-left-color: var(--blue); }
@@ -159,28 +159,29 @@ main {
   color: var(--white); margin-bottom: 4px;
 }
 .group .hint {
-  font-size: 11px; color: var(--gray); margin-bottom: 6px;
+  font-size: 11.5px; color: #8fa0b0; margin-bottom: 6px;
   font-style: italic;
 }
 .group .req { color: var(--green); margin-left: 2px; }
 
 input[type=text], input[type=tel], input[type=email],
 input[type=number], textarea, select {
-  width: 100%; background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 4px; color: var(--white);
-  font-family: var(--fb); font-size: 13px;
+  width: 100%; background: #ffffff;
+  border: 1.5px solid #3a4a5a;
+  border-radius: 4px; color: #111111;
+  font-family: var(--fb); font-size: 14px;
   padding: 11px 14px;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
   -webkit-appearance: none;
 }
 input:focus, textarea:focus, select:focus {
   border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(77,184,106,0.15);
 }
 textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 select { cursor: pointer; }
-select option { background: var(--card); }
+select option { background: #ffffff; color: #111; }
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media(max-width:480px){ .grid-2 { grid-template-columns: 1fr; } }
@@ -189,10 +190,10 @@ select option { background: var(--card); }
 .check-group { display: flex; flex-direction: column; gap: 10px; }
 .check-item {
   display: flex; align-items: center; gap: 12px;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 4px; padding: 10px 14px;
-  cursor: pointer; transition: border-color 0.2s;
-  font-size: 13px; user-select: none;
+  background: #161f29; border: 1.5px solid #2a3d52;
+  border-radius: 4px; padding: 11px 14px;
+  cursor: pointer; transition: border-color 0.2s, background 0.2s;
+  font-size: 13.5px; user-select: none; color: #d8e4f0;
 }
 .check-item:hover { border-color: var(--green); }
 .check-item input[type=checkbox],
@@ -204,8 +205,9 @@ select option { background: var(--card); }
   transition: all 0.2s; font-size: 11px;
 }
 .check-item.radio .cb { border-radius: 50%; }
-.check-item.checked { border-color: var(--green); }
+.check-item.checked { border-color: var(--green); background: #0d2015; }
 .check-item.checked .cb { background: var(--green); border-color: var(--green); color: #000; }
+.check-item.checked { color: #ffffff; }
 .checks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 @media(max-width:400px){ .checks-grid { grid-template-columns: 1fr; } }
 
@@ -273,6 +275,10 @@ select option { background: var(--card); }
 #success .big-icon { font-size: 64px; margin-bottom: 20px; }
 #success h2 { font-family: var(--fh); font-size: 28px; margin-bottom: 12px; }
 #success p { color: var(--lgray); font-size: 14px; line-height: 1.7; max-width: 400px; margin: 0 auto; }
+input::placeholder, textarea::placeholder {
+  color: #8a9aaa;
+  font-style: italic;
+}
 </style>
 </head>
 <body>
@@ -571,11 +577,11 @@ select option { background: var(--card); }
   <div class="group">
     <label>Aceita pedido fora do horário para entregar depois?</label>
     <div class="check-group">
-      <label class="check-item radio" onclick=\"toggleRadio(this,event,'pedido_fora')\">
+      <label class="check-item radio" onclick="toggleRadio(this,event,'pedido_fora')">
         <input type="radio" name="pedido_fora" value="sim">
         <span class="cb"></span> Sim — registra e entrega quando abrir
       </label>
-      <label class="check-item radio" onclick=\"toggleRadio(this,event,'pedido_fora')\">
+      <label class="check-item radio" onclick="toggleRadio(this,event,'pedido_fora')">
         <input type="radio" name="pedido_fora" value="nao">
         <span class="cb"></span> Não — informa que está fechado
       </label>
