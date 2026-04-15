@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORBI IA — Seu Funcionário de IA Trabalhando 24h</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800;900&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #4CAF78;
+  --green2: #4DB86A;
+  --blue: #5B76B8;
+  --blue2: #5a73c5;
+  --dark: #0E1218;
+  --dark2: #161B27;
+  --dark3: #1E252E;
+  --card: #1a2130;
+  --border: rgba(76,175,120,0.15);
+  --text: #e8edf5;
+  --muted: #8a97aa;
+  --font-head: 'Raleway', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--dark);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── CANVAS BG ── */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(20px);
+  background: rgba(14,18,24,0.7);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo-img { height: 36px; width: auto; }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--green); }
+
+.nav-cta {
+  background: var(--green);
+  color: #000 !important;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: 500 !important;
+  font-size: 0.9rem;
+  transition: background 0.2s, transform 0.2s !important;
+}
+.nav-cta:hover { background: var(--green2) !important; transform: translateY(-1px); }
+
+/* ── SECTIONS ── */
+section { position: relative; z-index: 1; }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 48px 80px;
+  text-align: center;
+}
+
+.hero-inner { max-width: 900px; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(76,175,120,0.1);
+  border: 1px solid rgba(76,175,120,0.3);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  color: var(--green);
+  margin-bottom: 32px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.badge-dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+.hero-title {
+  font-family: var(--font-head);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.hero-title .accent { color: var(--green); }
+.hero-title .accent2 { color: var(--blue2); }
+
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--muted);
+  max-width: 620px;
+  margin: 0 auto 48px;
+  font-weight: 300;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #000;
+  border: none;
+  padding: 16px 36px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-primary:hover { background: var(--green2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(76,175,120,0.3); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 16px 36px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+  margin-top: 80px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border);
+  animation: fadeUp 0.6s 0.4s ease both;
+  flex-wrap: wrap;
+}
+
+.stat { text-align: center; }
+.stat-num {
+  font-family: var(--font-head);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--green);
+  display: block;
+}
+.stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── LOGOS ── */
+#logos {
+  padding: 48px 48px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(22,27,39,0.5);
+}
+
+.logos-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.logos-track {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.logo-item {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--muted);
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  letter-spacing: -0.02em;
+}
+.logo-item:hover { opacity: 1; }
+
+/* ── WHAT IS ── */
+#what {
+  padding: 120px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--font-head);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.what-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  margin-top: 64px;
+}
+
+.what-text p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.what-points { list-style: none; margin-top: 32px; }
+.what-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.what-points li:last-child { border-bottom: none; }
+
+.point-icon {
+  width: 24px; height: 24px;
+  background: rgba(76,175,120,0.15);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  color: var(--green);
+  margin-top: 1px;
+}
+
+.agent-visual {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.agent-visual::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(76,175,120,0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.agent-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.agent-avatar {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.agent-name { font-family: var(--font-head); font-weight: 700; font-size: 0.95rem; }
+.agent-status { font-size: 0.75rem; color: var(--green); }
+
+.chat-bubble {
+  background: var(--dark3);
+  border-radius: 12px 12px 12px 4px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  color: var(--text);
+  max-width: 85%;
+  animation: bubbleIn 0.4s ease;
+  line-height: 1.5;
+}
+
+.chat-bubble.user {
+  background: rgba(76,175,120,0.15);
+  border-radius: 12px 12px 4px 12px;
+  margin-left: auto;
+  text-align: right;
+  color: var(--green);
+}
+
+.chat-meta {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+@keyframes bubbleIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--dark3);
+  border-radius: 12px 12px 12px 4px;
+  width: fit-content;
+}
+.typing-dot {
+  width: 6px; height: 6px;
+  background: var(--muted);
+  border-radius: 50%;
+  animation: typing 1.2s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ── SECTORS ── */
+#sectors {
+  padding: 120px 48px;
+  background: linear-gradient(180deg, transparent, rgba(22,27,39,0.8), transparent);
+}
+
+.sectors-inner { max-width: 1200px; margin: 0 auto; }
+.sectors-header { text-align: center; margin-bottom: 64px; }
+.sectors-header p { color: var(--muted); font-size: 1.05rem; max-width: 520px; margin: 16px auto 0; }
+
+.sectors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.sector-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all 0.3s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.sector-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--green), var(--blue));
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.sector-card:hover {
+  border-color: rgba(76,175,120,0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+}
+.sector-card:hover::after { transform: scaleX(1); }
+
+.sector-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.sector-name {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.sector-agent {
+  font-size: 0.75rem;
+  color: var(--green);
+  background: rgba(76,175,120,0.1);
+  border-radius: 4px;
+  padding: 3px 8px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.sector-desc {
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── ROI CALCULATOR ── */
+#roi {
+  padding: 120px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.roi-inner {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.roi-inner::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(91,118,184,0.1), transparent 70%);
+}
+
+.roi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  margin-top: 48px;
+}
+
+.roi-inputs { display: flex; flex-direction: column; gap: 28px; }
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+  letter-spacing: 0.05em;
+}
+
+.slider-wrap { position: relative; }
+
+input[type=range] {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--dark3);
+  outline: none;
+  border: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--green);
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(76,175,120,0.2);
+  transition: box-shadow 0.2s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 8px rgba(76,175,120,0.2);
+}
+
+.slider-value {
+  font-family: var(--font-head);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.roi-results { display: flex; flex-direction: column; gap: 20px; }
+
+.result-card {
+  background: var(--dark3);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border);
+}
+
+.result-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.result-value {
+  font-family: var(--font-head);
+  font-size: 2rem;
+  font-weight: 800;
+  transition: all 0.4s;
+}
+
+.result-value.green { color: var(--green); }
+.result-value.blue { color: var(--blue2); }
+.result-value.white { color: var(--text); }
+
+.result-sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+/* ── CHART ── */
+.chart-section {
+  padding: 80px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.chart-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  margin-top: 48px;
+}
+
+#roi-chart {
+  width: 100%;
+  height: 300px;
+}
+
+/* ── COMPARISON ── */
+#compare {
+  padding: 120px 48px;
+  background: rgba(22,27,39,0.5);
+}
+
+.compare-inner { max-width: 1000px; margin: 0 auto; text-align: center; }
+.compare-inner p { color: var(--muted); font-size: 1.05rem; max-width: 520px; margin: 16px auto 48px; }
+
+.compare-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.compare-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.compare-row:hover { background: rgba(76,175,120,0.03); }
+.compare-row:last-child { border-bottom: none; }
+
+.compare-row.header {
+  background: var(--dark3);
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.compare-feature { font-size: 0.95rem; color: var(--text); }
+.compare-human { color: #e05c5c; font-size: 0.9rem; text-align: center; }
+.compare-ai { color: var(--green); font-size: 0.9rem; font-weight: 500; text-align: center; }
+
+/* ── HOW IT WORKS ── */
+#how {
+  padding: 120px 48px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.steps {
+  margin-top: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.step:last-child { border-bottom: none; }
+
+.step-num {
+  font-family: var(--font-head);
+  font-size: 3rem;
+  font-weight: 800;
+  color: rgba(76,175,120,0.2);
+  line-height: 1;
+  padding-top: 4px;
+}
+
+.step-content {}
+.step-name {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.step-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+
+.step-tag {
+  display: inline-block;
+  background: rgba(91,118,184,0.15);
+  color: var(--blue2);
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  margin-top: 12px;
+}
+
+/* ── CTA ── */
+#cta {
+  padding: 120px 48px;
+  text-align: center;
+}
+
+.cta-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(76,175,120,0.1), rgba(91,118,184,0.1));
+  border: 1px solid rgba(76,175,120,0.3);
+  border-radius: 24px;
+  padding: 80px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-inner::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(76,175,120,0.2), transparent 70%);
+}
+
+.cta-title {
+  font-family: var(--font-head);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+
+.cta-sub {
+  color: var(--muted);
+  font-size: 1.05rem;
+  margin-bottom: 40px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 16px;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 48px 48px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  #hero { padding: 100px 24px 60px; }
+  .hero-stats { gap: 32px; }
+  .what-grid { grid-template-columns: 1fr; gap: 40px; }
+  .roi-grid { grid-template-columns: 1fr; gap: 40px; }
+  .roi-inner { padding: 32px; }
+  .compare-row { grid-template-columns: 1.5fr 1fr 1fr; padding: 14px 16px; }
+  #sectors, #roi, #compare, #how, #cta, #what { padding: 80px 24px; }
+  .step { grid-template-columns: 50px 1fr; gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" style="display:flex;align-items:center;">
+    <img src="logo-orbi-white.png" alt="ORBI IA" style="height:38px;width:auto;">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#what">O que é</a></li>
+    <li><a href="#sectors">Setores</a></li>
+    <li><a href="#roi">Calculadora</a></li>
+    <li><a href="#compare">Comparativo</a></li>
+    <li><a href="#cta" class="nav-cta">Quero uma demo</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Tecnologia disponível agora para sua empresa
+    </div>
+    <h1 class="hero-title">
+      Seu funcionário de IA<br>
+      trabalha <span class="accent">24 horas</span>,<br>
+      <span class="accent2">7 dias por semana</span>
+    </h1>
+    <p class="hero-sub">
+      Agentes de inteligência artificial que atendem clientes, qualificam leads, respondem dúvidas e fecham vendas — sem salário, sem férias, sem 13º.
+    </p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">Quero uma demonstração</a>
+      <a href="#roi" class="btn-ghost">Ver calculadora de ROI</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num" id="counter-1">0</span>
+        <div class="stat-label">atendimentos por dia</div>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="counter-2">0%</span>
+        <div class="stat-label">disponibilidade</div>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="counter-3">0s</span>
+        <div class="stat-label">tempo de resposta</div>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="counter-4">0x</span>
+        <div class="stat-label">mais barato que um funcionário</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<section id="logos" class="reveal">
+  <p class="logos-label">Empresas ao redor do mundo já usam agentes de IA</p>
+  <div class="logos-track">
+    <span class="logo-item">Nubank</span>
+    <span class="logo-item">Magazine Luiza</span>
+    <span class="logo-item">iFood</span>
+    <span class="logo-item">Itaú</span>
+    <span class="logo-item">Mercado Livre</span>
+    <span class="logo-item">Bradesco</span>
+    <span class="logo-item">Ambev</span>
+    <span class="logo-item">Totvs</span>
+  </div>
+</section>
+
+<!-- O QUE É -->
+<section id="what">
+  <div class="what-grid">
+    <div class="what-text reveal">
+      <p class="section-label">O que é um Agente de IA</p>
+      <h2 class="section-title">Não é um chatbot.<br>É um funcionário inteligente.</h2>
+      <p>Diferente de um chatbot simples que só responde perguntas pré-programadas, um Agente de IA <strong>pensa, interpreta e age</strong> com base no contexto da conversa.</p>
+      <p>Ele aprende sobre o seu negócio, fala no tom da sua empresa e executa tarefas complexas como agendar consultas, qualificar clientes ou enviar propostas — tudo de forma autônoma.</p>
+      <ul class="what-points">
+        <li><span class="point-icon">✓</span> Entende linguagem natural — o cliente escreve como quiser</li>
+        <li><span class="point-icon">✓</span> Integra com seu sistema: agenda, CRM, ERP, planilhas</li>
+        <li><span class="point-icon">✓</span> Funciona no WhatsApp, Instagram, site ou interno</li>
+        <li><span class="point-icon">✓</span> Escala sem custo adicional — 1 ou 10.000 atendimentos</li>
+        <li><span class="point-icon">✓</span> Aprende e melhora com o tempo</li>
+      </ul>
+    </div>
+    <div class="agent-visual reveal">
+      <div class="agent-header">
+        <div class="agent-avatar"><img src="favicon.png" alt="ORBI IA" style="width:28px;height:28px;border-radius:50%;object-fit:cover;"></div>
+        <div>
+          <div class="agent-name">Agente ORBI IA</div>
+          <div class="agent-status">● Online agora</div>
+        </div>
+      </div>
+      <div id="chat-demo"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SETORES -->
+<section id="sectors">
+  <div class="sectors-inner">
+    <div class="sectors-header reveal">
+      <p class="section-label">Um agente para cada setor</p>
+      <h2 class="section-title">Não apenas atendimento.<br>Um funcionário para cada área.</h2>
+      <p>Cada setor da sua empresa pode ter seu próprio agente especializado, trabalhando em paralelo, sem conflito e sem custo adicional.</p>
+    </div>
+    <div class="sectors-grid">
+      <div class="sector-card reveal">
+        <span class="sector-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+        <div class="sector-name">Clínicas &amp; Saúde</div>
+        <span class="sector-agent">Agente Recepcionista</span>
+        <p class="sector-desc">Agenda consultas, responde dúvidas sobre procedimentos, confirma presença e envia lembretes automáticos. Nunca perde um lead.</p>
+      </div>
+      <div class="sector-card reveal">
+        <span class="sector-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
+        <div class="sector-name">Distribuidoras &amp; Atacado</div>
+        <span class="sector-agent">Agente de Pedidos</span>
+        <p class="sector-desc">Recebe pedidos via WhatsApp, consulta estoque em tempo real, emite orçamentos e aciona o time comercial para fechamento.</p>
+      </div>
+      <div class="sector-card reveal">
+        <span class="sector-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+        <div class="sector-name">Imobiliárias</div>
+        <span class="sector-agent">Agente Corretor</span>
+        <p class="sector-desc">Filtra imóveis por perfil do cliente, agenda visitas, envia fotos e responde sobre financiamento — 24h por dia.</p>
+      </div>
+      <div class="sector-card reveal">
+        <span class="sector-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span>
+        <div class="sector-name">Food Service</div>
+        <span class="sector-agent">Agente de Pedidos</span>
+        <p class="sector-desc">Recebe pedidos, sugere complementos, confirma endereço e repassa para a cozinha — com voz ou texto.</p>
+      </div>
+      <div class="sector-card reveal">
+        <span class="sector-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+        <div class="sector-name">Escritórios Jurídicos</div>
+        <span class="sector-agent">Agente Jurídico</span>
+        <p class="sector-desc">Triagem de casos, coleta de documentos, consulta de processos e agendamento com o advogado responsável.</p>
+      </div>
+      <div class="sector-card reveal">
+        <span class="sector-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <div class="sector-name">Marketing &amp; Político</div>
+        <span class="sector-agent">Agente de Comunicação</span>
+        <p class="sector-desc">Responde mensagens em massa, qualifica eleitores ou leads, coleta dados e gera relatórios automáticos.</p>
+      </div>
+      <div class="sector-card reveal">
+        <span class="sector-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+        <div class="sector-name">Financeiro</div>
+        <span class="sector-agent">Agente Financeiro</span>
+        <p class="sector-desc">Responde sobre boletos, cobranças, status de pagamento e emite segunda via — sem movimentar a equipe.</p>
+      </div>
+      <div class="sector-card reveal">
+        <span class="sector-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+        <div class="sector-name">Logística &amp; Estoque</div>
+        <span class="sector-agent">Agente Operacional</span>
+        <p class="sector-desc">Rastreia pedidos, atualiza status de entrega, avisa sobre atrasos e coleta confirmação de recebimento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI CALCULATOR -->
+<section id="roi">
+  <div class="roi-inner reveal">
+    <p class="section-label">Calculadora de ROI</p>
+    <h2 class="section-title">Quanto você está deixando<br>na mesa agora?</h2>
+
+    <div class="roi-grid">
+      <div class="roi-inputs">
+        <div class="input-group">
+          <label>Leads recebidos por mês</label>
+          <span class="slider-value" id="val-leads">150</span>
+          <input type="range" min="10" max="1000" value="150" id="slider-leads">
+        </div>
+        <div class="input-group">
+          <label>Ticket médio (R$)</label>
+          <span class="slider-value" id="val-ticket">R$ 1.200</span>
+          <input type="range" min="200" max="50000" step="100" value="1200" id="slider-ticket">
+        </div>
+        <div class="input-group">
+          <label>Taxa de conversão atual (%)</label>
+          <span class="slider-value" id="val-conv">15%</span>
+          <input type="range" min="1" max="60" value="15" id="slider-conv">
+        </div>
+        <div class="input-group">
+          <label>Custo mensal com atendimento (R$)</label>
+          <span class="slider-value" id="val-cost">R$ 3.500</span>
+          <input type="range" min="500" max="30000" step="100" value="3500" id="slider-cost">
+        </div>
+      </div>
+      <div class="roi-results">
+        <div class="result-card">
+          <div class="result-label">Receita atual (sem IA)</div>
+          <div class="result-value white" id="res-current">R$ 27.000</div>
+          <div class="result-sub">Com taxa de conversão atual</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">Receita com Agente de IA</div>
+          <div class="result-value green" id="res-ai">R$ 95.040</div>
+          <div class="result-sub">Estimando 35% de conversão com IA</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">Ganho adicional por mês</div>
+          <div class="result-value blue" id="res-gain">+ R$ 68.040</div>
+          <div class="result-sub" id="res-roi">ROI estimado: 4.389%</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">Economia em atendimento</div>
+          <div class="result-value green" id="res-save">R$ 2.510</div>
+          <div class="result-sub">Substituindo custo humano por IA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHART -->
+<div class="chart-section reveal">
+  <p class="section-label" style="text-align:center">Projeção de crescimento</p>
+  <h2 class="section-title" style="text-align:center">Receita acumulada em 12 meses</h2>
+  <div class="chart-wrap">
+    <canvas id="roi-chart"></canvas>
+  </div>
+</div>
+
+<!-- COMPARE -->
+<section id="compare">
+  <div class="compare-inner">
+    <p class="section-label">Comparativo</p>
+    <h2 class="section-title">Funcionário Humano<br>vs Agente de IA</h2>
+    <p>Não é sobre substituir pessoas. É sobre escalar o que seu time humano não consegue fazer sozinho.</p>
+
+    <div class="compare-table reveal">
+      <div class="compare-row header">
+        <span>Característica</span>
+        <span style="text-align:center">Humano</span>
+        <span style="text-align:center">Agente IA</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-feature">Horário de trabalho</span>
+        <span class="compare-human">8h/dia</span>
+        <span class="compare-ai">24h/dia</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-feature">Tempo de resposta</span>
+        <span class="compare-human">Minutos ou horas</span>
+        <span class="compare-ai">Segundos</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-feature">Atendimentos simultâneos</span>
+        <span class="compare-human">1</span>
+        <span class="compare-ai">Ilimitados</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-feature">Custo mensal médio</span>
+        <span class="compare-human">R$ 3.000 – 6.000</span>
+        <span class="compare-ai">A partir de R$ 990</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-feature">13º salário</span>
+        <span class="compare-human">✗ Obrigatório</span>
+        <span class="compare-ai">✓ Não existe</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-feature">Férias</span>
+        <span class="compare-human">✗ 30 dias/ano</span>
+        <span class="compare-ai">✓ Nunca</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-feature">Erros por cansaço</span>
+        <span class="compare-human">✗ Frequentes</span>
+        <span class="compare-ai">✓ Zero</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-feature">Escala com crescimento</span>
+        <span class="compare-human">✗ Precisa contratar</span>
+        <span class="compare-ai">✓ Automático</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-feature">Disponível nos finais de semana</span>
+        <span class="compare-human">✗ Custo extra</span>
+        <span class="compare-ai">✓ Incluso</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <p class="section-label reveal">Como funciona</p>
+  <h2 class="section-title reveal">Da contratação ao<br>primeiro atendimento em dias.</h2>
+
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <div class="step-name">Mapeamos seu negócio</div>
+        <p class="step-desc">Entendemos como sua empresa funciona, quem são seus clientes, quais são as perguntas mais frequentes e quais tarefas consomem mais tempo da sua equipe.</p>
+        <span class="step-tag">Reunião de alinhamento</span>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <div class="step-name">Construímos o agente personalizado</div>
+        <p class="step-desc">Criamos um agente treinado com as informações do seu negócio, com a personalidade e o tom de comunicação da sua marca — não um bot genérico.</p>
+        <span class="step-tag">Desenvolvimento e treinamento</span>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <div class="step-name">Integramos com seus sistemas</div>
+        <p class="step-desc">Conectamos o agente ao seu WhatsApp, agenda, CRM ou sistema interno. Você não precisa mudar nada — o agente se adapta ao que você já usa.</p>
+        <span class="step-tag">Integração técnica</span>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <div class="step-name">Testamos e ajustamos</div>
+        <p class="step-desc">Rodamos testes reais antes de ativar para os seus clientes. Ajustamos respostas, fluxos e comportamentos até estar perfeito.</p>
+        <span class="step-tag">Validação e refinamento</span>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">05</div>
+      <div class="step-content">
+        <div class="step-name">Ativamos e acompanhamos</div>
+        <p class="step-desc">O agente entra em operação e você recebe relatórios de desempenho. Nossa equipe monitora e aprimora continuamente.</p>
+        <span class="step-tag">Operação contínua</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner reveal">
+    <img src="logo-orbi-white.png" alt="ORBI IA" style="height:48px;width:auto;margin-bottom:28px;opacity:0.9;">
+    <h2 class="cta-title">Pronto para ter seu<br>funcionário de IA?</h2>
+    <p class="cta-sub">Agende uma demonstração gratuita de 20 minutos e veja o agente funcionando ao vivo para o seu segmento.</p>
+    <a href="https://wa.me/556681320667?text=Ol%C3%A1%2C%20quero%20ver%20uma%20demonstra%C3%A7%C3%A3o%20do%20Agente%20ORBI%20IA" class="btn-primary" target="_blank">Agendar demonstração gratuita</a>
+    <p class="cta-note">Sem compromisso • Demonstração ao vivo • Resultado em dias</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:1200px;margin:0 auto;width:100%;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:32px;padding-bottom:40px;border-bottom:1px solid var(--border);">
+      <div>
+        <img src="logo-orbi-white.png" alt="ORBI IA" style="height:44px;width:auto;margin-bottom:12px;display:block;">
+        <p style="font-size:0.85rem;color:var(--muted);max-width:320px;line-height:1.6;">Automação inteligente com Agentes de IA para empresas que querem crescer sem aumentar custos.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;text-align:right;">
+        <div style="font-family:var(--font-head);font-weight:700;font-size:0.95rem;color:var(--text);">Jonei Lima</div>
+        <div style="font-size:0.8rem;color:var(--muted);">CEO &amp; Fundador · Pós-Graduado em Inteligência Artificial — Estácio</div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-top:4px;">(66) 9.8132-0667 &nbsp;|&nbsp; (83) 9.8914-8253</div>
+        <div style="font-size:0.82rem;color:var(--muted);">contato@agenteorbiia.com &nbsp;|&nbsp; agenteorbiia.com</div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;">Mato Grosso · Goiás · Paraná · São Paulo</div>
+      </div>
+    </div>
+    <div style="padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <p style="font-size:0.75rem;color:var(--muted);">© 2026 ORBI IA — Todos os direitos reservados. Proteção de propriedade intelectual conforme <strong style="color:var(--muted);">Lei 9.610/1998</strong> (Direitos Autorais) e <strong style="color:var(--muted);">Lei 9.279/1996</strong> (Propriedade Industrial). É proibida a reprodução total ou parcial sem autorização expressa.</p>
+      <p style="font-size:0.75rem;color:var(--muted);">Em conformidade com a <strong style="color:var(--muted);">LGPD — Lei 13.709/2020</strong>. Seus dados são tratados com segurança e transparência.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── CANVAS PARTICLES ──
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+for (let i = 0; i < 60; i++) {
+  particles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.5 + 0.3,
+    dx: (Math.random() - 0.5) * 0.3,
+    dy: (Math.random() - 0.5) * 0.3,
+    o: Math.random() * 0.5 + 0.1
+  });
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(76,175,120,${p.o})`;
+    ctx.fill();
+    p.x += p.dx;
+    p.y += p.dy;
+    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+  });
+
+  // draw lines between close particles
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(76,175,120,${0.08 * (1 - dist/120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── COUNTERS ──
+function animateCounter(el, target, suffix, duration) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = Math.floor(start) + suffix;
+    if (start >= target) clearInterval(timer);
+  }, 16);
+}
+
+setTimeout(() => {
+  animateCounter(document.getElementById('counter-1'), 500, '+', 1500);
+  animateCounter(document.getElementById('counter-2'), 100, '%', 1200);
+  animateCounter(document.getElementById('counter-3'), 3, 's', 1000);
+  animateCounter(document.getElementById('counter-4'), 5, 'x', 1200);
+}, 400);
+
+// ── CHAT DEMO ──
+const chatEl = document.getElementById('chat-demo');
+const messages = [
+  { text: 'Boa tarde! Quero agendar uma avaliação estética 😊', type: 'user', delay: 0 },
+  { text: 'Olá! Tudo bem? 😊 Fico feliz em ajudar com o agendamento. Pode me informar seu nome e qual procedimento te interessa?', type: 'bot', delay: 800 },
+  { text: 'Me chamo Ana, tenho interesse em harmonização facial', type: 'user', delay: 2000 },
+  { text: 'Perfeito, Ana! Temos horários disponíveis ainda essa semana. Prefere pela manhã ou tarde?', type: 'bot', delay: 3000 },
+];
+
+let chatIndex = 0;
+function addMessage() {
+  if (chatIndex >= messages.length) {
+    setTimeout(() => { chatEl.innerHTML = ''; chatIndex = 0; addMessage(); }, 3000);
+    return;
+  }
+  const msg = messages[chatIndex];
+  setTimeout(() => {
+    const div = document.createElement('div');
+    div.className = `chat-bubble ${msg.type === 'user' ? 'user' : ''}`;
+    div.textContent = msg.text;
+    chatEl.appendChild(div);
+    chatEl.scrollTop = chatEl.scrollHeight;
+    chatIndex++;
+    addMessage();
+  }, msg.delay);
+}
+addMessage();
+
+// ── ROI CALCULATOR ──
+const sliders = {
+  leads: document.getElementById('slider-leads'),
+  ticket: document.getElementById('slider-ticket'),
+  conv: document.getElementById('slider-conv'),
+  cost: document.getElementById('slider-cost'),
+};
+
+const vals = {
+  leads: document.getElementById('val-leads'),
+  ticket: document.getElementById('val-ticket'),
+  conv: document.getElementById('val-conv'),
+  cost: document.getElementById('val-cost'),
+};
+
+const results = {
+  current: document.getElementById('res-current'),
+  ai: document.getElementById('res-ai'),
+  gain: document.getElementById('res-gain'),
+  roi: document.getElementById('res-roi'),
+  save: document.getElementById('res-save'),
+};
+
+function fmt(n) {
+  return 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+}
+
+function calcROI() {
+  const leads = +sliders.leads.value;
+  const ticket = +sliders.ticket.value;
+  const conv = +sliders.conv.value / 100;
+  const cost = +sliders.cost.value;
+  const aiCost = 990;
+  const aiConv = Math.min(conv * 2.5, 0.7);
+
+  const current = leads * conv * ticket;
+  const withAI = leads * aiConv * ticket;
+  const gain = withAI - current;
+  const save = cost - aiCost;
+  const roiPct = cost > 0 ? ((gain + save) / aiCost * 100).toFixed(0) : 0;
+
+  vals.leads.textContent = leads;
+  vals.ticket.textContent = 'R$ ' + (+ticket).toLocaleString('pt-BR');
+  vals.conv.textContent = sliders.conv.value + '%';
+  vals.cost.textContent = fmt(cost);
+
+  results.current.textContent = fmt(current);
+  results.ai.textContent = fmt(withAI);
+  results.gain.textContent = '+ ' + fmt(gain);
+  results.roi.textContent = 'ROI estimado: ' + roiPct + '%';
+  results.save.textContent = save > 0 ? fmt(save) : 'R$ 0';
+
+  updateChart(leads, ticket, conv, aiConv, aiCost);
+}
+
+Object.values(sliders).forEach(s => s.addEventListener('input', calcROI));
+
+// ── CHART ──
+const chartCanvas = document.getElementById('roi-chart');
+const chartCtx = chartCanvas.getContext('2d');
+let chartData = { human: [], ai: [] };
+
+function updateChart(leads, ticket, conv, aiConv, aiCost) {
+  chartData.human = [];
+  chartData.ai = [];
+  for (let m = 1; m <= 12; m++) {
+    chartData.human.push(leads * conv * ticket * m);
+    chartData.ai.push(leads * aiConv * ticket * m - aiCost * m);
+  }
+  drawChart();
+}
+
+function drawChart() {
+  const W = chartCanvas.width;
+  const H = chartCanvas.height;
+  chartCtx.clearRect(0, 0, W, H);
+
+  const all = [...chartData.human, ...chartData.ai];
+  const maxVal = Math.max(...all) * 1.1;
+  const minVal = 0;
+  const padL = 80, padR = 20, padT = 20, padB = 40;
+  const w = W - padL - padR;
+  const h = H - padT - padB;
+
+  // grid lines
+  chartCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+  chartCtx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + (h / 4) * i;
+    chartCtx.beginPath();
+    chartCtx.moveTo(padL, y);
+    chartCtx.lineTo(W - padR, y);
+    chartCtx.stroke();
+    const val = maxVal - (maxVal / 4) * i;
+    chartCtx.fillStyle = 'rgba(138,151,170,0.7)';
+    chartCtx.font = '11px DM Sans';
+    chartCtx.textAlign = 'right';
+    chartCtx.fillText('R$' + (val >= 1000 ? (val/1000).toFixed(0)+'k' : val.toFixed(0)), padL - 8, y + 4);
+  }
+
+  // month labels
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  chartCtx.fillStyle = 'rgba(138,151,170,0.7)';
+  chartCtx.font = '11px DM Sans';
+  chartCtx.textAlign = 'center';
+  months.forEach((m, i) => {
+    const x = padL + (w / 11) * i;
+    chartCtx.fillText(m, x, H - 8);
+  });
+
+  function drawLine(data, color, label) {
+    chartCtx.beginPath();
+    data.forEach((v, i) => {
+      const x = padL + (w / 11) * i;
+      const y = padT + h - ((v - minVal) / (maxVal - minVal)) * h;
+      i === 0 ? chartCtx.moveTo(x, y) : chartCtx.lineTo(x, y);
+    });
+    chartCtx.strokeStyle = color;
+    chartCtx.lineWidth = 2.5;
+    chartCtx.lineJoin = 'round';
+    chartCtx.stroke();
+
+    // fill area
+    const lastX = padL + w;
+    const lastY = padT + h - ((data[11] - minVal) / (maxVal - minVal)) * h;
+    chartCtx.lineTo(lastX, padT + h);
+    chartCtx.lineTo(padL, padT + h);
+    chartCtx.closePath();
+    chartCtx.fillStyle = color.replace(')', ',0.08)').replace('rgb', 'rgba');
+    chartCtx.fill();
+
+    // dots
+    data.forEach((v, i) => {
+      const x = padL + (w / 11) * i;
+      const y = padT + h - ((v - minVal) / (maxVal - minVal)) * h;
+      chartCtx.beginPath();
+      chartCtx.arc(x, y, 3, 0, Math.PI * 2);
+      chartCtx.fillStyle = color;
+      chartCtx.fill();
+    });
+  }
+
+  drawLine(chartData.human, '#e05c5c', 'Sem IA');
+  drawLine(chartData.ai, '#4CAF78', 'Com IA');
+
+  // legend
+  chartCtx.fillStyle = '#e05c5c';
+  chartCtx.fillRect(padL, padT - 2, 16, 3);
+  chartCtx.fillStyle = 'rgba(138,151,170,0.8)';
+  chartCtx.font = '12px DM Sans';
+  chartCtx.textAlign = 'left';
+  chartCtx.fillText('Sem IA', padL + 22, padT + 5);
+
+  chartCtx.fillStyle = '#4CAF78';
+  chartCtx.fillRect(padL + 90, padT - 2, 16, 3);
+  chartCtx.fillStyle = 'rgba(138,151,170,0.8)';
+  chartCtx.fillText('Com Agente IA', padL + 112, padT + 5);
+}
+
+function resizeChart() {
+  chartCanvas.width = chartCanvas.offsetWidth;
+  chartCanvas.height = 300;
+  calcROI();
+}
+
+window.addEventListener('resize', resizeChart);
+setTimeout(resizeChart, 100);
+
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+
+calcROI();
+</script>
+</body>
+</html>
