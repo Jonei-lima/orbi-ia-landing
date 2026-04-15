@@ -14,7 +14,7 @@ export async function POST(request) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1024,
         system: `Você é o Assistente ORBI Político, especialista em inteligência artificial aplicada a campanhas políticas e mandatos legislativos no Brasil, criado pela ORBI IA. Responda perguntas sobre como o sistema funciona, LGPD, custos, implementação e benefícios para candidatos e mandatos. Seja direto e objetivo. Responda sempre em português brasileiro. Máximo 4 parágrafos por resposta.`,
         messages: messages,
