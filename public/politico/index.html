@@ -940,6 +940,11 @@ footer {
 }
 .wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.5); }
 
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ── REVEAL ── */
 .reveal {
   opacity: 0;
@@ -979,7 +984,7 @@ footer {
     <li><a href="#how">Como funciona</a></li>
     <li><a href="#examples">Exemplos</a></li>
     <li><a href="#briefing">Briefing</a></li>
-    <li><a href="#ai-chat">Tire dúvidas</a></li>
+    <li><a href="#" onclick="toggleChat(); return false;">Tire dúvidas</a></li>
     <li><a href="#cta" class="nav-cta">Quero uma demo</a></li>
   </ul>
 </nav>
@@ -1283,49 +1288,6 @@ footer {
   </div>
 </section>
 
-<div class="divider"></div>
-
-<!-- AI CHAT -->
-<section id="ai-chat">
-  <div class="section-inner">
-    <div class="chat-intro reveal">
-      <p class="s-label">Tire suas dúvidas agora</p>
-      <h2 class="s-title">Pergunte ao assistente<br>ORBI Político</h2>
-      <p>Tem alguma dúvida sobre como funciona, sobre LGPD, custos ou implementação? Pergunte aqui — o assistente responde na hora.</p>
-    </div>
-    <div class="chat-container reveal">
-      <div class="chat-topbar">
-        <div class="chat-avatar">🏛</div>
-        <div>
-          <div class="chat-info-name">Assistente ORBI Político</div>
-          <div class="chat-info-status"><span class="chat-dot"></span> Online — responde em segundos</div>
-        </div>
-      </div>
-      <div class="chat-disclaimer">
-        💡 Este assistente responde sobre o ORBI Político em tempo real usando Inteligência Artificial.
-      </div>
-      <div class="chat-messages" id="chat-msgs">
-        <div class="msg bot">
-          <div class="msg-bubble">Olá! Sou o assistente do ORBI Político. Pode me perguntar sobre como funciona o sistema, sobre privacidade dos dados dos eleitores, custos, implementação ou qualquer outra dúvida. Estou aqui para ajudar! 🏛</div>
-          <div class="msg-time">agora</div>
-        </div>
-      </div>
-      <div class="quick-questions" id="quick-qs">
-        <button class="quick-q" onclick="sendQuick(this)">Como funciona o agente no WhatsApp?</button>
-        <button class="quick-q" onclick="sendQuick(this)">É permitido por lei usar IA na política?</button>
-        <button class="quick-q" onclick="sendQuick(this)">Quanto custa e quanto tempo pra implementar?</button>
-        <button class="quick-q" onclick="sendQuick(this)">O eleitor sabe que é IA?</button>
-        <button class="quick-q" onclick="sendQuick(this)">Como funciona o briefing automático?</button>
-      </div>
-      <div class="chat-footer">
-        <textarea id="chat-input" placeholder="Digite sua pergunta aqui..." rows="1"></textarea>
-        <button id="chat-send" onclick="sendMessage()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
 
 <div class="divider"></div>
 
@@ -1409,6 +1371,77 @@ footer {
   </div>
 </footer>
 
+<!-- FLOATING CHAT WIDGET -->
+<div id="chat-widget" style="
+  position: fixed;
+  bottom: 100px;
+  right: 28px;
+  width: 360px;
+  max-height: 520px;
+  background: var(--card);
+  border: 1px solid rgba(75,108,183,0.3);
+  border-radius: 20px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  z-index: 998;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+">
+  <div style="background:var(--dark3);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border2);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--gold),#3a5699);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;">🏛</div>
+      <div>
+        <div style="font-weight:600;font-size:0.88rem;">Assistente ORBI Político</div>
+        <div style="font-size:0.68rem;color:var(--green);display:flex;align-items:center;gap:4px;"><span style="width:5px;height:5px;background:var(--green);border-radius:50%;display:inline-block;"></span> Online agora</div>
+      </div>
+    </div>
+    <button onclick="toggleChat()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;padding:4px;line-height:1;">✕</button>
+  </div>
+  <div style="padding:8px 16px;background:rgba(75,108,183,0.05);border-bottom:1px solid var(--border2);font-size:0.72rem;color:var(--muted);text-align:center;">
+    💡 Assistente com IA — responde sobre o ORBI Político
+  </div>
+  <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;max-height:280px;scroll-behavior:smooth;">
+    <div class="msg bot">
+      <div class="msg-bubble">Olá! Sou o assistente do ORBI Político. Pergunte sobre como funciona, LGPD, implementação ou qualquer dúvida. Estou aqui! 🏛</div>
+      <div class="msg-time">agora</div>
+    </div>
+  </div>
+  <div id="quick-qs" style="padding:8px 12px;background:var(--dark3);border-top:1px solid var(--border2);display:flex;flex-wrap:wrap;gap:6px;">
+    <button class="quick-q" onclick="sendQuick(this)">Como funciona no WhatsApp?</button>
+    <button class="quick-q" onclick="sendQuick(this)">É legal usar IA na política?</button>
+    <button class="quick-q" onclick="sendQuick(this)">O eleitor sabe que é IA?</button>
+    <button class="quick-q" onclick="sendQuick(this)">Como é o briefing automático?</button>
+    <button class="quick-q" onclick="sendQuick(this)">O que é o Diagnóstico Municipal?</button>
+  </div>
+  <div style="padding:10px 12px;background:var(--dark3);border-top:1px solid var(--border2);display:flex;gap:8px;align-items:flex-end;">
+    <textarea id="chat-input" placeholder="Digite sua pergunta..." rows="1" style="flex:1;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--font-body);font-size:0.83rem;resize:none;outline:none;line-height:1.4;max-height:80px;transition:border-color 0.2s;"></textarea>
+    <button id="chat-send" onclick="sendMessage()" style="background:var(--gold);border:none;border-radius:8px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- CHAT TRIGGER BUTTON -->
+<button id="chat-trigger" onclick="toggleChat()" style="
+  position: fixed;
+  bottom: 28px;
+  right: 96px;
+  z-index: 999;
+  width: 60px; height: 60px;
+  background: var(--gold);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(75,108,183,0.5);
+  transition: all 0.2s;
+" title="Tire suas dúvidas com o assistente">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
 <!-- WA FLOAT -->
 <a class="wa-float" href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20o%20ORBI%20Pol%C3%ADtico" target="_blank" title="Fale conosco">
   <svg viewBox="0 0 32 32" fill="white" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
@@ -1417,6 +1450,19 @@ footer {
 </a>
 
 <script>
+// ── CHAT WIDGET TOGGLE ──
+function toggleChat() {
+  const widget = document.getElementById('chat-widget');
+  const trigger = document.getElementById('chat-trigger');
+  const isOpen = widget.style.display === 'flex';
+  widget.style.display = isOpen ? 'none' : 'flex';
+  trigger.style.background = isOpen ? 'var(--gold)' : 'var(--dark3)';
+  if (!isOpen) {
+    const msgs = document.getElementById('chat-msgs');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+}
+
 // ── CANVAS ──
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
