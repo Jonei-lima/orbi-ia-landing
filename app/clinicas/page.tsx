@@ -652,8 +652,8 @@ export default function ClinicasPage() {
               />
               <p className="text-sm text-white">
                 Inteligência de Operações Autônomas
-                </a>
               </p>
+              <p className="text-sm text-white opacity-50">
                 GO · MT · PR · SP · PB
               </p>
             </div>
