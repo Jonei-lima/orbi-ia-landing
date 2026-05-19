@@ -652,6 +652,7 @@ export default function ClinicasPage() {
               />
               <p className="text-sm text-white">
                 Inteligência de Operações Autônomas
+                GO · MT · PR · SP · PB
               </p>
             </div>
             
@@ -659,8 +660,11 @@ export default function ClinicasPage() {
               <h3 className="text-white font-semibold mb-4">Contato</h3>
               <p className="text-sm mb-2 text-white">
                 <a href="https://wa.me/5566981320667" className="hover:text-[#7BCB8E] transition-colors">
-                  WhatsApp: (66) 98132-0667 | (83) 9.8914-8253 | GO · MT · PR · SP · PB
+                  WhatsApp: (66) 98132-0667
                 </a>
+              </p>
+              <p className="text-sm mb-2 text-white">
+                Tel: (83) 9.8914-8253
               </p>
               <p className="text-sm text-white">
                 <a href="mailto:contato@agenteorbiia.com" className="hover:text-[#7BCB8E] transition-colors">
