@@ -84,7 +84,7 @@ export default function ClinicasPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="inline-block px-4 py-1 bg-[#7BCB8E]/10 text-[#3D4449] rounded-full text-sm font-medium mb-6 border border-[#7BCB8E]/20">
-                Especialmente para Clínicas Médicas
+                Para clínicas de estética, saúde e odontologia
               </div>
               
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
@@ -92,7 +92,7 @@ export default function ClinicasPage() {
               </h1>
               
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Agente de IA que agenda consultas, confirma presença e reduz faltas no WhatsApp da sua clínica — <strong>24 horas por dia</strong>, sem contratar secretária extra.
+                Que tal experimentar por 30 DIAS GRATUITO nosso Agente de IA que agenda consultas, confirma presença e reduz faltas no WhatsApp da sua clínica — <strong>24 horas por dia</strong>, entre em contrato agora.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
@@ -147,7 +147,7 @@ export default function ClinicasPage() {
                 <div className="space-y-4">
                   <div className="flex gap-3">
                     <div className="flex-1 bg-gray-100 rounded-lg p-3 text-sm text-gray-700">
-                      Olá! Gostaria de agendar uma consulta
+                      Olá! Preciso agendar um procedimento
                     </div>
                   </div>
                   
@@ -165,7 +165,7 @@ export default function ClinicasPage() {
                   
                   <div className="flex gap-3 justify-end">
                     <div className="flex-1 bg-[#5B7FB5] text-white rounded-lg p-3 text-sm">
-                      Perfeito! Confirmado para terça às 9h30 com Dr. Silva. Enviarei um lembrete 1 dia antes. ✓
+                      Perfeito! Confirmado para terça às 9h30. Enviarei um lembrete 1 dia antes. ✓
                     </div>
                   </div>
                 </div>
@@ -265,7 +265,7 @@ export default function ClinicasPage() {
                 No WhatsApp da clínica, qualquer hora do dia ou da noite. Final de semana, feriado, madrugada.
               </p>
               <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-700 border border-gray-200">
-                💬 "Olá, preciso marcar consulta com ortopedista"
+                💬 "Olá, preciso agendar um procedimento"
               </div>
             </div>
             
@@ -357,15 +357,15 @@ export default function ClinicasPage() {
                 ))}
               </div>
               <p className="text-gray-700 mb-4">
-                "Reduzimos 60% das faltas em consultas. O retorno financeiro pagou a implementação em menos de 2 meses."
+                "Reduzimos 60% das faltas nos procedimentos. O retorno financeiro pagou a implementação em menos de 2 meses."
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-[#5B7FB5]/10 rounded-full flex items-center justify-center text-[#5B7FB5] font-bold">
-                  DS
+                  CR
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">Dra. Silva</p>
-                  <p className="text-sm text-gray-600">Clínica Ortopédica - Cuiabá</p>
+                  <p className="font-semibold text-gray-900">Dra. Camila R.</p>
+                  <p className="text-sm text-gray-600">Clínica de Estética</p>
                 </div>
               </div>
             </div>
@@ -383,11 +383,11 @@ export default function ClinicasPage() {
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-[#5B7FB5]/10 rounded-full flex items-center justify-center text-[#5B7FB5] font-bold">
-                  CM
+                  RM
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">Dr. Mendes</p>
-                  <p className="text-sm text-gray-600">Clínica Cardiológica - Várzea Grande</p>
+                  <p className="font-semibold text-gray-900">Dr. Rafael M.</p>
+                  <p className="text-sm text-gray-600">Clínica Odontológica</p>
                 </div>
               </div>
             </div>
@@ -435,7 +435,7 @@ export default function ClinicasPage() {
                     value={formData.nome}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#5B7FB5] focus:border-transparent transition-all"
-                    placeholder="Dr. João Silva"
+                    placeholder="Ex: Ana Paula"
                   />
                 </div>
                 
@@ -450,7 +450,7 @@ export default function ClinicasPage() {
                     value={formData.empresa}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#5B7FB5] focus:border-transparent transition-all"
-                    placeholder="Clínica Saúde Total"
+                    placeholder="Ex: Clínica Bella Vita"
                   />
                 </div>
                 
@@ -466,7 +466,9 @@ export default function ClinicasPage() {
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#5B7FB5] focus:border-transparent transition-all"
                   >
                     <option value="">Selecione</option>
-                    <option value="Médico(a) proprietário(a)">Médico(a) proprietário(a)</option>
+                    <option value="Profissional de saúde proprietário(a)">Profissional de saúde proprietário(a)</option>
+                    <option value="Dentista proprietário(a)">Dentista proprietário(a)</option>
+                    <option value="Esteticista / Proprietário(a)">Esteticista / Proprietário(a)</option>
                     <option value="Diretor(a)">Diretor(a)</option>
                     <option value="Gerente">Gerente</option>
                     <option value="Administrador(a)">Administrador(a)</option>
@@ -485,7 +487,7 @@ export default function ClinicasPage() {
                     value={formData.telefone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#5B7FB5] focus:border-transparent transition-all"
-                    placeholder="(65) 9 9999-9999"
+                    placeholder="(00) 9 0000-0000"
                   />
                 </div>
                 
@@ -500,7 +502,7 @@ export default function ClinicasPage() {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#5B7FB5] focus:border-transparent transition-all"
-                    placeholder="contato@clinica.com.br"
+                    placeholder="contato@suaclinica.com.br"
                   />
                 </div>
                 
@@ -581,7 +583,7 @@ export default function ClinicasPage() {
                 Funciona com meu sistema de agenda atual?
               </summary>
               <p className="mt-3 text-gray-600">
-                Sim. Integramos com Google Agenda, iClinic, MV, Tasy e outros sistemas. Se você usa agenda em papel ou Excel, também funciona — criamos uma integração personalizada.
+                Sim. Integramos com Google Agenda, iClinic, Ninsaúde, Clinicorp e outros sistemas. Se você usa agenda em papel ou planilha, também funciona — criamos uma integração personalizada.
               </p>
             </details>
             
@@ -670,69 +672,20 @@ export default function ClinicasPage() {
             <div>
               <h3 className="text-white font-semibold mb-4">Redes Sociais</h3>
               <div className="flex gap-4">
-                {/* Threads */}
-                <a 
-                  href="https://www.threads.com/@agenciaorbi.ia" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10"
-                  title="Threads"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12.186 3.077c-1.503.075-3.011.335-4.304.903-1.293.567-2.515 1.513-3.297 2.853-.782 1.339-1.17 3.07-1.17 4.843 0 1.773.388 3.504 1.17 4.843.782 1.34 2.004 2.286 3.297 2.853 1.293.568 2.801.828 4.304.903 1.503.074 2.796.074 4.299 0 1.503-.075 3.011-.335 4.304-.903 1.293-.567 2.515-1.513 3.297-2.853.782-1.339 1.17-3.07 1.17-4.843 0-1.773-.388-3.504-1.17-4.843-.782-1.34-2.004-2.286-3.297-2.853-1.293-.568-2.801-.828-4.304-.903-1.503-.074-2.796-.074-4.299 0zm.814 13.846c-1.158 0-2.106-.22-2.843-.66-.738-.44-1.265-1.04-1.584-1.797-.318-.758-.477-1.614-.477-2.566 0-.953.159-1.809.477-2.567.319-.757.846-1.356 1.584-1.797.737-.44 1.685-.66 2.843-.66.958 0 1.777.142 2.457.427.68.284 1.234.675 1.663 1.172.43.497.723 1.067.88 1.71.156.642.234 1.316.234 2.021 0 .706-.078 1.38-.234 2.022-.157.643-.45 1.213-.88 1.71-.429.497-.983.888-1.663 1.172-.68.285-1.499.427-2.457.427z"/>
-                  </svg>
+                <a href="https://www.threads.com/@agenciaorbi.ia" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10" title="Threads">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.186 3.077c-1.503.075-3.011.335-4.304.903-1.293.567-2.515 1.513-3.297 2.853-.782 1.339-1.17 3.07-1.17 4.843 0 1.773.388 3.504 1.17 4.843.782 1.34 2.004 2.286 3.297 2.853 1.293.568 2.801.828 4.304.903 1.503.074 2.796.074 4.299 0 1.503-.075 3.011-.335 4.304-.903 1.293-.567 2.515-1.513 3.297-2.853.782-1.339 1.17-3.07 1.17-4.843 0-1.773-.388-3.504-1.17-4.843-.782-1.34-2.004-2.286-3.297-2.853-1.293-.568-2.801-.828-4.304-.903-1.503-.074-2.796-.074-4.299 0zm.814 13.846c-1.158 0-2.106-.22-2.843-.66-.738-.44-1.265-1.04-1.584-1.797-.318-.758-.477-1.614-.477-2.566 0-.953.159-1.809.477-2.567.319-.757.846-1.356 1.584-1.797.737-.44 1.685-.66 2.843-.66.958 0 1.777.142 2.457.427.68.284 1.234.675 1.663 1.172.43.497.723 1.067.88 1.71.156.642.234 1.316.234 2.021 0 .706-.078 1.38-.234 2.022-.157.643-.45 1.213-.88 1.71-.429.497-.983.888-1.663 1.172-.68.285-1.499.427-2.457.427z"/></svg>
                 </a>
-                
-                {/* LinkedIn */}
-                <a 
-                  href="https://www.linkedin.com/in/orbi-ia-869408186" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10"
-                  title="LinkedIn"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                  </svg>
+                <a href="https://www.linkedin.com/in/orbi-ia-869408186" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10" title="LinkedIn">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                 </a>
-                
-                {/* TikTok */}
-                <a 
-                  href="https://tiktok.com/@orbi.ia" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10"
-                  title="TikTok"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-                  </svg>
+                <a href="https://tiktok.com/@orbi.ia" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10" title="TikTok">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
                 </a>
-                
-                {/* Facebook */}
-                <a 
-                  href="https://www.facebook.com/share/1HhQ7G9WZC/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10"
-                  title="Facebook"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
+                <a href="https://www.facebook.com/share/1HhQ7G9WZC/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10" title="Facebook">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                 </a>
-                
-                {/* Instagram */}
-                <a 
-                  href="https://www.instagram.com/agenciaorbi.ia" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10"
-                  title="Instagram"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                  </svg>
+                <a href="https://www.instagram.com/agenciaorbi.ia" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#7BCB8E]/20 transition-all border border-white/10" title="Instagram">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
               </div>
             </div>
