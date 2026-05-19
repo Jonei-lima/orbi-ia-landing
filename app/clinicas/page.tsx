@@ -659,7 +659,7 @@ export default function ClinicasPage() {
               <h3 className="text-white font-semibold mb-4">Contato</h3>
               <p className="text-sm mb-2 text-white">
                 <a href="https://wa.me/5566981320667" className="hover:text-[#7BCB8E] transition-colors">
-                  WhatsApp: (66) 98132-0667
+                  WhatsApp: (66) 98132-0667 | (83) 9.8914-8253 | GO · MT · PR · SP · PB
                 </a>
               </p>
               <p className="text-sm text-white">
