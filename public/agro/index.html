@@ -151,6 +151,22 @@ section { position: relative; z-index: 1; }
 .s-title em { font-style: normal; color: var(--wheat); }
 .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
 
+/* ── DADOS REAIS ── */
+#dados { padding: 80px 0; }
+.dados-intro { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+.dados-intro p { color: var(--ink-soft); font-size: 1.02rem; margin-top: 12px; }
+.dados-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.data-stat {
+  background: var(--card); border: 1px solid var(--border2); border-radius: 14px;
+  padding: 24px 20px; text-align: center; transition: all 0.3s;
+}
+.data-stat:hover { border-color: rgba(79,122,52,0.25); transform: translateY(-2px); }
+.data-stat-n { font-family: var(--font-head); font-size: 2.1rem; font-weight: 700; color: var(--leaf-deep); line-height: 1; margin-bottom: 10px; }
+.data-stat-desc { font-size: 0.83rem; color: var(--ink); line-height: 1.55; margin-bottom: 10px; min-height: 62px; }
+.data-stat-source { font-size: 0.68rem; color: var(--ink-soft); }
+.data-stat-source a { color: var(--ink-soft); }
+.dados-note { text-align: center; font-size: 0.75rem; color: var(--ink-soft); margin-top: 24px; }
+
 /* ── HOW IT WORKS ── */
 #how { padding: 100px 0; }
 .how-intro { text-align: center; max-width: 640px; margin: 0 auto 64px; }
@@ -411,6 +427,42 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
       <div class="hero-stat"><span class="stat-n" id="c3">0%</span><span class="stat-l">do histórico registrado</span></div>
       <div class="hero-stat"><span class="stat-n">0</span><span class="stat-l">decisões sem o agrônomo</span></div>
     </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DADOS REAIS -->
+<section id="dados">
+  <div class="section-inner">
+    <div class="dados-intro reveal">
+      <p class="s-label" style="justify-content:center;">Dado real, não promessa</p>
+      <h2 class="s-title">A IA <em>já</em> está no campo — os números do setor</h2>
+      <p>Não é tendência distante. É o que já está acontecendo no agro brasileiro agora.</p>
+    </div>
+    <div class="dados-grid">
+      <div class="data-stat reveal">
+        <div class="data-stat-n">41,9%</div>
+        <div class="data-stat-desc">das fazendas e agroindústrias do Brasil já usam IA — mais que o dobro dos 16,9% de 2022</div>
+        <div class="data-stat-source">Fonte: <a href="https://opresenterural.com.br/ia-chega-a-42-do-agro-brasileiro-mas-esbarra-em-um-velho-problema/" target="_blank" rel="noopener">FGV, via O Presente Rural</a></div>
+      </div>
+      <div class="data-stat reveal">
+        <div class="data-stat-n">15–20%</div>
+        <div class="data-stat-desc">de ganho de produtividade em propriedades com agricultura de precisão apoiada por IA</div>
+        <div class="data-stat-source">Fonte: <a href="https://opresenterural.com.br/ia-chega-a-42-do-agro-brasileiro-mas-esbarra-em-um-velho-problema/" target="_blank" rel="noopener">Embrapa</a></div>
+      </div>
+      <div class="data-stat reveal">
+        <div class="data-stat-n">até 30%</div>
+        <div class="data-stat-desc">de redução no uso de fertilizantes com sistemas de IA em agricultura de precisão</div>
+        <div class="data-stat-source">Fonte: <a href="https://opresenterural.com.br/ia-chega-a-42-do-agro-brasileiro-mas-esbarra-em-um-velho-problema/" target="_blank" rel="noopener">Embrapa</a></div>
+      </div>
+      <div class="data-stat reveal">
+        <div class="data-stat-n">74%</div>
+        <div class="data-stat-desc">dos brasileiros já veem a IA como fator capaz de transformar a agricultura</div>
+        <div class="data-stat-source">Fonte: <a href="https://opresenterural.com.br/ia-chega-a-42-do-agro-brasileiro-mas-esbarra-em-um-velho-problema/" target="_blank" rel="noopener">Ipsos</a></div>
+      </div>
+    </div>
+    <p class="dados-note">Números do setor, citados com fonte. O que a ORBI Agro faz na sua fazenda, a gente mostra no chat — sem prometer o que não entrega.</p>
   </div>
 </section>
 
