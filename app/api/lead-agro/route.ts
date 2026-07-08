@@ -76,9 +76,11 @@ export async function POST(req: Request) {
 
     // =====================
     // 3️⃣ ENVIAR WHATSAPP (EVOLUTION) - notifica VOCÊ
+    // Instância: ORBI_Trafego (a antiga "orbi_ia_landing" não existe mais)
+    // ATENÇÃO: precisa estar CONECTADA no Evolution pra isso funcionar.
     // =====================
     const evolutionResponse = await fetch(
-      `${process.env.EVOLUTION_URL}/message/sendText/orbi_ia_landing`,
+      `${process.env.EVOLUTION_URL}/message/sendText/ORBI_Trafego`,
       {
         method: "POST",
         headers: {
