@@ -382,6 +382,15 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
   footer { padding: 36px 24px; }
 }
 </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17997912287"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-17997912287');
+</script>
+
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -973,11 +982,18 @@ async function maybeSaveLead(leadFields) {
   if (!leadFields.nome || !leadFields.telefone) return;
   leadSaved = true;
   try {
-    await fetch('/api/lead-agro', {
+    const res = await fetch('/api/lead-agro', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(leadFields),
     });
+    if (res.ok && typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-17997912287/YVgbCOe6380cEN-xiYZD',
+        'value': 1.0,
+        'currency': 'BRL'
+      });
+    }
   } catch (err) {
     console.error('Falha ao salvar lead do agro:', err);
     leadSaved = false;
