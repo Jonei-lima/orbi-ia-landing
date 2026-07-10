@@ -192,6 +192,8 @@ section { position: relative; z-index: 1; }
 @media (max-width: 900px) { .parallax-bg { background-attachment: scroll; } }
 .manifesto-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .manifesto-video { width: 100%; height: 100%; object-fit: cover; }
+.cta-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.cta-video { width: 100%; height: 100%; object-fit: cover; }
 .manifesto-scrim { position: absolute; inset: 0; z-index: 1; background: rgba(20,16,10,0.72); }
 .manifesto-inner {
   position: relative; z-index: 2; max-width: 780px; margin: 0 auto; padding: 0 56px; text-align: center; color: #F7F1E4;
@@ -438,7 +440,7 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
       <span class="eyebrow-text">Inteligência Artificial dentro do campo</span>
     </div>
     <h1 class="hero-title">
-  Quem tem resposta na hora <em>colhe na frente.</em>
+      Enquanto uns ainda voltam pra sede, a lavoura de vocês <em>já tem resposta.</em>
     </h1>
     <p class="hero-sub">
       O ORBI Agro conecta a IA ao histórico real da sua fazenda, ao clima da sua região e ao WhatsApp que o seu time já usa. Primeira leitura na hora, decisão sempre com o agrônomo.
@@ -766,7 +768,11 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
 
 <!-- CTA -->
 <section id="cta">
-  <div class="parallax-bg" style="background-image: url('/agro/img/algodao-poredosol.png');"></div>
+  <div class="cta-video-wrap">
+    <video class="cta-video" autoplay muted loop playsinline poster="/agro/img/algodao-poredosol.png">
+      <source src="/agro/video/cta-fazenda-espera.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="cta-scrim"></div>
   <div class="cta-inner reveal">
     <h2 class="cta-title">Pronto pra tirar sua fazenda da espera?</h2>
