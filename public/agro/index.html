@@ -84,11 +84,7 @@ nav {
   position: relative; z-index: 1; overflow: hidden;
 }
 .hero-photo-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.hero-photo {
-  width: 100%; height: 100%; object-fit: cover;
-  animation: kenburns 24s ease-in-out infinite alternate;
-}
-@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.08); } }
+.hero-photo { width: 100%; height: 100%; object-fit: cover; }
 .hero-scrim {
   position: absolute; inset: 0; z-index: 1;
   background: linear-gradient(0deg, rgba(20,16,10,0.86) 0%, rgba(20,16,10,0.55) 38%, rgba(20,16,10,0.08) 68%, transparent 100%);
@@ -194,6 +190,8 @@ section { position: relative; z-index: 1; }
   background-attachment: fixed; background-position: center; background-size: cover;
 }
 @media (max-width: 900px) { .parallax-bg { background-attachment: scroll; } }
+.manifesto-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.manifesto-video { width: 100%; height: 100%; object-fit: cover; }
 .manifesto-scrim { position: absolute; inset: 0; z-index: 1; background: rgba(20,16,10,0.72); }
 .manifesto-inner {
   position: relative; z-index: 2; max-width: 780px; margin: 0 auto; padding: 0 56px; text-align: center; color: #F7F1E4;
@@ -429,7 +427,9 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
 <!-- HERO -->
 <section id="hero">
   <div class="hero-photo-wrap">
-    <img class="hero-photo" src="/agro/img/hero-fazendeiro-poredosol.png" alt="Produtor rural observando a lavoura de milho ao entardecer">
+    <video class="hero-photo" autoplay muted loop playsinline poster="/agro/img/hero-fazendeiro-poredosol.png">
+      <source src="/agro/video/hero-produtor-soja-poredosol.mp4" type="video/mp4">
+    </video>
     <div class="hero-scrim"></div>
   </div>
   <div class="hero-inner">
@@ -551,7 +551,11 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
 
 <!-- MANIFESTO -->
 <section id="manifesto">
-  <div class="parallax-bg" style="background-image: url('/agro/img/colheita-soja.png');"></div>
+  <div class="manifesto-video-wrap">
+    <video class="manifesto-video" autoplay muted loop playsinline poster="/agro/img/colheita-soja.png">
+      <source src="/agro/video/produtor-caminhando-soja.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="manifesto-scrim"></div>
   <div class="manifesto-inner reveal">
     <div class="manifesto-mark">"</div>
@@ -1073,6 +1077,11 @@ inputEl.addEventListener('input', () => {
   inputEl.style.height = 'auto';
   inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
 });
+
+// ── RESPEITA "REDUZIR MOVIMENTO" ──
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('video[autoplay]').forEach(v => { v.pause(); v.removeAttribute('autoplay'); });
+}
 
 // ── SCROLL REVEAL ──
 const reveals = document.querySelectorAll('.reveal');
