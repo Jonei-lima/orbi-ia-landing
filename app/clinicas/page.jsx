@@ -80,6 +80,8 @@ export default function ClinicasPage() {
     if (snapshot === lastLeadSnapshotRef.current) return;
     lastLeadSnapshotRef.current = snapshot;
 
+    // Sempre salva/atualiza (protege contra perder o lead se a pessoa sumir no meio),
+    // mas o e-mail/WhatsApp real só dispara quando o servidor ver "encerrar":true.
     try {
       await fetch('/api/lead-clinicas', {
         method: 'POST',
