@@ -38,12 +38,12 @@ const SEGMENTOS = [
 export default function ClinicasPage() {
   const [chatOpen, setChatOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'bot', text: 'Olá! Sou o assistente da ORBI Plena. Me conta rapidinho: sua clínica é de qual área — estética, odontológica, médica ou fisioterapia?' },
+    { role: 'bot', text: 'Oi! Sou o assistente da ORBI Plena. Qual é sua área?' },
   ]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [leadSaved, setLeadSaved] = useState(false);
-  const leadIdRef = useRef(null);
+  const [segmentoEscolhido, setSegmentoEscolhido] = useState(false);
   const lastLeadSnapshotRef = useRef('');
   const chatHistoryRef = useRef([]);
   const msgsEndRef = useRef(null);
@@ -52,12 +52,15 @@ export default function ClinicasPage() {
     msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  function openChatWithSegment(segmentoNome) {
+  function escolherSegmento(segmentoNome) {
+    setSegmentoEscolhido(true);
     setChatOpen(true);
-    if (chatHistoryRef.current.length === 0) {
-      const abertura = `Oi! Tenho interesse na área de ${segmentoNome}.`;
-      handleSend(abertura);
-    }
+    const abertura = `Meu segmento é ${segmentoNome}.`;
+    handleSend(abertura);
+  }
+
+  function openChatWithSegment(segmentoNome) {
+    escolherSegmento(segmentoNome);
   }
 
   function extractLeadMarker(rawText) {
@@ -73,26 +76,20 @@ export default function ClinicasPage() {
     if (!leadFields) return;
     if (!leadFields.nome || !leadFields.telefone || !leadFields.segmento) return;
 
-    // Evita chamada repetida se nada de novo apareceu desde o último save/update
     const snapshot = JSON.stringify(leadFields);
     if (snapshot === lastLeadSnapshotRef.current) return;
     lastLeadSnapshotRef.current = snapshot;
 
     try {
-      const payload = leadIdRef.current ? { ...leadFields, id: leadIdRef.current } : leadFields;
-      const res = await fetch('/api/lead-clinicas', {
+      await fetch('/api/lead-clinicas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(leadFields),
       });
-      const data = await res.json();
-      if (data?.id && !leadIdRef.current) {
-        leadIdRef.current = data.id; // guarda o id só na primeira vez (criação)
-        setLeadSaved(true);
-      }
+      setLeadSaved(true);
     } catch (err) {
       console.error('Falha ao salvar/atualizar lead:', err);
-      lastLeadSnapshotRef.current = ''; // permite tentar de novo na próxima mensagem
+      lastLeadSnapshotRef.current = '';
     }
   }
 
@@ -116,6 +113,7 @@ export default function ClinicasPage() {
       const { visibleText, leadFields } = extractLeadMarker(rawReply);
       setMessages((prev) => [...prev, { role: 'bot', text: visibleText }]);
       chatHistoryRef.current.push({ role: 'assistant', content: rawReply });
+      if (leadFields?.segmento) setSegmentoEscolhido(true);
       maybeSaveLead(leadFields);
     } catch (err) {
       setMessages((prev) => [...prev, { role: 'bot', text: 'Erro de conexão, tenta de novo em instantes.' }]);
@@ -147,7 +145,7 @@ export default function ClinicasPage() {
       {/* HERO — vídeo estética */}
       <section className="relative overflow-hidden min-h-[92vh] flex items-end">
         <div className="absolute inset-0 z-0">
-          <video autoPlay muted loop playsInline poster="/clinicas/img/estetica-bemestar.jpg" className="w-full h-full object-cover">
+          <video autoPlay muted loop playsInline poster="/clinicas/img/estetica-poster.jpg" className="w-full h-full object-cover">
             <source src="/clinicas/video/estetica.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-t from-[#141712] via-[#141712]/55 to-[#141712]/10" />
@@ -261,7 +259,7 @@ export default function ClinicasPage() {
       {/* BLOCO FULL-BLEED — vídeo odonto */}
       <section className="relative py-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <video autoPlay muted loop playsInline poster="/clinicas/img/odonto-avaliacao.jpg" className="w-full h-full object-cover">
+          <video autoPlay muted loop playsInline poster="/clinicas/img/odonto-poster.jpg" className="w-full h-full object-cover">
             <source src="/clinicas/video/odonto.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-[#141712]/70" />
@@ -365,7 +363,7 @@ export default function ClinicasPage() {
       {/* CTA FINAL */}
       <section className="relative py-28 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <video autoPlay muted loop playsInline poster="/clinicas/img/fisio-preventiva.jpeg" className="w-full h-full object-cover">
+          <video autoPlay muted loop playsInline poster="/clinicas/img/medico-poster.jpg" className="w-full h-full object-cover">
             <source src="/clinicas/video/medico.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-[#141712]/70" />
@@ -456,6 +454,19 @@ export default function ClinicasPage() {
             )}
             <div ref={msgsEndRef} />
           </div>
+          {!segmentoEscolhido && (
+            <div className="px-3 pb-3 grid grid-cols-2 gap-2">
+              {SEGMENTOS.map((seg) => (
+                <button
+                  key={seg.id}
+                  onClick={() => escolherSegmento(seg.nome)}
+                  className="text-xs bg-[#4F7A5A]/10 text-[#4F7A5A] rounded-lg px-3 py-2 font-medium hover:bg-[#4F7A5A]/20 transition-colors text-left"
+                >
+                  Meu segmento é {seg.nome}
+                </button>
+              ))}
+            </div>
+          )}
           <div className="p-3 border-t border-black/5 flex gap-2">
             <input
               value={input}
