@@ -43,6 +43,8 @@ export default function ClinicasPage() {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [leadSaved, setLeadSaved] = useState(false);
+  const leadIdRef = useRef(null);
+  const lastLeadSnapshotRef = useRef('');
   const chatHistoryRef = useRef([]);
   const msgsEndRef = useRef(null);
 
@@ -68,18 +70,29 @@ export default function ClinicasPage() {
   }
 
   async function maybeSaveLead(leadFields) {
-    if (!leadFields || leadSaved) return;
+    if (!leadFields) return;
     if (!leadFields.nome || !leadFields.telefone || !leadFields.segmento) return;
-    setLeadSaved(true);
+
+    // Evita chamada repetida se nada de novo apareceu desde o último save/update
+    const snapshot = JSON.stringify(leadFields);
+    if (snapshot === lastLeadSnapshotRef.current) return;
+    lastLeadSnapshotRef.current = snapshot;
+
     try {
-      await fetch('/api/lead-clinicas', {
+      const payload = leadIdRef.current ? { ...leadFields, id: leadIdRef.current } : leadFields;
+      const res = await fetch('/api/lead-clinicas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(leadFields),
+        body: JSON.stringify(payload),
       });
+      const data = await res.json();
+      if (data?.id && !leadIdRef.current) {
+        leadIdRef.current = data.id; // guarda o id só na primeira vez (criação)
+        setLeadSaved(true);
+      }
     } catch (err) {
-      console.error('Falha ao salvar lead:', err);
-      setLeadSaved(false);
+      console.error('Falha ao salvar/atualizar lead:', err);
+      lastLeadSnapshotRef.current = ''; // permite tentar de novo na próxima mensagem
     }
   }
 
