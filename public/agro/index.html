@@ -295,18 +295,19 @@ section { position: relative; z-index: 1; }
 #noticias { padding: 100px 0; background: var(--cream2); }
 .noticias-intro { text-align: center; max-width: 640px; margin: 0 auto 48px; }
 .noticias-intro p { color: var(--ink-soft); font-size: 1.02rem; margin-top: 12px; }
+.noticias-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .noticia-card {
-  background: var(--card); border: 1px solid var(--border2); border-radius: 16px; padding: 28px;
-  max-width: 760px; margin: 0 auto; transition: all 0.3s;
+  background: var(--card); border: 1px solid var(--border2); border-radius: 16px; padding: 26px;
+  transition: all 0.3s; display: flex; flex-direction: column;
 }
 .noticia-card:hover { border-color: rgba(79,122,52,0.25); box-shadow: 0 12px 32px rgba(43,35,24,0.08); }
-.noticia-meta { font-size: 0.72rem; color: var(--ink-soft); margin-bottom: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.noticia-tag { background: var(--leaf-tint); color: var(--leaf-deep); padding: 2px 9px; border-radius: 100px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; font-size: 0.66rem; }
-.noticia-title { font-family: var(--font-head); font-size: 1.15rem; font-weight: 600; margin-bottom: 10px; line-height: 1.4; }
-.noticia-summary { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.7; margin-bottom: 16px; }
-.noticia-link { font-size: 0.85rem; font-weight: 600; color: var(--leaf-deep); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.noticia-meta { font-size: 0.68rem; color: var(--ink-soft); margin-bottom: 10px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.noticia-tag { background: var(--leaf-tint); color: var(--leaf-deep); padding: 2px 9px; border-radius: 100px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; font-size: 0.63rem; }
+.noticia-title { font-family: var(--font-head); font-size: 1.02rem; font-weight: 600; margin-bottom: 10px; line-height: 1.4; }
+.noticia-summary { font-size: 0.83rem; color: var(--ink-soft); line-height: 1.65; margin-bottom: 16px; flex: 1; }
+.noticia-link { font-size: 0.82rem; font-weight: 600; color: var(--leaf-deep); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
 .noticia-link:hover { color: var(--leaf); }
-.noticias-note { text-align: center; font-size: 0.78rem; color: var(--ink-soft); margin-top: 20px; }
+.noticias-note { text-align: center; font-size: 0.78rem; color: var(--ink-soft); margin-top: 28px; }
 
 /* ── TRUST ── */
 #trust { padding: 100px 0; }
@@ -374,6 +375,7 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
   .examples-grid { grid-template-columns: 1fr; }
   .painel-grid { grid-template-columns: 1fr; }
   .trust-grid { grid-template-columns: 1fr; }
+  .noticias-grid { grid-template-columns: 1fr; }
   #how, #ciclo, #examples, #painel, #noticias, #trust { padding: 76px 0; }
   #manifesto { padding: 90px 0; }
   #cta { padding: 90px 0; }
@@ -440,7 +442,7 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
       <span class="eyebrow-text">Inteligência Artificial dentro do campo</span>
     </div>
     <h1 class="hero-title">
-      Quem tem resposta na hora <em>colhe na frente.</em>
+      Enquanto uns ainda voltam pra sede, a lavoura de vocês <em>já tem resposta.</em>
     </h1>
     <p class="hero-sub">
       O ORBI Agro conecta a IA ao histórico real da sua fazenda, ao clima da sua região e ao WhatsApp que o seu time já usa. Primeira leitura na hora, decisão sempre com o agrônomo.
@@ -685,6 +687,7 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
           <div class="wchip"><div class="wchip-v" id="wchip-temp">--°C</div><div class="wchip-l">Agora</div></div>
           <div class="wchip"><div class="wchip-v" id="wchip-vento">--km/h</div><div class="wchip-l">Vento</div></div>
           <div class="wchip"><div class="wchip-v" id="wchip-chuva">--mm</div><div class="wchip-l">Chuva agora</div></div>
+          <div class="wchip"><div class="wchip-v" id="wchip-dolar">--</div><div class="wchip-l">Dólar agora</div></div>
         </div>
         <div class="bbar"><div class="bbar-header"><span class="bbar-label">Talhões monitorados</span><span class="bbar-count">18</span></div><div class="bbar-track"><div class="bbar-fill" style="width:92%"></div></div></div>
         <div class="bbar"><div class="bbar-header"><span class="bbar-label">Consultas respondidas pela IA</span><span class="bbar-count">31</span></div><div class="bbar-track"><div class="bbar-fill" style="width:74%"></div></div></div>
@@ -710,22 +713,55 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
       <p>Curadoria de notícias sobre IA aplicada ao agro — sempre com link e crédito pra fonte original.</p>
     </div>
 
-    <!-- NOTA: card estático por enquanto. Quando o workflow n8n de curadoria
+    <!-- NOTA: 3 cards estáticos por enquanto. Quando o workflow n8n de curadoria
          estiver pronto, este bloco pode ser substituído por uma busca a
-         /api/noticias-agro que renderiza os N mais recentes salvos no Supabase. -->
-    <div class="noticia-card reveal">
-      <div class="noticia-meta">
-        <span class="noticia-tag">Impacto</span>
-        <span>Fast Company Brasil · Jacqueline Heard</span>
-        <span>·</span>
-        <span>30/01/2025</span>
+         /api/noticias-agro que renderiza as 3 mais recentes salvas no Supabase.
+         Regra combinada: sempre mostrar 3, e trocar as 3 juntas a cada atualização. -->
+    <div class="noticias-grid">
+      <div class="noticia-card reveal">
+        <div class="noticia-meta">
+          <span class="noticia-tag">Impacto</span>
+          <span>Fast Company Brasil</span>
+          <span>·</span>
+          <span>30/01/2025</span>
+        </div>
+        <div class="noticia-title">Uso de IA na agricultura poderia ajudar a acabar com a fome no mundo</div>
+        <p class="noticia-summary">Com a população mundial caminhando pra 10 bilhões até 2050 e uma fatia grande da colheita perdida todo ano pra pragas e doenças, a matéria argumenta que a IA pode acelerar a criação de defensivos mais seguros e ajudar produtores a lidar com a mudança climática — aumentando produtividade sem expandir a área plantada.</p>
+        <a class="noticia-link" href="https://fastcompanybrasil.com/impacto/uso-de-ia-na-agricultura-poderia-ajudar-a-acabar-com-a-fome-no-mundo/" target="_blank" rel="noopener">
+          Ler matéria completa
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
       </div>
-      <div class="noticia-title">Uso de IA na agricultura poderia ajudar a acabar com a fome no mundo</div>
-      <p class="noticia-summary">Com a população mundial caminhando pra 10 bilhões até 2050 e uma fatia grande da colheita perdida todo ano pra pragas e doenças, a matéria argumenta que a IA pode acelerar a criação de defensivos mais seguros e ajudar produtores a lidar com a mudança climática — aumentando produtividade sem expandir a área plantada.</p>
-      <a class="noticia-link" href="https://fastcompanybrasil.com/impacto/uso-de-ia-na-agricultura-poderia-ajudar-a-acabar-com-a-fome-no-mundo/" target="_blank" rel="noopener">
-        Ler matéria completa
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-      </a>
+
+      <div class="noticia-card reveal">
+        <div class="noticia-meta">
+          <span class="noticia-tag">Mercado</span>
+          <span>O Tempo</span>
+          <span>·</span>
+          <span>06/07/2026</span>
+        </div>
+        <div class="noticia-title">Ferramentas de IA impulsionam negócios do agro, com prevenção de perdas e aumento de receita</div>
+        <p class="noticia-summary">Levantamento da PwC citado na matéria aponta que um terço dos CEOs do agronegócio brasileiro já registra aumento de receita com uso de IA, e o Sebrae estima redução de até 40% nos custos. A reportagem também traz o caso de um viveiro que criou um aplicativo próprio pra identificar praga em foto de planta, reduzindo a necessidade de enviar amostra pro laboratório.</p>
+        <a class="noticia-link" href="https://www.otempo.com.br/economia/2026/7/6/ferramentas-de-ia-impulsionam-negocios-do-agro-com-prevencao-de-perdas-e-aumento-de-receita" target="_blank" rel="noopener">
+          Ler matéria completa
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+
+      <div class="noticia-card reveal">
+        <div class="noticia-meta">
+          <span class="noticia-tag">Tecnologia</span>
+          <span>Times Brasil / CNBC</span>
+          <span>·</span>
+          <span>27/04/2026</span>
+        </div>
+        <div class="noticia-title">Agrishow 2026: IA no campo pode reduzir em 62% uso de defensivos, diz vice-presidente da Bosch</div>
+        <p class="noticia-summary">Na Agrishow 2026, o vice-presidente de Agricultura Inteligente da Bosch apresentou um sistema de pulverização com IA que identifica praga em tempo real e aplica o insumo só onde é necessário — segundo ele, isso gera uma economia média de 62% no uso de defensivos.</p>
+        <a class="noticia-link" href="https://timesbrasil.com.br/empresas-e-negocios/agro/agrishow-2026-ia-no-campo-pode-reduzir-em-62-uso-de-defensivos-diz-vice-presidente-da-bosch/" target="_blank" rel="noopener">
+          Ler matéria completa
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
     </div>
     <p class="noticias-note">Novas curadorias toda semana.</p>
   </div>
@@ -868,6 +904,20 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
 </a>
 
 <script>
+// ── DÓLAR REAL (AwesomeAPI — gratuito, sem chave) ──
+async function buscarDolar() {
+  try {
+    const res = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+    const data = await res.json();
+    const valor = parseFloat(data.USDBRL.bid);
+    document.getElementById('wchip-dolar').textContent = 'R$ ' + valor.toFixed(2).replace('.', ',');
+  } catch (err) {
+    console.error('Falha ao buscar cotação do dólar:', err);
+    document.getElementById('wchip-dolar').textContent = '—';
+  }
+}
+buscarDolar();
+
 // ── CLIMA REAL (Open-Meteo — gratuito, sem chave de API) ──
 async function buscarClimaCidade() {
   const input = document.getElementById('cidade-input');
