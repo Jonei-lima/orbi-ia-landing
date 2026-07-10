@@ -6,8 +6,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Mapeia segmento -> persona do agente de demo (mesma instância ORBI_Trafego_Demo,
-// prompts diferentes por segmento já configurados no n8n).
 const PERSONAS: Record<string, string> = {
   estetica: "Lari",
   odontologica: "Ana",
@@ -21,8 +19,6 @@ function montaResumo(clinica?: string, desafio?: string) {
     .join(" | ") || null;
 }
 
-// Garante que o número tenha o código do Brasil (55) na frente, sem
-// parênteses/traços/espaços — formato que o Evolution API espera.
 function normalizarTelefone(raw: string) {
   const digits = (raw || "").replace(/\D/g, "");
   if (digits.startsWith("55") && digits.length >= 12) return digits;
@@ -32,32 +28,8 @@ function normalizarTelefone(raw: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { id, nome, telefone, segmento, clinica, desafio } = body;
+    const { nome, telefone, segmento, clinica, desafio } = body;
 
-    // =====================
-    // CASO 1: já existe um lead (id veio do primeiro save) — só ATUALIZA,
-    // sem reenviar e-mail/WhatsApp/handoff de novo.
-    // =====================
-    if (id) {
-      const { error: updateError } = await supabase
-        .from("leads")
-        .update({
-          name: nome,
-          segment: segmento,
-          resumo_conversa: montaResumo(clinica, desafio),
-        })
-        .eq("id", id);
-
-      if (updateError) {
-        console.error("SUPABASE UPDATE ERROR:", updateError);
-        return NextResponse.json({ success: false, error: "Erro ao atualizar." }, { status: 500 });
-      }
-      return NextResponse.json({ success: true, id });
-    }
-
-    // =====================
-    // CASO 2: primeiro save — exige só o mínimo (nome + telefone + segmento)
-    // =====================
     if (!nome || !telefone || !segmento) {
       return NextResponse.json(
         { success: false, error: "Nome, telefone e segmento são obrigatórios." },
@@ -65,30 +37,55 @@ export async function POST(req: Request) {
       );
     }
 
+    const phoneNormalizado = normalizarTelefone(telefone);
     const persona = PERSONAS[segmento] || "nossa equipe";
 
-    const { data: inserted, error } = await supabase
+    // =====================
+    // Verifica se esse telefone já existe (tabela "leads" tem UNIQUE em phone,
+    // compartilhada com outras origens de lead — não é exclusiva do site).
+    // =====================
+    const { data: existente } = await supabase
       .from("leads")
-      .insert([
-        {
-          name: nome,
-          phone: telefone,
-          segment: segmento,
-          source: "chat_landing_clinicas",
-          resumo_conversa: montaResumo(clinica, desafio),
-        },
-      ])
       .select("id")
-      .single();
+      .eq("phone", telefone) // mantém o formato como já está salvo, se já existir
+      .maybeSingle();
+
+    if (existente) {
+      // Já existe — só ATUALIZA, sem reenviar e-mail/WhatsApp/handoff de novo.
+      const { error: updateError } = await supabase
+        .from("leads")
+        .update({
+          name: nome,
+          segment: segmento,
+          resumo_conversa: montaResumo(clinica, desafio),
+        })
+        .eq("id", existente.id);
+
+      if (updateError) {
+        console.error("SUPABASE UPDATE ERROR:", updateError);
+        return NextResponse.json({ success: false, error: "Erro ao atualizar." }, { status: 500 });
+      }
+      return NextResponse.json({ success: true, updated: true });
+    }
+
+    // =====================
+    // Não existe — cria a linha nova e dispara as notificações (só aqui, uma vez)
+    // =====================
+    const { error } = await supabase.from("leads").insert([
+      {
+        name: nome,
+        phone: telefone,
+        segment: segmento,
+        source: "chat_landing_clinicas",
+        resumo_conversa: montaResumo(clinica, desafio),
+      },
+    ]);
 
     if (error) {
       console.error("SUPABASE INSERT ERROR:", error);
       return NextResponse.json({ success: false, error: "Erro banco." }, { status: 500 });
     }
 
-    // =====================
-    // ENVIAR EMAIL (RESEND) — notifica Jonei, só na primeira vez
-    // =====================
     const resendResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -104,16 +101,13 @@ export async function POST(req: Request) {
           <p><strong>Nome:</strong> ${nome}</p>
           <p><strong>Telefone:</strong> ${telefone}</p>
           <p><strong>Área:</strong> ${segmento}</p>
-          <p><strong>Clínica:</strong> ${clinica || "ainda não informado — confere o Supabase depois, a conversa pode revelar mais"}</p>
-          <p><strong>Desafio:</strong> ${desafio || "ainda não informado — confere o Supabase depois"}</p>
+          <p><strong>Clínica:</strong> ${clinica || "ainda não informado"}</p>
+          <p><strong>Desafio:</strong> ${desafio || "ainda não informado"}</p>
         `,
       }),
     });
     console.log("RESEND STATUS:", resendResponse.status);
 
-    // =====================
-    // NOTIFICAR VOCÊ NO WHATSAPP (Evolution — instância ORBI_Trafego)
-    // =====================
     const evolutionNotifyJonei = await fetch(
       `${process.env.EVOLUTION_URL}/message/sendText/ORBI_Trafego`,
       {
@@ -121,20 +115,17 @@ export async function POST(req: Request) {
         headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY! },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\n\nObs: a conversa pode revelar mais dado (nome da clínica, desafio) depois deste aviso — confere o Supabase mais tarde pra ver o resumo completo.\n\nHandoff disparado pra ${persona}.`,
+          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\n\nHandoff disparado pra ${persona}.`,
         }),
       }
     );
     console.log("EVOLUTION NOTIFY STATUS:", evolutionNotifyJonei.status);
 
-    // =====================
-    // HANDOFF AUTOMÁTICO — dispara mensagem de abertura pro PRÓPRIO LEAD, só na primeira vez
-    // =====================
     const aberturaPorSegmento: Record<string, string> = {
-      estetica: `Oi, ${nome}! Aqui é a Lari, da ORBI 🌿 Vi que você conversou no site sobre sua clínica de estética. Me conta, qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
-      odontologica: `Oi, ${nome}! Aqui é a Ana, da ORBI 🦷 Vi que você conversou no site sobre sua clínica odontológica. Me conta, qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
-      medica: `Oi, ${nome}! Aqui é a Beatriz, da ORBI ⚕️ Vi que você conversou no site sobre sua clínica médica. Me conta, qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
-      fisioterapia: `Oi, ${nome}! Aqui é a Duda, da ORBI 🤸 Vi que você conversou no site sobre sua clínica de fisioterapia. Me conta, qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
+      estetica: `Oi, ${nome}! Aqui é a Lari, da ORBI 🌿 Vi seu interesse em automatizar sua clínica de estética. Qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
+      odontologica: `Oi, ${nome}! Aqui é a Ana, da ORBI 🦷 Vi seu interesse em automatizar sua clínica odontológica. Qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
+      medica: `Oi, ${nome}! Aqui é a Beatriz, da ORBI ⚕️ Vi seu interesse em automatizar sua clínica médica. Qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
+      fisioterapia: `Oi, ${nome}! Aqui é a Duda, da ORBI 🤸 Vi seu interesse em automatizar sua clínica de fisioterapia. Qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
     };
 
     const evolutionHandoff = await fetch(
@@ -143,15 +134,15 @@ export async function POST(req: Request) {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY! },
         body: JSON.stringify({
-          number: normalizarTelefone(telefone),
-          text: aberturaPorSegmento[segmento] || `Oi, ${nome}! Aqui é a equipe da ORBI, vi seu interesse no site. Como posso ajudar?`,
+          number: phoneNormalizado,
+          text: aberturaPorSegmento[segmento] || `Oi, ${nome}! Aqui é a equipe da ORBI, vi seu interesse no site.`,
         }),
       }
     );
     const handoffBody = await evolutionHandoff.text();
     console.log("EVOLUTION HANDOFF STATUS:", evolutionHandoff.status, handoffBody);
 
-    return NextResponse.json({ success: true, id: inserted?.id });
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("ERRO GERAL:", error);
     return NextResponse.json({ success: false, error: "Erro interno" }, { status: 500 });
