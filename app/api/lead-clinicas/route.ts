@@ -21,6 +21,14 @@ function montaResumo(clinica?: string, desafio?: string) {
     .join(" | ") || null;
 }
 
+// Garante que o número tenha o código do Brasil (55) na frente, sem
+// parênteses/traços/espaços — formato que o Evolution API espera.
+function normalizarTelefone(raw: string) {
+  const digits = (raw || "").replace(/\D/g, "");
+  if (digits.startsWith("55") && digits.length >= 12) return digits;
+  return "55" + digits;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -135,7 +143,7 @@ export async function POST(req: Request) {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY! },
         body: JSON.stringify({
-          number: telefone,
+          number: normalizarTelefone(telefone),
           text: aberturaPorSegmento[segmento] || `Oi, ${nome}! Aqui é a equipe da ORBI, vi seu interesse no site. Como posso ajudar?`,
         }),
       }
