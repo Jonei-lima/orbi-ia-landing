@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     // Busca se esse telefone já existe (tabela "leads" é compartilhada, UNIQUE em phone)
     const { data: existente } = await supabase
       .from("leads")
-      .select("id, status")
+      .select("id, handoff_enviado")
       .eq("phone", telefone)
       .maybeSingle();
 
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
     // Só dispara e-mail + WhatsApp (notify + handoff) quando a IA sinalizar
     // "encerrar":true, E só uma vez (confere status pra não duplicar).
     // =====================
-    const jaNotificado = existente?.status === "notificado";
+    const jaNotificado = existente?.handoff_enviado === true;
     if (!encerrar || jaNotificado) {
       return NextResponse.json({ success: true, notified: false });
     }
@@ -133,8 +133,12 @@ export async function POST(req: Request) {
     const handoffBody = await evolutionHandoff.text();
     console.log("EVOLUTION HANDOFF STATUS:", evolutionHandoff.status, handoffBody);
 
-    // Marca como notificado, pra nunca reenviar de novo pra esse telefone
-    await supabase.from("leads").update({ status: "notificado" }).eq("phone", telefone);
+    // Marca como notificado (coluna própria), pra nunca reenviar de novo pra esse telefone
+    const { error: marcaError } = await supabase
+      .from("leads")
+      .update({ handoff_enviado: true })
+      .eq("phone", telefone);
+    if (marcaError) console.error("ERRO AO MARCAR handoff_enviado:", marcaError);
 
     return NextResponse.json({ success: true, notified: true });
   } catch (error: any) {
