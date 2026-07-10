@@ -28,7 +28,7 @@ function normalizarTelefone(raw: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { nome, telefone, segmento, clinica, desafio } = body;
+    const { nome, telefone, segmento, clinica, desafio, encerrar } = body;
 
     if (!nome || !telefone || !segmento) {
       return NextResponse.json(
@@ -40,50 +40,41 @@ export async function POST(req: Request) {
     const phoneNormalizado = normalizarTelefone(telefone);
     const persona = PERSONAS[segmento] || "nossa equipe";
 
-    // =====================
-    // Verifica se esse telefone já existe (tabela "leads" tem UNIQUE em phone,
-    // compartilhada com outras origens de lead — não é exclusiva do site).
-    // =====================
+    // Busca se esse telefone já existe (tabela "leads" é compartilhada, UNIQUE em phone)
     const { data: existente } = await supabase
       .from("leads")
-      .select("id")
-      .eq("phone", telefone) // mantém o formato como já está salvo, se já existir
+      .select("id, status")
+      .eq("phone", telefone)
       .maybeSingle();
 
+    // =====================
+    // SEMPRE salva/atualiza — protege contra perder o lead se a pessoa sumir
+    // no meio da conversa, mesmo antes de "encerrar" virar true.
+    // =====================
     if (existente) {
-      // Já existe — só ATUALIZA, sem reenviar e-mail/WhatsApp/handoff de novo.
-      const { error: updateError } = await supabase
+      await supabase
         .from("leads")
-        .update({
-          name: nome,
-          segment: segmento,
-          resumo_conversa: montaResumo(clinica, desafio),
-        })
+        .update({ name: nome, segment: segmento, resumo_conversa: montaResumo(clinica, desafio) })
         .eq("id", existente.id);
-
-      if (updateError) {
-        console.error("SUPABASE UPDATE ERROR:", updateError);
-        return NextResponse.json({ success: false, error: "Erro ao atualizar." }, { status: 500 });
-      }
-      return NextResponse.json({ success: true, updated: true });
+    } else {
+      await supabase.from("leads").insert([
+        {
+          name: nome,
+          phone: telefone,
+          segment: segmento,
+          source: "chat_landing_clinicas",
+          resumo_conversa: montaResumo(clinica, desafio),
+        },
+      ]);
     }
 
     // =====================
-    // Não existe — cria a linha nova e dispara as notificações (só aqui, uma vez)
+    // Só dispara e-mail + WhatsApp (notify + handoff) quando a IA sinalizar
+    // "encerrar":true, E só uma vez (confere status pra não duplicar).
     // =====================
-    const { error } = await supabase.from("leads").insert([
-      {
-        name: nome,
-        phone: telefone,
-        segment: segmento,
-        source: "chat_landing_clinicas",
-        resumo_conversa: montaResumo(clinica, desafio),
-      },
-    ]);
-
-    if (error) {
-      console.error("SUPABASE INSERT ERROR:", error);
-      return NextResponse.json({ success: false, error: "Erro banco." }, { status: 500 });
+    const jaNotificado = existente?.status === "notificado";
+    if (!encerrar || jaNotificado) {
+      return NextResponse.json({ success: true, notified: false });
     }
 
     const resendResponse = await fetch("https://api.resend.com/emails", {
@@ -101,8 +92,8 @@ export async function POST(req: Request) {
           <p><strong>Nome:</strong> ${nome}</p>
           <p><strong>Telefone:</strong> ${telefone}</p>
           <p><strong>Área:</strong> ${segmento}</p>
-          <p><strong>Clínica:</strong> ${clinica || "ainda não informado"}</p>
-          <p><strong>Desafio:</strong> ${desafio || "ainda não informado"}</p>
+          <p><strong>Clínica:</strong> ${clinica || "não informado"}</p>
+          <p><strong>Desafio:</strong> ${desafio || "não informado"}</p>
         `,
       }),
     });
@@ -115,7 +106,7 @@ export async function POST(req: Request) {
         headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY! },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\n\nHandoff disparado pra ${persona}.`,
+          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\nClínica: ${clinica || "não informado"}\nDesafio: ${desafio || "não informado"}\n\nHandoff disparado pra ${persona}.`,
         }),
       }
     );
@@ -142,7 +133,10 @@ export async function POST(req: Request) {
     const handoffBody = await evolutionHandoff.text();
     console.log("EVOLUTION HANDOFF STATUS:", evolutionHandoff.status, handoffBody);
 
-    return NextResponse.json({ success: true });
+    // Marca como notificado, pra nunca reenviar de novo pra esse telefone
+    await supabase.from("leads").update({ status: "notificado" }).eq("phone", telefone);
+
+    return NextResponse.json({ success: true, notified: true });
   } catch (error: any) {
     console.error("ERRO GERAL:", error);
     return NextResponse.json({ success: false, error: "Erro interno" }, { status: 500 });
