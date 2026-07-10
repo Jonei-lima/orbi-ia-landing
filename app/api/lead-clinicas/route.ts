@@ -113,10 +113,10 @@ export async function POST(req: Request) {
     console.log("EVOLUTION NOTIFY STATUS:", evolutionNotifyJonei.status);
 
     const aberturaPorSegmento: Record<string, string> = {
-      estetica: `Oi, ${nome}! Aqui é a Lari, da ORBI 🌿 Vi seu interesse em automatizar sua clínica de estética. Qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
-      odontologica: `Oi, ${nome}! Aqui é a Ana, da ORBI 🦷 Vi seu interesse em automatizar sua clínica odontológica. Qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
-      medica: `Oi, ${nome}! Aqui é a Beatriz, da ORBI ⚕️ Vi seu interesse em automatizar sua clínica médica. Qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
-      fisioterapia: `Oi, ${nome}! Aqui é a Duda, da ORBI 🤸 Vi seu interesse em automatizar sua clínica de fisioterapia. Qual é o maior gargalo hoje — agenda, falta de paciente ou demora no WhatsApp?`,
+      estetica: `Oi, ${nome}! Bom te ver por aqui 🌿 Sou a Lari — aqui você faz um test drive de verdade: eu simulo como seria o atendimento de uma clínica de estética. Nada é real, viu? Sem custo, sem agendamento de verdade, seus dados ficam protegidos (LGPD). O que você quer testar — marcar uma consulta, tirar uma dúvida, remarcar horário?`,
+      odontologica: `Oi, ${nome}! Bom te ver por aqui 🦷 Sou a Ana — aqui você faz um test drive de verdade: eu simulo como seria o atendimento de uma clínica odontológica. Nada é real, viu? Sem custo, sem agendamento de verdade, seus dados ficam protegidos (LGPD). O que você quer testar — marcar uma consulta, tirar uma dúvida, remarcar horário?`,
+      medica: `Oi, ${nome}! Bom te ver por aqui ⚕️ Sou a Beatriz — aqui você faz um test drive de verdade: eu simulo como seria o atendimento de uma clínica médica. Nada é real, viu? Sem custo, sem agendamento de verdade, seus dados ficam protegidos (LGPD). O que você quer testar — marcar uma consulta, tirar uma dúvida, remarcar horário?`,
+      fisioterapia: `Oi, ${nome}! Bom te ver por aqui 🤸 Sou a Duda — aqui você faz um test drive de verdade: eu simulo como seria o atendimento de uma clínica de fisioterapia. Nada é real, viu? Sem custo, sem agendamento de verdade, seus dados ficam protegidos (LGPD). O que você quer testar — marcar uma sessão, tirar uma dúvida, remarcar horário?`,
     };
 
     const evolutionHandoff = await fetch(
