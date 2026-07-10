@@ -374,6 +374,7 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
   .hero-inner { padding: 140px 24px 56px; }
   .hero-stats { grid-template-columns: 1fr 1fr; }
   .pillars { grid-template-columns: 1fr 1fr; }
+  .dados-grid { grid-template-columns: 1fr 1fr; }
   .ciclo-tabs { grid-template-columns: 1fr 1fr; }
   .ciclo-panel { grid-template-columns: 1fr; }
   .examples-grid { grid-template-columns: 1fr; }
@@ -387,6 +388,12 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
   .section-inner { padding: 0 24px; }
   .manifesto-inner, .cta-inner { padding: 0 24px; }
   footer { padding: 36px 24px; }
+}
+@media (max-width: 480px) {
+  .cidade-search { flex-direction: column; }
+  .cidade-search button { white-space: normal; padding: 10px; }
+  .weather-strip { flex-wrap: wrap; }
+  .weather-strip > .wchip { flex: 1 1 calc(50% - 5px); }
 }
 </style>
 <!-- Google tag (gtag.js) -->
