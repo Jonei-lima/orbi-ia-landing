@@ -27,6 +27,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
+html { overflow-x: hidden; }
 body {
   background: var(--cream);
   color: var(--ink);
@@ -46,6 +47,9 @@ body {
 }
 
 img { max-width: 100%; display: block; }
+.hero-stats > *, .pillars > *, .dados-grid > *, .ciclo-tabs > *, .examples-grid > *,
+.painel-grid > *, .trust-grid > *, .noticias-grid > *, .weather-strip > *,
+.hero-actions > *, .region-tags > *, .social-row > * { min-width: 0; }
 
 /* Logo branco original -> convertido pra escuro (fundo agora é claro). */
 .logo-fix { filter: brightness(0); }
