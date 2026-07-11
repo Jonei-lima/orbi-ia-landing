@@ -1067,6 +1067,9 @@ async function maybeSaveLead(leadFields) {
         'currency': 'BRL'
       });
     }
+    if (res.ok && typeof fbq === 'function') {
+      fbq('track', 'Lead');
+    }
   } catch (err) {
     console.error('Falha ao salvar lead do agro:', err);
     leadSaved = false;
