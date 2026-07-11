@@ -96,6 +96,13 @@ export default function ClinicasPage() {
         if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
           window.fbq('track', 'Lead');
         }
+        if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+          window.gtag('event', 'conversion', {
+            send_to: 'AW-17997912287/FnWMCI_Rvc4cEN-xiYZD',
+            value: 1.0,
+            currency: 'BRL',
+          });
+        }
       }
       setLeadSaved(true);
     } catch (err) {
