@@ -74,12 +74,13 @@ export async function POST(req: Request) {
     }
 
     const persona = PERSONAS[segmento] || "nossa equipe";
+    const telefoneNormalizado = normalizarTelefone(telefone);
 
     // Busca se esse telefone já existe (tabela "leads" é compartilhada, UNIQUE em phone)
     const { data: existente } = await supabase
       .from("leads")
       .select("id, handoff_enviado")
-      .eq("phone", telefone)
+      .eq("phone", telefoneNormalizado)
       .maybeSingle();
 
     // =====================
@@ -95,7 +96,7 @@ export async function POST(req: Request) {
       await supabase.from("leads").insert([
         {
           name: nome,
-          phone: telefone,
+          phone: telefoneNormalizado,
           segment: segmento,
           source: "chat_landing_clinicas",
           resumo_conversa: montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual),
@@ -167,7 +168,7 @@ export async function POST(req: Request) {
     const { error: marcaError } = await supabase
       .from("leads")
       .update({ handoff_enviado: true })
-      .eq("phone", telefone);
+      .eq("phone", telefoneNormalizado);
     if (marcaError) console.error("ERRO AO MARCAR handoff_enviado:", marcaError);
 
     return NextResponse.json({ success: true, notified: true, whatsappLink, persona });
