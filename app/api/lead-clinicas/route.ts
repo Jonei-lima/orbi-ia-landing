@@ -13,10 +13,29 @@ const PERSONAS: Record<string, string> = {
   fisioterapia: "Duda",
 };
 
-function montaResumo(clinica?: string, desafio?: string) {
-  return [clinica && `Clínica: ${clinica}`, desafio && `Desafio: ${desafio}`]
-    .filter(Boolean)
-    .join(" | ") || null;
+function montaResumo(
+  clinica?: string,
+  sinalForaHorario?: boolean | null,
+  sinalPerdeuPaciente?: boolean | null,
+  sinalConfirmacaoManual?: boolean | null
+) {
+  const sinais = [
+    sinalForaHorario === true && "sem atendimento fora do expediente",
+    sinalPerdeuPaciente === true && "já perdeu paciente por demora",
+    sinalConfirmacaoManual === true && "confirmação de consulta ainda é manual",
+  ].filter(Boolean);
+
+  const totalRespondido = [sinalForaHorario, sinalPerdeuPaciente, sinalConfirmacaoManual].filter(
+    (v) => v !== null && v !== undefined
+  ).length;
+
+  const partes = [
+    clinica && `Clínica: ${clinica}`,
+    totalRespondido > 0 &&
+      `Diagnóstico: ${sinais.length} de ${totalRespondido} sinais de risco confirmados${sinais.length ? " (" + sinais.join("; ") + ")" : ""}`,
+  ].filter(Boolean);
+
+  return partes.length ? partes.join(" | ") : null;
 }
 
 function normalizarTelefone(raw: string) {
@@ -28,7 +47,7 @@ function normalizarTelefone(raw: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { nome, telefone, segmento, clinica, desafio, encerrar } = body;
+    const { nome, telefone, segmento, clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual, encerrar } = body;
 
     if (!nome || !telefone || !segmento) {
       return NextResponse.json(
@@ -54,7 +73,7 @@ export async function POST(req: Request) {
     if (existente) {
       await supabase
         .from("leads")
-        .update({ name: nome, segment: segmento, resumo_conversa: montaResumo(clinica, desafio) })
+        .update({ name: nome, segment: segmento, resumo_conversa: montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual) })
         .eq("id", existente.id);
     } else {
       await supabase.from("leads").insert([
@@ -63,7 +82,7 @@ export async function POST(req: Request) {
           phone: telefone,
           segment: segmento,
           source: "chat_landing_clinicas",
-          resumo_conversa: montaResumo(clinica, desafio),
+          resumo_conversa: montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual),
         },
       ]);
     }
@@ -93,7 +112,7 @@ export async function POST(req: Request) {
           <p><strong>Telefone:</strong> ${telefone}</p>
           <p><strong>Área:</strong> ${segmento}</p>
           <p><strong>Clínica:</strong> ${clinica || "não informado"}</p>
-          <p><strong>Desafio:</strong> ${desafio || "não informado"}</p>
+          <p><strong>Diagnóstico:</strong> ${montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual) || "não concluído"}</p>
         `,
       }),
     });
@@ -106,7 +125,7 @@ export async function POST(req: Request) {
         headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY! },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\nClínica: ${clinica || "não informado"}\nDesafio: ${desafio || "não informado"}\n\nHandoff disparado pra ${persona}.`,
+          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\nClínica: ${clinica || "não informado"}\n${montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual) || ""}\n\nHandoff disparado pra ${persona}.`,
         }),
       }
     );
