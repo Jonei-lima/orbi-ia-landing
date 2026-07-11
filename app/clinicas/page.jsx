@@ -3,6 +3,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import Script from 'next/script';
 
 const SEGMENTOS = [
   {
@@ -90,7 +91,12 @@ export default function ClinicasPage() {
         body: JSON.stringify(leadFields),
       });
       const data = await res.json();
-      if (data?.whatsappLink) setWhatsappLink({ url: data.whatsappLink, persona: data.persona });
+      if (data?.whatsappLink) {
+        setWhatsappLink({ url: data.whatsappLink, persona: data.persona });
+        if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+          window.fbq('track', 'Lead');
+        }
+      }
       setLeadSaved(true);
     } catch (err) {
       console.error('Falha ao salvar/atualizar lead:', err);
@@ -129,6 +135,25 @@ export default function ClinicasPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F5F2] text-[#22262B]">
+      {/* META PIXEL — ORBI Plena */}
+      <Script id="meta-pixel-clinicas" strategy="afterInteractive">
+        {`
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '1772566967429029');
+          fbq('track', 'PageView');
+        `}
+      </Script>
+      <noscript>
+        <img height="1" width="1" style={{ display: 'none' }}
+          src="https://www.facebook.com/tr?id=1772566967429029&ev=PageView&noscript=1" />
+      </noscript>
       {/* HEADER */}
       <header className="bg-[#F7F5F2]/90 backdrop-blur-sm py-4 sticky top-0 z-50 border-b border-black/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
