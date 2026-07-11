@@ -38,6 +38,23 @@ function montaResumo(
   return partes.length ? partes.join(" | ") : null;
 }
 
+function montaDiagnosticoResumido(
+  sinalForaHorario?: boolean | null,
+  sinalPerdeuPaciente?: boolean | null,
+  sinalConfirmacaoManual?: boolean | null
+) {
+  const sinais = [
+    sinalForaHorario === true && "sem atendimento fora do expediente",
+    sinalPerdeuPaciente === true && "já perdeu paciente por demora",
+    sinalConfirmacaoManual === true && "confirmação de consulta ainda é manual",
+  ].filter(Boolean);
+  const totalRespondido = [sinalForaHorario, sinalPerdeuPaciente, sinalConfirmacaoManual].filter(
+    (v) => v !== null && v !== undefined
+  ).length;
+  if (totalRespondido === 0) return "não concluído";
+  return `${sinais.length} de ${totalRespondido} sinais de risco confirmados${sinais.length ? " (" + sinais.join("; ") + ")" : ""}`;
+}
+
 function normalizarTelefone(raw: string) {
   const digits = (raw || "").replace(/\D/g, "");
   if (digits.startsWith("55") && digits.length >= 12) return digits;
@@ -56,7 +73,6 @@ export async function POST(req: Request) {
       );
     }
 
-    const phoneNormalizado = normalizarTelefone(telefone);
     const persona = PERSONAS[segmento] || "nossa equipe";
 
     // Busca se esse telefone já existe (tabela "leads" é compartilhada, UNIQUE em phone)
@@ -112,7 +128,7 @@ export async function POST(req: Request) {
           <p><strong>Telefone:</strong> ${telefone}</p>
           <p><strong>Área:</strong> ${segmento}</p>
           <p><strong>Clínica:</strong> ${clinica || "não informado"}</p>
-          <p><strong>Diagnóstico:</strong> ${montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual) || "não concluído"}</p>
+          <p><strong>Diagnóstico:</strong> ${montaDiagnosticoResumido(sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual)}</p>
         `,
       }),
     });
@@ -125,39 +141,36 @@ export async function POST(req: Request) {
         headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY! },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\nClínica: ${clinica || "não informado"}\n${montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual) || ""}\n\nHandoff disparado pra ${persona}.`,
+          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\nClínica: ${clinica || "não informado"}\nDiagnóstico: ${montaDiagnosticoResumido(sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual)}\n\nLink de test-drive já mostrado pro lead no site.`,
         }),
       }
     );
     console.log("EVOLUTION NOTIFY STATUS:", evolutionNotifyJonei.status);
 
-    const aberturaPorSegmento: Record<string, string> = {
-      estetica: `Oi, ${nome}! Bom te ver por aqui 🌿 Sou a Lari — aqui você faz um test drive de verdade: eu simulo como seria o atendimento de uma clínica de estética. Nada é real, viu? Sem custo, sem agendamento de verdade, seus dados ficam protegidos (LGPD). O que você quer testar — marcar uma consulta, tirar uma dúvida, remarcar horário?`,
-      odontologica: `Oi, ${nome}! Bom te ver por aqui 🦷 Sou a Ana — aqui você faz um test drive de verdade: eu simulo como seria o atendimento de uma clínica odontológica. Nada é real, viu? Sem custo, sem agendamento de verdade, seus dados ficam protegidos (LGPD). O que você quer testar — marcar uma consulta, tirar uma dúvida, remarcar horário?`,
-      medica: `Oi, ${nome}! Bom te ver por aqui ⚕️ Sou a Beatriz — aqui você faz um test drive de verdade: eu simulo como seria o atendimento de uma clínica médica. Nada é real, viu? Sem custo, sem agendamento de verdade, seus dados ficam protegidos (LGPD). O que você quer testar — marcar uma consulta, tirar uma dúvida, remarcar horário?`,
-      fisioterapia: `Oi, ${nome}! Bom te ver por aqui 🤸 Sou a Duda — aqui você faz um test drive de verdade: eu simulo como seria o atendimento de uma clínica de fisioterapia. Nada é real, viu? Sem custo, sem agendamento de verdade, seus dados ficam protegidos (LGPD). O que você quer testar — marcar uma sessão, tirar uma dúvida, remarcar horário?`,
+    // =====================
+    // Link de WhatsApp pra PESSOA clicar e mandar a primeira mensagem —
+    // em vez da automação mandar primeiro (isso estava disparando bloqueio
+    // de spam da Meta/WhatsApp em contas não-oficiais como o Evolution).
+    // A mensagem pré-preenchida já carrega nome/clinica/segmento no texto,
+    // pro prompt de cada persona (Lari/Ana/Beatriz/Duda) já saber quem é.
+    // =====================
+    const segmentoLegivel: Record<string, string> = {
+      estetica: "estética",
+      odontologica: "odontológica",
+      medica: "médica",
+      fisioterapia: "fisioterapia",
     };
+    const mensagemPreenchida = `Oi! Sou ${nome}${clinica ? `, da ${clinica}` : ""}. Quero testar como funcionaria pra uma clínica de ${segmentoLegivel[segmento] || segmento}.`;
+    const whatsappLink = `https://wa.me/${558388584946}?text=${encodeURIComponent(mensagemPreenchida)}`;
 
-    const evolutionHandoff = await fetch(
-      `${process.env.EVOLUTION_URL}/message/sendText/ORBI_Trafego_Demo`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY! },
-        body: JSON.stringify({
-          number: phoneNormalizado,
-          text: aberturaPorSegmento[segmento] || `Oi, ${nome}! Aqui é a equipe da ORBI, vi seu interesse no site.`,
-        }),
-      }
-    );
-    const handoffBody = await evolutionHandoff.text();
-    console.log("EVOLUTION HANDOFF STATUS:", evolutionHandoff.status, handoffBody);
-
-    // Marca como notificado (coluna própria), pra nunca reenviar de novo pra esse telefone
+    // Marca como notificado (coluna própria), pra nunca reenviar/reexibir de novo
     const { error: marcaError } = await supabase
       .from("leads")
       .update({ handoff_enviado: true })
       .eq("phone", telefone);
     if (marcaError) console.error("ERRO AO MARCAR handoff_enviado:", marcaError);
+
+    return NextResponse.json({ success: true, notified: true, whatsappLink, persona });
 
     return NextResponse.json({ success: true, notified: true });
   } catch (error: any) {
