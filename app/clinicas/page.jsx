@@ -44,6 +44,7 @@ export default function ClinicasPage() {
   const [sending, setSending] = useState(false);
   const [leadSaved, setLeadSaved] = useState(false);
   const [segmentoEscolhido, setSegmentoEscolhido] = useState(false);
+  const [whatsappLink, setWhatsappLink] = useState(null);
   const lastLeadSnapshotRef = useRef('');
   const chatHistoryRef = useRef([]);
   const msgsEndRef = useRef(null);
@@ -83,11 +84,13 @@ export default function ClinicasPage() {
     // Sempre salva/atualiza (protege contra perder o lead se a pessoa sumir no meio),
     // mas o e-mail/WhatsApp real só dispara quando o servidor ver "encerrar":true.
     try {
-      await fetch('/api/lead-clinicas', {
+      const res = await fetch('/api/lead-clinicas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(leadFields),
       });
+      const data = await res.json();
+      if (data?.whatsappLink) setWhatsappLink({ url: data.whatsappLink, persona: data.persona });
       setLeadSaved(true);
     } catch (err) {
       console.error('Falha ao salvar/atualizar lead:', err);
@@ -161,7 +164,7 @@ export default function ClinicasPage() {
               Quem responde na hora, <span className="text-[#D9B36A]">fecha a consulta.</span>
             </h1>
             <p className="text-xl text-white/80 mb-8 leading-relaxed">
-              O ORBI Plena atende seus pacientes no WhatsApp, 24 horas por dia, agenda, confirma presença e reduz falta — sem sua equipe largar o presencial pra responder mensagem.
+              O ORBI Plena atende seus pacientes no WhatsApp, 24 horas por dia, agenda, confirma presença e reduz falta — pra sua equipe focar no que os pacientes realmente amam: o acolhimento humano.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button onClick={() => setChatOpen(true)} className="inline-flex items-center justify-center px-8 py-4 bg-[#D9B36A] text-[#22262B] font-semibold rounded-lg hover:bg-[#e5c584] transition-all shadow-lg">
@@ -171,6 +174,9 @@ export default function ClinicasPage() {
                 Ver como funciona
               </a>
             </div>
+            <p className="text-xs text-white/50 mt-4">
+              Ao conversar, você concorda com nossa política de privacidade — seus dados seguem a LGPD (Lei 13.709/2020).
+            </p>
           </div>
         </div>
       </section>
@@ -435,7 +441,7 @@ export default function ClinicasPage() {
             <button onClick={() => setChatOpen(false)} className="text-white/70 hover:text-white">✕</button>
           </div>
           <div className="px-4 py-2 bg-[#4F7A5A]/10 text-[10px] text-[#22262B]/60 text-center border-b border-black/5">
-            💡 A IA analisa e agenda — decisão clínica é sempre do profissional
+            💡 A IA analisa e agenda (decisão clínica é sempre do profissional) — seus dados seguem a LGPD
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ maxHeight: 320 }}>
             {messages.map((m, i) => (
@@ -452,6 +458,19 @@ export default function ClinicasPage() {
                   <span className="w-1.5 h-1.5 bg-[#22262B]/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                   <span className="w-1.5 h-1.5 bg-[#22262B]/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
+              </div>
+            )}
+            {whatsappLink && (
+              <div className="flex justify-start">
+                <a
+                  href={whatsappLink.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-[#25D366] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
+                >
+                  <svg viewBox="0 0 32 32" fill="white" width="18" height="18"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2z"/></svg>
+                  Clique pra falar com a {whatsappLink.persona} no WhatsApp
+                </a>
               </div>
             )}
             <div ref={msgsEndRef} />
