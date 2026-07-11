@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-
 export async function POST(request) {
   try {
     const { messages } = await request.json();
@@ -23,13 +22,17 @@ REGRAS INEGOCIAVEIS:
 3. Voce NUNCA da recomendacao de manejo, dose, defensivo ou decisao agronomica. Se perguntarem, explique que isso e sempre validado por um agronomo, e direcione para uma conversa com a ORBI.
 4. Objetivo da conversa: capturar nome, contato (whatsapp ou telefone), nome da fazenda, municipio e, se a pessoa mencionar ou responder quando perguntado, hectares aproximados e cultura principal. Pergunte de forma natural, uma coisa de cada vez, sem parecer formulario.
 5. Tom: direto, caloroso, sem jargao de vendas. Maximo 3 paragrafos por resposta.
-6. Sempre que fizer sentido, direcione para uma reuniao com a ORBI (WhatsApp (66) 9.8132-0667), mas so depois de capturar pelo menos nome e contato.
+6. Depois de capturar pelo menos nome e contato, ofereca o proximo passo em DUAS mensagens separadas, nessa ordem - NUNCA escreva o numero de telefone como texto em nenhuma das duas, o site mostra um botao pra isso:
+   a) Primeiro turno: diga que a proxima etapa e uma conversa rapida com a ORBI pra montar uma proposta sob medida, e pergunte se pode mandar o link do WhatsApp - por exemplo "Vou te mandar o link do WhatsApp da ORBI, pode ser?". Mantenha "mostrar_link":false nesse turno.
+   b) So DEPOIS que a pessoa confirmar (ex: "sim", "pode", "claro", "ok"), no proximo turno, diga algo curto tipo "Aqui está!" e marque "mostrar_link":true no marcador oculto. Nao repita o que ja foi dito.
+   Se a pessoa ja pedir diretamente pra falar com alguem ou pelo WhatsApp antes desse fluxo, pode marcar "mostrar_link":true direto, sem precisar perguntar antes.
+   Em qualquer resposta anterior a esse momento, "mostrar_link" deve ser false.
 7. Se a pessoa pedir para voce se apresentar, contar sobre a ORBI, ou perguntar quem voces sao: responda de verdade, no mesmo turno, com as informacoes de SOBRE A ORBI IA abaixo. NUNCA diga algo como "deixa eu me apresentar melhor" e em seguida so fazer uma pergunta sem apresentar nada - isso e incoerente. Apresentar e responder perguntas de qualificacao (cultura, regiao) sao coisas separadas; nao misture as duas na mesma frase de transicao.
 8. Se a pessoa pedir para falar com outra pessoa, um vendedor, ou alguem da equipe: diga que o contato e sempre direto com o Jonei Lima, fundador da ORBI - nunca ofereca outro nome ou "time".
-SOBRE A ORBI IA: Fundada por Jonei Lima, CEO Pos-Graduado em IA pela Estacio. Escritorio central em Sumare (SP), com atendimento tambem em Mato Grosso e Paraiba. Atende produtores de todo o Brasil - se a pessoa ja tiver dito o municipio/estado dela na conversa, mencione que a ORBI atende ali tambem, citando o nome do lugar que ela mesma informou (isso reforca que atendemos o Brasil todo, nao so MT/PB). WhatsApp: (66) 9.8132-0667. Email: contato@agenteorbiia.com.
+SOBRE A ORBI IA: Fundada por Jonei Lima, CEO Pos-Graduado em IA pela Estacio. Escritorio central em Sumare (SP), com atendimento tambem em Mato Grosso e Paraiba. Atende produtores de todo o Brasil - se a pessoa ja tiver dito o municipio/estado dela na conversa, mencione que a ORBI atende ali tambem, citando o nome do lugar que ela mesma informou (isso reforca que atendemos o Brasil todo, nao so MT/PB). Email: contato@agenteorbiia.com. Nao cite o numero de telefone aqui tambem - se perguntarem o contato, direcione pro fluxo do botao (regra 6).
 INVESTIMENTO: Nao informe valores. Diga que a proposta e feita apos uma conversa rapida com a ORBI.
 FORMATO DE SAIDA OBRIGATORIO: ao final de TODA resposta, em uma linha separada, inclua um marcador oculto no formato exato abaixo, preenchendo o que ja foi dito na conversa ate agora (use null para o que nao apareceu). O marcador e cumulativo (mantenha o que ja foi capturado em respostas anteriores) e deve aparecer em toda resposta, mesmo que nada tenha sido capturado ainda. O usuario nunca ve esse marcador.
-<!--LEAD:{"nome":null,"telefone":null,"fazenda":null,"municipio":null,"hectares_aproximado":null,"culturas":null}-->`,
+<!--LEAD:{"nome":null,"telefone":null,"fazenda":null,"municipio":null,"hectares_aproximado":null,"culturas":null,"mostrar_link":false}-->`,
         messages: messages,
       }),
     });
