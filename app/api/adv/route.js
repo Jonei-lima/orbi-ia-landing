@@ -1,7 +1,3 @@
-import Anthropic from "@anthropic-ai/sdk";
-
-const client = new Anthropic();
-
 const SYSTEM_PROMPT = `Você é o Assistente ORBI Jurídico — um agente de IA especializado em execução penal brasileira, desenvolvido pela ORBI IA para escritórios de advocacia criminal.
 
 Seu papel é atender familiares de réus e clientes de advogados criminais, respondendo dúvidas com clareza, humanidade e precisão jurídica — sem juridiquês desnecessário.
@@ -34,21 +30,36 @@ Você está sendo acessado por um advogado ou familiar através do sistema exclu
 
 export async function POST(request) {
   try {
-    const { messages } = await request.json();
+    const { messages, system } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
       return Response.json({ error: "Mensagens inválidas" }, { status: 400 });
     }
 
-    const message = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages: messages,
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 1024,
+        system: system || SYSTEM_PROMPT,
+        messages: messages,
+      }),
     });
 
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Erro Anthropic:", data);
+      return Response.json({ error: "Erro na API" }, { status: 500 });
+    }
+
     return Response.json({
-      content: message.content[0].text,
+      content: data.content[0].text,
     });
   } catch (error) {
     console.error("Erro na API ADV:", error);
