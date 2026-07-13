@@ -91,11 +91,19 @@ export default function ClinicasPage() {
         body: JSON.stringify(leadFields),
       });
       const data = await res.json();
-      if (data?.whatsappLink) {
+            if (data?.whatsappLink) {
         setWhatsappLink({ url: data.whatsappLink, persona: data.persona });
+        
         if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-          window.fbq('track', 'Lead');
+          window.fbq('track', 'Lead', {
+            content_name: 'Lead Clinicas ORBI',
+            content_category: 'Lead Qualificado',
+            value: 65.00,
+            currency: 'BRL',
+            lead_type: 'Chat WhatsApp Clinicas'
+          });
         }
+
         if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
           window.gtag('event', 'conversion', {
             send_to: 'AW-17997912287/FnWMCI_Rvc4cEN-xiYZD',
