@@ -112,6 +112,7 @@ export default function ClinicasPage() {
           });
         }
       setLeadSaved(true);
+      }
     } catch (err) {
       console.error('Falha ao salvar/atualizar lead:', err);
       lastLeadSnapshotRef.current = '';
