@@ -107,11 +107,10 @@ export default function ClinicasPage() {
         if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
           window.gtag('event', 'conversion', {
             send_to: 'AW-17997912287/FnWMCI_Rvc4cEN-xiYZD',
-            value: 1.0,
+            value: 65.00,
             currency: 'BRL',
           });
         }
-      }
       setLeadSaved(true);
     } catch (err) {
       console.error('Falha ao salvar/atualizar lead:', err);
