@@ -162,7 +162,7 @@ export async function POST(req: Request) {
       fisioterapia: "fisioterapia",
     };
     const mensagemPreenchida = `Oi! Sou ${nome}${clinica ? `, da ${clinica}` : ""}. Quero testar como funcionaria pra uma clínica de ${segmentoLegivel[segmento] || segmento}.`;
-    const whatsappLink = `https://wa.me/${558388584946}?text=${encodeURIComponent(mensagemPreenchida)}`;
+    const whatsappLink = `https://wa.me/5519971336498?text=${encodeURIComponent(mensagemPreenchida)}`;
 
     // Marca como notificado (coluna própria), pra nunca reenviar/reexibir de novo
     const { error: marcaError } = await supabase
