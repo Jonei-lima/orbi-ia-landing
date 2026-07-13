@@ -1072,13 +1072,19 @@ async function maybeSaveLead(leadFields) {
       } catch (gtagErr) {
         console.error('Falha ao disparar conversão Google:', gtagErr);
       }
-      try {
-        if (typeof fbq === 'function') {
-          fbq('track', 'Lead');
+        try {
+          if (typeof fbq === 'function') {
+            fbq('track', 'Lead', {
+              content_name: 'Lead Agro ORBI',
+              content_category: 'Lead Qualificado',
+              value: 85.00,
+              currency: 'BRL',
+              lead_type: 'Chat WhatsApp Agro'
+            });
+          }
+        } catch (fbqErr) {
+          console.error('Falha ao disparar Lead Meta:', fbqErr);
         }
-      } catch (fbqErr) {
-        console.error('Falha ao disparar Lead Meta:', fbqErr);
-      }
     }
   } catch (err) {
     console.error('Falha ao salvar lead do agro:', err);
