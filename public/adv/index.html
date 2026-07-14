@@ -3,592 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORBI Jurídico — IA para Advocacia Criminal</title>
-<meta name="description" content="Agente de IA especializado em execução penal. Atende a família dos seus clientes 24h no WhatsApp enquanto você está em audiência.">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>ORBI Jurídico — Dr. Maurício</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#080c12;
-  --surface:#0e1520;
-  --surface2:#131d2b;
-  --surface3:#0f1825;
-  --border:rgba(255,255,255,.07);
-  --border2:rgba(255,255,255,.12);
-  --green:#4eca7f;
-  --green-dim:rgba(78,202,127,.1);
-  --green-border:rgba(78,202,127,.18);
-  --blue:#5b8af0;
-  --text:#e8edf5;
-  --text2:rgba(232,237,245,.55);
-  --text3:rgba(232,237,245,.28);
-  --radius:12px;
-  --font:'Sora',sans-serif;
-  --mono:'JetBrains Mono',monospace;
+  --bg:#080c12;--surface:#0e1520;--surface2:#131d2b;--surface3:#0f1825;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --green:#4eca7f;--green-dim:rgba(78,202,127,.1);--green-border:rgba(78,202,127,.18);
+  --blue:#5b8af0;--text:#e8edf5;--text2:rgba(232,237,245,.55);--text3:rgba(232,237,245,.28);
+  --font:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
 
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,12,18,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-.nav-brand{display:flex;align-items:center;gap:10px}
-.nav-ring{width:26px;height:26px;border:2.5px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
-.nav-name{font-size:15px;font-weight:700;color:#fff}
-.nav-name em{color:var(--green);font-style:normal}
-.nav-links{display:flex;align-items:center;gap:24px}
-.nav-link{font-size:13px;color:var(--text2);text-decoration:none;transition:color .15s}
-.nav-link:hover{color:var(--green)}
-.nav-cta{font-size:13px;font-weight:600;padding:8px 20px;background:var(--green);color:#050e08;border-radius:8px;text-decoration:none;transition:opacity .15s}
-.nav-cta:hover{opacity:.85}
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;background-image:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(78,202,127,.06) 0%,transparent 70%)}
+.login-box{width:100%;max-width:380px;padding:2.5rem;background:var(--surface);border:1px solid var(--border2);border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.login-brand{display:flex;align-items:center;gap:10px;margin-bottom:2rem;justify-content:center}
+.login-ring{width:32px;height:32px;border:2.5px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
+.login-name{font-size:18px;font-weight:700;color:#fff}
+.login-name em{color:var(--green);font-style:normal}
+.login-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;margin-top:16px;display:block}
+.login-label:first-of-type{margin-top:0}
+.login-input{width:100%;height:44px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:0 14px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s}
+.login-input:focus{border-color:var(--green)}
+.login-input::placeholder{color:var(--text3)}
+.login-btn{width:100%;height:46px;background:var(--green);color:#050e08;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;margin-top:20px;transition:opacity .15s}
+.login-btn:hover{opacity:.88}
+.login-err{font-size:12px;color:#e05555;margin-top:10px;text-align:center;min-height:18px}
+.login-badge{text-align:center;margin-top:1.5rem;font-size:11px;color:var(--text3)}
+.login-badge span{color:var(--green);font-weight:600}
 
-/* ── HERO ── */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 2rem 4rem;position:relative;overflow:hidden;text-align:center}
-.hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(78,202,127,.07) 0%,transparent 70%);pointer-events:none}
-.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none}
+/* APP */
+#app{display:none;flex-direction:column;height:100vh}
 
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--green);background:var(--green-dim);border:1px solid var(--green-border);border-radius:20px;padding:5px 14px;margin-bottom:28px}
-.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px}
+.ring{width:24px;height:24px;border:2px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
+.brand-name{font-size:15px;font-weight:700;color:#fff}
+.brand-name em{color:var(--green);font-style:normal}
+.user-pill{display:flex;align-items:center;gap:8px;background:var(--green-dim);border:1px solid var(--green-border);border-radius:20px;padding:5px 14px 5px 8px}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#050e08}
+.user-name{font-size:12px;font-weight:600;color:var(--green)}
+.logout-btn{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:var(--font);margin-left:8px}
+.logout-btn:hover{color:var(--text2)}
 
-.hero-title{font-size:clamp(32px,5vw,58px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:20px;letter-spacing:-.02em;max-width:780px}
-.hero-title .accent{color:var(--green)}
-.hero-title .line2{color:var(--text2);font-weight:500}
+/* MAIN */
+.main{display:flex;flex:1;overflow:hidden}
 
-.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--text2);max-width:560px;line-height:1.75;margin:0 auto 40px}
+/* SIDEBAR */
+.sidebar{width:270px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-section{padding:1.25rem 1rem .5rem}
+.sidebar-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px}
+.sidebar-item.active{background:var(--green-dim);border:1px solid var(--green-border)}
+.sidebar-item-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:rgba(255,255,255,.05)}
+.sidebar-item.active .sidebar-item-icon{background:rgba(78,202,127,.15)}
+.sidebar-item-text strong{font-size:13px;font-weight:500;color:var(--text);display:block}
+.sidebar-item-text span{font-size:11px;color:var(--text3)}
+.sidebar-item.active .sidebar-item-text strong{color:var(--green)}
+.sidebar-divider{height:1px;background:var(--border);margin:.5rem 1rem}
 
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
-.btn-primary{font-size:14px;font-weight:700;padding:14px 32px;background:var(--green);color:#050e08;border-radius:10px;text-decoration:none;transition:all .15s;border:none;cursor:pointer;font-family:var(--font)}
-.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
-.btn-secondary{font-size:14px;font-weight:600;padding:14px 32px;background:transparent;color:var(--text);border-radius:10px;text-decoration:none;border:1px solid var(--border2);transition:all .15s;cursor:pointer;font-family:var(--font)}
-.btn-secondary:hover{border-color:var(--green);color:var(--green)}
+/* CASOS */
+.caso-card{margin:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.75rem}
+.caso-nome{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.caso-detail{font-size:11px;color:var(--text3);line-height:1.6}
+.caso-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:6px}
+.s-verde{background:rgba(78,202,127,.1);color:var(--green);border:1px solid var(--green-border)}
+.s-amarelo{background:rgba(232,151,58,.1);color:#e8973a;border:1px solid rgba(232,151,58,.2)}
+.s-azul{background:rgba(91,138,240,.1);color:var(--blue);border:1px solid rgba(91,138,240,.2)}
 
-/* ── CHAT DEMO ── */
-.chat-demo{width:100%;max-width:760px;margin:0 auto;background:var(--surface);border:1px solid var(--border2);border-radius:20px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 0 1px rgba(78,202,127,.05);position:relative;z-index:1}
+/* CHAT */
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.chat-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.chat-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green),#2a7a4f);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#050e08;flex-shrink:0}
+.chat-info strong{font-size:14px;font-weight:600;color:var(--text);display:block}
+.chat-info span{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-.chat-topbar{background:var(--surface2);padding:14px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
-.chat-dots{display:flex;gap:6px}
-.chat-dot{width:10px;height:10px;border-radius:50%}
-.chat-avatar-wrap{display:flex;align-items:center;gap:10px;margin-left:8px}
-.chat-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--green),#2a7a4f);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#050e08}
-.chat-av-info strong{font-size:13px;font-weight:600;color:var(--text);display:block;line-height:1.2}
-.chat-av-info span{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
-.online-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-
-.chat-messages{height:340px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.chat-messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
 .chat-messages::-webkit-scrollbar{width:4px}
 .chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:4px}
 
-.cmsg{display:flex;gap:10px;max-width:80%}
-.cmsg.user{align-self:flex-end;flex-direction:row-reverse}
-.cmsg-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
-.cmsg.agent .cmsg-av{background:linear-gradient(135deg,var(--green),#2a7a4f);color:#050e08}
-.cmsg.user .cmsg-av{background:rgba(91,138,240,.15);border:1px solid rgba(91,138,240,.2);color:var(--blue);font-size:10px}
-.cmsg-body{}
-.cmsg-name{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;padding:0 4px}
-.cmsg.user .cmsg-name{text-align:right}
-.cmsg-bubble{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;color:var(--text)}
-.cmsg.agent .cmsg-bubble{background:var(--surface2);border:1px solid var(--border);border-top-left-radius:4px}
-.cmsg.user .cmsg-bubble{background:rgba(91,138,240,.12);border:1px solid rgba(91,138,240,.18);border-top-right-radius:4px}
-.cmsg-time{font-size:10px;color:var(--text3);padding:3px 4px 0;font-family:var(--mono)}
-.cmsg.user .cmsg-time{text-align:right}
+.msg{display:flex;gap:10px;max-width:75%}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
+.msg.agent .msg-avatar{background:linear-gradient(135deg,var(--green),#2a7a4f);color:#050e08}
+.msg.user .msg-avatar{background:rgba(91,138,240,.12);border:1px solid rgba(91,138,240,.2);color:var(--blue);font-size:10px}
+.msg-content{display:flex;flex-direction:column;gap:4px}
+.msg.user .msg-content{align-items:flex-end}
+.msg-name{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.04em;text-transform:uppercase;padding:0 4px}
+.msg-bubble{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;color:var(--text)}
+.msg.agent .msg-bubble{background:var(--surface2);border:1px solid var(--border);border-top-left-radius:4px}
+.msg.user .msg-bubble{background:rgba(91,138,240,.1);border:1px solid rgba(91,138,240,.18);border-top-right-radius:4px}
+.msg-time{font-size:10px;color:var(--text3);padding:0 4px;font-family:var(--mono)}
 
-.typing-wrap{display:flex;gap:10px;max-width:80%}
-.typing-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--green),#2a7a4f);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#050e08;flex-shrink:0;margin-top:2px}
+.typing-wrap{display:flex;gap:10px;max-width:75%}
+.typing-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green),#2a7a4f);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#050e08;flex-shrink:0;margin-top:2px}
 .typing-bubble{padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;border-top-left-radius:4px;display:flex;gap:4px;align-items:center}
 .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:tdot 1.2s infinite}
 .typing-dot:nth-child(2){animation-delay:.2s}
 .typing-dot:nth-child(3){animation-delay:.4s}
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
 
-.chat-suggestions{padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--surface2)}
-.chat-sug{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:none;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
-.chat-sug:hover{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+.suggestions{padding:.75rem 1.5rem;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--surface2)}
+.sug{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:none;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
+.sug:hover{border-color:var(--green);color:var(--green);background:var(--green-dim)}
 
-.chat-input-row{padding:12px 16px;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:10px;align-items:flex-end}
-.chat-inp{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text);font-family:var(--font);outline:none;resize:none;min-height:42px;max-height:100px;line-height:1.5;transition:border-color .15s}
-.chat-inp:focus{border-color:var(--green)}
-.chat-inp::placeholder{color:var(--text3)}
-.chat-send{width:42px;height:42px;background:var(--green);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
-.chat-send:hover{opacity:.85}
-.chat-send:disabled{opacity:.35;cursor:not-allowed}
+.disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:var(--text3);text-align:center;border-top:1px solid var(--border)}
 
-.chat-disclaimer{padding:8px 16px;background:var(--surface2);font-size:10px;color:var(--text3);text-align:center;border-top:1px solid var(--border)}
+.input-area{padding:1rem 1.5rem;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+.chat-input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;resize:none;min-height:50px;max-height:140px;line-height:1.6;transition:border-color .15s}
+.chat-input:focus{border-color:var(--green)}
+.chat-input::placeholder{color:var(--text3)}
+.send-btn{width:50px;height:50px;background:var(--green);border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
+.send-btn:hover{opacity:.85}
+.send-btn:disabled{opacity:.35;cursor:not-allowed}
 
-/* ── DORES ── */
-.section{padding:6rem 2rem;max-width:1000px;margin:0 auto}
-.section-eyebrow{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--green);margin-bottom:14px}
-.section-title{font-size:clamp(24px,3.5vw,38px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:14px;letter-spacing:-.01em}
-.section-sub{font-size:15px;color:var(--text2);max-width:520px;line-height:1.75}
-
-.dores-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:3rem}
-.dor-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:border-color .15s}
-.dor-card:hover{border-color:rgba(78,202,127,.2)}
-.dor-icon{font-size:28px;margin-bottom:12px}
-.dor-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px}
-.dor-text{font-size:13px;color:var(--text2);line-height:1.7}
-.dor-highlight{color:var(--green);font-weight:600}
-
-/* ── COMO FUNCIONA ── */
-.como{padding:6rem 2rem;background:var(--surface3);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.como-inner{max-width:1000px;margin:0 auto}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem;position:relative}
-.steps::before{content:'';position:absolute;top:28px;left:calc(16.6% + 24px);right:calc(16.6% + 24px);height:1px;background:linear-gradient(to right,var(--green-border),var(--border),var(--green-border))}
-.step{text-align:center;position:relative}
-.step-num{width:56px;height:56px;border-radius:50%;background:var(--green-dim);border:2px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--green);margin:0 auto 16px;font-family:var(--mono);position:relative;z-index:1}
-.step-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px}
-.step-text{font-size:13px;color:var(--text2);line-height:1.7}
-
-/* ── LEAD FORM ── */
-.lead-section{padding:6rem 2rem;max-width:1000px;margin:0 auto}
-.lead-wrap{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:3rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
-.lead-left .section-title{margin-bottom:12px}
-.lead-left p{font-size:14px;color:var(--text2);line-height:1.75}
-.lead-points{margin-top:1.5rem;display:flex;flex-direction:column;gap:10px}
-.lead-point{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)}
-.lead-point-dot{width:18px;height:18px;border-radius:50%;background:var(--green-dim);border:1px solid var(--green-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-size:9px;color:var(--green)}
-
-.form-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:2rem}
-.form-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:6px}
-.form-sub{font-size:12px;color:var(--text3);margin-bottom:1.5rem}
-.form-group{margin-bottom:14px}
-.form-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:6px;display:block}
-.form-input{width:100%;height:42px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:0 14px;font-size:13px;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s}
-.form-input:focus{border-color:var(--green)}
-.form-input::placeholder{color:var(--text3)}
-.form-select{width:100%;height:42px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:0 14px;font-size:13px;color:var(--text);font-family:var(--font);outline:none;appearance:none;cursor:pointer}
-.form-select:focus{border-color:var(--green)}
-.form-select option{background:var(--surface2)}
-.form-submit{width:100%;height:46px;background:var(--green);color:#050e08;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;margin-top:6px;transition:opacity .15s}
-.form-submit:hover{opacity:.88}
-.form-success{display:none;text-align:center;padding:1.5rem 0}
-.form-success-icon{font-size:40px;margin-bottom:12px}
-.form-success-title{font-size:16px;font-weight:700;color:var(--green);margin-bottom:6px}
-.form-success-text{font-size:13px;color:var(--text2)}
-
-/* ── LOGIN SECTION ── */
-.login-section{padding:4rem 2rem;background:var(--surface3);border-top:1px solid var(--border)}
-.login-inner{max-width:400px;margin:0 auto;text-align:center}
-.login-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:6px}
-.login-sub{font-size:13px;color:var(--text3);margin-bottom:1.5rem}
-.login-form{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:1.5rem}
-.login-inp{width:100%;height:42px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:0 14px;font-size:13px;color:var(--text);font-family:var(--font);outline:none;margin-bottom:10px;transition:border-color .15s}
-.login-inp:focus{border-color:var(--green)}
-.login-inp::placeholder{color:var(--text3)}
-.login-btn{width:100%;height:42px;background:var(--surface2);color:var(--text);border:1px solid var(--border2);border-radius:8px;font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .15s}
-.login-btn:hover{border-color:var(--green);color:var(--green)}
-.login-err{font-size:12px;color:#e05555;margin-top:8px;min-height:18px;text-align:center}
-
-/* ── MODAL LOGIN ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal-box{width:100%;max-width:420px;background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:2.5rem;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.6)}
-.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;transition:color .15s}
-.modal-close:hover{color:var(--text)}
-.modal-brand{display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;justify-content:center}
-.modal-ring{width:24px;height:24px;border:2px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
-.modal-name{font-size:15px;font-weight:700;color:#fff}
-.modal-name em{color:var(--green);font-style:normal}
-.modal-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:6px;text-align:center}
-.modal-sub{font-size:13px;color:var(--text3);margin-bottom:1.5rem;text-align:center}
-
-/* ── CHAT EXCLUSIVO ── */
-.chat-exclusivo{position:fixed;inset:0;background:var(--bg);z-index:300;display:none;flex-direction:column}
-.chat-exclusivo.open{display:flex}
-.excl-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.excl-brand{display:flex;align-items:center;gap:10px}
-.excl-ring{width:22px;height:22px;border:2px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
-.excl-name{font-size:14px;font-weight:700;color:#fff}
-.excl-name em{color:var(--green);font-style:normal}
-.excl-user{display:flex;align-items:center;gap:8px}
-.excl-avatar{width:28px;height:28px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#050e08}
-.excl-username{font-size:12px;font-weight:600;color:var(--green)}
-.excl-logout{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:var(--font);margin-left:10px}
-.excl-logout:hover{color:var(--text2)}
-
-.excl-body{flex:1;display:flex;overflow:hidden}
-
-.excl-sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);padding:1.25rem 1rem;overflow-y:auto;flex-shrink:0}
-.excl-sec-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px}
-.excl-caso{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.75rem;margin-bottom:10px}
-.excl-caso-nome{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
-.excl-caso-det{font-size:11px;color:var(--text3);line-height:1.6}
-.excl-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:5px}
-.s-verde{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border)}
-.s-amarelo{background:rgba(232,151,58,.1);color:#e8973a;border:1px solid rgba(232,151,58,.2)}
-
-.excl-chat{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.excl-chat-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:12px;flex-shrink:0}
-.excl-chat-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green),#2a7a4f);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#050e08}
-.excl-chat-info strong{font-size:14px;font-weight:600;color:var(--text);display:block}
-.excl-chat-info span{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px}
-
-.excl-messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:14px}
-.excl-messages::-webkit-scrollbar{width:4px}
-.excl-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:4px}
-
-.emsg{display:flex;gap:10px;max-width:75%}
-.emsg.user{align-self:flex-end;flex-direction:row-reverse}
-.emsg-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
-.emsg.agent .emsg-av{background:linear-gradient(135deg,var(--green),#2a7a4f);color:#050e08}
-.emsg.user .emsg-av{background:rgba(91,138,240,.12);border:1px solid rgba(91,138,240,.2);color:var(--blue);font-size:10px}
-.emsg-content{}
-.emsg-name{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:0 4px;margin-bottom:3px}
-.emsg.user .emsg-name{text-align:right}
-.emsg-bubble{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;color:var(--text)}
-.emsg.agent .emsg-bubble{background:var(--surface2);border:1px solid var(--border);border-top-left-radius:4px}
-.emsg.user .emsg-bubble{background:rgba(91,138,240,.1);border:1px solid rgba(91,138,240,.18);border-top-right-radius:4px}
-.emsg-time{font-size:10px;color:var(--text3);padding:3px 4px 0;font-family:var(--mono)}
-.emsg.user .emsg-time{text-align:right}
-
-.etyping-wrap{display:flex;gap:10px}
-.etyping-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green),#2a7a4f);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#050e08;flex-shrink:0;margin-top:2px}
-.etyping{padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;border-top-left-radius:4px;display:flex;gap:4px;align-items:center}
-.etdot{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:tdot 1.2s infinite}
-.etdot:nth-child(2){animation-delay:.2s}
-.etdot:nth-child(3){animation-delay:.4s}
-
-.excl-sugs{padding:.75rem 1.5rem;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--surface2)}
-.excl-sug{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:none;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
-.excl-sug:hover{border-color:var(--green);color:var(--green);background:var(--green-dim)}
-
-.excl-input-area{padding:1rem 1.5rem;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
-.excl-inp{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;resize:none;min-height:50px;max-height:140px;line-height:1.6;transition:border-color .15s}
-.excl-inp:focus{border-color:var(--green)}
-.excl-inp::placeholder{color:var(--text3)}
-.excl-send{width:50px;height:50px;background:var(--green);border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
-.excl-send:hover{opacity:.85}
-.excl-send:disabled{opacity:.35;cursor:not-allowed}
-.excl-disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:var(--text3);text-align:center;border-top:1px solid var(--border)}
-
-/* ── FOOTER ── */
-footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem;text-align:center}
-footer p{font-size:12px;color:var(--text3)}
-footer a{color:var(--green);text-decoration:none}
-
-@media(max-width:768px){
-  .dores-grid{grid-template-columns:1fr}
-  .steps{grid-template-columns:1fr;gap:2rem}
-  .steps::before{display:none}
-  .lead-wrap{grid-template-columns:1fr}
-  .nav-links{display:none}
-  .excl-sidebar{display:none}
-  .emsg{max-width:90%}
-  .cmsg{max-width:90%}
-}
+@media(max-width:700px){.sidebar{display:none}.msg{max-width:90%}}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-brand">
-    <div class="nav-ring"></div>
-    <span class="nav-name">ORBI <em>Jurídico</em></span>
-  </div>
-  <div class="nav-links">
-    <a href="#demo" class="nav-link">Demo ao vivo</a>
-    <a href="#como" class="nav-link">Como funciona</a>
-    <a href="#contato" class="nav-link">Quero testar</a>
-  </div>
-  <a href="#" class="nav-cta" onclick="abrirModalLogin(event)">Área do cliente</a>
-</nav>
-
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-eyebrow">
-    <div class="hero-eyebrow-dot"></div>
-    IA para advocacia criminal
-  </div>
-  <h1 class="hero-title">
-    Enquanto você está em audiência,<br>
-    <span class="accent">quem atende a família?</span>
-  </h1>
-  <p class="hero-sub">O ORBI Jurídico responde automaticamente as dúvidas dos familiares dos seus clientes — progressão de regime, alvarás, audiências, documentos — direto no WhatsApp, 24 horas por dia.</p>
-  <div class="hero-btns">
-    <a href="#demo" class="btn-primary">Ver funcionando agora</a>
-    <a href="#contato" class="btn-secondary">Quero para meu escritório</a>
-  </div>
-
-  <!-- CHAT DEMO -->
-  <div class="chat-demo" id="demo">
-    <div class="chat-topbar">
-      <div class="chat-dots">
-        <div class="chat-dot" style="background:#e05555"></div>
-        <div class="chat-dot" style="background:#e8973a"></div>
-        <div class="chat-dot" style="background:#5cb97a"></div>
-      </div>
-      <div class="chat-avatar-wrap">
-        <div class="chat-av">OJ</div>
-        <div class="chat-av-info">
-          <strong>Assistente ORBI Jurídico</strong>
-          <span><div class="online-dot"></div> online agora</span>
-        </div>
-      </div>
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="login-ring"></div>
+      <span class="login-name">ORBI <em>Jurídico</em></span>
     </div>
-
-    <div class="chat-messages" id="demo-messages">
-      <div class="cmsg agent">
-        <div class="cmsg-av">OJ</div>
-        <div class="cmsg-body">
-          <div class="cmsg-name">ORBI Jurídico</div>
-          <div class="cmsg-bubble">Olá! 👋 Sou o assistente jurídico especializado em execução penal. Posso responder suas dúvidas sobre progressão de regime, audiências, alvarás, visitas e muito mais.<br><br>Como posso ajudar?</div>
-          <div class="cmsg-time">agora</div>
-        </div>
-      </div>
-      <div class="etyping-wrap" id="demo-typing" style="display:none">
-        <div class="etyping-av">OJ</div>
-        <div class="etyping"><div class="etdot"></div><div class="etdot"></div><div class="etdot"></div></div>
-      </div>
-    </div>
-
-    <div class="chat-suggestions" id="demo-sugs">
-      <button class="chat-sug" onclick="demoSug(this)">Quando meu filho pode pedir progressão?</button>
-      <button class="chat-sug" onclick="demoSug(this)">Como funciona remição por estudo?</button>
-      <button class="chat-sug" onclick="demoSug(this)">Documentos para visita</button>
-      <button class="chat-sug" onclick="demoSug(this)">O que é saída temporária?</button>
-    </div>
-
-    <div class="chat-input-row">
-      <textarea class="chat-inp" id="demo-input" placeholder="Digite como se fosse a família de um cliente..." rows="1"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();demoEnviar()}"
-        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-      <button class="chat-send" id="demo-send" onclick="demoEnviar()">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
-      </button>
-    </div>
-    <div class="chat-disclaimer">Demo público · O agente responde com IA real sobre execução penal brasileira</div>
-  </div>
-</section>
-
-<!-- DORES -->
-<section style="padding:6rem 2rem;background:var(--surface3);border-top:1px solid var(--border)">
-  <div style="max-width:1000px;margin:0 auto">
-    <div class="section-eyebrow">O problema que você conhece bem</div>
-    <h2 class="section-title">Você já viveu alguma dessas situações?</h2>
-    <div class="dores-grid">
-      <div class="dor-card">
-        <div class="dor-icon">📱</div>
-        <div class="dor-title">WhatsApp que não para</div>
-        <div class="dor-text">A mãe do seu cliente manda mensagem às 22h perguntando sobre a progressão. Você está em casa, depois de um dia longo. <span class="dor-highlight">E responde, porque é sua cliente.</span></div>
-      </div>
-      <div class="dor-card">
-        <div class="dor-icon">⚖️</div>
-        <div class="dor-title">Audiência interrompida por mensagem</div>
-        <div class="dor-text">Você sai de uma audiência e tem 11 mensagens da família dos clientes. Todas perguntando a mesma coisa. <span class="dor-highlight">1h30 do seu dia foi embora respondendo.</span></div>
-      </div>
-      <div class="dor-card">
-        <div class="dor-icon">🔁</div>
-        <div class="dor-title">As mesmas perguntas todo dia</div>
-        <div class="dor-text">"Quando sai pro semiaberto?" "Que documento levo na visita?" "O alvará foi expedido?" Você respondeu isso <span class="dor-highlight">dezenas de vezes esse mês.</span></div>
-      </div>
-      <div class="dor-card">
-        <div class="dor-icon">😔</div>
-        <div class="dor-title">Família ansiosa sem resposta</div>
-        <div class="dor-text">A família está angustiada e merece atenção. Mas você tem processos, audiências, petições. <span class="dor-highlight">Não sobra tempo para explicar tudo com calma.</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- COMO FUNCIONA -->
-<section class="como" id="como">
-  <div class="como-inner">
-    <div class="section-eyebrow">Como funciona</div>
-    <h2 class="section-title">Simples. Exclusivo. Seu.</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-title">Você compartilha os casos</div>
-        <div class="step-text">Nos conta os processos dos seus clientes — nomes, regimes, datas de audiência, situações específicas. O agente aprende o contexto de cada um.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-title">O agente é ativado</div>
-        <div class="step-text">Em 48 horas o agente está no seu WhatsApp, pronto para atender. Você define o que ele responde e o que escala para você.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-title">A família é atendida</div>
-        <div class="step-text">Familiares mandam mensagem no seu número normal. O agente responde com precisão, humanidade e 24h por dia. Você só entra quando necessário.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- LEAD FORM -->
-<section class="lead-section" id="contato">
-  <div class="lead-wrap">
-    <div class="lead-left">
-      <div class="section-eyebrow">Quero testar</div>
-      <h2 class="section-title">Piloto de 15 dias.<br>Sem compromisso.</h2>
-      <p>Você testa com seus processos reais. Vê funcionando. Decide depois se quer continuar.</p>
-      <div class="lead-points">
-        <div class="lead-point">
-          <div class="lead-point-dot">✓</div>
-          <span>Agente treinado com seus casos específicos</span>
-        </div>
-        <div class="lead-point">
-          <div class="lead-point-dot">✓</div>
-          <span>Suporte direto com o desenvolvedor</span>
-        </div>
-        <div class="lead-point">
-          <div class="lead-point-dot">✓</div>
-          <span>Você define o que o agente responde</span>
-        </div>
-        <div class="lead-point">
-          <div class="lead-point-dot">✓</div>
-          <span>Ativo em 48 horas após o briefing</span>
-        </div>
-      </div>
-    </div>
-    <div class="form-card">
-      <div class="form-title">Solicitar piloto gratuito</div>
-      <div class="form-sub">Entraremos em contato em até 2 horas</div>
-      <div id="lead-form">
-        <div class="form-group">
-          <label class="form-label">Nome completo</label>
-          <input class="form-input" id="f-nome" type="text" placeholder="Dra. Maria Silva">
-        </div>
-        <div class="form-group">
-          <label class="form-label">WhatsApp</label>
-          <input class="form-input" id="f-whats" type="tel" placeholder="(61) 9 9999-9999">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Área de atuação</label>
-          <select class="form-select" id="f-area">
-            <option value="">Selecione</option>
-            <option>Execução Penal</option>
-            <option>Direito Criminal</option>
-            <option>Defesa Criminal</option>
-            <option>Outro</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Quantos clientes ativos?</label>
-          <select class="form-select" id="f-clientes">
-            <option value="">Selecione</option>
-            <option>Até 10 clientes</option>
-            <option>10 a 30 clientes</option>
-            <option>30 a 60 clientes</option>
-            <option>Mais de 60 clientes</option>
-          </select>
-        </div>
-        <button class="form-submit" onclick="enviarLead()">Quero testar por 15 dias →</button>
-      </div>
-      <div class="form-success" id="lead-success">
-        <div class="form-success-icon">⚖️</div>
-        <div class="form-success-title">Solicitação recebida!</div>
-        <div class="form-success-text">Jonei da ORBI IA entrará em contato no seu WhatsApp em até 2 horas para iniciar o piloto.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- LOGIN SECTION -->
-<section class="login-section" id="acesso">
-  <div class="login-inner">
-    <div class="login-title">Já é cliente?</div>
-    <div class="login-sub">Acesse sua área exclusiva com o agente treinado para o seu escritório.</div>
-    <div class="login-form">
-      <input class="login-inp" id="ls-user" type="text" placeholder="Usuário" autocomplete="off">
-      <input class="login-inp" id="ls-pass" type="password" placeholder="Senha" autocomplete="off"
-        onkeydown="if(event.key==='Enter')fazerLoginExclusivo()">
-      <button class="login-btn" onclick="fazerLoginExclusivo()">Acessar minha área →</button>
-      <div class="login-err" id="ls-err"></div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <p>ORBI IA · <a href="https://agenteorbiia.com">agenteorbiia.com</a> · contato@agenteorbiia.com · (66) 9.8132-0667</p>
-</footer>
-
-<!-- MODAL LOGIN -->
-<div class="modal-overlay" id="modal-login">
-  <div class="modal-box">
-    <button class="modal-close" onclick="fecharModal()">×</button>
-    <div class="modal-brand">
-      <div class="modal-ring"></div>
-      <span class="modal-name">ORBI <em>Jurídico</em></span>
-    </div>
-    <div class="modal-title">Área do cliente</div>
-    <div class="modal-sub">Acesso exclusivo ao seu agente personalizado</div>
-    <input class="login-inp" id="m-user" type="text" placeholder="Usuário" autocomplete="off">
-    <input class="login-inp" id="m-pass" type="password" placeholder="Senha" autocomplete="off"
-      onkeydown="if(event.key==='Enter')fazerLoginModal()">
-    <button class="form-submit" onclick="fazerLoginModal()" style="margin-top:4px">Entrar →</button>
-    <div class="login-err" id="m-err"></div>
+    <label class="login-label">Usuário</label>
+    <input class="login-input" id="login-user" type="text" placeholder="seu usuário" autocomplete="off">
+    <label class="login-label">Senha</label>
+    <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
+    <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-badge">Acesso exclusivo · <span>Dr. Maurício</span></div>
   </div>
 </div>
 
-<!-- CHAT EXCLUSIVO -->
-<div class="chat-exclusivo" id="chat-exclusivo">
-  <div class="excl-topbar">
-    <div class="excl-brand">
-      <div class="excl-ring"></div>
-      <span class="excl-name">ORBI <em>Jurídico</em></span>
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="ring"></div>
+      <span class="brand-name">ORBI <em>Jurídico</em></span>
     </div>
-    <div class="excl-user">
-      <div class="excl-avatar" id="excl-av-initials">ED</div>
-      <span class="excl-username" id="excl-username">Dra. Elisangela</span>
-      <button class="excl-logout" onclick="fazerLogout()">sair</button>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="user-pill">
+        <div class="user-avatar">MA</div>
+        <span class="user-name">Dr. Maurício</span>
+      </div>
+      <button class="logout-btn" onclick="fazerLogout()">sair</button>
     </div>
   </div>
-  <div class="excl-body">
-    <div class="excl-sidebar">
-      <div class="excl-sec-label">Casos ativos</div>
-      <div class="excl-caso">
-        <div class="excl-caso-nome">Carlos Eduardo Souza</div>
-        <div class="excl-caso-det">Proc. 0023419-88.2023.8.07.0001<br>CDP Brasília · Regime Fechado</div>
-        <div class="excl-status s-verde">⚖️ Progressão em andamento</div>
+
+  <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Menu</div>
+        <div class="sidebar-item active">
+          <div class="sidebar-item-icon">💬</div>
+          <div class="sidebar-item-text">
+            <strong>Assistente IA</strong>
+            <span>Atendimento ao cliente</span>
+          </div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-item-icon">📋</div>
+          <div class="sidebar-item-text"><strong>Processos</strong><span>Em breve</span></div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-item-icon">🔔</div>
+          <div class="sidebar-item-text"><strong>Alertas</strong><span>Em breve</span></div>
+        </div>
       </div>
-      <div class="excl-caso">
-        <div class="excl-caso-nome">Rafael Mendes Costa</div>
-        <div class="excl-caso-det">Proc. 0041872-12.2022.8.07.0003<br>Casa de Albergado DF</div>
-        <div class="excl-status s-amarelo">📅 Audiência 22/07</div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Casos ativos</div>
       </div>
-      <div class="excl-caso">
-        <div class="excl-caso-nome">Marcos Antônio Lima</div>
-        <div class="excl-caso-det">Proc. 0018933-55.2024.8.07.0002<br>Penitenciária do DF</div>
-        <div class="excl-status s-verde">📚 Remição ativa</div>
+
+      <div class="caso-card">
+        <div class="caso-nome">Empresa Alpha Ltda</div>
+        <div class="caso-detail">Ação de indenização por danos morais e materiais · Vara Cível · Rondonópolis/MT</div>
+        <div class="caso-status s-azul">⚖️ Aguardando audiência</div>
+      </div>
+
+      <div class="caso-card">
+        <div class="caso-nome">João Carlos Ferreira</div>
+        <div class="caso-detail">Improbidade administrativa · Tribunal de Contas · Mato Grosso</div>
+        <div class="caso-status s-amarelo">📅 Prazo em 15 dias</div>
+      </div>
+
+      <div class="caso-card">
+        <div class="caso-nome">Vereador Pedro Alves</div>
+        <div class="caso-detail">Mandado de segurança · Direito político eleitoral · TRE-MT</div>
+        <div class="caso-status s-verde">✅ Liminar deferida</div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <div class="sidebar-label" style="font-size:10px;color:var(--text3);line-height:1.6">Demo exclusivo · ORBI IA<br>agenteorbiia.com</div>
       </div>
     </div>
-    <div class="excl-chat">
-      <div class="excl-chat-header">
-        <div class="excl-chat-av">OJ</div>
-        <div class="excl-chat-info">
+
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="chat-avatar">OJ</div>
+        <div class="chat-info">
           <strong>Assistente ORBI Jurídico</strong>
           <span><div class="online-dot"></div> online · exclusivo para seu escritório</span>
         </div>
       </div>
-      <div class="excl-messages" id="excl-messages">
-        <div class="emsg agent">
-          <div class="emsg-av">OJ</div>
-          <div class="emsg-content">
-            <div class="emsg-name">ORBI Jurídico</div>
-            <div class="emsg-bubble" id="excl-welcome">Olá, Dra. Elisangela! 👋<br><br>Sou seu assistente jurídico exclusivo, treinado com os processos do seu escritório. Posso simular exatamente como atenderei os familiares dos seus clientes — com as informações reais de cada caso.<br><br>Como posso ajudar?</div>
-            <div class="emsg-time">agora</div>
+
+      <div class="chat-messages" id="messages">
+        <div class="msg agent">
+          <div class="msg-avatar">OJ</div>
+          <div class="msg-content">
+            <span class="msg-name">ORBI Jurídico</span>
+            <div class="msg-bubble">Olá, Dr. Maurício! 👋<br><br>Sou seu assistente jurídico exclusivo, especializado em <strong>direito político e cível</strong>. Posso responder dúvidas dos seus clientes sobre processos, prazos, direitos e orientações gerais — enquanto você está em audiência ou reunião.<br><br>Como posso ajudar?</div>
+            <span class="msg-time">agora</span>
           </div>
         </div>
-        <div class="etyping-wrap" id="excl-typing" style="display:none">
-          <div class="etyping-av">OJ</div>
-          <div class="etyping"><div class="etdot"></div><div class="etdot"></div><div class="etdot"></div></div>
+        <div class="typing-wrap" id="typing-wrap" style="display:none">
+          <div class="typing-av">OJ</div>
+          <div class="typing-bubble">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
         </div>
       </div>
-      <div class="excl-sugs" id="excl-sugs">
-        <button class="excl-sug" onclick="exclSug(this)">Quando o Carlos pode ir pro semiaberto?</button>
-        <button class="excl-sug" onclick="exclSug(this)">Tem audiência marcada pro Rafael?</button>
-        <button class="excl-sug" onclick="exclSug(this)">Documentos para visita no CDP</button>
-        <button class="excl-sug" onclick="exclSug(this)">Como funciona remição por estudo?</button>
-        <button class="excl-sug" onclick="exclSug(this)">O alvará do Marcos foi expedido?</button>
+
+      <div class="suggestions" id="suggestions">
+        <button class="sug" onclick="enviarSug(this)">O que é improbidade administrativa?</button>
+        <button class="sug" onclick="enviarSug(this)">Como funciona um mandado de segurança?</button>
+        <button class="sug" onclick="enviarSug(this)">Quais são meus direitos como réu cível?</button>
+        <button class="sug" onclick="enviarSug(this)">O que é dano moral e como provar?</button>
+        <button class="sug" onclick="enviarSug(this)">Candidato pode ser cassado por quê?</button>
       </div>
-      <div class="excl-disclaimer">Área exclusiva · Dra. Elisangela · ORBI IA · Orientação geral — não substitui assessoria jurídica formal. (LGPD — Lei 13.709/2018)</div>
-      <div class="excl-input-area">
-        <textarea class="excl-inp" id="excl-input" placeholder="Digite aqui — como se fosse a família de um cliente..." rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();exclEnviar()}"
+
+      <div class="disclaimer">Demo exclusivo · Dr. Maurício · ORBI IA — Orientação geral, não substitui assessoria jurídica formal</div>
+
+      <div class="input-area">
+        <textarea class="chat-input" id="chat-input" placeholder="Digite aqui — como se fosse um cliente seu..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviar()}"
           oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-        <button class="excl-send" id="excl-send" onclick="exclEnviar()">
+        <button class="send-btn" id="send-btn" onclick="enviar()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
         </button>
       </div>
@@ -597,228 +263,130 @@ footer a{color:var(--green);text-decoration:none}
 </div>
 
 <script>
-// ── CLIENTES ──
-const CLIENTES = {
-  elisangela: {
-    senha: '0972',
-    nome: 'Dra. Elisangela',
-    initials: 'ED',
-    system: `Você é o Assistente ORBI Jurídico exclusivo da Dra. Elisangela, advogada especializada em execução penal no Distrito Federal (TJDFT).
+const SYSTEM = `Você é o Assistente ORBI Jurídico exclusivo do Dr. Maurício, advogado especializado em direito político e direito cível no Mato Grosso.
 
-Seu papel é atender familiares dos clientes da Dra. Elisangela com clareza, humanidade e precisão jurídica.
+Seu papel é atender clientes do Dr. Maurício com clareza, humanidade e precisão jurídica.
 
 CASOS ATIVOS:
-- Carlos Eduardo Souza | Proc. 0023419-88.2023.8.07.0001 | Regime fechado | CDP Brasília — Ala B | Cumprimento de 1/6 desde 08/03/2026 — APTO para progressão ao semiaberto | Audiência: 22/07/2026 às 14h na 1ª VEP/TJDFT
-- Rafael Mendes Costa | Proc. 0041872-12.2022.8.07.0003 | Regime semiaberto | Casa de Albergado DF | Audiência: 22/07/2026
-- Marcos Antônio Lima | Proc. 0018933-55.2024.8.07.0002 | Regime fechado | Penitenciária do DF | Remição por estudo ativa — cursando Ensino Médio | Alvará não expedido
+- Empresa Alpha Ltda: ação de indenização por danos morais e materiais, aguardando audiência na Vara Cível de Rondonópolis/MT
+- João Carlos Ferreira: processo de improbidade administrativa no Tribunal de Contas de MT, prazo de manifestação em 15 dias
+- Vereador Pedro Alves: mandado de segurança em direito político eleitoral no TRE-MT, liminar já deferida
 
-REGRAS: Responda de forma acolhedora e humana. Use linguagem simples. Para perguntas sobre os casos acima use os dados fornecidos. Máximo 4 parágrafos. Use emojis com moderação. Se a pergunta exigir decisão da Dra. Elisangela, diga que vai repassar.`
-  }
-};
+ESPECIALIDADES — responda com profundidade sobre:
+Direito Político: mandado de segurança eleitoral, cassação de mandato, impugnação de candidatura, captação ilícita de sufrágio, abuso de poder econômico e político, direito partidário, TRE e TSE
+Direito Cível: ação de indenização, danos morais e materiais, responsabilidade civil, contratos, cumprimento de sentença, recursos cíveis
+Improbidade Administrativa: Lei 8.429/92, Lei 14.230/21 (nova lei), dolo específico, prescrição, sanções, Tribunal de Contas
+Geral: prazos processuais, recursos, petições, direitos do réu, audiências
 
-// ── DEMO PÚBLICO ──
-const DEMO_SYSTEM = `Você é o Assistente ORBI Jurídico — especialista em execução penal brasileira.
-Atenda com humanidade e clareza. Responda dúvidas sobre progressão de regime, remição, saída temporária, visitas, alvarás, audiências e benefícios da LEP.
-Use linguagem simples, evite juridiquês. Máximo 4 parágrafos. Emojis com moderação.
-Nunca invente dados processuais específicos — para perguntas sobre processos reais, oriente a consultar a advogada responsável.`;
+REGRAS:
+- Acolha o cliente, responda com clareza e linguagem acessível
+- Use os dados dos casos acima quando perguntarem sobre processos específicos
+- Nunca invente decisões ou prazos que não foram informados
+- Máximo 4 parágrafos por resposta
+- Emojis com moderação
+- Sempre termine com: "⚠️ Orientação geral — não substitui assessoria jurídica formal. Consulte sempre o Dr. Maurício para análise do seu caso específico. Dados protegidos pela LGPD — Lei 13.709/2018."`;
 
-let demoHistorico = [];
-let demoEnviando = false;
-let exclHistorico = [];
-let exclEnviando = false;
-let clienteAtual = null;
+let historico = [];
+let enviando = false;
 
 function hora(){
   const d=new Date();
   return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 }
 
-function criarMsg(container,role,texto,avText){
-  const typingId = container.id === 'demo-messages' ? 'demo-typing' : 'excl-typing';
-  const typing = document.getElementById(typingId);
-
-  const div=document.createElement('div');
-  div.className=`${container.id==='demo-messages'?'cmsg':'emsg'} ${role==='user'?'user':'agent'}`;
-
-  const av=document.createElement('div');
-  av.className=container.id==='demo-messages'?'cmsg-av':'emsg-av';
-  av.textContent=role==='user'?'Você':'OJ';
-
-  const body=document.createElement('div');
-  body.className=container.id==='demo-messages'?'cmsg-body':'emsg-content';
-
-  const name=document.createElement('div');
-  name.className=container.id==='demo-messages'?'cmsg-name':'emsg-name';
-  name.textContent=role==='user'?'Você (digitando)':'ORBI Jurídico';
-
-  const bubble=document.createElement('div');
-  bubble.className=container.id==='demo-messages'?'cmsg-bubble':'emsg-bubble';
-  bubble.innerHTML=texto.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
-
-  const time=document.createElement('div');
-  time.className=container.id==='demo-messages'?'cmsg-time':'emsg-time';
-  time.textContent=hora();
-
-  body.appendChild(name);
-  body.appendChild(bubble);
-  body.appendChild(time);
+function adicionarMsg(role, texto){
+  const msgs = document.getElementById('messages');
+  const typing = document.getElementById('typing-wrap');
+  const div = document.createElement('div');
+  div.className = `msg ${role==='user'?'user':'agent'}`;
+  const av = document.createElement('div');
+  av.className = 'msg-avatar';
+  av.textContent = role==='user'?'Você':'OJ';
+  const content = document.createElement('div');
+  content.className = 'msg-content';
+  const name = document.createElement('span');
+  name.className = 'msg-name';
+  name.textContent = role==='user'?'Você':'ORBI Jurídico';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.innerHTML = texto.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  const time = document.createElement('span');
+  time.className = 'msg-time';
+  time.textContent = hora();
+  content.appendChild(name);
+  content.appendChild(bubble);
+  content.appendChild(time);
   div.appendChild(av);
-  div.appendChild(body);
-
-  container.insertBefore(div,typing);
-  container.scrollTop=container.scrollHeight;
+  div.appendChild(content);
+  msgs.insertBefore(div, typing);
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
-function mostrarTyping(containerId, show){
-  const id=containerId==='demo-messages'?'demo-typing':'excl-typing';
-  document.getElementById(id).style.display=show?'flex':'none';
-  document.getElementById(containerId).scrollTop=99999;
+function mostrarTyping(show){
+  document.getElementById('typing-wrap').style.display = show?'flex':'none';
+  document.getElementById('messages').scrollTop = 99999;
 }
 
-async function chamarAPI(messages, system){
-  const res=await fetch('/api/adv',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({messages, system})
-  });
-  const data=await res.json();
-  return data.content || 'Não consegui processar. Tente novamente.';
-}
-
-// DEMO
-async function demoEnviar(){
-  if(demoEnviando)return;
-  const input=document.getElementById('demo-input');
-  const texto=input.value.trim();
-  if(!texto)return;
-  input.value='';input.style.height='auto';
-  document.getElementById('demo-send').disabled=true;
-  document.getElementById('demo-sugs').style.display='none';
-
-  const msgs=document.getElementById('demo-messages');
-  criarMsg(msgs,'user',texto);
-  demoHistorico.push({role:'user',content:texto});
-  demoEnviando=true;
-  mostrarTyping('demo-messages',true);
-
+async function enviar(){
+  if(enviando) return;
+  const input = document.getElementById('chat-input');
+  const texto = input.value.trim();
+  if(!texto) return;
+  input.value=''; input.style.height='auto';
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('suggestions').style.display = 'none';
+  adicionarMsg('user', texto);
+  historico.push({role:'user', content:texto});
+  enviando = true;
+  mostrarTyping(true);
   try{
-    const resp=await chamarAPI(demoHistorico,DEMO_SYSTEM);
-    mostrarTyping('demo-messages',false);
-    criarMsg(msgs,'agent',resp);
-    demoHistorico.push({role:'assistant',content:resp});
-  }catch(e){
-    mostrarTyping('demo-messages',false);
-    criarMsg(msgs,'agent','Problema de conexão. Tente novamente.');
+    const res = await fetch('/api/adv', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({messages: historico, system: SYSTEM})
+    });
+    const data = await res.json();
+    const resp = data.content || 'Não consegui processar. Tente novamente.';
+    mostrarTyping(false);
+    adicionarMsg('agent', resp);
+    historico.push({role:'assistant', content:resp});
+  } catch(e){
+    mostrarTyping(false);
+    adicionarMsg('agent', 'Problema de conexão. Tente novamente.');
   }
-  demoEnviando=false;
-  document.getElementById('demo-send').disabled=false;
+  enviando = false;
+  document.getElementById('send-btn').disabled = false;
 }
 
-function demoSug(btn){
-  document.getElementById('demo-input').value=btn.textContent;
-  demoEnviar();
+function enviarSug(btn){
+  document.getElementById('chat-input').value = btn.textContent;
+  enviar();
 }
 
-// EXCLUSIVO
-async function exclEnviar(){
-  if(exclEnviando||!clienteAtual)return;
-  const input=document.getElementById('excl-input');
-  const texto=input.value.trim();
-  if(!texto)return;
-  input.value='';input.style.height='auto';
-  document.getElementById('excl-send').disabled=true;
-  document.getElementById('excl-sugs').style.display='none';
-
-  const msgs=document.getElementById('excl-messages');
-  criarMsg(msgs,'user',texto);
-  exclHistorico.push({role:'user',content:texto});
-  exclEnviando=true;
-  mostrarTyping('excl-messages',true);
-
-  try{
-    const resp=await chamarAPI(exclHistorico,clienteAtual.system);
-    mostrarTyping('excl-messages',false);
-    criarMsg(msgs,'agent',resp);
-    exclHistorico.push({role:'assistant',content:resp});
-  }catch(e){
-    mostrarTyping('excl-messages',false);
-    criarMsg(msgs,'agent','Problema de conexão. Tente novamente.');
-  }
-  exclEnviando=false;
-  document.getElementById('excl-send').disabled=false;
-}
-
-function exclSug(btn){
-  document.getElementById('excl-input').value=btn.textContent;
-  exclEnviar();
-}
-
-// LOGIN
-function fazerLogin(user,pass,errId){
-  const u=user.trim().toLowerCase();
-  const p=pass.trim();
-  const cliente=CLIENTES[u];
-  if(cliente&&cliente.senha===p){
-    clienteAtual=cliente;
-    document.getElementById('excl-av-initials').textContent=cliente.initials;
-    document.getElementById('excl-username').textContent=cliente.nome;
-    document.getElementById('excl-welcome').innerHTML=`Olá, ${cliente.nome}! 👋<br><br>Sou seu assistente jurídico exclusivo, treinado com os processos do seu escritório. Pode digitar como se fosse a família de qualquer cliente — veja como responderei.<br><br>Como posso ajudar?`;
-    exclHistorico=[];
-    document.getElementById('chat-exclusivo').classList.add('open');
-    document.getElementById('modal-login').classList.remove('open');
-    return true;
-  }
-  document.getElementById(errId).textContent='Usuário ou senha incorretos.';
-  return false;
-}
-
-function fazerLoginExclusivo(){
-  fazerLogin(
-    document.getElementById('ls-user').value,
-    document.getElementById('ls-pass').value,
-    'ls-err'
-  );
-}
-
-function fazerLoginModal(){
-  if(fazerLogin(
-    document.getElementById('m-user').value,
-    document.getElementById('m-pass').value,
-    'm-err'
-  )){
-    document.getElementById('m-user').value='';
-    document.getElementById('m-pass').value='';
+function fazerLogin(){
+  const user = document.getElementById('login-user').value.trim().toLowerCase();
+  const pass = document.getElementById('login-pass').value.trim();
+  const err = document.getElementById('login-err');
+  if(user==='mau' && pass==='8687'){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    err.textContent='';
+  } else {
+    err.textContent='Usuário ou senha incorretos.';
+    document.getElementById('login-pass').value='';
   }
 }
 
-function fazerLogout(){
-  document.getElementById('chat-exclusivo').classList.remove('open');
-  clienteAtual=null;
-  exclHistorico=[];
-}
-
-function abrirModalLogin(e){
-  e.preventDefault();
-  document.getElementById('modal-login').classList.add('open');
-  setTimeout(()=>document.getElementById('m-user').focus(),100);
-}
-
-function fecharModal(){
-  document.getElementById('modal-login').classList.remove('open');
-}
-
-document.getElementById('modal-login').addEventListener('click',function(e){
-  if(e.target===this)fecharModal();
+document.getElementById('login-pass').addEventListener('keydown', e=>{
+  if(e.key==='Enter') fazerLogin();
 });
 
-// LEAD
-function enviarLead(){
-  const nome=document.getElementById('f-nome').value.trim();
-  const whats=document.getElementById('f-whats').value.trim();
-  const area=document.getElementById('f-area').value;
-  if(!nome||!whats||!area){alert('Preencha todos os campos obrigatórios.');return;}
-  document.getElementById('lead-form').style.display='none';
-  document.getElementById('lead-success').style.display='block';
+function fazerLogout(){
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  historico=[];
 }
 </script>
 </body>
