@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORBI Clínica — Dr. Ricardo Pontes</title>
+<title>ORBI Med — Dr. Ricardo Pontes</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -118,7 +118,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
 
 .suggestions{padding:.75rem 1.5rem;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--surface2)}
-.sug{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:none;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
+.sug{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--green-border);color:var(--green);background:none;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
 .sug:hover{border-color:var(--green);color:var(--green);background:var(--green-dim)}
 
 .disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:var(--text3);text-align:center;border-top:1px solid var(--border)}
@@ -141,7 +141,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <div class="login-box">
     <div class="login-brand">
       <div class="login-ring"></div>
-      <span class="login-name">ORBI <em>Clínica</em></span>
+      <span class="login-name">ORBI <em>Med</em></span>
     </div>
     <label class="login-label">Usuário</label>
     <input class="login-input" id="login-user" type="text" placeholder="seu usuário" autocomplete="off">
@@ -158,7 +158,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <div class="topbar">
     <div class="brand">
       <div class="ring"></div>
-      <span class="brand-name">ORBI <em>Clínica</em></span>
+      <span class="brand-name">ORBI <em>Med</em></span>
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="user-pill">
@@ -249,7 +249,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="chat-header">
         <div class="chat-avatar">OC</div>
         <div class="chat-info">
-          <strong>Assistente ORBI Clínica</strong>
+          <strong>Assistente ORBI Med</strong>
           <span><div class="online-dot"></div> online · atendendo pacientes agora</span>
         </div>
       </div>
@@ -258,7 +258,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="msg agent">
           <div class="msg-avatar">OC</div>
           <div class="msg-content">
-            <span class="msg-name">ORBI Clínica</span>
+            <span class="msg-name">ORBI Med</span>
             <div class="msg-bubble">Olá! Bem-vindo ao consultório do Dr. Ricardo Pontes 😊<br><br>Sou o assistente virtual do consultório. Posso ajudar com agendamentos, dúvidas sobre consultas, orientações gerais e informações sobre os serviços do Dr. Ricardo.<br><br>Como posso te ajudar hoje?</div>
             <span class="msg-time">agora</span>
           </div>
@@ -358,7 +358,7 @@ function adicionarMsg(role, texto){
   content.className = 'msg-content';
   const name = document.createElement('span');
   name.className = 'msg-name';
-  name.textContent = role==='user'?'Você':'ORBI Clínica';
+  name.textContent = role==='user'?'Você':'ORBI Med';
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
   bubble.innerHTML = texto.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
