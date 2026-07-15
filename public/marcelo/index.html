@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORBI Agro — Fazenda Mecena</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060d08;--surface:#0b1610;--surface2:#101f14;--surface3:#0e1a11;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --green:#4eca7f;--green-dim:rgba(78,202,127,.1);--green-border:rgba(78,202,127,.2);
+  --green2:#2d9e55;--yellow:#d4a843;--yellow-dim:rgba(212,168,67,.1);
+  --text:#e8edf0;--text2:rgba(232,237,240,.55);--text3:rgba(232,237,240,.28);
+  --font:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;background-image:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(78,202,127,.05) 0%,transparent 70%)}
+.login-box{width:100%;max-width:380px;padding:2.5rem;background:var(--surface);border:1px solid var(--border2);border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,.6)}
+.login-brand{display:flex;align-items:center;gap:10px;margin-bottom:.5rem;justify-content:center}
+.login-ring{width:32px;height:32px;border:2.5px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
+.login-name{font-size:18px;font-weight:700;color:#fff}
+.login-name em{color:var(--green);font-style:normal}
+.login-sub{text-align:center;font-size:11px;color:var(--text3);margin-bottom:1.75rem}
+.login-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;margin-top:16px;display:block}
+.login-label:first-of-type{margin-top:0}
+.login-input{width:100%;height:44px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:0 14px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s}
+.login-input:focus{border-color:var(--green)}
+.login-input::placeholder{color:var(--text3)}
+.login-btn{width:100%;height:46px;background:var(--green);color:#050e08;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;margin-top:20px}
+.login-btn:hover{opacity:.88}
+.login-err{font-size:12px;color:#e05555;margin-top:10px;text-align:center;min-height:18px}
+.login-badge{text-align:center;margin-top:1.5rem;font-size:11px;color:var(--text3)}
+.login-badge span{color:var(--green);font-weight:600}
+.login-demo{text-align:center;margin-top:.75rem;font-size:10px;color:rgba(212,168,67,.6);background:rgba(212,168,67,.05);border:1px solid rgba(212,168,67,.15);border-radius:6px;padding:5px 10px}
+
+#app{display:none;flex-direction:column;height:100vh}
+
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px}
+.ring{width:24px;height:24px;border:2px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
+.brand-name{font-size:15px;font-weight:700;color:#fff}
+.brand-name em{color:var(--green);font-style:normal}
+.demo-badge{font-size:10px;font-weight:600;padding:3px 8px;background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.2);border-radius:20px;color:var(--yellow);letter-spacing:.04em}
+.user-pill{display:flex;align-items:center;gap:8px;background:var(--green-dim);border:1px solid var(--green-border);border-radius:20px;padding:5px 14px 5px 8px}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#050e08}
+.user-name{font-size:12px;font-weight:600;color:var(--green)}
+.logout-btn{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:var(--font);margin-left:8px}
+
+.main{display:flex;flex:1;overflow:hidden}
+
+.sidebar{width:275px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-section{padding:1.25rem 1rem .5rem}
+.sidebar-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px}
+.sidebar-item.active{background:var(--green-dim);border:1px solid var(--green-border)}
+.sidebar-item-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:rgba(255,255,255,.04)}
+.sidebar-item.active .sidebar-item-icon{background:rgba(78,202,127,.12)}
+.sidebar-item-text strong{font-size:13px;font-weight:500;color:var(--text);display:block}
+.sidebar-item-text span{font-size:11px;color:var(--text3)}
+.sidebar-item.active .sidebar-item-text strong{color:var(--green)}
+.sidebar-divider{height:1px;background:var(--border);margin:.5rem 1rem}
+
+.talhao-card{margin:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.75rem}
+.talhao-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.talhao-nome{font-size:12px;font-weight:700;color:var(--text)}
+.talhao-cultura{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
+.cultura-soja{background:rgba(78,202,127,.1);color:var(--green);border:1px solid var(--green-border)}
+.cultura-milho{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(212,168,67,.2)}
+.talhao-detail{font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:5px}
+.talhao-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.s-ok{background:rgba(78,202,127,.08);color:var(--green);border:1px solid rgba(78,202,127,.15)}
+.s-atencao{background:rgba(232,151,58,.08);color:#e8973a;border:1px solid rgba(232,151,58,.15)}
+.s-alerta{background:rgba(224,85,85,.08);color:#e05555;border:1px solid rgba(224,85,85,.15)}
+
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:.5rem 1rem}
+.stat-mini{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .75rem}
+.stat-mini-val{font-size:19px;font-weight:700;color:#fff;font-family:var(--mono)}
+.stat-mini-lbl{font-size:10px;color:var(--text3);margin-top:2px}
+
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.chat-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.chat-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green),#1a6b35);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.chat-info strong{font-size:14px;font-weight:600;color:var(--text);display:block}
+.chat-info span{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.chat-messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.07);border-radius:4px}
+
+.msg{display:flex;gap:10px;max-width:78%}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;margin-top:2px}
+.msg.agent .msg-avatar{background:linear-gradient(135deg,var(--green),#1a6b35);font-size:16px}
+.msg.user .msg-avatar{background:rgba(91,138,240,.12);border:1px solid rgba(91,138,240,.2);color:#5b8af0;font-size:10px}
+.msg-content{display:flex;flex-direction:column;gap:4px}
+.msg.user .msg-content{align-items:flex-end}
+.msg-name{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.04em;text-transform:uppercase;padding:0 4px}
+.msg-bubble{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;color:var(--text)}
+.msg.agent .msg-bubble{background:var(--surface2);border:1px solid var(--border);border-top-left-radius:4px}
+.msg.user .msg-bubble{background:rgba(91,138,240,.08);border:1px solid rgba(91,138,240,.15);border-top-right-radius:4px}
+.msg-time{font-size:10px;color:var(--text3);padding:3px 4px 0;font-family:var(--mono)}
+
+.typing-wrap{display:flex;gap:10px;max-width:78%}
+.typing-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green),#1a6b35);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px}
+.typing-bubble{padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;border-top-left-radius:4px;display:flex;gap:4px;align-items:center}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:tdot 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+
+.suggestions{padding:.75rem 1.5rem;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--surface2)}
+.sug{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--green-border);color:var(--green);background:none;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
+.sug:hover{background:var(--green-dim)}
+
+.disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:var(--text3);text-align:center;border-top:1px solid var(--border);line-height:1.6}
+
+.input-area{padding:1rem 1.5rem;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+.chat-input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;resize:none;min-height:50px;max-height:140px;line-height:1.6;transition:border-color .15s}
+.chat-input:focus{border-color:var(--green)}
+.chat-input::placeholder{color:var(--text3)}
+.send-btn{width:50px;height:50px;background:var(--green);border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
+.send-btn:hover{opacity:.85}
+.send-btn:disabled{opacity:.35;cursor:not-allowed}
+
+@media(max-width:700px){.sidebar{display:none}.msg{max-width:92%}}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="login-ring"></div>
+      <span class="login-name">ORBI <em>Agro</em></span>
+    </div>
+    <div class="login-sub">Fazenda Mecena · Serra da Petrovina · MT</div>
+    <label class="login-label">Usuário</label>
+    <input class="login-input" id="login-user" type="text" placeholder="seu usuário" autocomplete="off">
+    <label class="login-label">Senha</label>
+    <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
+    <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-badge">Acesso exclusivo · <span>Marcelo Mecena</span></div>
+    <div class="login-demo">⚠️ Ambiente de demonstração — dados fictícios para fins de apresentação</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="ring"></div>
+      <span class="brand-name">ORBI <em>Agro</em></span>
+      <span class="demo-badge">DEMO</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="user-pill">
+        <div class="user-avatar">MM</div>
+        <span class="user-name">Marcelo Mecena</span>
+      </div>
+      <button class="logout-btn" onclick="fazerLogout()">sair</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Menu</div>
+        <div class="sidebar-item active">
+          <div class="sidebar-item-icon">🌱</div>
+          <div class="sidebar-item-text">
+            <strong>Assistente Agro</strong>
+            <span>Diagnóstico e manejo</span>
+          </div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-item-icon">🌦️</div>
+          <div class="sidebar-item-text"><strong>Clima</strong><span>Em breve</span></div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-item-icon">📊</div>
+          <div class="sidebar-item-text"><strong>Relatórios</strong><span>Em breve</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Propriedade</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-mini-val">850</div>
+          <div class="stat-mini-lbl">Hectares totais</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-val">2</div>
+          <div class="stat-mini-lbl">Talhões ativos</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section" style="padding-top:.75rem">
+        <div class="sidebar-label">Talhões</div>
+      </div>
+
+      <div class="talhao-card">
+        <div class="talhao-header">
+          <span class="talhao-nome">Talhão X</span>
+          <span class="talhao-cultura cultura-soja">Soja</span>
+        </div>
+        <div class="talhao-detail">
+          480 ha · Safra 2025/26<br>
+          Plantio: outubro/2025<br>
+          Colheita: fevereiro/2026<br>
+          Prod. obtida: 58 sc/ha
+        </div>
+        <div class="talhao-status s-atencao">⚠️ Ferrugem asiática detectada</div>
+      </div>
+
+      <div class="talhao-card">
+        <div class="talhao-header">
+          <span class="talhao-nome">Talhão Y</span>
+          <span class="talhao-cultura cultura-milho">Milho 2ª safra</span>
+        </div>
+        <div class="talhao-detail">
+          370 ha · Safrinha 2026<br>
+          Plantio: fevereiro/2026<br>
+          Prev. colheita: julho/2026<br>
+          Estádio: enchimento de grãos
+        </div>
+        <div class="talhao-status s-alerta">🔴 Lagarta-do-cartucho</div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Histórico recente</div>
+      </div>
+      <div style="padding:0 1rem;font-size:11px;color:var(--text3);line-height:1.8;margin-bottom:1rem">
+        Jan/26 — Aplicação fungicida Talhão X<br>
+        Fev/26 — Plantio milho Talhão Y<br>
+        Mar/26 — Monitoramento pragas<br>
+        Mai/26 — Análise foliar Talhão Y<br>
+        Jul/26 — Alerta lagarta-do-cartucho
+      </div>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <div class="sidebar-label" style="font-size:10px;color:var(--text3);line-height:1.6">Demo exclusivo · ORBI IA<br>agenteorbiia.com · Dados fictícios</div>
+      </div>
+    </div>
+
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="chat-avatar">🌾</div>
+        <div class="chat-info">
+          <strong>Assistente ORBI Agro</strong>
+          <span><div class="online-dot"></div> online · Fazenda Mecena · Serra da Petrovina/MT</span>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="messages">
+        <div class="msg agent">
+          <div class="msg-avatar">🌾</div>
+          <div class="msg-content">
+            <span class="msg-name">ORBI Agro</span>
+            <div class="msg-bubble">Olá, Marcelo! 👋<br><br>Sou seu assistente agronômico digital, configurado com os dados da <strong>Fazenda Mecena</strong> na Serra da Petrovina. Posso te ajudar com diagnóstico de pragas e doenças, orientações de manejo, épocas de plantio e informações técnicas sobre soja e milho na sua região.<br><br>⚠️ <em>Este é um ambiente de demonstração com dados fictícios. Todas as decisões de manejo, dosagem e aplicação devem ser validadas pelo seu agrônomo responsável.</em><br><br>Como posso ajudar hoje?</div>
+            <span class="msg-time">agora</span>
+          </div>
+        </div>
+        <div class="typing-wrap" id="typing-wrap" style="display:none">
+          <div class="typing-av">🌾</div>
+          <div class="typing-bubble">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="suggestions" id="suggestions">
+        <button class="sug" onclick="enviarSug(this)">Minhas folhas de soja estão com manchas amarronzadas</button>
+        <button class="sug" onclick="enviarSug(this)">Vi lagartas no milho do Talhão Y hoje</button>
+        <button class="sug" onclick="enviarSug(this)">Quando plantar soja na próxima safra em Rondonópolis?</button>
+        <button class="sug" onclick="enviarSug(this)">Como identificar ferrugem asiática?</button>
+        <button class="sug" onclick="enviarSug(this)">Folha do milho com fileiras de ovos</button>
+      </div>
+
+      <div class="disclaimer">
+        ⚠️ DEMONSTRAÇÃO — Dados fictícios · Orientações de caráter informativo<br>
+        Decisões de manejo, dosagem e aplicação são de responsabilidade exclusiva do Agrônomo responsável<br>
+        © 2026 ORBI IA · Dados protegidos pela LGPD — Lei 13.709/2018 · Todos os direitos reservados
+      </div>
+
+      <div class="input-area">
+        <textarea class="chat-input" id="chat-input" placeholder="Descreva o que está vendo na lavoura — folha, planta, solo..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviar()}"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button class="send-btn" id="send-btn" onclick="enviar()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SYSTEM = `Você é o Assistente ORBI Agro da Fazenda Mecena, propriedade de Marcelo Mecena na Serra da Petrovina, próximo a Rondonópolis, Mato Grosso.
+
+AVISO OBRIGATÓRIO: Este é um ambiente de demonstração com dados fictícios. Sempre inclua ao final de cada resposta técnica: "⚠️ Esta orientação é informativa. Decisões de manejo, dosagem e aplicação devem ser validadas pelo Agrônomo responsável pela propriedade."
+
+DADOS DA PROPRIEDADE (FICTÍCIOS - DEMO):
+- Produtor: Marcelo Mecena
+- Localização: Serra da Petrovina, próximo a Rondonópolis/MT
+- Área total: 850 hectares
+- Clima: Tropical (Aw) — chuvas concentradas out/mar, seco abr/set
+- Solo: Latossolo Vermelho-Amarelo, textura argilosa, típico do Cerrado
+
+TALHÃO X — SOJA (480 ha) DADOS FICTÍCIOS:
+- Safra 2025/26 — já colhida em fevereiro/2026
+- Variedade fictícia: TMG 7062 IPRO (ciclo médio 115 dias)
+- Plantio: outubro/2025 | Colheita: fevereiro/2026
+- Produtividade obtida: 58 sacas/ha
+- Histórico: incidência de ferrugem asiática em janeiro — aplicação de fungicida realizada
+- Próxima safra: plantio previsto para outubro/2026
+
+TALHÃO Y — MILHO 2ª SAFRA (370 ha) DADOS FICTÍCIOS:
+- Safrinha 2026 — em andamento
+- Variedade fictícia: DKB 390 PRO3 (ciclo 135 dias)
+- Plantio: fevereiro/2026 | Prev. colheita: julho/2026
+- Estádio atual: enchimento de grãos (R4/R5)
+- Situação atual: alerta de lagarta-do-cartucho (Spodoptera frugiperda) detectada no monitoramento de maio/2026
+- Produtividade esperada: 90-95 sacas/ha se controlada a praga
+
+CONHECIMENTO TÉCNICO — REGIÃO RONDONÓPOLIS/MT:
+
+SOJA:
+- Janela de plantio recomendada pelo ZARC: 1 outubro a 15 dezembro
+- Principais doenças: ferrugem asiática (Phakopsora pachyrhizi), mancha-alvo, cercosporiose, crestamento foliar
+- Ferrugem asiática: manchas angulares na folha, coloração ferrugínea, pústulas na face inferior — controle com fungicida triazol+estrobilurina, iniciar no fechamento das entrelinhas
+- Principais pragas: lagarta-da-soja, percevejo marrom, percevejo verde, mosca-branca, trips
+- Adubação: base NPK conforme análise de solo, cobertura de potássio no início do florescimento
+
+MILHO 2ª SAFRA (SAFRINHA):
+- Janela ideal em MT: 15 janeiro a 15 fevereiro (risco climático após essa data)
+- Principais pragas: lagarta-do-cartucho (Spodoptera frugiperda), cigarrinha-do-milho, percevejo, pulgão
+- Lagarta-do-cartucho: orifícios nas folhas, serragem (fezes) no cartucho, lagartas de até 4cm — monitorar 20 plantas/ha, controlar se mais de 20% de plantas com lagartas grandes
+- Principais doenças: cercosporiose (listras cinzas nas folhas), mancha bipolaris, helmintosporiose, enfezamento (transmitido pela cigarrinha)
+- Estresse hídrico em março/abril (veranico) é principal risco da safrinha em MT
+
+PRAGAS E DOENÇAS — IDENTIFICAÇÃO RÁPIDA:
+
+Ferrugem asiática na soja:
+- Sintoma: manchas pequenas angulares amarelo-esverdeadas na face superior, pústulas marrons na face inferior
+- Condição favorável: temperatura 18-28°C + umidade alta + orvalho
+- Controle: fungicida triazol + estrobilurina, repetir a cada 14-21 dias se condição favorável
+
+Lagarta-do-cartucho no milho:
+- Sintoma: folhas com orifícios irregulares, "janelas" translúcidas nas folhas jovens, fezes no cartucho
+- Identificação: lagarta com listras laterais e marca em H no último segmento abdominal
+- Nível de controle: 20% de plantas infestadas com lagartas maiores que 1,5 cm
+- Controle: inseticidas à base de espinosade, diamida ou organofosforado — decision do agrônomo
+
+Cercosporiose no milho:
+- Sintoma: lesões retangulares cinza-esverdeadas, paralelas às nervuras, nas folhas medianas/superiores
+- Favorecida por alta umidade e temperaturas amenas
+
+Deficiência de nitrogênio:
+- Sintoma: amarelecimento das folhas mais velhas em V, iniciando pela ponta para a base (em V)
+- Ação: verificar adubação de cobertura e condições de solo
+
+CALENDARIO AGRICOLA RONDONOPOLIS/MT:
+- Outubro: plantio soja (início janela)
+- Novembro/Dezembro: plantio soja (período ideal)
+- Janeiro/Fevereiro: colheita soja precoce + plantio milho safrinha
+- Março/Abril: risco veranico — período crítico milho safrinha
+- Junho/Julho: colheita milho safrinha
+- Agosto/Setembro: entressafra — preparo solo, análise, planejamento
+
+REGRAS DE ATENDIMENTO:
+- Responda com base nos dados da propriedade quando perguntado sobre os talhões
+- Para diagnóstico de pragas e doenças: peça descrição detalhada dos sintomas
+- Sempre seja preciso tecnicamente mas acessível na linguagem
+- Nunca prescreva dosagem de defensivo — oriente a consultar o agrônomo
+- Máximo 4 parágrafos por resposta
+- Emojis com moderação — apenas quando ajudar na identificação visual
+- SEMPRE termine com o aviso do agrônomo responsável`;
+
+let historico = [];
+let enviando = false;
+
+function hora(){
+  const d=new Date();
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+
+function adicionarMsg(role,texto){
+  const msgs=document.getElementById('messages');
+  const typing=document.getElementById('typing-wrap');
+  const div=document.createElement('div');
+  div.className='msg '+(role==='user'?'user':'agent');
+  const av=document.createElement('div');
+  av.className='msg-avatar';
+  av.textContent=role==='user'?'MM':'🌾';
+  const content=document.createElement('div');
+  content.className='msg-content';
+  const name=document.createElement('span');
+  name.className='msg-name';
+  name.textContent=role==='user'?'Marcelo Mecena':'ORBI Agro';
+  const bubble=document.createElement('div');
+  bubble.className='msg-bubble';
+  bubble.innerHTML=texto.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>');
+  const time=document.createElement('span');
+  time.className='msg-time';
+  time.textContent=hora();
+  content.appendChild(name);
+  content.appendChild(bubble);
+  content.appendChild(time);
+  div.appendChild(av);
+  div.appendChild(content);
+  msgs.insertBefore(div,typing);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function mostrarTyping(show){
+  document.getElementById('typing-wrap').style.display=show?'flex':'none';
+  document.getElementById('messages').scrollTop=99999;
+}
+
+async function enviar(){
+  if(enviando)return;
+  const input=document.getElementById('chat-input');
+  const texto=input.value.trim();
+  if(!texto)return;
+  input.value='';input.style.height='auto';
+  document.getElementById('send-btn').disabled=true;
+  document.getElementById('suggestions').style.display='none';
+  adicionarMsg('user',texto);
+  historico.push({role:'user',content:texto});
+  enviando=true;
+  mostrarTyping(true);
+  try{
+    const res=await fetch('/api/adv',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:historico,system:SYSTEM})
+    });
+    const data=await res.json();
+    const resp=data.content||'Não consegui processar. Tente novamente.';
+    mostrarTyping(false);
+    adicionarMsg('agent',resp);
+    historico.push({role:'assistant',content:resp});
+  }catch(e){
+    mostrarTyping(false);
+    adicionarMsg('agent','Problema de conexão. Tente novamente.');
+  }
+  enviando=false;
+  document.getElementById('send-btn').disabled=false;
+}
+
+function enviarSug(btn){
+  document.getElementById('chat-input').value=btn.textContent;
+  enviar();
+}
+
+function fazerLogin(){
+  const user=document.getElementById('login-user').value.trim().toLowerCase();
+  const pass=document.getElementById('login-pass').value.trim();
+  if(user==='marcelo'&&pass==='mecena'){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('login-err').textContent='';
+  }else{
+    document.getElementById('login-err').textContent='Usuário ou senha incorretos.';
+    document.getElementById('login-pass').value='';
+  }
+}
+
+document.getElementById('login-pass').addEventListener('keydown',e=>{
+  if(e.key==='Enter')fazerLogin();
+});
+
+function fazerLogout(){
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  historico=[];
+}
+</script>
+</body>
+</html>
