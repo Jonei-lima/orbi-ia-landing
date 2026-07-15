@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORBI Contábil — Raquel Dantas</title>
+<title>ORBI Contábil — Sérgio Melo</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -139,7 +139,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
     <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
     <div class="login-err" id="login-err"></div>
-    <div class="login-badge">Acesso exclusivo · <span>Raquel Dantas Contabilidade</span></div>
+    <div class="login-badge">Acesso exclusivo · <span>Sérgio Melo Contabilidade</span></div>
   </div>
 </div>
 
@@ -151,8 +151,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="user-pill">
-        <div class="user-avatar">RD</div>
-        <span class="user-name">Raquel Dantas</span>
+        <div class="user-avatar">SM</div>
+        <span class="user-name">Sérgio Melo</span>
       </div>
       <button class="logout-btn" onclick="fazerLogout()">sair</button>
     </div>
@@ -239,7 +239,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="chat-avatar">OC</div>
         <div class="chat-info">
           <strong>Assistente ORBI Contábil</strong>
-          <span><div class="online-dot"></div> online · exclusivo para Raquel Dantas Contabilidade</span>
+          <span><div class="online-dot"></div> online · exclusivo para Sérgio Melo Contabilidade</span>
         </div>
       </div>
 
@@ -248,7 +248,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="msg-avatar">OC</div>
           <div class="msg-content">
             <span class="msg-name">ORBI Contábil</span>
-            <div class="msg-bubble">Olá! Bem-vindo à Raquel Dantas Contabilidade e Associados 😊<br><br>Sou o assistente virtual do escritório. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, abertura de empresa, Imposto de Renda, prazos fiscais</strong> e muito mais — enquanto a Raquel e a equipe estão em atendimento.<br><br>Como posso te ajudar hoje?</div>
+            <div class="msg-bubble">Olá! Bem-vindo à Sérgio Melo Contabilidade 😊<br><br>Sou o assistente virtual do escritório. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, abertura de empresa, Imposto de Renda, prazos fiscais</strong> e muito mais — enquanto a Raquel e a equipe estão em atendimento.<br><br>Como posso te ajudar hoje?</div>
             <span class="msg-time">agora</span>
           </div>
         </div>
@@ -271,7 +271,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <button class="sug" onclick="enviarSug(this)">Posso emitir nota fiscal como MEI?</button>
       </div>
 
-      <div class="disclaimer">Demo exclusivo · Raquel Dantas Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
+      <div class="disclaimer">Demo exclusivo · Sérgio Melo Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
 
       <div class="input-area">
         <textarea class="chat-input" id="chat-input" placeholder="Digite como se fosse um cliente do escritório..." rows="1"
@@ -286,16 +286,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
-const SYSTEM = `Você é o assistente virtual da Raquel Dantas Contabilidade e Associados, escritório contábil com 29 anos de experiência em Patos, Paraíba.
+const SYSTEM = `Você é o assistente virtual da Sérgio Melo Contabilidade, escritório contábil com 29 anos de experiência em Patos, Paraíba.
 
 Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais do dia a dia enquanto a Raquel e a equipe estão em atendimento.
 
 SOBRE O ESCRITÓRIO:
-- Nome: Raquel Dantas Contabilidade e Associados
-- Responsável: Raquel Dantas — 29 anos de experiência
-- Localização: Rua Felizardo Leite, Patos/PB
+- Nome: Sérgio Melo Contabilidade
+- Responsável: Sérgio Melo — 29 anos de experiência
+- Localização: Patos/PB
 - Horário: Segunda a sexta, 8h às 17h
-- Contato: WhatsApp e Instagram @raqueldantascontabilidade
+- Contato: WhatsApp e Instagram @sergiomelocontabilidade
 - Especialidades: Abertura MEI/ME, Migração MEI→ME, Assessoria Contábil, IRPF/IRPJ, Lucro Presumido/Real, Departamento Pessoal
 
 SKILL — SIMPLES NACIONAL:
@@ -428,7 +428,7 @@ function fazerLogin(){
   const user = document.getElementById('login-user').value.trim().toLowerCase();
   const pass = document.getElementById('login-pass').value.trim();
   const err = document.getElementById('login-err');
-  if(user==='raquel' && pass==='dantas'){
+  if(user==='sergio' && pass==='6525'){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='flex';
     err.textContent='';
