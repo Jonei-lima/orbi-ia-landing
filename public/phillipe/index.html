@@ -110,8 +110,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
 
 .suggestions{padding:.75rem 1.5rem;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--surface2)}
-.sug{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:none;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
-.sug:hover{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+.sug{font-size:11px;padding:5px 14px 5px 11px;border-radius:20px;border:1px solid var(--green-border);color:var(--green);background:var(--green-dim);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .15s;white-space:nowrap}
+.sug:hover{opacity:.85}
 
 .disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:var(--text3);text-align:center;border-top:1px solid var(--border)}
 
@@ -212,7 +212,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="sidebar-label">O que o agente faz</div>
       </div>
       <div class="caso-card" style="background:transparent">
-        <div class="caso-detail" style="line-height:1.9">
+        <div class="caso-detail" style="line-height:1.9;color:var(--text)">
           💬 Atendimento inteligente no WhatsApp<br>
           🎯 Qualificação automática de clientes<br>
           📁 Organização de documentos<br>
@@ -384,7 +384,7 @@ function fazerLogin(){
   const user = document.getElementById('login-user').value.trim().toLowerCase();
   const pass = document.getElementById('login-pass').value.trim();
   const err = document.getElementById('login-err');
-  if(user==='phillipe' && pass==='pb16450'){
+  if(user==='phillipe' && pass==='3151'){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='flex';
     err.textContent='';
