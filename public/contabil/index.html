@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORBI Contábil — Sérgio Melo</title>
+<title>ORBI Contábil — Kayron</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -139,7 +139,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
     <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
     <div class="login-err" id="login-err"></div>
-    <div class="login-badge">Acesso exclusivo · <span>Sérgio Melo Contabilidade</span></div>
+    <div class="login-badge">Acesso exclusivo · <span>Kayron Contabilidade</span></div>
   </div>
 </div>
 
@@ -151,8 +151,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="user-pill">
-        <div class="user-avatar">SM</div>
-        <span class="user-name">Sérgio Melo</span>
+        <div class="user-avatar">LE</div>
+        <span class="user-name">Leonardo</span>
       </div>
       <button class="logout-btn" onclick="fazerLogout()">sair</button>
     </div>
@@ -239,7 +239,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="chat-avatar">OC</div>
         <div class="chat-info">
           <strong>Assistente ORBI Contábil</strong>
-          <span><div class="online-dot"></div> online · exclusivo para Sérgio Melo Contabilidade</span>
+          <span><div class="online-dot"></div> online · exclusivo para Kayron Contabilidade</span>
         </div>
       </div>
 
@@ -248,7 +248,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="msg-avatar">OC</div>
           <div class="msg-content">
             <span class="msg-name">ORBI Contábil</span>
-            <div class="msg-bubble">Olá! Bem-vindo à Sérgio Melo Contabilidade 😊<br><br>Sou o assistente virtual do escritório. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, abertura de empresa, Imposto de Renda, prazos fiscais</strong> e muito mais — enquanto a Raquel e a equipe estão em atendimento.<br><br>Como posso te ajudar hoje?</div>
+            <div class="msg-bubble">Olá! Bem-vindo à Kayron Contabilidade 😊<br><br>Sou o assistente virtual do escritório. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, abertura de empresa, Imposto de Renda, prazos fiscais</strong> e muito mais — enquanto o Leonardo e a equipe estão em atendimento.<br><br>Como posso te ajudar hoje?</div>
             <span class="msg-time">agora</span>
           </div>
         </div>
@@ -271,7 +271,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <button class="sug" onclick="enviarSug(this)">Posso emitir nota fiscal como MEI?</button>
       </div>
 
-      <div class="disclaimer">Demo exclusivo · Sérgio Melo Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
+      <div class="disclaimer">Demo exclusivo · Kayron Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
 
       <div class="input-area">
         <textarea class="chat-input" id="chat-input" placeholder="Digite como se fosse um cliente do escritório..." rows="1"
@@ -286,16 +286,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
-const SYSTEM = `Você é o assistente virtual da Sérgio Melo Contabilidade, escritório contábil com 29 anos de experiência em Patos, Paraíba.
+const SYSTEM = `Você é o assistente virtual da Kayron Contabilidade, escritório contábil com +5 anos de experiência em Patos,Paraíba.
 
-Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais do dia a dia enquanto a Raquel e a equipe estão em atendimento.
+Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais do dia a dia enquanto o Leonardo e a equipe estão em atendimento.
 
 SOBRE O ESCRITÓRIO:
-- Nome: Sérgio Melo Contabilidade
-- Responsável: Sérgio Melo — 29 anos de experiência
-- Localização: Patos/PB
+- Nome: Kayron Contabilidade
+- Responsável: Leonardo e Ricardo
+- Localização: Rua Felizardo Leite, 414, Centro, Patos, Paraíba
 - Horário: Segunda a sexta, 8h às 17h
-- Contato: WhatsApp e Instagram @sergiomelocontabilidade
+- Contato: WhatsApp 83 99831-3102
 - Especialidades: Abertura MEI/ME, Migração MEI→ME, Assessoria Contábil, IRPF/IRPJ, Lucro Presumido/Real, Departamento Pessoal
 
 SKILL — SIMPLES NACIONAL:
@@ -332,19 +332,28 @@ SKILL — LUCRO PRESUMIDO:
 - PIS/Cofins cumulativo: 0,65% + 3%
 - Apuração trimestral
 
+SKILL — REFORMA TRIBUTÁRIA (CBS/IBS) — ANO-PILOTO 2026:
+- A partir de 1º de agosto de 2026, toda nota fiscal eletrônica precisa sair com os campos de IBS e CBS (novos tributos da reforma)
+- Prazo para adaptar os sistemas emissores: até 31 de julho de 2026 — nota fora do novo padrão é nota rejeitada
+- 2026 é ano de transição: empresas destacam IBS/CBS com alíquota simbólica de 1%, na maioria dos casos sem recolher o valor de fato (ano-teste do sistema)
+- Empresas do Simples Nacional ficam dispensadas da apuração no piloto — passam a destacar os tributos de verdade em 2027
+- Pessoa física contribuinte de IBS/CBS precisa de CNPJ desde julho/2026
+- Impacto prático: emissor de nota que não estiver homologado no novo layout trava a nota fiscal, o que trava a venda e o faturamento do cliente
+
 OBRIGAÇÕES JULHO/2026:
 - DAS Simples: vence dia 20/07 — URGENTE
 - DCTFWeb: vence dia 25/07
 - ECF anual (2025): vence dia 31/07
 - eSocial junho: já enviado em 07/07
+- Adaptação do emissor de NF-e para campos IBS/CBS: prazo final 31/07 — URGENTE
 
 REGRAS DE ATENDIMENTO:
 - Seja simpático, paciente e claro — muitos clientes são pequenos empreendedores sem conhecimento técnico
 - Use linguagem simples, explique termos quando necessário
-- Quando a dúvida for específica do caso do cliente, oriente a agendar consulta com a Raquel
+- Quando a dúvida for específica do caso do cliente, oriente a agendar consulta com o Leonardo
 - Máximo 4 parágrafos por resposta
 - Emojis com moderação
-- Sempre termine com: "Para o seu caso específico, a Raquel pode te atender pessoalmente no escritório ou pelo WhatsApp 😊"
+- Sempre termine com: "Para o seu caso específico, o Leonardo pode te atender pessoalmente no escritório ou pelo WhatsApp 😊"
 - ⚠️ Orientação geral — não substitui assessoria contábil formal. Dados protegidos pela LGPD — Lei 13.709/2018.`;
 
 let historico = [];
@@ -428,7 +437,7 @@ function fazerLogin(){
   const user = document.getElementById('login-user').value.trim().toLowerCase();
   const pass = document.getElementById('login-pass').value.trim();
   const err = document.getElementById('login-err');
-  if(user==='sergio' && pass==='6525'){
+  if(user==='kayron' && pass==='3102'){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='flex';
     err.textContent='';
