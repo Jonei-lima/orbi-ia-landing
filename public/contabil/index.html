@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORBI Contábil — Kayron</title>
+<title>ORBI Contábil — Pinharas Contabilidade</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -66,6 +66,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .obrig-nome{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
 .obrig-detail{font-size:11px;color:var(--text3);line-height:1.5}
 .obrig-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:5px}
+.scope-card{margin:.5rem 1rem;background:var(--surface2);border:1px solid var(--green-border);border-radius:10px;padding:.85rem}
+.scope-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px}
+.scope-line{font-size:11px;color:var(--text2);line-height:1.55;margin-bottom:5px;padding-left:16px;position:relative}
+.scope-line::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+.scope-note{font-size:10.5px;color:var(--text3);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
 .s-verde{background:rgba(78,202,127,.1);color:var(--green);border:1px solid var(--green-border)}
 .s-amarelo{background:rgba(232,151,58,.1);color:#e8973a;border:1px solid rgba(232,151,58,.2)}
 .s-vermelho{background:rgba(224,85,85,.1);color:#e05555;border:1px solid rgba(224,85,85,.2)}
@@ -139,7 +144,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
     <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
     <div class="login-err" id="login-err"></div>
-    <div class="login-badge">Acesso exclusivo · <span>Kayron Contabilidade</span></div>
+    <div class="login-badge">Acesso exclusivo · <span>Pinharas Contabilidade</span></div>
   </div>
 </div>
 
@@ -151,8 +156,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="user-pill">
-        <div class="user-avatar">LR</div>
-        <span class="user-name">Leonardo & Ricardo</span>
+        <div class="user-avatar">SA</div>
+        <span class="user-name">Sérgio Araújo</span>
       </div>
       <button class="logout-btn" onclick="fazerLogout()">sair</button>
     </div>
@@ -177,6 +182,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="sidebar-item-icon">🔔</div>
           <div class="sidebar-item-text"><strong>Alertas</strong><span>Em breve</span></div>
         </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section" style="padding-bottom:.25rem">
+        <div class="sidebar-label">O que este piloto faz</div>
+      </div>
+      <div class="scope-card">
+        <div class="scope-title">ORBI Contábil</div>
+        <div class="scope-line">Conversa com o cliente final em linguagem natural, no WhatsApp do escritório</div>
+        <div class="scope-line">Responde dúvidas fiscais reais com o conhecimento do escritório, não uma resposta genérica</div>
+        <div class="scope-line">Busca documentos específicos por CNPJ direto no sistema de gestão (fase de integração)</div>
+        <div class="scope-line">Sabe o que responder sozinho e o que escalar pra equipe humana</div>
+        <div class="scope-note">Diferente de robôs de busca de nota fiscal e de assistentes de IA genéricos: essas ferramentas organizam o back-office (armazenam, buscam, calculam), mas não conversam com o seu cliente. O ORBI é a camada de atendimento — uma coisa não substitui a outra, elas se somam.</div>
       </div>
 
       <div class="sidebar-divider"></div>
@@ -239,7 +258,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="chat-avatar">OC</div>
         <div class="chat-info">
           <strong>Assistente ORBI Contábil</strong>
-          <span><div class="online-dot"></div> online · exclusivo para Kayron Contabilidade</span>
+          <span><div class="online-dot"></div> online · exclusivo para Pinharas Contabilidade</span>
         </div>
       </div>
 
@@ -248,7 +267,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="msg-avatar">OC</div>
           <div class="msg-content">
             <span class="msg-name">ORBI Contábil</span>
-            <div class="msg-bubble">Olá! Bem-vindo à Kayron Contabilidade 😊<br><br>Sou o assistente virtual do escritório. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, abertura de empresa, Imposto de Renda, prazos fiscais</strong> e muito mais — enquanto o Leonardo, o Ricardo e a equipe estão em atendimento.<br><br>Como posso te ajudar hoje?</div>
+            <div class="msg-bubble">Olá! Bem-vindo à Pinharas Contabilidade 😊<br><br>Sou o assistente virtual do escritório. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, obrigações fiscais, folha de pagamento</strong> e consultoria financeira para o seu segmento — enquanto o Sérgio e a equipe estão em atendimento.<br><br>Como posso te ajudar hoje?</div>
             <span class="msg-time">agora</span>
           </div>
         </div>
@@ -271,7 +290,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <button class="sug" onclick="enviarSug(this)">Posso emitir nota fiscal como MEI?</button>
       </div>
 
-      <div class="disclaimer">Demo exclusivo · Kayron Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
+      <div class="disclaimer">Demo exclusivo · Pinharas Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
 
       <div class="input-area">
         <textarea class="chat-input" id="chat-input" placeholder="Digite como se fosse um cliente do escritório..." rows="1"
@@ -286,17 +305,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
-const SYSTEM = `Você é o assistente virtual da Kayron Contabilidade, escritório contábil com 5 anos de experiência em Patos, Paraíba.
+const SYSTEM = `Você é o assistente virtual da Pinharas Contabilidade, escritório de contabilidade consultiva e consultoria financeira, com sede em Patos, Paraíba, atuando também no Rio Grande do Norte e Pernambuco (região do Sertão Paraibano).
 
-Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais do dia a dia enquanto o Leonardo, o Ricardo e a equipe estão em atendimento.
+Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais do dia a dia enquanto o Sérgio e a equipe estão em atendimento.
 
 SOBRE O ESCRITÓRIO:
-- Nome: Kayron Contabilidade
-- Sócios: Leonardo e Ricardo — 5 anos de experiência
-- Endereço: Rua Felizardo Leite, 414, Centro, Patos/PB
-- Horário: Segunda a sexta, 8h às 17h
-- Contato: WhatsApp 83 99831-3102 - Leonardo / 83 99632-1852 - Ricardo · Instagram @kayron_contabilidade
-- Especialidades: Abertura MEI/ME, Migração MEI→ME, Assessoria Contábil, IRPF/IRPJ, Lucro Presumido/Real, Departamento Pessoal
+- Nome: Pinharas Contabilidade
+- Contador responsável: Sérgio Araújo — graduado pela Universidade Estadual da Paraíba (UEPB), atuação em contábil, pessoal, fiscal e financeiro
+- Posicionamento: consultoria financeira e contabilidade consultiva, com foco em resultados de alto retorno para o cliente
+- Endereço: Rua Dr. Pedro Firmino, sala 604, nº 107, Centro, Patos/PB
+- Contato: WhatsApp 83 99646-6525 · Instagram @pinharas
+- Segmentos atendidos: Marketing, Advocacia, Profissionais da Saúde, Engenheiros e Arquitetos, Instituições de Ensino, Consultórios e Clínicas, Empregadores Domésticos, Condomínios e Imobiliárias
+- Especialidades gerais: Abertura MEI/ME, Assessoria Contábil, IRPF/IRPJ, Lucro Presumido/Real, Departamento Pessoal, Simples Nacional
 
 SKILL — SIMPLES NACIONAL:
 - Quem pode optar: ME até R$4,8M/ano, MEI até R$81.000/ano
@@ -350,10 +370,10 @@ OBRIGAÇÕES JULHO/2026:
 REGRAS DE ATENDIMENTO:
 - Seja simpático, paciente e claro — muitos clientes são pequenos empreendedores sem conhecimento técnico
 - Use linguagem simples, explique termos quando necessário
-- Quando a dúvida for específica do caso do cliente, oriente a agendar consulta com o Leonardo ou o Ricardo
+- Quando a dúvida for específica do caso do cliente, oriente a agendar consulta com o Sérgio
 - Máximo 4 parágrafos por resposta
 - Emojis com moderação
-- Sempre termine com: "Para o seu caso específico, o Leonardo ou o Ricardo podem te atender pessoalmente no escritório ou pelo WhatsApp 😊"
+- Sempre termine com: "Para o seu caso específico, o Sérgio pode te atender pessoalmente no escritório ou pelo WhatsApp 😊"
 - ⚠️ Orientação geral — não substitui assessoria contábil formal. Dados protegidos pela LGPD — Lei 13.709/2018.`;
 
 let historico = [];
@@ -437,7 +457,7 @@ function fazerLogin(){
   const user = document.getElementById('login-user').value.trim().toLowerCase();
   const pass = document.getElementById('login-pass').value.trim();
   const err = document.getElementById('login-err');
-  if(user==='kayron' && pass==='3102'){
+  if(user==='sergio' && pass==='6525'){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='flex';
     err.textContent='';
