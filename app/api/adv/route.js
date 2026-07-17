@@ -19,8 +19,8 @@ export async function POST(request) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001", // trocado de claude-haiku-4-5-20251001 — mais preciso em prazo/número jurídico
-        max_tokens: 1024,
+        model: "claude-sonnet-5",
+        max_tokens: 4096, // Sonnet 5 usa adaptive thinking por padrão — tokens de raciocínio contam aqui dentro, 1024 não sobrava espaço pra resposta
         system: system,
         messages: messages,
       }),
@@ -30,8 +30,15 @@ export async function POST(request) {
       console.error("Erro Anthropic:", data);
       return Response.json({ error: "Erro na API" }, { status: 500 });
     }
+    // Extrai o primeiro bloco de texto real, não assume que content[0] é sempre texto
+    // (com adaptive thinking, o primeiro bloco pode ser 'thinking', não 'text')
+    const textBlock = data.content?.find((block) => block.type === "text");
+    if (!textBlock) {
+      console.error("Erro ADV: resposta sem bloco de texto", data);
+      return Response.json({ error: "Resposta vazia do modelo" }, { status: 500 });
+    }
     return Response.json({
-      content: data.content[0].text,
+      content: textBlock.text,
     });
   } catch (error) {
     console.error("Erro na API ADV:", error);
