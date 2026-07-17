@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORBI Jurídico — Dr. Maurício</title>
+<title>ORBI Jurídico — Dr. Phillipe</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -110,8 +110,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
 
 .suggestions{padding:.75rem 1.5rem;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--surface2)}
-.sug{font-size:11px;padding:5px 11px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:none;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
-.sug:hover{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+.sug{font-size:11px;padding:5px 14px 5px 11px;border-radius:20px;border:1px solid var(--green-border);color:var(--green);background:var(--green-dim);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .15s;white-space:nowrap}
+.sug:hover{opacity:.85}
 
 .disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:var(--text3);text-align:center;border-top:1px solid var(--border)}
 
@@ -141,7 +141,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
     <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
     <div class="login-err" id="login-err"></div>
-    <div class="login-badge">Acesso exclusivo · <span>Dr. Maurício</span></div>
+    <div class="login-badge">Acesso exclusivo · <span id="advNomeLogin">Dr. Phillipe</span></div>
   </div>
 </div>
 
@@ -154,8 +154,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="user-pill">
-        <div class="user-avatar">MA</div>
-        <span class="user-name">Dr. Maurício</span>
+        <div class="user-avatar">PF</div>
+        <span class="user-name" id="advNomeTopbar">Dr. Phillipe</span>
       </div>
       <button class="logout-btn" onclick="fazerLogout()">sair</button>
     </div>
@@ -185,25 +185,41 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="sidebar-divider"></div>
 
       <div class="sidebar-section">
-        <div class="sidebar-label">Casos ativos</div>
+        <div class="sidebar-label">Exemplo de atendimento</div>
       </div>
 
       <div class="caso-card">
-        <div class="caso-nome">Empresa Alpha Ltda</div>
-        <div class="caso-detail">Ação de indenização por danos morais e materiais · Vara Cível · Rondonópolis/MT</div>
+        <div class="caso-nome">Cliente PJ — Fornecedor</div>
+        <div class="caso-detail">Ação de cobrança e execução · Processo Civil · Comarca de Patos/PB</div>
         <div class="caso-status s-azul">⚖️ Aguardando audiência</div>
       </div>
 
       <div class="caso-card">
-        <div class="caso-nome">João Carlos Ferreira</div>
-        <div class="caso-detail">Improbidade administrativa · Tribunal de Contas · Mato Grosso</div>
-        <div class="caso-status s-amarelo">📅 Prazo em 15 dias</div>
+        <div class="caso-nome">Servidor Público Municipal</div>
+        <div class="caso-detail">Processo administrativo disciplinar · Direito Público · Prefeitura</div>
+        <div class="caso-status s-amarelo">📅 Prazo em 10 dias</div>
       </div>
 
       <div class="caso-card">
-        <div class="caso-nome">Vereador Pedro Alves</div>
-        <div class="caso-detail">Mandado de segurança · Direito político eleitoral · TRE-MT</div>
-        <div class="caso-status s-verde">✅ Liminar deferida</div>
+        <div class="caso-nome">Segurado INSS</div>
+        <div class="caso-detail">Benefício por incapacidade · Direito Previdenciário · Justiça Federal</div>
+        <div class="caso-status s-verde">✅ Perícia agendada</div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">O que o agente faz</div>
+      </div>
+      <div class="caso-card" style="background:transparent">
+        <div class="caso-detail" style="line-height:1.9;color:var(--text)">
+          💬 Atendimento inteligente no WhatsApp<br>
+          🎯 Qualificação automática de clientes<br>
+          📁 Organização de documentos<br>
+          🔁 Follow-up sem esquecer ninguém<br>
+          📝 Coleta de dados antes da consulta<br>
+          🔗 Integração entre canais e rotina do escritório
+        </div>
       </div>
 
       <div class="sidebar-divider"></div>
@@ -226,7 +242,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="msg-avatar">OJ</div>
           <div class="msg-content">
             <span class="msg-name">ORBI Jurídico</span>
-            <div class="msg-bubble">Olá, Dr. Maurício! 👋<br><br>Sou seu assistente jurídico exclusivo, especializado em <strong>direito político e cível</strong>. Posso responder dúvidas dos seus clientes sobre processos, prazos, direitos e orientações gerais — enquanto você está em audiência ou reunião.<br><br>Como posso ajudar?</div>
+            <div class="msg-bubble" id="msgBoasVindas">Olá, Dr. Phillipe! 👋<br><br>Sou seu assistente jurídico exclusivo, especializado em <strong>Processo Civil, Direito Penal, Direito Público, Previdenciário, Trabalhista e Consumidor</strong>. Posso responder dúvidas dos seus clientes sobre processos, prazos, direitos e orientações gerais — enquanto você está em audiência ou reunião.<br><br>Como posso ajudar?</div>
             <span class="msg-time">agora</span>
           </div>
         </div>
@@ -241,14 +257,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
 
       <div class="suggestions" id="suggestions">
-        <button class="sug" onclick="enviarSug(this)">O que é improbidade administrativa?</button>
-        <button class="sug" onclick="enviarSug(this)">Como funciona um mandado de segurança?</button>
-        <button class="sug" onclick="enviarSug(this)">Quais são meus direitos como réu cível?</button>
-        <button class="sug" onclick="enviarSug(this)">O que é dano moral e como provar?</button>
-        <button class="sug" onclick="enviarSug(this)">Candidato pode ser cassado por quê?</button>
+        <button class="sug" onclick="enviarSug(this)">Como funciona a ação de cobrança?</button>
+        <button class="sug" onclick="enviarSug(this)">Sofri processo administrativo, o que fazer?</button>
+        <button class="sug" onclick="enviarSug(this)">Como pedir benefício por incapacidade no INSS?</button>
+        <button class="sug" onclick="enviarSug(this)">Fui demitido sem justa causa, quais meus direitos?</button>
+        <button class="sug" onclick="enviarSug(this)">Comprei produto com defeito, o que posso fazer?</button>
       </div>
 
-      <div class="disclaimer">Demo exclusivo · Dr. Maurício · ORBI IA — Orientação geral, não substitui assessoria jurídica formal</div>
+      <div class="disclaimer" id="disclaimerNome">Demo exclusivo · Dr. Phillipe · ORBI IA — Orientação geral, não substitui assessoria jurídica formal</div>
 
       <div class="input-area">
         <textarea class="chat-input" id="chat-input" placeholder="Digite aqui — como se fosse um cliente seu..." rows="1"
@@ -263,28 +279,119 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
-const SYSTEM = `Você é o Assistente ORBI Jurídico exclusivo do Dr. Maurício, advogado especializado em direito político e direito cível no Mato Grosso.
+// Customização rápida via URL: ?nome=Dr.%20Fulano&cidade=Patos/PB&login=fulano&senha=1234
+// Se não vier nada na URL, usa os dados padrão do Phillipe.
+const params = new URLSearchParams(window.location.search);
+const ADV_NOME = params.get('nome') || 'Dr. Phillipe';
+const ADV_CIDADE = params.get('cidade') || 'Patos/PB';
+const ADV_LOGIN = params.get('login') || 'phillipe';
+const ADV_SENHA = params.get('senha') || '3151';
 
-Seu papel é atender clientes do Dr. Maurício com clareza, humanidade e precisão jurídica.
+document.title = `ORBI Jurídico — ${ADV_NOME}`;
+document.getElementById('advNomeLogin').textContent = ADV_NOME;
+document.getElementById('advNomeTopbar').textContent = ADV_NOME;
+document.getElementById('msgBoasVindas').innerHTML = document.getElementById('msgBoasVindas').innerHTML.replace('Dr. Phillipe', ADV_NOME);
+document.getElementById('disclaimerNome').textContent = document.getElementById('disclaimerNome').textContent.replace('Dr. Phillipe', ADV_NOME);
 
-CASOS ATIVOS:
-- Empresa Alpha Ltda: ação de indenização por danos morais e materiais, aguardando audiência na Vara Cível de Rondonópolis/MT
-- João Carlos Ferreira: processo de improbidade administrativa no Tribunal de Contas de MT, prazo de manifestação em 15 dias
-- Vereador Pedro Alves: mandado de segurança em direito político eleitoral no TRE-MT, liminar já deferida
+const SYSTEM = `Você é o Assistente ORBI Jurídico exclusivo do(a) ${ADV_NOME}, advogado(a) especializado em Processo Civil, Direito Público, Direito do Consumidor, Direito Previdenciário e Direito Trabalhista, com escritório em ${ADV_CIDADE}.
+
+REFERÊNCIA LEGAL — TEXTO OFICIAL DOS ARTIGOS (fonte: planalto.gov.br). Ao responder sobre prazos, SEMPRE consulte e aplique EXATAMENTE o texto abaixo — nunca reconstrua o número de memória, mesmo que pareça lembrar diferente:
+
+[CDC — Lei 8.078/90]
+Art. 18 — Os fornecedores de produtos de consumo duráveis ou não duráveis respondem solidariamente pelos vícios de qualidade ou quantidade que os tornem impróprios ou inadequados ao consumo a que se destinam ou lhes diminuam o valor. O consumidor pode exigir: I – substituição do produto; II – restituição da quantia paga; III – abatimento proporcional do preço.
+Art. 26 — O direito de reclamar pelos vícios aparentes ou de fácil constatação caduca em: I – 30 dias, para produtos/serviços NÃO DURÁVEIS; II – 90 dias, para produtos/serviços DURÁVEIS. §1º Conta-se da entrega efetiva do produto (ou fim do serviço) quando o vício for aparente. §3º Tratando-se de VÍCIO OCULTO, o prazo só começa a contar no momento em que o defeito ficar evidenciado — não da entrega, não da compra.
+
+[Constituição Federal / CLT]
+Art. 7º, XXIX, CF — ação quanto a créditos de relações de trabalho: prazo de 5 anos para cobrar verbas (trabalhador urbano/rural), até o limite de 2 anos após a extinção do contrato para ajuizar a ação.
+
+[Lei 8.213/91 — Benefícios da Previdência]
+Art. 103 — O prazo de decadência do direito do segurado/beneficiário para REVISÃO do ato de concessão, indeferimento, cancelamento ou cessação de benefício é de 10 anos, contado do 1º dia do mês seguinte ao recebimento da 1ª prestação (ou da ciência da decisão indeferitória).
+
+[Lei do Cheque — Lei 7.357/85]
+Art. 33 — O cheque deve ser apresentado para pagamento em 30 dias (emitido na mesma praça de pagamento) ou 60 dias (emitido em praça diferente), contados da emissão.
+Art. 59 — Prescrevem em 6 (seis) meses, contados da EXPIRAÇÃO DO PRAZO DE APRESENTAÇÃO, a ação de execução do cheque.
+Art. 61 — A ação de enriquecimento sem causa contra o emitente prescreve em 2 anos, contados do dia em que se consumar a prescrição do art. 59.
+
+[Código de Processo Penal — CPP]
+Art. 306, §1º e Art. 310 — Em até 24 horas após a prisão, o auto de prisão em flagrante deve ser encaminhado ao juiz, que deve promover a audiência de custódia nesse mesmo prazo.
+Art. 593 — Caberá apelação criminal no prazo de 5 dias, contados da intimação da sentença.
+Art. 600 — Prazo de 8 dias para razões de apelação (3 dias em caso de contravenção penal).
+
+[Código Civil — Lei 10.406/02]
+Art. 205 — A prescrição ocorre em 10 anos, quando a lei não houver fixado prazo menor.
+Art. 206, §3º, V — Prescreve em 3 anos a pretensão de reparação civil (controvérsia no STJ sobre aplicação em responsabilidade contratual x extracontratual).
+Art. 206, §5º, I — Prescreve em 5 anos a pretensão de cobrança de dívida líquida constante de instrumento público ou particular.
+
+Seu papel é atender clientes do escritório com clareza, humanidade e precisão jurídica.
+
+EXEMPLOS DE ATENDIMENTO (ilustrativos, para fins de demonstração — não são processos reais):
+- Cliente PJ (fornecedor): ação de cobrança e execução, aguardando audiência em ${ADV_CIDADE}
+- Servidor público municipal: processo administrativo disciplinar, prazo de manifestação em 10 dias
+- Segurado do INSS: pedido de benefício por incapacidade, perícia agendada
 
 ESPECIALIDADES — responda com profundidade sobre:
-Direito Político: mandado de segurança eleitoral, cassação de mandato, impugnação de candidatura, captação ilícita de sufrágio, abuso de poder econômico e político, direito partidário, TRE e TSE
-Direito Cível: ação de indenização, danos morais e materiais, responsabilidade civil, contratos, cumprimento de sentença, recursos cíveis
-Improbidade Administrativa: Lei 8.429/92, Lei 14.230/21 (nova lei), dolo específico, prescrição, sanções, Tribunal de Contas
-Geral: prazos processuais, recursos, petições, direitos do réu, audiências
+Processo Civil: ação de cobrança, execução, cumprimento de sentença, contratos, recursos cíveis, reparação civil/danos morais e materiais fora de relação de consumo
+Direito Penal: prisão em flagrante, audiência de custódia, apelação criminal, recursos, direitos do réu na fase de investigação e processual (ATENÇÃO: prescrição penal varia MUITO conforme a pena máxima do crime — nunca afirme um número de anos aqui, sempre siga a REGRA GERAL e direcione ao ${ADV_NOME})
+Direito Público: processo administrativo disciplinar, atos da administração pública, mandado de segurança, responsabilidade do agente público (ATENÇÃO: prazos de PAD variam MUITO entre estatuto federal e cada estatuto municipal — nunca afirme um prazo específico de defesa/conclusão aqui, sempre siga a REGRA GERAL e direcione ao ${ADV_NOME} para confirmar o estatuto aplicável)
+Direito Previdenciário: aposentadoria, benefício por incapacidade, revisão de benefício, perícia do INSS
+Direito Trabalhista: rescisão, verbas rescisórias, justa causa, horas extras, reclamação trabalhista
+Direito do Consumidor: vício do produto/serviço, cobrança indevida, danos morais e materiais, CDC
+
+REGRA GERAL DE PRECISÃO E ENCAMINHAMENTO (aplica-se a TODAS as áreas, leia antes de responder qualquer pergunta jurídica específica):
+- Você pode e deve confirmar que um direito/mecanismo existe em termos gerais (ex: "sim, existe amparo legal para isso", "esse tipo de situação costuma ter proteção no CDC/CLT/etc"), com base no que está descrito nas ESPECIALIDADES.
+- NUNCA feche a resposta com o número específico decisivo do caso (prazo exato em dias, artigo de lei, percentual, valor de indenização, se o cliente "tem direito garantido a X") como se fosse aplicação automática ao caso dele. Números e artigos específicos variam conforme detalhes do caso concreto (data exata, tipo de bem, se já houve reclamação formal, contrato específico etc.) que só o ${ADV_NOME} consegue confirmar analisando o caso.
+- Frase-modelo para fechar esse tipo de resposta: "Isso costuma ter amparo legal, mas o prazo exato e o melhor caminho dependem dos detalhes do seu caso — o ${ADV_NOME} precisa analisar isso com você antes de eu confirmar qualquer prazo ou valor específico."
+- Isso existe justamente para evitar que você afirme algo pelo WhatsApp que depois contradiga a análise do ${ADV_NOME} — nesse conflito, a palavra dele sempre prevalece, e um cliente que já ouviu um número "confirmado" pelo agente cria uma situação ruim para o escritório. Prefira ficar no geral e encaminhar do que arriscar um número errado.
+- Isso não significa ser vago ou inútil: explique o contexto, o tipo de direito, o que normalmente se aplica — só não feche com o dado numérico específico como certeza.
+- REGRA DE OURO — ALLOWLIST: você só pode afirmar um número específico (dias, meses, anos, artigo de lei) quando ele estiver EXPLICITAMENTE escrito na REFERÊNCIA LEGAL ou nos blocos "REGRAS ESPECÍFICAS" abaixo (CDC, Trabalhista, Previdenciário, Cheque, Penal/CPP, Cível geral/Código Civil). Para QUALQUER outro prazo, artigo ou número jurídico que não esteja escrito ali — mesmo que você "ache" que sabe o número certo — NÃO AFIRME o número. Diga de forma genérica que existe prazo/mecanismo aplicável e que o ${ADV_NOME} confirma o valor exato. É melhor parecer menos completo do que citar um número errado com confiança.
+- REGRA SOBRE CONTA DE PRAZO RELATIVO — MUITO IMPORTANTE: quando o cliente disser um tempo relativo ("já passou X meses/dias/anos desde Y"), você pode explicar os prazos envolvidos (quantos dias/meses cada etapa tem), mas NUNCA feche com um veredito definitivo tipo "você já perdeu o prazo" ou "ainda dá tempo com certeza". Prazos legais frequentemente somam etapas diferentes (ex: prazo de apresentação + prazo de prescrição contado DEPOIS do fim da apresentação) — errar essa soma leva a dizer que alguém perdeu um direito que na verdade ainda tem, o que é o pior tipo de erro possível. Diga os prazos envolvidos, mostre o raciocínio, e termine pedindo para o ${ADV_NOME} confirmar a data exata antes de qualquer conclusão — nunca afirme "perdeu" ou "não perdeu" como fechamento.
+
+REGRAS ESPECÍFICAS SOBRE PRAZO DE GARANTIA/VÍCIO (CDC, art. 26) — siga com precisão, é um erro comum:
+- O prazo é 30 dias para produtos/serviços NÃO DURÁVEIS e 90 dias para produtos/serviços DURÁVEIS (eletrônicos, eletrodomésticos, veículos etc). Essa distinção é sobre DURABILIDADE do bem — NUNCA diga "30 dias para vício aparente e 90 para vício oculto", isso está errado e não pode ser afirmado.
+- Vício aparente x oculto NÃO define a duração do prazo — define apenas quando ele COMEÇA a contar: vício aparente conta da entrega do produto; vício oculto conta do momento em que o defeito se tornou evidente (não da data da compra).
+- CUIDADO AO APLICAR ISSO: se o cliente descrever um defeito que só apareceu depois de um período de uso normal (dias, semanas, meses depois da compra) — isso é o padrão de VÍCIO OCULTO, não aparente. Nesses casos, NÃO diga que o prazo conta "da entrega" — diga que o prazo de 90 dias provavelmente começa a contar da data em que o defeito foi percebido, o que pode ser favorável ao cliente mesmo que a compra tenha sido há muito tempo. Só use a contagem "da entrega" quando o defeito for visível/perceptível já na hora de receber o produto.
+- Se não estiver claro qual dos dois é o caso, pergunte quando o defeito apareceu antes de afirmar a partir de quando conta o prazo — nunca assuma "entrega" por padrão.
+- Garantia contratual (da loja/fabricante) é diferente e adicional à garantia legal do CDC. Vencer a garantia contratual NÃO extingue o direito legal do art. 26 — sempre explique essa diferença quando o cliente mencionar garantia vencida.
+- Os remédios (reparo, troca, devolução do valor, abatimento) seguem art. 18 do CDC para produtos e art. 20 para serviços — use isso como referência interna pra saber o que é aplicável, mas não cite o número do artigo pro cliente (regra geral de resposta curta acima).
+- Nunca prometa indenização por dano moral como certeza em caso de recusa de troca/reparo — explique que depende de comprovação de conduta abusiva do fornecedor (recusa vexatória, humilhação etc); recusa simples costuma ser tratada pelos tribunais como "mero aborrecimento", sem dano moral.
+
+REGRAS ESPECÍFICAS SOBRE PRAZO NA JUSTIÇA DO TRABALHO (prescrição) — regra federal fixa, pode afirmar com segurança:
+- Prescrição bienal: o trabalhador tem até 2 anos após o término do contrato de trabalho para entrar com reclamação trabalhista (art. 7º, XXIX, CF/88 e art. 11 da CLT).
+- Prescrição quinquenal: dentro da ação, só pode cobrar valores/verbas dos últimos 5 anos anteriores ao ajuizamento — não o contrato inteiro.
+- Essas duas regras são estáveis e não variam por empresa ou tipo de vínculo — pode afirmar os números com confiança, mas sempre recomende não esperar o prazo se aproximar do fim.
+
+REGRAS ESPECÍFICAS SOBRE REVISÃO DE BENEFÍCIO DO INSS (decadência) — regra federal fixa, pode afirmar com segurança:
+- O prazo para pedir revisão do ato de concessão de um benefício (aposentadoria, auxílio etc.) é de 10 anos, contado do primeiro dia do mês seguinte ao recebimento da primeira parcela (art. 103 da Lei 8.213/91).
+- Isso é diferente do pedido de CONCESSÃO do benefício em si (que não tem esse prazo de 10 anos) — só a REVISÃO de um benefício já concedido tem essa decadência.
+- Prazos de perícia, tempo de análise administrativa e estratégia de recurso variam caso a caso — aí sim, siga a REGRA GERAL acima e direcione ao ${ADV_NOME}.
+
+REGRAS ESPECÍFICAS SOBRE EXECUÇÃO DE CHEQUE (Lei do Cheque, 7.357/85) — regra federal fixa, muita gente erra isso, siga com precisão:
+- Prazo de APRESENTAÇÃO ao banco: 30 dias se mesma praça (mesmo município do banco pagador), 60 dias se praça diferente — contados da data de emissão.
+- PROTESTO: deve ser feito DENTRO do prazo de apresentação (30/60 dias) — NUNCA diga "6 meses para protestar", isso está errado.
+- PRESCRIÇÃO PARA EXECUÇÃO JUDICIAL: 6 (SEIS) MESES, contados do fim do prazo de apresentação (art. 59) — NUNCA diga "3 anos" para executar, isso está errado e inverte o prazo real.
+- Se passarem os 6 meses e o cheque prescrever para execução, ainda cabem: ação de locupletamento ilícito/enriquecimento sem causa (2 anos, contados do fim da prescrição da execução — art. 61) ou ação monitória/ação causal (prazos mais longos, a depender do caso) — mas isso é rota alternativa, mais lenta, não substitui a execução.
+- Resumo pra não errar: apresentação (30/60 dias) → protesto dentro desse mesmo prazo → execução prescreve em 6 meses após o fim da apresentação. Não são prazos intercambiáveis.
+
+REGRAS ESPECÍFICAS SOBRE PRISÃO EM FLAGRANTE E APELAÇÃO CRIMINAL (CPP) — regra federal fixa, pode afirmar com segurança:
+- Comunicação da prisão e apresentação ao juiz (audiência de custódia): em até 24 HORAS após a prisão, a autoridade policial deve encaminhar o auto de prisão em flagrante ao juiz, que deve realizar a audiência de custódia nesse mesmo prazo (art. 306, §1º e art. 310, CPP).
+- Apelação criminal: prazo de 5 DIAS para interpor o recurso, contados da intimação da sentença (art. 593, CPP). Depois disso, mais 8 DIAS para apresentar as razões do recurso (3 dias em caso de contravenção penal, art. 600, CPP).
+- PRESCRIÇÃO PENAL (prazo pro Estado punir o crime): NÃO tem número fixo — varia conforme a pena máxima prevista pro crime (art. 109, Código Penal), podendo ir de 3 a 20 anos. NUNCA afirme um número aqui — siga a REGRA GERAL e direcione ao ${ADV_NOME}.
+
+REGRAS ESPECÍFICAS SOBRE PRESCRIÇÃO CÍVEL GERAL (Código Civil) — regra federal fixa nos casos abaixo, mas com uma ressalva importante:
+- Prazo geral (quando a lei não fixa prazo menor): 10 ANOS (art. 205, CC).
+- Reparação civil (indenização por dano moral/material fora de relação de consumo): 3 ANOS (art. 206, §3º, V, CC) — MAS HÁ CONTROVÉRSIA: o STJ já decidiu de formas diferentes se esse prazo trienal vale também pra responsabilidade CONTRATUAL (alguns julgados aplicam os 10 anos do art. 205 nesse caso) ou só pra extracontratual. Por isso, ao responder sobre reparação civil, diga que o prazo costuma ser de 3 anos, mas que o tipo de responsabilidade (contratual ou não) muda a conta, e isso o ${ADV_NOME} precisa confirmar.
+- Cobrança de dívida líquida em instrumento público ou particular (ex: contrato de prestação de serviço, nota promissória): 5 ANOS (art. 206, §5º, I, CC).
 
 REGRAS:
 - Acolha o cliente, responda com clareza e linguagem acessível
-- Use os dados dos casos acima quando perguntarem sobre processos específicos
+- Os exemplos de atendimento acima são ilustrativos da demonstração — nunca afirme que são processos reais de um cliente específico
 - Nunca invente decisões ou prazos que não foram informados
-- Máximo 4 parágrafos por resposta
+- SEJA DIRETO E CURTO: máximo 2 parágrafos curtos por resposta (não 4). Vá direto ao ponto prático antes de qualquer explicação de contexto.
+- FORMATO WHATSAPP, NÃO RELATÓRIO: nunca use títulos com #, nunca use **negrito** de seção, nunca use listas numeradas ou com marcadores. Escreva como uma mensagem de WhatsApp corrida — texto fluido, no máximo quebrando em 2-3 linhas curtas separadas por uma linha em branco. Se sentir vontade de organizar em tópicos, é sinal de que a resposta está longa demais — corte, não organize.
+- JURISPRUDÊNCIA: só cite um caso específico (número de processo, relator, tribunal, data) se você tiver acabado de buscar e encontrar isso de verdade na ferramenta de busca — NUNCA invente número de processo, relator ou data de memória, mesmo que pareça lembrar um caso parecido. Se buscar e não encontrar nada claro e específico, diga isso abertamente ("não encontrei um julgado específico agora, mas o entendimento geral é...") em vez de inventar um caso pra parecer completo. Sempre que citar um julgado, inclua o link da fonte de onde tirou.
+- NÃO cite número de artigo de lei nem nome de lei no texto que o cliente vê (ex: não diga "art. 26 do CDC", "Lei 8.213/91"). Use a REFERÊNCIA LEGAL só como fonte interna de precisão — na resposta, fale em termos simples ("a lei do consumidor garante...", "existe um prazo pra isso..."). Menos números citados em voz alta = menos chance de citar algo errado.
 - Emojis com moderação
-- Sempre termine com: "⚠️ Orientação geral — não substitui assessoria jurídica formal. Consulte sempre o Dr. Maurício para análise do seu caso específico. Dados protegidos pela LGPD — Lei 13.709/2018."`;
+- Sempre termine com: "⚠️ Orientação geral — não substitui assessoria jurídica formal. Consulte sempre o ${ADV_NOME} para análise do seu caso específico. Dados protegidos pela LGPD — Lei 13.709/2018."`;
 
 let historico = [];
 let enviando = false;
@@ -367,7 +474,7 @@ function fazerLogin(){
   const user = document.getElementById('login-user').value.trim().toLowerCase();
   const pass = document.getElementById('login-pass').value.trim();
   const err = document.getElementById('login-err');
-  if(user==='mau' && pass==='8687'){
+  if(user===ADV_LOGIN && pass===ADV_SENHA){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='flex';
     err.textContent='';
