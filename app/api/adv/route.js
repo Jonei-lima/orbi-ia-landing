@@ -45,19 +45,36 @@ export async function POST(request) {
       console.error("Erro Anthropic:", data);
       return Response.json({ error: "Erro na API" }, { status: 500 });
     }
-    // LOG TEMPORÁRIO DE DIAGNÓSTICO — remove depois de confirmar se a busca está funcionando
-    console.log("Tipos de bloco na resposta:", data.content?.map((b) => b.type));
-
-    // Com busca ativada, a resposta pode vir em vários blocos de texto intercalados
-    // com chamadas de busca — junta todos na ordem certa, não pega só o último
+    // Remove o log de diagnóstico agora que confirmamos que a busca funciona
     const textBlocks = data.content?.filter((block) => block.type === "text") || [];
     if (textBlocks.length === 0) {
       console.error("Erro ADV: resposta sem bloco de texto", data);
       return Response.json({ error: "Resposta vazia do modelo" }, { status: 500 });
     }
     const fullText = textBlocks.map((block) => block.text).join("");
+
+    // As citações da busca vêm como metadado separado (block.citations), não como
+    // link dentro do texto — precisa juntar e listar as fontes manualmente
+    const fontes = new Map(); // url -> title, pra não repetir a mesma fonte
+    for (const block of textBlocks) {
+      if (Array.isArray(block.citations)) {
+        for (const c of block.citations) {
+          if (c.url && !fontes.has(c.url)) {
+            fontes.set(c.url, c.title || c.url);
+          }
+        }
+      }
+    }
+    let finalText = fullText;
+    if (fontes.size > 0) {
+      const listaFontes = Array.from(fontes.entries())
+        .map(([url, title]) => `${title}: ${url}`)
+        .join("\n");
+      finalText += `\n\nFontes consultadas:\n${listaFontes}`;
+    }
+
     return Response.json({
-      content: fullText,
+      content: finalText,
     });
   } catch (error) {
     console.error("Erro na API ADV:", error);
