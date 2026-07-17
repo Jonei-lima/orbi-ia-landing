@@ -19,7 +19,7 @@ export async function POST(request) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-5", // trocado de claude-haiku-4-5-20251001 — mais preciso em prazo/número jurídico
+        model: "claude-haiku-4-5-20251001", // trocado de claude-haiku-4-5-20251001 — mais preciso em prazo/número jurídico
         max_tokens: 1024,
         system: system,
         messages: messages,
