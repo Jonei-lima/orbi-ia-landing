@@ -416,7 +416,10 @@ function adicionarMsg(role, texto){
   name.textContent = role==='user'?'Você':'ORBI Jurídico';
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
-  bubble.innerHTML = texto.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  bubble.innerHTML = texto
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:var(--green);text-decoration:underline;word-break:break-all">$1</a>')
+    .replace(/\n/g,'<br>')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
   const time = document.createElement('span');
   time.className = 'msg-time';
   time.textContent = hora();
