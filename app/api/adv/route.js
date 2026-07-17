@@ -20,9 +20,24 @@ export async function POST(request) {
       },
       body: JSON.stringify({
         model: "claude-sonnet-5",
-        max_tokens: 4096, // Sonnet 5 usa adaptive thinking por padrão — tokens de raciocínio contam aqui dentro, 1024 não sobrava espaço pra resposta
+        max_tokens: 4096,
         system: system,
         messages: messages,
+        tools: [
+          {
+            type: "web_search_20250305",
+            name: "web_search",
+            // Restringe a busca a fontes jurídicas confiáveis — reduz risco de pegar
+            // blog/fórum errado ou fonte de baixa qualidade pra citar jurisprudência
+            allowed_domains: [
+              "stf.jus.br",
+              "stj.jus.br",
+              "tst.jus.br",
+              "jusbrasil.com.br",
+              "planalto.gov.br",
+            ],
+          },
+        ],
       }),
     });
     const data = await response.json();
@@ -30,9 +45,10 @@ export async function POST(request) {
       console.error("Erro Anthropic:", data);
       return Response.json({ error: "Erro na API" }, { status: 500 });
     }
-    // Extrai o primeiro bloco de texto real, não assume que content[0] é sempre texto
-    // (com adaptive thinking, o primeiro bloco pode ser 'thinking', não 'text')
-    const textBlock = data.content?.find((block) => block.type === "text");
+    // Com busca ativada, pode haver blocos de tool_use/tool_result antes do texto final —
+    // pega o ÚLTIMO bloco de texto, que é a resposta sintetizada após a busca
+    const textBlocks = data.content?.filter((block) => block.type === "text") || [];
+    const textBlock = textBlocks[textBlocks.length - 1];
     if (!textBlock) {
       console.error("Erro ADV: resposta sem bloco de texto", data);
       return Response.json({ error: "Resposta vazia do modelo" }, { status: 500 });
