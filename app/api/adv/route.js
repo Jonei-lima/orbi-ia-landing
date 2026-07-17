@@ -45,6 +45,9 @@ export async function POST(request) {
       console.error("Erro Anthropic:", data);
       return Response.json({ error: "Erro na API" }, { status: 500 });
     }
+    // LOG TEMPORÁRIO DE DIAGNÓSTICO — remove depois de confirmar se a busca está funcionando
+    console.log("Tipos de bloco na resposta:", data.content?.map((b) => b.type));
+
     // Com busca ativada, a resposta pode vir em vários blocos de texto intercalados
     // com chamadas de busca — junta todos na ordem certa, não pega só o último
     const textBlocks = data.content?.filter((block) => block.type === "text") || [];
