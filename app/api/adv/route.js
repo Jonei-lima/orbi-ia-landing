@@ -45,16 +45,16 @@ export async function POST(request) {
       console.error("Erro Anthropic:", data);
       return Response.json({ error: "Erro na API" }, { status: 500 });
     }
-    // Com busca ativada, pode haver blocos de tool_use/tool_result antes do texto final —
-    // pega o ÚLTIMO bloco de texto, que é a resposta sintetizada após a busca
+    // Com busca ativada, a resposta pode vir em vários blocos de texto intercalados
+    // com chamadas de busca — junta todos na ordem certa, não pega só o último
     const textBlocks = data.content?.filter((block) => block.type === "text") || [];
-    const textBlock = textBlocks[textBlocks.length - 1];
-    if (!textBlock) {
+    if (textBlocks.length === 0) {
       console.error("Erro ADV: resposta sem bloco de texto", data);
       return Response.json({ error: "Resposta vazia do modelo" }, { status: 500 });
     }
+    const fullText = textBlocks.map((block) => block.text).join("");
     return Response.json({
-      content: textBlock.text,
+      content: fullText,
     });
   } catch (error) {
     console.error("Erro na API ADV:", error);
