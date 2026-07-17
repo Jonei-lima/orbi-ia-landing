@@ -53,6 +53,12 @@ export async function POST(request) {
     }
     const fullText = textBlocks.map((block) => block.text).join("");
 
+    // LOG TEMPORÁRIO — descobrir a estrutura real de citations antes de formatar
+    const blocoComCitacao = textBlocks.find((b) => Array.isArray(b.citations) && b.citations.length > 0);
+    if (blocoComCitacao) {
+      console.log("Estrutura real de uma citation:", JSON.stringify(blocoComCitacao.citations[0], null, 2));
+    }
+
     // As citações da busca vêm como metadado separado (block.citations), não como
     // link dentro do texto — precisa juntar e listar as fontes manualmente
     const fontes = new Map(); // url -> title, pra não repetir a mesma fonte
