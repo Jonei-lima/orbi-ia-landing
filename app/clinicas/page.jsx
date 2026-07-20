@@ -46,6 +46,7 @@ export default function ClinicasPage() {
   const [leadSaved, setLeadSaved] = useState(false);
   const [segmentoEscolhido, setSegmentoEscolhido] = useState(false);
   const [whatsappLink, setWhatsappLink] = useState(null);
+  const [chatNudged, setChatNudged] = useState(false);
   const lastLeadSnapshotRef = useRef('');
   const chatHistoryRef = useRef([]);
   const msgsEndRef = useRef(null);
@@ -53,6 +54,28 @@ export default function ClinicasPage() {
   useEffect(() => {
     msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // ── NUDGE NO BOTÃO DE CHAT ──
+  // Depois que a pessoa rola ~35% da página e ainda não abriu o chat, chama
+  // atenção pro botão flutuante com um pulso + badge. Some ao abrir o chat
+  // (o cálculo "chatNudged && !chatOpen" já cuida disso, sem precisar zerar).
+  useEffect(() => {
+    function onScroll() {
+      if (chatNudged) return;
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollable <= 0) return;
+      if (window.scrollY / scrollable > 0.35) setChatNudged(true);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [chatNudged]);
+
+  // ── Lê cookie do navegador (usado pra pegar _fbp e _fbc, que o próprio
+  //    pixel da Meta já grava sozinho quando carrega a página) ──
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : null;
+  }
 
   function escolherSegmento(segmentoNome) {
     setSegmentoEscolhido(true);
@@ -82,26 +105,39 @@ export default function ClinicasPage() {
     if (snapshot === lastLeadSnapshotRef.current) return;
     lastLeadSnapshotRef.current = snapshot;
 
+    // event_id único, compartilhado entre o pixel do navegador (fbq) e o
+    // evento que o servidor manda pra CAPI — é isso que faz a Meta deduplicar
+    // e não contar o mesmo lead 2x. Vai em toda chamada; só é "usado" de
+    // verdade no momento em que o servidor confirma "encerrar" (mesmo ponto
+    // em que o fbq abaixo dispara).
+    const eventId = (typeof window !== 'undefined' && window.crypto?.randomUUID)
+      ? window.crypto.randomUUID()
+      : 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+    const fbp = getCookie('_fbp');
+    const fbc = getCookie('_fbc');
+
     // Sempre salva/atualiza (protege contra perder o lead se a pessoa sumir no meio),
     // mas o e-mail/WhatsApp real só dispara quando o servidor ver "encerrar":true.
     try {
       const res = await fetch('/api/lead-clinicas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(leadFields),
+        body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc }),
       });
       const data = await res.json();
             if (data?.whatsappLink) {
         setWhatsappLink({ url: data.whatsappLink, persona: data.persona });
-        
+
         if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+          // Terceiro argumento {eventID: eventId} liga esse evento do
+          // navegador ao mesmo evento que o servidor manda pra CAPI.
           window.fbq('track', 'Lead', {
             content_name: 'Lead Clinicas ORBI',
             content_category: 'Lead Qualificado',
             value: 65.00,
             currency: 'BRL',
             lead_type: 'Chat WhatsApp Clinicas'
-          });
+          }, { eventID: eventId });
         }
 
         if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
@@ -215,7 +251,9 @@ export default function ClinicasPage() {
               </a>
             </div>
             <p className="text-xs text-white/50 mt-4">
-              Ao conversar, você concorda com nossa política de privacidade — seus dados seguem a LGPD (Lei 13.709/2020).
+              Ao conversar, você concorda com nossa{' '}
+              <a href="https://www.agenteorbiia.com/politica" className="underline hover:text-white/80" target="_blank" rel="noopener noreferrer">política de privacidade</a>
+              {' '}— seus dados seguem a LGPD (Lei 13.709/2020).
             </p>
           </div>
         </div>
@@ -456,7 +494,8 @@ export default function ClinicasPage() {
             </div>
           </div>
           <div className="border-t border-white/10 pt-6 text-center text-xs text-white/50">
-            © 2026 ORBI IA — Todos os direitos reservados.
+            © 2026 ORBI IA — Todos os direitos reservados. ·{' '}
+            <a href="https://www.agenteorbiia.com/politica" className="underline hover:text-white/80">Política de Privacidade</a>
           </div>
         </div>
       </footer>
@@ -467,8 +506,14 @@ export default function ClinicasPage() {
       </a>
 
       {/* CHAT WIDGET */}
-      <button onClick={() => setChatOpen((v) => !v)} className="fixed bottom-7 right-24 z-50 w-14 h-14 bg-[#22262B] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <button onClick={() => setChatOpen((v) => !v)} className="fixed bottom-7 right-24 z-50 w-14 h-14 bg-[#22262B] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative">
+        {chatNudged && !chatOpen && (
+          <span className="absolute inset-0 rounded-full bg-[#4F7A5A] opacity-60 animate-ping" />
+        )}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" className="relative"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        {chatNudged && !chatOpen && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#D9B36A] text-[#22262B] text-[11px] font-bold rounded-full flex items-center justify-center border-2 border-[#F7F5F2]">1</span>
+        )}
       </button>
 
       {chatOpen && (
