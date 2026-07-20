@@ -347,12 +347,13 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
   box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: all 0.2s; text-decoration: none;
 }
 .wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.5); }
-#chat-trigger.attention { animation: chatPulse 1.8s ease-in-out infinite; }
-@keyframes chatPulse {
-  0%, 100% { box-shadow: 0 4px 20px rgba(79,122,52,0.4); }
-  50% { box-shadow: 0 4px 20px rgba(79,122,52,0.4), 0 0 0 10px rgba(79,122,52,0.25); }
-}
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── NUDGE (pulso + badge no chat e no WhatsApp após ~35% de rolagem) ── */
+@keyframes orbiPulseRing { 0% { transform: scale(1); opacity: 0.75; } 100% { transform: scale(1.9); opacity: 0; } }
+.orbi-nudge-ring { position: absolute; top: -2px; right: -2px; bottom: -2px; left: -2px; border-radius: 50%; background: #e53935; opacity: 0.75; animation: orbiPulseRing 1.4s ease-out infinite; pointer-events: none; display: none; }
+.orbi-nudge-badge { position: absolute; top: -4px; right: -4px; width: 20px; height: 20px; background: #e53935; color: #fff; font-size: 11px; font-weight: 700; border-radius: 50%; display: none; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
+.is-nudged .orbi-nudge-ring, .is-nudged .orbi-nudge-badge { display: flex; }
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -809,7 +810,7 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
       <div class="trust-card reveal">
         <div class="trust-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="trust-title">Seus dados, sua fazenda</div>
-        <div class="trust-text">O histórico da sua operação fica com vocês. Coleta e uso seguem a LGPD (Lei 13.709/2020).</div>
+        <div class="trust-text">O histórico da sua operação fica com vocês. Coleta e uso seguem a LGPD (Lei 13.709/2020) — veja nossa <a href="https://www.agenteorbiia.com/politica" target="_blank" rel="noopener" style="color:var(--leaf-deep);text-decoration:underline;">política de privacidade</a>.</div>
       </div>
       <div class="trust-card reveal">
         <div class="trust-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
@@ -864,7 +865,7 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
       </div>
     </div>
     <div style="padding-top:20px;">
-      <p style="font-size:0.72rem;color:var(--ink-soft);">© 2026 ORBI IA — Todos os direitos reservados. Lei 9.610/1998 · Lei 9.279/1996 · LGPD 13.709/2020 · <a href="https://www.agenteorbiia.com/politica" style="color:var(--ink-soft);text-decoration:underline;">Política de Privacidade</a></p>
+      <p style="font-size:0.72rem;color:var(--ink-soft);">© 2026 ORBI IA — Todos os direitos reservados. Lei 9.610/1998 · Lei 9.279/1996 · LGPD 13.709/2020 · <a href="https://www.agenteorbiia.com/politica" target="_blank" rel="noopener" style="color:var(--ink-soft);text-decoration:underline;">Política de Privacidade</a></p>
     </div>
   </div>
 </footer>
@@ -913,17 +914,15 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 20px rgba(79,122,52,0.4); transition: all 0.2s;
 " title="Tire suas dúvidas com o assistente">
+  <span class="orbi-nudge-ring"></span>
+  <span class="orbi-nudge-badge">1</span>
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-  <span id="chat-badge" style="
-    display: none; position: absolute; top: -4px; right: -4px;
-    width: 20px; height: 20px; background: #F0C878; color: #2B2318;
-    border-radius: 50%; font-size: 0.68rem; font-weight: 700;
-    align-items: center; justify-content: center; border: 2px solid var(--cream);
-  ">1</span>
 </button>
 
 <!-- WA FLOAT -->
-<a class="wa-float" href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20o%20ORBI%20Agro" target="_blank" title="Fale conosco">
+<a id="wa-float" class="wa-float" href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20o%20ORBI%20Agro" target="_blank" title="Fale conosco">
+  <span class="orbi-nudge-ring"></span>
+  <span class="orbi-nudge-badge">1</span>
   <svg viewBox="0 0 32 32" fill="white" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.4a11.34 11.34 0 0 1-5.78-1.58l-.42-.24-4.44 1.04 1.06-4.32-.28-.44A11.36 11.36 0 0 1 4.6 16C4.6 9.7 9.7 4.6 16 4.6S27.4 9.7 27.4 16 22.3 27.4 16 27.4zm6.22-8.5c-.34-.17-2-.98-2.3-1.1-.32-.1-.54-.16-.78.18-.22.34-.88 1.1-1.08 1.32-.2.22-.4.24-.74.08-.34-.18-1.42-.52-2.7-1.66a10.1 10.1 0 0 1-1.88-2.32c-.2-.34-.02-.52.14-.7.16-.14.34-.38.52-.56.16-.18.22-.3.34-.52.1-.22.06-.42-.02-.58-.08-.18-.78-1.88-1.06-2.58-.28-.68-.56-.58-.78-.6-.2-.02-.42-.02-.64-.02s-.58.08-.88.42c-.3.34-1.16 1.14-1.16 2.78s1.18 3.22 1.34 3.44c.18.22 2.34 3.56 5.66 5 .78.34 1.4.54 1.88.68.78.24 1.5.2 2.06.12.62-.1 1.94-.8 2.22-1.56.28-.76.28-1.4.2-1.56-.08-.14-.3-.22-.64-.38z"/></svg>
 </a>
 
@@ -1026,11 +1025,41 @@ function toggleChat() {
   if (!isOpen) {
     const msgs = document.getElementById('chat-msgs');
     msgs.scrollTop = msgs.scrollHeight;
-    // Assim que a pessoa abre o chat, para o nudge — já conseguiu o que queria
-    const badge = document.getElementById('chat-badge');
-    if (trigger) trigger.classList.remove('attention');
-    if (badge) badge.style.display = 'none';
+    clearNudge();
   }
+}
+
+// ── NUDGE: pulsa chat + WhatsApp depois de ~35% de rolagem sem abrir o chat ──
+let chatNudged = false;
+function clearNudge() {
+  chatNudged = true; // já não pulsa mais depois de abrir uma vez
+  document.getElementById('chat-trigger')?.classList.remove('is-nudged');
+  document.getElementById('wa-float')?.classList.remove('is-nudged');
+}
+window.addEventListener('scroll', () => {
+  if (chatNudged) return;
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  if (total > 0 && window.scrollY / total >= 0.35) {
+    chatNudged = true;
+    document.getElementById('chat-trigger')?.classList.add('is-nudged');
+    document.getElementById('wa-float')?.classList.add('is-nudged');
+  }
+}, { passive: true });
+
+// ── UTM / fbclid: captura na 1ª carga e persiste na sessão pra não perder o dado ──
+function getQueryParam(name) {
+  return new URLSearchParams(window.location.search).get(name);
+}
+const orbiUtm = {};
+['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'].forEach((k) => {
+  const fromUrl = getQueryParam(k);
+  if (fromUrl) sessionStorage.setItem('orbi_' + k, fromUrl);
+  orbiUtm[k] = fromUrl || sessionStorage.getItem('orbi_' + k) || null;
+});
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
 }
 
 // ── COUNTERS ──
@@ -1065,24 +1094,14 @@ function extractLeadMarker(rawText) {
   return { visibleText, leadFields };
 }
 
-// ── Lê cookie do navegador (usado pra pegar _fbp e _fbc, que o próprio
-//    pixel da Meta já grava sozinho quando carrega a página) ──
-function getCookie(name) {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? match[2] : null;
-}
-
 async function maybeSaveLead(leadFields) {
   if (!leadFields || leadSaved) return;
   if (!leadFields.nome || !leadFields.telefone) return;
   leadSaved = true;
 
-  // event_id único, compartilhado entre o pixel do navegador (fbq) e o
-  // evento que o servidor manda pra CAPI — é isso que faz a Meta deduplicar
-  // e não contar o mesmo lead 2x.
-  const eventId = (window.crypto && crypto.randomUUID)
+  const eventId = (typeof crypto !== 'undefined' && crypto.randomUUID)
     ? crypto.randomUUID()
-    : 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+    : `evt_${Date.now()}_${Math.random().toString(36).slice(2)}`;
   const fbp = getCookie('_fbp');
   const fbc = getCookie('_fbc');
 
@@ -1090,7 +1109,7 @@ async function maybeSaveLead(leadFields) {
     const res = await fetch('/api/lead-agro', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc }),
+      body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc, ...orbiUtm }),
     });
     if (res.ok) {
       try {
@@ -1106,8 +1125,6 @@ async function maybeSaveLead(leadFields) {
       }
         try {
           if (typeof fbq === 'function') {
-            // Terceiro argumento {eventID: eventId} liga esse evento do
-            // navegador ao mesmo evento que o servidor manda pra CAPI.
             fbq('track', 'Lead', {
               content_name: 'Lead Agro ORBI',
               content_category: 'Lead Qualificado',
@@ -1230,24 +1247,6 @@ const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.08 });
 reveals.forEach(el => obs.observe(el));
-
-// ── NUDGE NO BOTÃO DE CHAT ──
-// Depois que a pessoa rola ~35% da página e ainda não abriu o chat, chama
-// atenção pro botão flutuante com um pulso + badge. Some ao abrir o chat.
-let chatNudged = false;
-window.addEventListener('scroll', () => {
-  if (chatNudged) return;
-  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-  if (scrollable <= 0) return;
-  const scrollPercent = window.scrollY / scrollable;
-  if (scrollPercent > 0.35) {
-    chatNudged = true;
-    const trigger = document.getElementById('chat-trigger');
-    const badge = document.getElementById('chat-badge');
-    if (trigger) trigger.classList.add('attention');
-    if (badge) badge.style.display = 'flex';
-  }
-}, { passive: true });
 </script>
 </body>
 </html>
