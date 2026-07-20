@@ -347,6 +347,11 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
   box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: all 0.2s; text-decoration: none;
 }
 .wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.5); }
+#chat-trigger.attention { animation: chatPulse 1.8s ease-in-out infinite; }
+@keyframes chatPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(79,122,52,0.4); }
+  50% { box-shadow: 0 4px 20px rgba(79,122,52,0.4), 0 0 0 10px rgba(79,122,52,0.25); }
+}
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -859,7 +864,7 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
       </div>
     </div>
     <div style="padding-top:20px;">
-      <p style="font-size:0.72rem;color:var(--ink-soft);">© 2026 ORBI IA — Todos os direitos reservados. Lei 9.610/1998 · Lei 9.279/1996 · LGPD 13.709/2020</p>
+      <p style="font-size:0.72rem;color:var(--ink-soft);">© 2026 ORBI IA — Todos os direitos reservados. Lei 9.610/1998 · Lei 9.279/1996 · LGPD 13.709/2020 · <a href="https://www.agenteorbiia.com/politica" style="color:var(--ink-soft);text-decoration:underline;">Política de Privacidade</a></p>
     </div>
   </div>
 </footer>
@@ -909,6 +914,12 @@ src="https://www.facebook.com/tr?id=1029192646552967&ev=PageView&noscript=1"
   box-shadow: 0 4px 20px rgba(79,122,52,0.4); transition: all 0.2s;
 " title="Tire suas dúvidas com o assistente">
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <span id="chat-badge" style="
+    display: none; position: absolute; top: -4px; right: -4px;
+    width: 20px; height: 20px; background: #F0C878; color: #2B2318;
+    border-radius: 50%; font-size: 0.68rem; font-weight: 700;
+    align-items: center; justify-content: center; border: 2px solid var(--cream);
+  ">1</span>
 </button>
 
 <!-- WA FLOAT -->
@@ -1015,6 +1026,10 @@ function toggleChat() {
   if (!isOpen) {
     const msgs = document.getElementById('chat-msgs');
     msgs.scrollTop = msgs.scrollHeight;
+    // Assim que a pessoa abre o chat, para o nudge — já conseguiu o que queria
+    const badge = document.getElementById('chat-badge');
+    if (trigger) trigger.classList.remove('attention');
+    if (badge) badge.style.display = 'none';
   }
 }
 
@@ -1050,15 +1065,32 @@ function extractLeadMarker(rawText) {
   return { visibleText, leadFields };
 }
 
+// ── Lê cookie do navegador (usado pra pegar _fbp e _fbc, que o próprio
+//    pixel da Meta já grava sozinho quando carrega a página) ──
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
 async function maybeSaveLead(leadFields) {
   if (!leadFields || leadSaved) return;
   if (!leadFields.nome || !leadFields.telefone) return;
   leadSaved = true;
+
+  // event_id único, compartilhado entre o pixel do navegador (fbq) e o
+  // evento que o servidor manda pra CAPI — é isso que faz a Meta deduplicar
+  // e não contar o mesmo lead 2x.
+  const eventId = (window.crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+  const fbp = getCookie('_fbp');
+  const fbc = getCookie('_fbc');
+
   try {
     const res = await fetch('/api/lead-agro', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(leadFields),
+      body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc }),
     });
     if (res.ok) {
       try {
@@ -1074,13 +1106,15 @@ async function maybeSaveLead(leadFields) {
       }
         try {
           if (typeof fbq === 'function') {
+            // Terceiro argumento {eventID: eventId} liga esse evento do
+            // navegador ao mesmo evento que o servidor manda pra CAPI.
             fbq('track', 'Lead', {
               content_name: 'Lead Agro ORBI',
               content_category: 'Lead Qualificado',
               value: 85.00,
               currency: 'BRL',
               lead_type: 'Chat WhatsApp Agro'
-            });
+            }, { eventID: eventId });
           }
         } catch (fbqErr) {
           console.error('Falha ao disparar Lead Meta:', fbqErr);
@@ -1196,6 +1230,24 @@ const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.08 });
 reveals.forEach(el => obs.observe(el));
+
+// ── NUDGE NO BOTÃO DE CHAT ──
+// Depois que a pessoa rola ~35% da página e ainda não abriu o chat, chama
+// atenção pro botão flutuante com um pulso + badge. Some ao abrir o chat.
+let chatNudged = false;
+window.addEventListener('scroll', () => {
+  if (chatNudged) return;
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  if (scrollable <= 0) return;
+  const scrollPercent = window.scrollY / scrollable;
+  if (scrollPercent > 0.35) {
+    chatNudged = true;
+    const trigger = document.getElementById('chat-trigger');
+    const badge = document.getElementById('chat-badge');
+    if (trigger) trigger.classList.add('attention');
+    if (badge) badge.style.display = 'flex';
+  }
+}, { passive: true });
 </script>
 </body>
 </html>
