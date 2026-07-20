@@ -1008,15 +1008,32 @@ function extractLeadMarker(rawText) {
   return { visibleText, leadFields };
 }
 
+// ── Lê cookie do navegador (usado pra pegar _fbp e _fbc, que o próprio
+//    pixel da Meta já grava sozinho quando carrega a página) ──
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
 async function maybeSaveLead(leadFields) {
   if (!leadFields || leadSaved) return;
   if (!leadFields.nome || !leadFields.telefone) return;
   leadSaved = true;
+
+  // event_id único, compartilhado entre o pixel do navegador (fbq) e o
+  // evento que o servidor manda pra CAPI — é isso que faz a Meta deduplicar
+  // e não contar o mesmo lead 2x.
+  const eventId = (window.crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+  const fbp = getCookie('_fbp');
+  const fbc = getCookie('_fbc');
+
   try {
     const res = await fetch('/api/lead-contador', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(leadFields),
+      body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc }),
     });
     if (res.ok) {
       // ── TODO: criar conversão "Lead Contador" no Google Ads e trocar o rótulo abaixo.
@@ -1032,13 +1049,15 @@ async function maybeSaveLead(leadFields) {
       // } catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
       try {
         if (typeof fbq === 'function') {
+          // Terceiro argumento {eventID: eventId} liga esse evento do
+          // navegador ao mesmo evento que o servidor manda pra CAPI.
           fbq('track', 'Lead', {
             content_name: 'Lead Contador ORBI',
             content_category: 'Lead Qualificado',
             value: 100.00,
             currency: 'BRL',
             lead_type: 'Chat Landing Contador'
-          });
+          }, { eventID: eventId });
         }
       } catch (fbqErr) { console.error('Falha Lead Meta:', fbqErr); }
     }
