@@ -1,15 +1,104 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// ID do pixel "Orbi ADV" no Business Manager ORBI IA 2026.
+// NÃO reutilizar com outro nicho — cada LP tem o próprio pixel e o próprio token CAPI.
+const META_PIXEL_ID = "1030105936066490";
+
+function sha256(input: string) {
+  return crypto.createHash("sha256").update(input).digest("hex");
+}
+
+// Normaliza telefone BR pro formato que o Meta espera pra hash: só dígitos,
+// com código do país (55) na frente.
+function normalizePhoneBR(raw?: string | null) {
+  if (!raw) return null;
+  let digits = raw.replace(/\D/g, "");
+  if (!digits) return null;
+  if (!digits.startsWith("55")) digits = "55" + digits;
+  return digits;
+}
+
+async function sendMetaCAPI(params: {
+  telefone?: string;
+  eventId?: string;
+  fbp?: string;
+  fbc?: string;
+  clientIp?: string;
+  userAgent?: string;
+}) {
+  const accessToken = process.env.META_CAPI_TOKEN_ADV;
+  if (!accessToken) {
+    console.error("META_CAPI_TOKEN_ADV não configurado — pulando envio CAPI (pixel do navegador continua funcionando normal).");
+    return;
+  }
+
+  const phoneDigits = normalizePhoneBR(params.telefone);
+  const userData: Record<string, any> = {};
+  if (phoneDigits) userData.ph = [sha256(phoneDigits)];
+  if (params.fbp) userData.fbp = params.fbp;
+  if (params.fbc) userData.fbc = params.fbc;
+  if (params.clientIp) userData.client_ip_address = params.clientIp;
+  if (params.userAgent) userData.client_user_agent = params.userAgent;
+
+  const payload = {
+    data: [
+      {
+        event_name: "Lead",
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: params.eventId, // mesmo event_id do fbq() no navegador -> evita contar o lead 2x
+        action_source: "chat",
+        event_source_url: "https://agenteorbiia.com/advogados",
+        user_data: userData,
+        custom_data: {
+          content_name: "Lead Advogados ORBI",
+          content_category: "Lead Qualificado",
+          value: 120.0,
+          currency: "BRL",
+        },
+      },
+    ],
+  };
+
+  try {
+    const res = await fetch(
+      `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${accessToken}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    const json = await res.json();
+    if (!res.ok) {
+      console.error("META CAPI ERROR:", res.status, json);
+    } else {
+      console.log("META CAPI OK:", json);
+    }
+  } catch (err) {
+    console.error("META CAPI FETCH FAILED:", err);
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { nome, telefone, area_atuacao, cidade, clientes_ativos_aproximado } = body;
+    const {
+      nome,
+      telefone,
+      area_atuacao,
+      cidade,
+      clientes_ativos_aproximado,
+      event_id,
+      fbp,
+      fbc,
+    } = body;
 
     // Lead vem de conversa em andamento (igual ao agro) — campos chegam aos
     // poucos. Mínimo pra um contato ser útil: nome e telefone.
@@ -22,20 +111,15 @@ export async function POST(req: Request) {
 
     // =====================
     // 1️⃣ SALVAR NO BANCO (tabela compartilhada "leads")
-    // ⚠️ ANTES DO PRIMEIRO DEPLOY: rodar no SQL Editor do Supabase:
-    //
+    // ⚠️ Se ainda não rodou, precisa antes:
     //   ALTER TABLE leads
     //     ADD COLUMN IF NOT EXISTS area_atuacao text,
     //     ADD COLUMN IF NOT EXISTS cidade text,
     //     ADD COLUMN IF NOT EXISTS clientes_ativos_aproximado text;
-    //
-    // Sem isso, o insert abaixo FALHA (coluna inexistente) e o lead se perde
-    // silenciosamente do banco (o e-mail e o WhatsApp ainda saem — ver ordem
-    // abaixo: por isso o insert vem primeiro e retorna 500 se falhar).
+    // Sem isso, o insert abaixo FALHA e o lead se perde silenciosamente do banco.
     // =====================
-    const { error } = await supabase
-      .from("leads")
-      .insert([{
+    const { error } = await supabase.from("leads").insert([
+      {
         name: nome,
         phone: telefone,
         segment: "advogados",
@@ -43,7 +127,8 @@ export async function POST(req: Request) {
         area_atuacao: area_atuacao || null,
         cidade: cidade || null,
         clientes_ativos_aproximado: clientes_ativos_aproximado || null,
-      }]);
+      },
+    ]);
 
     if (error) {
       console.error("SUPABASE ERROR:", error);
@@ -80,10 +165,9 @@ export async function POST(req: Request) {
 
     // =====================
     // 3️⃣ ENVIAR WHATSAPP (EVOLUTION) — notifica VOCÊ
-    // ⚠️ ATENÇÃO: a instância ORBI_Trafego está com restrição da Meta
-    // (falha silenciosa, status PENDING). Enquanto isso não for resolvido,
-    // este aviso pode não chegar — o e-mail acima é o canal confiável.
-    // Se tiver outra instância saudável, troque o nome na URL abaixo.
+    // ⚠️ ATENÇÃO: a instância ORBI_Trafego estava com restrição da Meta
+    // (falha silenciosa, status PENDING/500). Confirme que reconectou antes
+    // de contar com esse canal — o e-mail acima é o canal confiável hoje.
     // =====================
     const evolutionResponse = await fetch(
       `${process.env.EVOLUTION_URL}/message/sendText/ORBI_Trafego`,
@@ -100,6 +184,27 @@ export async function POST(req: Request) {
       }
     );
     console.log("EVOLUTION STATUS:", evolutionResponse.status);
+
+    // =====================
+    // 4️⃣ META CONVERSIONS API — evento Lead server-side
+    // Resiliente a ad blocker / Safari ITP / cookie bloqueado no navegador.
+    // Usa o MESMO event_id que o fbq() do navegador manda, pra Meta deduplicar
+    // e não contar o lead 2x.
+    // =====================
+    const clientIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      undefined;
+    const userAgent = req.headers.get("user-agent") || undefined;
+
+    await sendMetaCAPI({
+      telefone,
+      eventId: event_id,
+      fbp,
+      fbc,
+      clientIp,
+      userAgent,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
