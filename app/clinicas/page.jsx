@@ -55,10 +55,10 @@ export default function ClinicasPage() {
     msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // ── NUDGE NO BOTÃO DE CHAT ──
+  // ── NUDGE NO BOTÃO DE CHAT E NO WHATSAPP ──
   // Depois que a pessoa rola ~35% da página e ainda não abriu o chat, chama
-  // atenção pro botão flutuante com um pulso + badge. Some ao abrir o chat
-  // (o cálculo "chatNudged && !chatOpen" já cuida disso, sem precisar zerar).
+  // atenção pros dois botões flutuantes com um pulso + badge. Some ao abrir
+  // o chat (o cálculo "chatNudged && !chatOpen" já cuida disso).
   useEffect(() => {
     function onScroll() {
       if (chatNudged) return;
@@ -512,8 +512,14 @@ export default function ClinicasPage() {
       </footer>
 
       {/* WHATSAPP FLOAT */}
-      <a href="https://wa.me/5566981320667" target="_blank" rel="noopener noreferrer" className="fixed bottom-7 right-7 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
-        <svg viewBox="0 0 32 32" fill="white" width="28" height="28"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.4a11.34 11.34 0 0 1-5.78-1.58l-.42-.24-4.44 1.04 1.06-4.32-.28-.44A11.36 11.36 0 0 1 4.6 16C4.6 9.7 9.7 4.6 16 4.6S27.4 9.7 27.4 16 22.3 27.4 16 27.4z"/></svg>
+      <a href="https://wa.me/5566981320667" target="_blank" rel="noopener noreferrer" className="fixed bottom-7 right-7 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative">
+        {chatNudged && !chatOpen && (
+          <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-60 animate-ping" />
+        )}
+        <svg viewBox="0 0 32 32" fill="white" width="28" height="28" className="relative"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.4a11.34 11.34 0 0 1-5.78-1.58l-.42-.24-4.44 1.04 1.06-4.32-.28-.44A11.36 11.36 0 0 1 4.6 16C4.6 9.7 9.7 4.6 16 4.6S27.4 9.7 27.4 16 22.3 27.4 16 27.4z"/></svg>
+        {chatNudged && !chatOpen && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#D9B36A] text-[#22262B] text-[11px] font-bold rounded-full flex items-center justify-center border-2 border-[#F7F5F2]">1</span>
+        )}
       </a>
 
       {/* CHAT WIDGET */}
