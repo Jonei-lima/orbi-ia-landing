@@ -411,6 +411,19 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
 .dores-list li strong { color: #fff; }
 .dores-x { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(168,132,44,0.25); border: 1px solid rgba(168,132,44,0.6); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #D9B45A; margin-top: 2px; }
 @media (max-width: 720px) { .dores-inner { padding: 0 24px; } }
+
+/* ── DADOS REAIS agora com vídeo de fundo (mãos passando pasta) ── */
+#dados { position: relative; overflow: hidden; }
+.dados-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.dados-video { width: 100%; height: 100%; object-fit: cover; }
+.dados-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(20,16,10,0.62) 0%, rgba(20,16,10,0.85) 100%); }
+#dados .section-inner { position: relative; z-index: 2; }
+#dados .s-label { color: #C9E0AE; }
+#dados .s-label::before { background: #C9E0AE; }
+#dados .s-title { color: #F7F1E4; }
+#dados .s-title em { color: #F0C878; }
+#dados .dados-intro p { color: rgba(247,241,228,0.85); }
+#dados .dados-note { color: rgba(247,241,228,0.7); }
 </style>
 
 <!-- Google Ads (mesma conta do Agro — a CONVERSÃO é separada, veja TODO abaixo) -->
@@ -498,14 +511,8 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
 
 <div class="divider"></div>
 
-<!-- CTA (logo após o Hero) -->
-<section id="cta">
-  <div class="cta-video-wrap">
-    <video class="cta-video" autoplay muted loop playsinline poster="/advogados/img/cta-poster.jpg">
-      <source src="/advogados/video/cta-fechamento-contrato.mp4" type="video/mp4">
-    </video>
-  </div>
-  <div class="cta-scrim"></div>
+<!-- CTA (logo após o Hero) — fundo sólido, sem vídeo -->
+<section id="cta" style="background: #14100A;">
   <div class="cta-inner reveal">
     <h2 class="cta-title">Pronto pra tirar seu escritório do modo espera?</h2>
     <p class="cta-sub">Agenda uma conversa com a gente. A gente escuta o gargalo real do seu atendimento antes de propor qualquer coisa.</p>
@@ -518,6 +525,12 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
 
 <!-- DADOS REAIS -->
 <section id="dados">
+  <div class="dados-video-wrap">
+    <video class="dados-video" autoplay muted loop playsinline poster="/advogados/img/cta-poster.jpg">
+      <source src="/advogados/video/cta-fechamento-contrato.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="dados-scrim"></div>
   <div class="section-inner">
     <div class="dados-intro reveal">
       <p class="s-label" style="justify-content:center;">Dado real, não promessa</p>
