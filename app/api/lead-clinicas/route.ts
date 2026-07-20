@@ -7,81 +7,37 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// ID do pixel "Orbi Plena/Clínicas" no Business Manager ORBI IA 2026.
-// NÃO reutilizar com outro nicho — cada LP tem o próprio pixel e o próprio token CAPI.
-const META_PIXEL_ID = "1772566967429029";
-
-function sha256(input: string) {
-  return crypto.createHash("sha256").update(input).digest("hex");
-}
-
-async function sendMetaCAPI(params: {
-  telefoneNormalizado: string;
-  eventId?: string;
-  fbp?: string;
-  fbc?: string;
-  clientIp?: string;
-  userAgent?: string;
-}) {
-  const accessToken = process.env.META_CAPI_TOKEN_CLINICAS;
-  if (!accessToken) {
-    console.error("META_CAPI_TOKEN_CLINICAS não configurado — pulando envio CAPI (pixel do navegador continua funcionando normal).");
-    return;
-  }
-
-  const userData: Record<string, any> = {
-    ph: [sha256(params.telefoneNormalizado)],
-  };
-  if (params.fbp) userData.fbp = params.fbp;
-  if (params.fbc) userData.fbc = params.fbc;
-  if (params.clientIp) userData.client_ip_address = params.clientIp;
-  if (params.userAgent) userData.client_user_agent = params.userAgent;
-
-  const payload = {
-    data: [
-      {
-        event_name: "Lead",
-        event_time: Math.floor(Date.now() / 1000),
-        event_id: params.eventId, // mesmo event_id do fbq() no navegador -> evita contar o lead 2x
-        action_source: "chat",
-        event_source_url: "https://agenteorbiia.com/clinicas",
-        user_data: userData,
-        custom_data: {
-          content_name: "Lead Clinicas ORBI",
-          content_category: "Lead Qualificado",
-          value: 65.0,
-          currency: "BRL",
-        },
-      },
-    ],
-  };
-
-  try {
-    const res = await fetch(
-      `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${accessToken}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }
-    );
-    const json = await res.json();
-    if (!res.ok) {
-      console.error("META CAPI ERROR:", res.status, json);
-    } else {
-      console.log("META CAPI OK:", json);
-    }
-  } catch (err) {
-    console.error("META CAPI FETCH FAILED:", err);
-  }
-}
-
 const PERSONAS: Record<string, string> = {
   estetica: "Lari",
   odontologica: "Ana",
   medica: "Beatriz",
   fisioterapia: "Duda",
 };
+
+const META_PIXEL_ID = "1772566967429029";
+const META_CAPI_TOKEN = process.env.META_CAPI_TOKEN_CLINICAS;
+const EVENT_SOURCE_URL = "https://www.agenteorbiia.com/clinicas";
+
+function sha256(value: string) {
+  return crypto.createHash("sha256").update(value.trim().toLowerCase()).digest("hex");
+}
+
+function normalizarTelefone(raw: string) {
+  const digits = (raw || "").replace(/\D/g, "");
+  if (digits.startsWith("55") && digits.length >= 12) return digits;
+  return "55" + digits;
+}
+
+// Divide "João da Silva" em primeiro/último nome pra Advanced Matching (fn/ln).
+// OBS: clínicas não coleta cidade no chat hoje — por isso não dá pra mandar "ct"
+// aqui como fizemos em agro/adv/contador. Se quiser mandar cidade também, precisa
+// acrescentar essa pergunta no fluxo do chat-clinicas.
+function splitNome(nomeCompleto: string) {
+  const partes = (nomeCompleto || "").trim().split(/\s+/).filter(Boolean);
+  const primeiro = partes[0] || "";
+  const ultimo = partes.length > 1 ? partes[partes.length - 1] : "";
+  return { primeiro, ultimo };
+}
 
 function montaResumo(
   clinica?: string,
@@ -125,10 +81,69 @@ function montaDiagnosticoResumido(
   return `${sinais.length} de ${totalRespondido} sinais de risco confirmados${sinais.length ? " (" + sinais.join("; ") + ")" : ""}`;
 }
 
-function normalizarTelefone(raw: string) {
-  const digits = (raw || "").replace(/\D/g, "");
-  if (digits.startsWith("55") && digits.length >= 12) return digits;
-  return "55" + digits;
+async function sendMetaCAPI(params: {
+  nome: string;
+  telefoneNormalizado: string;
+  eventId: string;
+  fbp?: string | null;
+  fbc?: string | null;
+  clientIp?: string;
+  userAgent?: string;
+}) {
+  if (!META_CAPI_TOKEN) {
+    console.error("META_CAPI_TOKEN_CLINICAS não configurado — pulando CAPI.");
+    return;
+  }
+  const { nome, telefoneNormalizado, eventId, fbp, fbc, clientIp, userAgent } = params;
+  const { primeiro, ultimo } = splitNome(nome);
+
+  const userData: Record<string, any> = {
+    ph: [sha256(telefoneNormalizado)],
+  };
+  if (primeiro) userData.fn = [sha256(primeiro)];
+  if (ultimo) userData.ln = [sha256(ultimo)];
+  if (fbp) userData.fbp = fbp;
+  if (fbc) userData.fbc = fbc;
+  if (clientIp) userData.client_ip_address = clientIp;
+  if (userAgent) userData.client_user_agent = userAgent;
+
+  const payload = {
+    data: [
+      {
+        event_name: "Lead",
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: eventId,
+        action_source: "chat",
+        event_source_url: EVENT_SOURCE_URL,
+        user_data: userData,
+        custom_data: {
+          content_name: "Lead Clinicas ORBI",
+          content_category: "Lead Qualificado",
+          value: 65.0,
+          currency: "BRL",
+        },
+      },
+    ],
+  };
+
+  try {
+    const res = await fetch(
+      `https://graph.facebook.com/v21.0/${META_PIXEL_ID}/events?access_token=${META_CAPI_TOKEN}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      console.error("META CAPI ERRO:", data);
+    } else {
+      console.log("META CAPI OK:", data);
+    }
+  } catch (err) {
+    console.error("META CAPI FALHA:", err);
+  }
 }
 
 export async function POST(req: Request) {
@@ -254,27 +269,25 @@ export async function POST(req: Request) {
     if (marcaError) console.error("ERRO AO MARCAR handoff_enviado:", marcaError);
 
     // =====================
-    // META CONVERSIONS API — evento Lead server-side.
-    // Dispara no MESMO ponto em que o front-end dispara o fbq('track','Lead')
-    // (ou seja, só quando "encerrar" é confirmado e ainda não tinha notificado),
-    // usando o mesmo event_id que o navegador manda, pra Meta deduplicar.
+    // Meta CAPI — dispara no mesmo momento exato em que o cliente dispara o fbq('track','Lead'),
+    // usando o mesmo event_id (dedup) e Advanced Matching: telefone + nome (fn/ln) hasheados,
+    // + fbp/fbc + IP/user-agent quando disponíveis.
     // =====================
-    const clientIp =
-      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-      req.headers.get("x-real-ip") ||
-      undefined;
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
     const userAgent = req.headers.get("user-agent") || undefined;
+    const eventId = event_id || crypto.randomUUID();
 
     await sendMetaCAPI({
+      nome,
       telefoneNormalizado,
-      eventId: event_id,
+      eventId,
       fbp,
       fbc,
       clientIp,
       userAgent,
     });
 
-    return NextResponse.json({ success: true, notified: true, whatsappLink, persona });
+    return NextResponse.json({ success: true, notified: true, whatsappLink, persona, eventId });
   } catch (error: any) {
     console.error("ERRO GERAL:", error);
     return NextResponse.json({ success: false, error: "Erro interno" }, { status: 500 });
