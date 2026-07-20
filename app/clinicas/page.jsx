@@ -36,8 +36,15 @@ const SEGMENTOS = [
   },
 ];
 
+function getCookie(name) {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
 export default function ClinicasPage() {
   const [chatOpen, setChatOpen] = useState(false);
+  const [chatNudged, setChatNudged] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'bot', text: 'Oi! Sou o assistente da ORBI Plena. Qual é sua área?' },
   ]);
@@ -46,7 +53,6 @@ export default function ClinicasPage() {
   const [leadSaved, setLeadSaved] = useState(false);
   const [segmentoEscolhido, setSegmentoEscolhido] = useState(false);
   const [whatsappLink, setWhatsappLink] = useState(null);
-  const [chatNudged, setChatNudged] = useState(false);
   const lastLeadSnapshotRef = useRef('');
   const chatHistoryRef = useRef([]);
   const msgsEndRef = useRef(null);
@@ -55,30 +61,28 @@ export default function ClinicasPage() {
     msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // ── NUDGE NO BOTÃO DE CHAT E NO WHATSAPP ──
-  // Depois que a pessoa rola ~35% da página e ainda não abriu o chat, chama
-  // atenção pros dois botões flutuantes com um pulso + badge. Some ao abrir
-  // o chat (o cálculo "chatNudged && !chatOpen" já cuida disso).
+  // Nudge: depois de ~35% de rolagem sem abrir o chat, pulsa chat + WhatsApp
   useEffect(() => {
-    function onScroll() {
-      if (chatNudged) return;
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollable <= 0) return;
-      if (window.scrollY / scrollable > 0.35) setChatNudged(true);
+    function handleScroll() {
+      if (chatOpen || chatNudged) return;
+      const scrolled = window.scrollY;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      if (total > 0 && scrolled / total >= 0.35) {
+        setChatNudged(true);
+      }
     }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [chatNudged]);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [chatOpen, chatNudged]);
 
-  // ── Lê cookie do navegador (usado pra pegar _fbp e _fbc, que o próprio
-  //    pixel da Meta já grava sozinho quando carrega a página) ──
-  function getCookie(name) {
-    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    return match ? match[2] : null;
+  function openChat() {
+    setChatNudged(false);
+    setChatOpen(true);
   }
 
   function escolherSegmento(segmentoNome) {
     setSegmentoEscolhido(true);
+    setChatNudged(false);
     setChatOpen(true);
     const abertura = `Meu segmento é ${segmentoNome}.`;
     handleSend(abertura);
@@ -105,14 +109,9 @@ export default function ClinicasPage() {
     if (snapshot === lastLeadSnapshotRef.current) return;
     lastLeadSnapshotRef.current = snapshot;
 
-    // event_id único, compartilhado entre o pixel do navegador (fbq) e o
-    // evento que o servidor manda pra CAPI — é isso que faz a Meta deduplicar
-    // e não contar o mesmo lead 2x. Vai em toda chamada; só é "usado" de
-    // verdade no momento em que o servidor confirma "encerrar" (mesmo ponto
-    // em que o fbq abaixo dispara).
-    const eventId = (typeof window !== 'undefined' && window.crypto?.randomUUID)
-      ? window.crypto.randomUUID()
-      : 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+    const eventId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `evt_${Date.now()}_${Math.random().toString(36).slice(2)}`;
     const fbp = getCookie('_fbp');
     const fbc = getCookie('_fbc');
 
@@ -125,12 +124,10 @@ export default function ClinicasPage() {
         body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc }),
       });
       const data = await res.json();
-            if (data?.whatsappLink) {
+      if (data?.whatsappLink) {
         setWhatsappLink({ url: data.whatsappLink, persona: data.persona });
 
         if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-          // Terceiro argumento {eventID: eventId} liga esse evento do
-          // navegador ao mesmo evento que o servidor manda pra CAPI.
           window.fbq('track', 'Lead', {
             content_name: 'Lead Clinicas ORBI',
             content_category: 'Lead Qualificado',
@@ -147,7 +144,7 @@ export default function ClinicasPage() {
             currency: 'BRL',
           });
         }
-      setLeadSaved(true);
+        setLeadSaved(true);
       }
     } catch (err) {
       console.error('Falha ao salvar/atualizar lead:', err);
@@ -216,7 +213,7 @@ export default function ClinicasPage() {
             <a href="#segmentos" className="hover:text-[#4F7A5A] transition-colors">Áreas de atuação</a>
             <a href="#como-funciona" className="hover:text-[#4F7A5A] transition-colors">Como funciona</a>
             <a href="#noticias" className="hover:text-[#4F7A5A] transition-colors">Notícias</a>
-            <button onClick={() => setChatOpen(true)} className="bg-[#22262B] text-[#F7F5F2] px-5 py-2 rounded-lg font-medium hover:bg-[#4F7A5A] transition-colors">
+            <button onClick={openChat} className="bg-[#22262B] text-[#F7F5F2] px-5 py-2 rounded-lg font-medium hover:bg-[#4F7A5A] transition-colors">
               Falar com a IA
             </button>
           </nav>
@@ -243,7 +240,7 @@ export default function ClinicasPage() {
               O ORBI Plena atende seus pacientes no WhatsApp, 24 horas por dia, agenda, confirma presença e reduz falta — pra sua equipe focar no que os pacientes realmente amam: o acolhimento humano.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button onClick={() => setChatOpen(true)} className="inline-flex items-center justify-center px-8 py-4 bg-[#D9B36A] text-[#22262B] font-semibold rounded-lg hover:bg-[#e5c584] transition-all shadow-lg">
+              <button onClick={openChat} className="inline-flex items-center justify-center px-8 py-4 bg-[#D9B36A] text-[#22262B] font-semibold rounded-lg hover:bg-[#e5c584] transition-all shadow-lg">
                 Conversar com a IA agora
               </button>
               <a href="#como-funciona" className="inline-flex items-center justify-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-lg border border-white/30 hover:bg-white/20 transition-all">
@@ -251,20 +248,17 @@ export default function ClinicasPage() {
               </a>
             </div>
             <p className="text-xs text-white/50 mt-4">
-              Ao conversar, você concorda com nossa{' '}
-              <a href="https://www.agenteorbiia.com/politica" className="underline hover:text-white/80" target="_blank" rel="noopener noreferrer">política de privacidade</a>
-              {' '}— seus dados seguem a LGPD (Lei 13.709/2020).
+              Ao conversar, você concorda com nossa <a href="https://www.agenteorbiia.com/politica" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">política de privacidade</a> — seus dados seguem a LGPD (Lei 13.709/2020).
             </p>
           </div>
         </div>
       </section>
 
-      {/* CTA INICIAL (logo após o Hero) — fundo sólido, sem vídeo */}
-      <section className="relative py-16 overflow-hidden bg-[#141712]">
-        <div className="relative z-10 max-w-3xl mx-auto px-6 text-center text-white">
-          <h2 className="text-2xl lg:text-3xl font-bold mb-4">Pronto pra parar de perder paciente por demora?</h2>
-          <p className="text-lg text-white/80 mb-7">Fala com a IA agora e vê como funciona pra sua especialidade.</p>
-          <button onClick={() => setChatOpen(true)} className="inline-flex items-center justify-center px-8 py-4 bg-[#D9B36A] text-[#22262B] font-semibold rounded-lg hover:bg-[#e5c584] transition-all shadow-lg">
+      {/* CTA INICIAL */}
+      <section className="py-14 bg-[#141712]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-white/70 mb-5 text-lg">Prefere já conversar com a IA antes de continuar lendo?</p>
+          <button onClick={openChat} className="inline-flex items-center justify-center px-8 py-4 bg-[#D9B36A] text-[#22262B] font-semibold rounded-lg hover:bg-[#e5c584] transition-all shadow-lg">
             Conversar com a IA agora
           </button>
         </div>
@@ -468,7 +462,7 @@ export default function ClinicasPage() {
         <div className="relative z-10 max-w-3xl mx-auto px-6 text-center text-white">
           <h2 className="text-3xl lg:text-4xl font-bold mb-5">Pare de perder paciente por demora</h2>
           <p className="text-xl text-white/80 mb-8">Fala com a IA agora e vê como funciona pra sua especialidade.</p>
-          <button onClick={() => setChatOpen(true)} className="inline-flex items-center justify-center px-8 py-4 bg-[#D9B36A] text-[#22262B] font-semibold rounded-lg hover:bg-[#e5c584] transition-all shadow-xl">
+          <button onClick={openChat} className="inline-flex items-center justify-center px-8 py-4 bg-[#D9B36A] text-[#22262B] font-semibold rounded-lg hover:bg-[#e5c584] transition-all shadow-xl">
             Conversar com a IA
           </button>
         </div>
@@ -506,31 +500,45 @@ export default function ClinicasPage() {
           </div>
           <div className="border-t border-white/10 pt-6 text-center text-xs text-white/50">
             © 2026 ORBI IA — Todos os direitos reservados. ·{' '}
-            <a href="https://www.agenteorbiia.com/politica" className="underline hover:text-white/80">Política de Privacidade</a>
+            <a href="https://www.agenteorbiia.com/politica" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/80">
+              Política de Privacidade
+            </a>
           </div>
         </div>
       </footer>
 
       {/* WHATSAPP FLOAT */}
-      <a href="https://wa.me/5566981320667" target="_blank" rel="noopener noreferrer" className="fixed bottom-7 right-7 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative">
+      <a
+        href="https://wa.me/5566981320667"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-7 right-7 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative"
+      >
         {chatNudged && !chatOpen && (
-          <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-60 animate-ping" />
+          <span className="absolute -top-1 -right-1 flex items-center justify-center pointer-events-none">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping" />
+            <span className="relative inline-flex w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full items-center justify-center">1</span>
+          </span>
         )}
-        <svg viewBox="0 0 32 32" fill="white" width="28" height="28" className="relative"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.4a11.34 11.34 0 0 1-5.78-1.58l-.42-.24-4.44 1.04 1.06-4.32-.28-.44A11.36 11.36 0 0 1 4.6 16C4.6 9.7 9.7 4.6 16 4.6S27.4 9.7 27.4 16 22.3 27.4 16 27.4z"/></svg>
-        {chatNudged && !chatOpen && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#D9B36A] text-[#22262B] text-[11px] font-bold rounded-full flex items-center justify-center border-2 border-[#F7F5F2]">1</span>
-        )}
+        <svg viewBox="0 0 32 32" fill="white" width="28" height="28" className="relative z-10">
+          <path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.4a11.34 11.34 0 0 1-5.78-1.58l-.42-.24-4.44 1.04 1.06-4.32-.28-.44A11.36 11.36 0 0 1 4.6 16C4.6 9.7 9.7 4.6 16 4.6S27.4 9.7 27.4 16 22.3 27.4 16 27.4z"/>
+        </svg>
       </a>
 
       {/* CHAT WIDGET */}
-      <button onClick={() => setChatOpen((v) => !v)} className="fixed bottom-7 right-24 z-50 w-14 h-14 bg-[#22262B] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative">
+      <button
+        onClick={() => { setChatNudged(false); setChatOpen((v) => !v); }}
+        className="fixed bottom-7 right-24 z-50 w-14 h-14 bg-[#22262B] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative"
+      >
         {chatNudged && !chatOpen && (
-          <span className="absolute inset-0 rounded-full bg-[#4F7A5A] opacity-60 animate-ping" />
+          <span className="absolute -top-1 -right-1 flex items-center justify-center pointer-events-none">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping" />
+            <span className="relative inline-flex w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full items-center justify-center">1</span>
+          </span>
         )}
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" className="relative"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        {chatNudged && !chatOpen && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#D9B36A] text-[#22262B] text-[11px] font-bold rounded-full flex items-center justify-center border-2 border-[#F7F5F2]">1</span>
-        )}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" className="relative z-10">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
       </button>
 
       {chatOpen && (
