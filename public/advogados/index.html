@@ -1,1 +1,1152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORBI Jurídico — Seu escritório respondendo, mesmo quando você não pode</title>
+<meta name="description" content="Agente de IA no WhatsApp do seu escritório: atende cliente e família 24/7, entende o andamento dos processos e busca jurisprudência com fonte. O parecer é sempre seu.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F4F3EF;
+  --cream2: #EAE7DF;
+  --card: #FFFEFB;
+  --ink: #1E2430;
+  --ink-soft: #5B6272;
+  --leaf: #35507E;
+  --leaf-deep: #24395C;
+  --leaf-tint: rgba(53,80,126,0.10);
+  --wheat: #A8842C;
+  --border: rgba(30,36,48,0.12);
+  --border2: rgba(30,36,48,0.07);
+  --font-head: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+html { overflow-x: hidden; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 400;
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+img { max-width: 100%; display: block; }
+.hero-stats > *, .pillars > *, .dados-grid > *, .ciclo-tabs > *, .examples-grid > *,
+.painel-grid > *, .trust-grid > *, .noticias-grid > *, .weather-strip > *,
+.hero-actions > *, .region-tags > *, .social-row > * { min-width: 0; }
+
+/* Logo branco original -> convertido pra escuro (fundo agora é claro). */
+.logo-fix { filter: brightness(0); }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 16px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  backdrop-filter: blur(20px);
+  background: rgba(244,243,239,0.85);
+  border-bottom: 1px solid var(--border);
+}
+.nav-left { display: flex; align-items: center; gap: 12px; }
+.nav-logo { height: 30px; width: auto; }
+.nav-badge {
+  background: var(--leaf-tint);
+  border: 1px solid rgba(53,80,126,0.3);
+  color: var(--leaf-deep);
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 100px;
+}
+.nav-links { display: flex; align-items: center; gap: 30px; list-style: none; }
+.nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 0.87rem; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--leaf-deep); }
+.nav-cta {
+  background: var(--ink); color: var(--cream) !important;
+  padding: 10px 22px; border-radius: 6px; font-weight: 600 !important; font-size: 0.84rem;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: var(--leaf-deep); transform: translateY(-1px); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh; display: flex; align-items: flex-end;
+  position: relative; z-index: 1; overflow: hidden;
+}
+.hero-photo-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.hero-photo { width: 100%; height: 100%; object-fit: cover; }
+.hero-scrim {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(0deg, rgba(12,16,26,0.86) 0%, rgba(12,16,26,0.55) 38%, rgba(12,16,26,0.08) 68%, transparent 100%);
+}
+.hero-inner {
+  position: relative; z-index: 2; width: 100%;
+  max-width: 1200px; margin: 0 auto; padding: 160px 56px 72px;
+  color: #F7F1E4;
+}
+.hero-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; animation: fadeUp 0.7s ease both; }
+.eyebrow-line { width: 32px; height: 1px; background: #C9E0AE; }
+.eyebrow-text { font-size: 0.74rem; letter-spacing: 0.15em; text-transform: uppercase; color: #C9E0AE; font-weight: 600; }
+.hero-title {
+  font-family: var(--font-head); font-size: clamp(2.1rem, 4.6vw, 3.6rem); font-weight: 700;
+  line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 22px; max-width: 720px;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+.hero-title em { font-style: normal; font-weight: 800; color: #F0C878; }
+.hero-sub {
+  font-size: 1.02rem; color: rgba(247,241,228,0.86); max-width: 520px; margin-bottom: 34px;
+  line-height: 1.75; animation: fadeUp 0.7s 0.2s ease both;
+}
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 44px; animation: fadeUp 0.7s 0.3s ease both; }
+.btn-wheat {
+  background: #F0C878; color: #2B2318; border: none; padding: 15px 30px; border-radius: 7px;
+  font-family: var(--font-body); font-size: 0.94rem; font-weight: 600; cursor: pointer;
+  transition: all 0.2s; text-decoration: none; display: inline-block;
+}
+.btn-wheat:hover { background: #f5d894; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+.btn-outline-light {
+  background: rgba(247,241,228,0.08); color: #F7F1E4; border: 1px solid rgba(247,241,228,0.4);
+  padding: 15px 30px; border-radius: 7px; font-size: 0.94rem; cursor: pointer;
+  transition: all 0.2s; text-decoration: none; display: inline-block; backdrop-filter: blur(4px);
+}
+.btn-outline-light:hover { border-color: #fff; background: rgba(247,241,228,0.15); }
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+  max-width: 760px; animation: fadeUp 0.7s 0.4s ease both;
+}
+.hero-stat {
+  background: rgba(20,16,10,0.4); border: 1px solid rgba(247,241,228,0.18);
+  border-radius: 10px; padding: 14px; backdrop-filter: blur(6px);
+}
+.stat-n { font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; color: #F0C878; display: block; line-height: 1; margin-bottom: 4px; }
+.stat-l { font-size: 0.72rem; color: rgba(247,241,228,0.8); line-height: 1.3; }
+@keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+/* ── SECTION BASE ── */
+section { position: relative; z-index: 1; }
+.section-inner { max-width: 1200px; margin: 0 auto; padding: 0 56px; }
+.s-label {
+  font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--leaf-deep);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 600;
+}
+.s-label::before { content: ''; width: 20px; height: 1px; background: var(--leaf-deep); }
+.s-title {
+  font-family: var(--font-head); font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700;
+  letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 16px; color: var(--ink);
+}
+.s-title em { font-style: normal; color: var(--wheat); }
+.divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+
+/* ── DADOS REAIS ── */
+#dados { padding: 80px 0; }
+.dados-intro { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+.dados-intro p { color: var(--ink-soft); font-size: 1.02rem; margin-top: 12px; }
+.dados-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.data-stat {
+  background: var(--card); border: 1px solid var(--border2); border-radius: 14px;
+  padding: 24px 20px; text-align: center; transition: all 0.3s;
+}
+.data-stat:hover { border-color: rgba(79,122,52,0.25); transform: translateY(-2px); }
+.data-stat-n { font-family: var(--font-head); font-size: 2.1rem; font-weight: 700; color: var(--leaf-deep); line-height: 1; margin-bottom: 10px; }
+.data-stat-desc { font-size: 0.83rem; color: var(--ink); line-height: 1.55; margin-bottom: 10px; min-height: 62px; }
+.data-stat-source { font-size: 0.68rem; color: var(--ink-soft); }
+.data-stat-source a { color: var(--ink-soft); }
+.dados-note { text-align: center; font-size: 0.75rem; color: var(--ink-soft); margin-top: 24px; }
+
+/* ── HOW IT WORKS ── */
+#how { padding: 100px 0; }
+.how-intro { text-align: center; max-width: 640px; margin: 0 auto 64px; }
+.how-intro p { color: var(--ink-soft); font-size: 1.02rem; margin-top: 12px; }
+.pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.pillar {
+  background: var(--card); border: 1px solid var(--border2); border-radius: 16px; padding: 30px 24px;
+  transition: all 0.3s; box-shadow: 0 1px 3px rgba(43,35,24,0.04);
+}
+.pillar:hover { border-color: rgba(53,80,126,0.3); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(43,35,24,0.09); }
+.pillar-icon {
+  width: 44px; height: 44px; background: var(--leaf-tint); border: 1px solid rgba(79,122,52,0.2);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+}
+.pillar-name { font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; margin-bottom: 10px; line-height: 1.32; }
+.pillar-desc { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.7; }
+.pillar-features { list-style: none; margin-top: 16px; display: flex; flex-direction: column; gap: 7px; }
+.pillar-features li { font-size: 0.78rem; color: var(--ink); display: flex; align-items: flex-start; gap: 7px; }
+.pillar-features li::before { content: '→'; color: var(--leaf); flex-shrink: 0; font-size: 0.72rem; margin-top: 2px; }
+
+/* ── MANIFESTO (full-bleed photo, parallax) ── */
+#manifesto { position: relative; padding: 140px 0; overflow: hidden; }
+.parallax-bg {
+  position: absolute; inset: -8% 0; z-index: 0;
+  background-attachment: fixed; background-position: center; background-size: cover;
+}
+@media (max-width: 900px) { .parallax-bg { background-attachment: scroll; } }
+.manifesto-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.manifesto-video { width: 100%; height: 100%; object-fit: cover; }
+.cta-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.cta-video { width: 100%; height: 100%; object-fit: cover; }
+.manifesto-scrim { position: absolute; inset: 0; z-index: 1; background: rgba(20,16,10,0.72); }
+.manifesto-inner {
+  position: relative; z-index: 2; max-width: 780px; margin: 0 auto; padding: 0 56px; text-align: center; color: #F7F1E4;
+}
+.manifesto-mark { font-family: var(--font-head); font-size: 3rem; color: #F0C878; line-height: 1; margin-bottom: 16px; }
+.manifesto-text {
+  font-family: var(--font-head); font-size: clamp(1.3rem, 2.6vw, 1.9rem); font-weight: 500;
+  line-height: 1.5; margin-bottom: 22px;
+}
+.manifesto-text strong { color: #F0C878; font-weight: 700; }
+.manifesto-source { font-size: 0.82rem; color: rgba(247,241,228,0.7); }
+
+/* ── CICLO DA SAFRA (interativo) ── */
+#ciclo { padding: 100px 0; }
+.ciclo-intro { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+.ciclo-intro p { color: var(--ink-soft); font-size: 1.02rem; margin-top: 12px; }
+.ciclo-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 32px; }
+.ciclo-tab {
+  background: var(--card); border: 1px solid var(--border2); border-radius: 10px;
+  padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; font-family: var(--font-body);
+}
+.ciclo-tab:hover { border-color: rgba(53,80,126,0.3); }
+.ciclo-tab.active { background: var(--leaf); border-color: var(--leaf); }
+.ciclo-tab-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.ciclo-tab-name { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+.ciclo-tab.active .ciclo-tab-name { color: #fff; }
+.ciclo-panel {
+  background: var(--card); border: 1px solid var(--border2); border-radius: 16px;
+  padding: 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+  box-shadow: 0 1px 3px rgba(43,35,24,0.04);
+}
+.ciclo-block strong { display: block; font-family: var(--font-head); font-size: 0.95rem; margin-bottom: 8px; color: var(--ink); }
+.ciclo-block.risco strong { color: #A34D2C; }
+.ciclo-block.solucao strong { color: var(--leaf-deep); }
+.ciclo-block p { font-size: 0.88rem; color: var(--ink-soft); line-height: 1.7; }
+
+/* ── EXAMPLES ── */
+#examples { padding: 100px 0; background: var(--cream2); }
+.examples-intro { text-align: center; max-width: 620px; margin: 0 auto 64px; }
+.examples-intro p { color: var(--ink-soft); margin-top: 12px; font-size: 1.02rem; }
+.examples-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.example-card { background: var(--card); border: 1px solid var(--border2); border-radius: 16px; padding: 26px; transition: all 0.3s; }
+.example-card:hover { border-color: rgba(79,122,52,0.25); box-shadow: 0 12px 32px rgba(43,35,24,0.08); }
+.example-scenario { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--leaf-deep); margin-bottom: 16px; font-weight: 700; }
+.example-chat { display: flex; flex-direction: column; gap: 10px; }
+.echat { border-radius: 10px; padding: 10px 14px; font-size: 0.82rem; line-height: 1.5; max-width: 88%; }
+.echat.tec { background: var(--cream2); border-radius: 10px 10px 10px 3px; }
+.echat.agent { background: var(--leaf-tint); border: 1px solid rgba(79,122,52,0.18); border-radius: 10px 10px 3px 10px; align-self: flex-end; color: var(--ink); }
+.echat-label { font-size: 0.66rem; color: var(--ink-soft); margin-bottom: 4px; font-weight: 500; }
+.example-result {
+  margin-top: 16px; padding: 12px; background: var(--leaf-tint); border: 1px solid rgba(79,122,52,0.18);
+  border-radius: 8px; font-size: 0.78rem; color: var(--leaf-deep); display: flex; align-items: center; gap: 8px;
+}
+
+/* ── PAINEL ── */
+#painel { padding: 100px 0; }
+.painel-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: center; }
+.painel-text p { color: var(--ink-soft); font-size: 1rem; margin-top: 12px; line-height: 1.75; }
+.painel-points { list-style: none; margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+.bp { display: flex; align-items: flex-start; gap: 14px; padding: 16px; background: var(--card); border: 1px solid var(--border2); border-radius: 10px; }
+.bp-icon { width: 34px; height: 34px; background: var(--leaf-tint); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.bp-text strong { display: block; font-size: 0.89rem; font-weight: 600; margin-bottom: 2px; }
+.bp-text span { font-size: 0.79rem; color: var(--ink-soft); }
+.painel-mockup { background: var(--card); border: 1px solid var(--border2); border-radius: 16px; padding: 26px; box-shadow: 0 4px 20px rgba(43,35,24,0.06); }
+.painel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border2); }
+.painel-title { font-family: var(--font-head); font-weight: 600; font-size: 0.95rem; }
+.painel-sub { font-size: 0.71rem; color: var(--ink-soft); margin-top: 2px; }
+.painel-time { font-size: 0.71rem; color: var(--leaf-deep); background: var(--leaf-tint); border-radius: 4px; padding: 3px 8px; }
+.weather-strip { display: flex; gap: 10px; margin-bottom: 20px; }
+.cidade-search { display: flex; gap: 8px; margin-bottom: 16px; }
+.cidade-search input {
+  flex: 1; background: var(--cream2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-family: var(--font-body); font-size: 0.85rem; color: var(--ink); outline: none;
+}
+.cidade-search input:focus { border-color: rgba(53,80,126,0.4); }
+.cidade-search button {
+  background: var(--leaf); color: #fff; border: none; border-radius: 8px; padding: 0 16px;
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.cidade-search button:hover { background: var(--leaf-deep); }
+.cidade-search button:disabled { opacity: 0.6; cursor: not-allowed; }
+.wchip { flex: 1; background: var(--cream2); border: 1px solid var(--border2); border-radius: 8px; padding: 10px; text-align: center; }
+.wchip-v { font-family: var(--font-head); font-size: 1.15rem; font-weight: 700; color: var(--leaf-deep); }
+.wchip-l { font-size: 0.68rem; color: var(--ink-soft); margin-top: 2px; }
+.bbar { margin-bottom: 14px; }
+.bbar:last-child { margin-bottom: 0; }
+.bbar-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.bbar-label { font-size: 0.8rem; color: var(--ink); }
+.bbar-count { font-size: 0.8rem; color: var(--leaf-deep); font-weight: 600; }
+.bbar-track { height: 6px; background: var(--cream2); border-radius: 3px; overflow: hidden; }
+.bbar-fill { height: 100%; background: linear-gradient(90deg, var(--leaf-deep), var(--leaf)); border-radius: 3px; animation: fillBar 1.5s ease both; }
+@keyframes fillBar { from { width: 0; } }
+.painel-top { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border2); }
+.painel-top-label { font-size: 0.71rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+.region-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.region-tag { font-size: 0.74rem; padding: 4px 10px; background: var(--cream2); border: 1px solid var(--border2); border-radius: 100px; color: var(--ink); }
+
+/* ── NOTÍCIAS ── */
+#noticias { padding: 100px 0; background: var(--cream2); }
+.noticias-intro { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+.noticias-intro p { color: var(--ink-soft); font-size: 1.02rem; margin-top: 12px; }
+.noticias-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.noticia-card {
+  background: var(--card); border: 1px solid var(--border2); border-radius: 16px; padding: 26px;
+  transition: all 0.3s; display: flex; flex-direction: column;
+}
+.noticia-card:hover { border-color: rgba(79,122,52,0.25); box-shadow: 0 12px 32px rgba(43,35,24,0.08); }
+.noticia-meta { font-size: 0.68rem; color: var(--ink-soft); margin-bottom: 10px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.noticia-tag { background: var(--leaf-tint); color: var(--leaf-deep); padding: 2px 9px; border-radius: 100px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; font-size: 0.63rem; }
+.noticia-title { font-family: var(--font-head); font-size: 1.02rem; font-weight: 600; margin-bottom: 10px; line-height: 1.4; }
+.noticia-summary { font-size: 0.83rem; color: var(--ink-soft); line-height: 1.65; margin-bottom: 16px; flex: 1; }
+.noticia-link { font-size: 0.82rem; font-weight: 600; color: var(--leaf-deep); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.noticia-link:hover { color: var(--leaf); }
+.noticias-note { text-align: center; font-size: 0.78rem; color: var(--ink-soft); margin-top: 28px; }
+
+/* ── TRUST ── */
+#trust { padding: 100px 0; }
+.trust-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 48px; }
+.trust-card { background: var(--card); border: 1px solid var(--border2); border-radius: 14px; padding: 26px; transition: all 0.3s; }
+.trust-card:hover { border-color: rgba(79,122,52,0.25); }
+.trust-icon { width: 42px; height: 42px; background: var(--leaf-tint); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+.trust-title { font-weight: 600; font-size: 0.98rem; margin-bottom: 8px; font-family: var(--font-head); }
+.trust-text { font-size: 0.84rem; color: var(--ink-soft); line-height: 1.65; }
+
+/* ── CTA (full-bleed photo) ── */
+#cta { position: relative; padding: 130px 0; text-align: center; overflow: hidden; }
+.cta-scrim { position: absolute; inset: 0; z-index: 1; background: rgba(20,16,10,0.68); }
+.cta-inner { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; padding: 0 56px; color: #F7F1E4; }
+.cta-title { font-family: var(--font-head); font-size: clamp(1.7rem, 3.2vw, 2.6rem); font-weight: 700; margin-bottom: 16px; }
+.cta-sub { color: rgba(244,243,239,0.85); font-size: 1rem; max-width: 480px; margin: 0 auto 36px; line-height: 1.7; }
+.cta-note { font-size: 0.78rem; color: rgba(247,241,228,0.7); margin-top: 14px; }
+
+/* ── FOOTER ── */
+footer { padding: 44px 56px; border-top: 1px solid var(--border); background: var(--cream2); }
+.social-row { display: flex; gap: 12px; margin-top: 14px; }
+.social-icon {
+  width: 34px; height: 34px; border-radius: 50%; background: var(--card); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--ink-soft);
+}
+.social-icon:hover { background: var(--leaf); border-color: var(--leaf); color: #fff; }
+
+/* ── WA FLOAT ── */
+.wa-float {
+  position: fixed; bottom: 28px; right: 28px; z-index: 999;
+  width: 60px; height: 60px; background: #25D366; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: all 0.2s; text-decoration: none;
+}
+.wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.5); }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── CHAT WIDGET (restyled for light theme) ── */
+.msg { display: flex; flex-direction: column; max-width: 78%; }
+.msg.user { align-self: flex-end; align-items: flex-end; }
+.msg.bot { align-self: flex-start; }
+.msg-bubble { padding: 12px 16px; border-radius: 14px; font-size: 0.88rem; line-height: 1.55; }
+.msg.bot .msg-bubble { background: var(--cream2); border-radius: 4px 14px 14px 14px; color: var(--ink); }
+.msg.user .msg-bubble { background: var(--leaf-tint); border: 1px solid rgba(79,122,52,0.2); border-radius: 14px 4px 14px 14px; color: var(--ink); }
+.msg-time { font-size: 0.65rem; color: var(--ink-soft); margin-top: 4px; padding: 0 4px; }
+.typing-bubble { background: var(--cream2); border-radius: 4px 14px 14px 14px; padding: 12px 16px; display: flex; gap: 5px; align-items: center; width: fit-content; }
+.t-dot { width: 7px; height: 7px; background: var(--ink-soft); border-radius: 50%; animation: typing 1.2s infinite; }
+.t-dot:nth-child(2) { animation-delay: 0.2s; }
+.t-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing { 0%,60%,100% { transform:translateY(0); opacity:0.4; } 30% { transform:translateY(-5px); opacity:1; } }
+.quick-q { background: var(--leaf-tint); border: 1px solid rgba(79,122,52,0.2); color: var(--leaf-deep); border-radius: 100px; padding: 5px 14px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+.quick-q:hover { background: rgba(79,122,52,0.2); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 14px 24px; }
+  .nav-links { display: none; }
+  .hero-inner { padding: 140px 24px 56px; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .pillars { grid-template-columns: 1fr 1fr; }
+  .dados-grid { grid-template-columns: 1fr 1fr; }
+  .ciclo-tabs { grid-template-columns: 1fr 1fr; }
+  .ciclo-panel { grid-template-columns: 1fr; }
+  .examples-grid { grid-template-columns: 1fr; }
+  .painel-grid { grid-template-columns: 1fr; }
+  .trust-grid { grid-template-columns: 1fr; }
+  .noticias-grid { grid-template-columns: 1fr; }
+  #chat-widget { width: calc(100vw - 24px) !important; right: 12px !important; left: 12px !important; bottom: 96px !important; }
+  #how, #ciclo, #examples, #painel, #noticias, #trust { padding: 76px 0; }
+  #manifesto { padding: 90px 0; }
+  #cta { padding: 90px 0; }
+  .section-inner { padding: 0 24px; }
+  .manifesto-inner, .cta-inner { padding: 0 24px; }
+  footer { padding: 36px 24px; }
+}
+@media (max-width: 480px) {
+  .cidade-search { flex-direction: column; }
+  .cidade-search button { white-space: normal; padding: 10px; }
+  .weather-strip { flex-wrap: wrap; }
+  .weather-strip > .wchip { flex: 1 1 calc(50% - 5px); }
+}
+</style>
+
+<style>
+/* ── Extras exclusivos da página /advogados ── */
+#dores { position: relative; overflow: hidden; padding: 110px 0; }
+.dores-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.dores-video { width: 100%; height: 100%; object-fit: cover; }
+.dores-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(12,16,26,0.90) 0%, rgba(12,16,26,0.78) 45%, rgba(12,16,26,0.45) 100%); }
+.dores-inner { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 56px; color: #F4F3EF; }
+.dores-title { font-family: var(--font-head); font-size: clamp(1.6rem, 3.2vw, 2.4rem); font-weight: 700; line-height: 1.2; margin-bottom: 28px; max-width: 560px; }
+.dores-list { list-style: none; display: flex; flex-direction: column; gap: 16px; max-width: 560px; }
+.dores-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.95rem; line-height: 1.6; color: rgba(244,243,239,0.92); }
+.dores-list li strong { color: #fff; }
+.dores-x { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(168,132,44,0.25); border: 1px solid rgba(168,132,44,0.6); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #D9B45A; margin-top: 2px; }
+@media (max-width: 720px) { .dores-inner { padding: 0 24px; } }
+</style>
+
+<!-- Google Ads (mesma conta do Agro — a CONVERSÃO é separada, veja TODO abaixo) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17997912287"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-17997912287');
+</script>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     TODO AINDA PENDENTE:
+     1. GOOGLE ADS: criar conversão "Lead ADV" e trocar o rótulo
+        TODO_LABEL_LEAD_ADV no evento de conversão lá embaixo no chat.
+     Meta Pixel: já configurado (ORBI ADV, id 1030105936066490).
+════════════════════════════════════════════════════════════════════ -->
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1030105936066490');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <img src="/advogados/logo-orbi-white.png" alt="ORBI IA" class="nav-logo logo-fix">
+    <span class="nav-badge">Jurídico</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#how">Como funciona</a></li>
+    <li><a href="#jornada">Jornada do cliente</a></li>
+    <li><a href="#painel">Painel</a></li>
+    <li><a href="#noticias">IA no Direito</a></li>
+    <li><a href="#" onclick="toggleChat(); return false;">Tire dúvidas</a></li>
+    <li><a href="#cta" class="nav-cta">Falar com a ORBI</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-photo-wrap">
+    <video class="hero-photo" autoplay muted loop playsinline poster="/advogados/img/hero-poster.jpg">
+      <source src="/advogados/video/hero-advogado-cliente.mp4" type="video/mp4">
+    </video>
+    <div class="hero-scrim"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span class="eyebrow-text">Inteligência Artificial dentro do escritório</span>
+    </div>
+    <h1 class="hero-title">
+      Seu escritório respondendo, <em>mesmo quando você não pode.</em>
+    </h1>
+    <p class="hero-sub">
+      O ORBI Jurídico coloca um agente de IA no WhatsApp do seu escritório: atende o cliente e a família, explica o andamento dos seus processos em linguagem simples e busca jurisprudência sempre com fonte. O parecer é sempre seu — a IA nunca opina sobre mérito nem promete resultado.
+    </p>
+    <div class="hero-actions">
+      <a href="#" onclick="toggleChat(); return false;" class="btn-wheat">Tire suas dúvidas agora</a>
+      <a href="#how" class="btn-outline-light">Ver como funciona</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="stat-n" id="c1">0h</span><span class="stat-l">atendendo seu cliente</span></div>
+      <div class="hero-stat"><span class="stat-n" id="c2">0s</span><span class="stat-l">até a primeira resposta</span></div>
+      <div class="hero-stat"><span class="stat-n" id="c3">0%</span><span class="stat-l">das conversas registradas</span></div>
+      <div class="hero-stat"><span class="stat-n">0</span><span class="stat-l">pareceres sem o advogado</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DORES -->
+<section id="dores">
+  <div class="dores-video-wrap">
+    <video class="dores-video" autoplay muted loop playsinline poster="/advogados/img/dores-poster.jpg">
+      <source src="/advogados/video/dores-mesa-processos.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="dores-scrim"></div>
+  <div class="dores-inner reveal">
+    <h2 class="dores-title">Você reconhece esse dia?</h2>
+    <ul class="dores-list">
+      <li><span class="dores-x">✕</span><span><strong>Cliente cobrando resposta às 22h</strong> — e de novo às 7h, antes do seu primeiro café.</span></li>
+      <li><span class="dores-x">✕</span><span><strong>Família ligando durante a audiência</strong> — justo na hora em que você não pode atender ninguém.</span></li>
+      <li><span class="dores-x">✕</span><span><strong>"Doutor, como está meu processo?"</strong> pela quinta vez na semana — sobre a mesma movimentação que você já explicou.</span></li>
+      <li><span class="dores-x">✕</span><span><strong>Horas caçando jurisprudência</strong> que deveriam estar indo pra estratégia do caso.</span></li>
+    </ul>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DADOS REAIS -->
+<section id="dados">
+  <div class="section-inner">
+    <div class="dados-intro reveal">
+      <p class="s-label" style="justify-content:center;">Dado real, não promessa</p>
+      <h2 class="s-title">A IA <em>já</em> está na advocacia — os números do setor</h2>
+      <p>Não é tendência distante. É o que já está acontecendo na advocacia brasileira agora.</p>
+    </div>
+    <div class="dados-grid">
+      <div class="data-stat reveal">
+        <div class="data-stat-n">77%</div>
+        <div class="data-stat-desc">dos advogados brasileiros já usam IA ao menos uma vez por semana — eram 55% no ano anterior</div>
+        <div class="data-stat-source">Fonte: <a href="https://exame.com/inteligencia-artificial/ia-ja-e-usada-por-77-dos-advogados-e-redefine-a-pratica-juridica-aponta-estudo-da-oab/" target="_blank" rel="noopener">Relatório OAB/SP 2026, via Exame</a></div>
+      </div>
+      <div class="data-stat reveal">
+        <div class="data-stat-n">84%</div>
+        <div class="data-stat-desc">dizem que a IA atendeu ou superou as expectativas em produtividade e qualidade</div>
+        <div class="data-stat-source">Fonte: <a href="https://consumidormoderno.com.br/ia-advogados-transformacao-setor-juridico/" target="_blank" rel="noopener">OAB SP/PR/BA/GO/PE/ES + Jusbrasil + ITS Rio</a></div>
+      </div>
+      <div class="data-stat reveal">
+        <div class="data-stat-n">65,9%</div>
+        <div class="data-stat-desc">dos escritórios já usam IA na elaboração de peças processuais</div>
+        <div class="data-stat-source">Fonte: <a href="https://www.migalhas.com.br/quentes/452429/pesquisa-aponta-que-ia-devolve-tempo-ao-advogado-e-amplia-estrategias" target="_blank" rel="noopener">Panorama Preâmbulo Tech 2026, via Migalhas</a></div>
+      </div>
+      <div class="data-stat reveal">
+        <div class="data-stat-n">34%</div>
+        <div class="data-stat-desc">apenas — é a fatia de escritórios com orçamento dedicado a IA. Quem entra agora, entra na frente.</div>
+        <div class="data-stat-source">Fonte: <a href="https://exame.com/inteligencia-artificial/ia-ja-e-usada-por-77-dos-advogados-e-redefine-a-pratica-juridica-aponta-estudo-da-oab/" target="_blank" rel="noopener">Relatório OAB/SP 2026, via Exame</a></div>
+      </div>
+    </div>
+    <p class="dados-note">Números do setor, citados com fonte. O que o ORBI Jurídico faz no seu escritório, a gente mostra no chat — sem prometer o que não entrega.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMO FUNCIONA -->
+<section id="how">
+  <div class="section-inner">
+    <div class="how-intro reveal">
+      <p class="s-label" style="justify-content:center;">Como funciona</p>
+      <h2 class="s-title">Quatro frentes de trabalho do <em>ORBI Jurídico</em></h2>
+      <p>Um agente que aprende a rotina do seu escritório — e nunca decide sozinho o que só o advogado pode decidir.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar reveal">
+        <div class="pillar-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="pillar-name">Atendimento no WhatsApp, 24/7</div>
+        <p class="pillar-desc">Cliente e família recebem resposta na hora — inclusive fora do horário e enquanto você está em audiência.</p>
+        <ul class="pillar-features">
+          <li>Explica o andamento em linguagem que o cliente entende</li>
+          <li>Acolhe a família sem nunca prometer resultado</li>
+          <li>Registra tudo — nenhuma conversa se perde</li>
+        </ul>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="pillar-name">Inteligência do Processo</div>
+        <p class="pillar-desc">O agente aprende os processos que o escritório cadastra: fase, próxima audiência, última movimentação registrada.</p>
+        <ul class="pillar-features">
+          <li>Responde "como está meu processo" com base no que o escritório registrou</li>
+          <li>Resume documento e movimentação — você recebe o resumo E o original</li>
+          <li>Pergunta o que não sabe — nunca inventa andamento</li>
+        </ul>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="pillar-name">Jurisprudência com Fonte</div>
+        <p class="pillar-desc">Busca julgados e entrega sempre com o link da fonte e a ressalva: confirme antes de usar na peça.</p>
+        <ul class="pillar-features">
+          <li>Toda resposta de jurisprudência vem com fonte verificável</li>
+          <li>Nunca inventa julgado, número ou ementa</li>
+          <li>Quem valida e assina é sempre o advogado</li>
+        </ul>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="pillar-name">O Advogado Sempre no Comando</div>
+        <p class="pillar-desc">A IA atende e organiza. Mérito, tese, prazo e promessa de resultado são território exclusivo do advogado.</p>
+        <ul class="pillar-features">
+          <li>Nunca avalia mérito nem prevê chance de êxito — sob nenhuma formulação</li>
+          <li>Quando não entende ou o assunto exige, escala pra você na hora</li>
+          <li>Feito pra dar segurança, não pra tirar responsabilidade de ninguém</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <div class="manifesto-video-wrap">
+    <video class="manifesto-video" autoplay muted loop playsinline poster="/advogados/img/manifesto-poster.jpg">
+      <source src="/advogados/video/manifesto-advogados-corredor.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="manifesto-scrim"></div>
+  <div class="manifesto-inner reveal">
+    <div class="manifesto-mark">"</div>
+    <p class="manifesto-text">
+      Seth Godin, em <em style="font-style:normal;">A Vaca Roxa</em>, chama de <strong>"adaptadores"</strong> quem só muda quando o que usava virou passado — quando não sobra mais opção. Na advocacia, essa régua já está correndo: 77% dos colegas já usam IA toda semana. Quem ainda atende tudo na mão vai continuar competindo — só que cada vez mais atrás.
+    </p>
+    <p class="manifesto-source">A pergunta não é <em style="font-style:normal;color:inherit;">se</em> a IA vai entrar no escritório — isso já é fato. É se você entra agora, decidindo primeiro, ou depois, quando não decidir mais for opção.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- JORNADA DO CLIENTE -->
+<section id="jornada">
+  <div class="section-inner">
+    <div class="ciclo-intro reveal">
+      <p class="s-label" style="justify-content:center;">Onde a IA entra</p>
+      <h2 class="s-title">A <em>jornada do cliente</em>, etapa por etapa</h2>
+      <p>Clique em cada fase e veja o que costuma dar errado — e onde o ORBI Jurídico ajuda.</p>
+    </div>
+    <div class="ciclo-tabs">
+      <div class="ciclo-tab active" data-stage="contato" onclick="showStage('contato', this)">
+        <div class="ciclo-tab-icon">📥</div>
+        <div class="ciclo-tab-name">Primeiro Contato</div>
+      </div>
+      <div class="ciclo-tab" data-stage="andamento" onclick="showStage('andamento', this)">
+        <div class="ciclo-tab-icon">📄</div>
+        <div class="ciclo-tab-name">Andamento</div>
+      </div>
+      <div class="ciclo-tab" data-stage="audiencia" onclick="showStage('audiencia', this)">
+        <div class="ciclo-tab-icon">⚖️</div>
+        <div class="ciclo-tab-name">Audiência</div>
+      </div>
+      <div class="ciclo-tab" data-stage="decisao" onclick="showStage('decisao', this)">
+        <div class="ciclo-tab-icon">📌</div>
+        <div class="ciclo-tab-name">Pós-decisão</div>
+      </div>
+    </div>
+    <div class="ciclo-panel reveal">
+      <div class="ciclo-block risco">
+        <strong id="ciclo-risco-title">O que costuma dar errado</strong>
+        <p id="ciclo-risco-text">Lead chega fora do horário, ninguém responde, e no dia seguinte ele já fechou com outro escritório.</p>
+      </div>
+      <div class="ciclo-block solucao">
+        <strong id="ciclo-solucao-title">Onde o ORBI Jurídico ajuda</strong>
+        <p id="ciclo-solucao-text">Responde na hora, qualifica o caso com perguntas certas e agenda a conversa com você — sem dar nenhuma orientação jurídica no seu lugar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXEMPLOS -->
+<section id="examples">
+  <div class="section-inner">
+    <div class="examples-intro reveal">
+      <p class="s-label" style="justify-content:center;">Exemplos reais de uso</p>
+      <h2 class="s-title">Como funciona uma <em>conversa</em> de verdade</h2>
+      <p>Situações comuns do dia a dia do escritório — respondidas na hora, sem inventar o que não se sabe.</p>
+    </div>
+    <div class="examples-grid">
+      <div class="example-card reveal">
+        <div class="example-scenario">Cenário 1 — Cliente fora do horário</div>
+        <div class="example-chat">
+          <div class="echat tec"><div class="echat-label">Cliente — 21h47</div>Doutora, boa noite. Saiu alguma coisa nova do meu processo? Tô sem dormir com isso.</div>
+          <div class="echat agent"><div class="echat-label" style="text-align:right;">Assistente do escritório — 21h47</div>Boa noite, Sr. João! Entendo a ansiedade. A última movimentação registrada foi no dia 14: o processo foi concluso ao juiz — significa que está na mesa dele pra análise. A Dra. acompanha de perto e te avisa assim que houver decisão, tá bem?</div>
+        </div>
+        <div class="example-result">✓ Resposta na hora, em linguagem simples · Sem promessa de resultado · Cliente acolhido</div>
+      </div>
+      <div class="example-card reveal">
+        <div class="example-scenario">Cenário 2 — Família durante a audiência</div>
+        <div class="example-chat">
+          <div class="echat tec"><div class="echat-label">Familiar — 14h12</div>Moça, a audiência do meu irmão era hoje 14h né?? Já acabou? O que decidiram??</div>
+          <div class="echat agent"><div class="echat-label" style="text-align:right;">Assistente do escritório — 14h12</div>Oi, Dona Maria! Sim, a audiência começou às 14h e a Dra. está lá dentro agora, acompanhando pessoalmente. Assim que terminar, ela entra em contato com a família. Fico aqui com a senhora — quer que eu explique como funciona essa etapa?</div>
+        </div>
+        <div class="example-result">✓ Família atendida enquanto a advogada trabalha · Zero interrupção na audiência</div>
+      </div>
+      <div class="example-card reveal">
+        <div class="example-scenario">Cenário 3 — Jurisprudência com fonte</div>
+        <div class="example-chat">
+          <div class="echat tec"><div class="echat-label">Advogado — 18h20</div>Me acha julgado recente sobre atraso de voo com dano moral presumido.</div>
+          <div class="echat agent"><div class="echat-label" style="text-align:right;">Assistente do escritório — 18h21</div>Encontrei 3 acórdãos recentes sobre o tema. O mais alinhado à sua tese está resumido abaixo, com link direto pra fonte. Importante: confira o inteiro teor antes de citar na peça — quem valida é sempre você. Quer que eu resuma os outros dois?</div>
+        </div>
+        <div class="example-result">✓ Fonte verificável em toda resposta · Ressalva de conferência · Validação sempre do advogado</div>
+      </div>
+      <div class="example-card reveal">
+        <div class="example-scenario">Cenário 4 — Advogado conhecendo a ORBI</div>
+        <div class="example-chat">
+          <div class="echat tec"><div class="echat-label">Visitante do site — 20h11</div>Oi, sou o Dr. Rafael, advogo na área trabalhista em Cuiabá. Isso funciona pra minha área?</div>
+          <div class="echat agent"><div class="echat-label" style="text-align:right;">Assistente ORBI Jurídico — 20h11</div>Prazer, Dr. Rafael! Funciona sim — o agente é configurado pra sua área, com as regras e o vocabulário do seu escritório. Na trabalhista, o forte costuma ser cliente ansioso por atualização de audiência e cálculo. É essa a sua realidade hoje? E qual o melhor WhatsApp pra te mostrar um exemplo na prática?</div>
+        </div>
+        <div class="example-result">✓ Pergunta em vez de afirmar · Contato virou lead qualificado</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PAINEL -->
+<section id="painel">
+  <div class="section-inner">
+    <div class="painel-grid">
+      <div class="painel-text reveal">
+        <p class="s-label">Painel inteligente</p>
+        <h2 class="s-title">Saiba o que o escritório precisa <em>antes</em> de abrir o e-mail.</h2>
+        <p>Quem perguntou o quê, o que a IA já resolveu e o que está esperando só você — tudo no seu WhatsApp.</p>
+        <ul class="painel-points">
+          <li class="bp"><div class="bp-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="bp-text"><strong>Resumo do dia, sem pedir</strong><span>O que aconteceu enquanto você estava em audiência</span></div></li>
+          <li class="bp"><div class="bp-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="bp-text"><strong>O que a IA já resolveu</strong><span>E o que foi escalado pra sua decisão — separado, claro</span></div></li>
+          <li class="bp"><div class="bp-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="bp-text"><strong>Histórico sempre à mão</strong><span>Toda conversa com todo cliente, registrada e pesquisável</span></div></li>
+        </ul>
+      </div>
+      <div class="painel-mockup reveal">
+        <div class="painel-header">
+          <div><div class="painel-title">⚖️ Painel do Escritório</div><div class="painel-sub" id="painel-cidade">Exemplo ilustrativo do produto</div></div>
+          <div class="painel-time" id="painel-hora">--:--</div>
+        </div>
+        <div class="bbar"><div class="bbar-header"><span class="bbar-label">Conversas respondidas pela IA hoje</span><span class="bbar-count">47</span></div><div class="bbar-track"><div class="bbar-fill" style="width:88%"></div></div></div>
+        <div class="bbar"><div class="bbar-header"><span class="bbar-label">Atendimentos fora do horário comercial</span><span class="bbar-count">22</span></div><div class="bbar-track"><div class="bbar-fill" style="width:52%"></div></div></div>
+        <div class="bbar"><div class="bbar-header"><span class="bbar-label">Escaladas pro advogado decidir</span><span class="bbar-count">6</span></div><div class="bbar-track"><div class="bbar-fill" style="width:18%"></div></div></div>
+        <div class="painel-top">
+          <div class="painel-top-label">Aguardando sua atenção</div>
+          <div class="region-tags"><span class="region-tag">2 novos leads</span><span class="region-tag">1 pedido de reunião</span><span class="region-tag">3 docs pra revisar</span></div>
+        </div>
+        <p style="font-size:0.68rem;color:var(--ink-soft);margin-top:14px;text-align:center;">* Números acima são um exemplo ilustrativo do produto — o dado real vem da operação do seu escritório.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- NOTÍCIAS -->
+<section id="noticias">
+  <div class="section-inner">
+    <div class="noticias-intro reveal">
+      <p class="s-label" style="justify-content:center;">Notícias · Direito + IA</p>
+      <h2 class="s-title">O que está <em>acontecendo</em> no setor</h2>
+      <p>Curadoria de notícias sobre IA aplicada ao Direito — sempre com link e crédito pra fonte original.</p>
+    </div>
+    <div class="noticias-grid">
+      <div class="noticia-card reveal">
+        <div class="noticia-meta">
+          <span class="noticia-tag">Pesquisa</span>
+          <span>Exame</span>
+          <span>·</span>
+          <span>03/2026</span>
+        </div>
+        <div class="noticia-title">IA já é usada por 77% dos advogados e redefine a prática jurídica, aponta estudo da OAB</div>
+        <a class="noticia-link" href="https://exame.com/inteligencia-artificial/ia-ja-e-usada-por-77-dos-advogados-e-redefine-a-pratica-juridica-aponta-estudo-da-oab/" target="_blank" rel="noopener">Ler na fonte →</a>
+      </div>
+      <div class="noticia-card reveal">
+        <div class="noticia-meta">
+          <span class="noticia-tag">Tendência</span>
+          <span>Migalhas</span>
+          <span>·</span>
+          <span>03/2026</span>
+        </div>
+        <div class="noticia-title">Pesquisa aponta que IA devolve tempo ao advogado e amplia estratégias</div>
+        <a class="noticia-link" href="https://www.migalhas.com.br/quentes/452429/pesquisa-aponta-que-ia-devolve-tempo-ao-advogado-e-amplia-estrategias" target="_blank" rel="noopener">Ler na fonte →</a>
+      </div>
+      <div class="noticia-card reveal">
+        <div class="noticia-meta">
+          <span class="noticia-tag">Mercado</span>
+          <span>Rota Jurídica</span>
+          <span>·</span>
+          <span>02/2025</span>
+        </div>
+        <div class="noticia-title">300 mil advogados no Brasil já adotam ferramentas de IA especializadas, diz pesquisa</div>
+        <a class="noticia-link" href="https://www.rotajuridica.com.br/ia-no-direito-300-mil-advogados-no-brasil-ja-adotam-ferramentas-especializadas-para-otimizar-trabalho-diz-pesquisa/" target="_blank" rel="noopener">Ler na fonte →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONFIANÇA -->
+<section id="trust">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;max-width:640px;margin:0 auto 20px;">
+      <p class="s-label" style="justify-content:center;">Como a IA trabalha no escritório</p>
+      <h2 class="s-title">Com <em>responsabilidade</em>, não com autonomia.</h2>
+      <p style="color:var(--ink-soft);margin-top:12px;">O ORBI Jurídico foi desenhado pra dar segurança, não pra tirar responsabilidade de ninguém.</p>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-card reveal">
+        <div class="trust-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/></svg></div>
+        <div class="trust-title">Nunca avalia mérito</div>
+        <div class="trust-text">A IA não opina sobre chance de êxito, não prevê decisão e não promete resultado — sob nenhuma formulação. Isso é do advogado.</div>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="trust-title">Jurisprudência sempre com fonte</div>
+        <div class="trust-text">Todo julgado vem com link verificável e a ressalva de conferir antes de usar. Nunca inventa ementa, número ou precedente.</div>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="trust-title">Sigilo e LGPD</div>
+        <div class="trust-text">Dado do cliente é tratado com o cuidado que o sigilo profissional exige. Coleta e uso seguem a LGPD (Lei 13.709/2020).</div>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div class="trust-title">Transparência com quem conversa</div>
+        <div class="trust-text">O sistema se identifica como assistente. E quando o assunto exige o advogado, ele escala — na hora, sem enrolar o cliente.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-video-wrap">
+    <video class="cta-video" autoplay muted loop playsinline poster="/advogados/img/cta-poster.jpg">
+      <source src="/advogados/video/cta-fechamento-contrato.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="cta-scrim"></div>
+  <div class="cta-inner reveal">
+    <h2 class="cta-title">Pronto pra tirar seu escritório do modo espera?</h2>
+    <p class="cta-sub">Agenda uma conversa com a gente. A gente escuta o gargalo real do seu atendimento antes de propor qualquer coisa.</p>
+    <a href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20sou%20advogado(a)%20e%20quero%20saber%20mais%20sobre%20o%20ORBI%20Jur%C3%ADdico" class="btn-wheat" target="_blank">Falar com a ORBI Jurídico</a>
+    <p class="cta-note">Sem promessa vazia · Diagnóstico antes da proposta</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:1200px;margin:0 auto;width:100%;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:32px;padding-bottom:32px;border-bottom:1px solid var(--border);">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <img src="/advogados/logo-orbi-white.png" alt="ORBI IA" class="logo-fix" style="height:30px;width:auto;">
+          <span class="nav-badge">Jurídico</span>
+        </div>
+        <p style="font-size:0.82rem;color:var(--ink-soft);max-width:300px;line-height:1.6;">IA que atende o escritório — sem nunca substituir quem advoga de verdade.</p>
+        <div class="social-row">
+          <a class="social-icon" href="https://www.instagram.com/agenciaorbi.ia" target="_blank" rel="noopener" title="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></a>
+          <a class="social-icon" href="https://www.facebook.com/agenciaorbiia/" target="_blank" rel="noopener" title="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg></a>
+          <a class="social-icon" href="https://www.linkedin.com/in/orbi-ia-869408186/" target="_blank" rel="noopener" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="7.5" y1="10" x2="7.5" y2="17"/><circle cx="7.5" cy="6.8" r="0.9" fill="currentColor" stroke="none"/><path d="M11.5 17v-4.5c0-1.4 1-2.5 2.5-2.5s2.5 1.1 2.5 2.5V17"/></svg></a>
+          <a class="social-icon" href="https://www.tiktok.com/@orbi.ia" target="_blank" rel="noopener" title="TikTok"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 4v9.5a3.5 3.5 0 1 1-3-3.46"/><path d="M15 4c0 2.2 1.8 4 4 4"/></svg></a>
+          <a class="social-icon" href="https://www.threads.com/@agenciaorbi.ia" target="_blank" rel="noopener" title="Threads"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3c-4.5 0-7 2.7-7 7v4c0 4.3 2.5 7 7 7s7-2.7 7-6c0-2.5-1.6-4-4-4H9"/></svg></a>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-weight:600;font-size:0.95rem;margin-bottom:6px;">Jonei Lima</div>
+        <div style="font-size:0.78rem;color:var(--ink-soft);">CEO &amp; Fundador · Pós-Graduado em IA — Estácio · Bacharel em Direito</div>
+        <div style="font-size:0.78rem;color:var(--ink-soft);margin-top:6px;">(66) 9.8132-0667 · MT</div>
+        <div style="font-size:0.78rem;color:var(--ink-soft);">(19) 9.7133-6498 · SP</div>
+        <div style="font-size:0.78rem;color:var(--ink-soft);">(83) 9.8858-4946 · PB</div>
+        <div style="font-size:0.78rem;color:var(--ink-soft);margin-top:4px;">contato@agenteorbiia.com · agenteorbiia.com</div>
+      </div>
+    </div>
+    <div style="padding-top:20px;">
+      <p style="font-size:0.72rem;color:var(--ink-soft);">© 2026 ORBI IA — Todos os direitos reservados. Lei 9.610/1998 · Lei 9.279/1996 · LGPD 13.709/2020 · A ORBI IA fornece tecnologia de atendimento para escritórios de advocacia e não presta serviços jurídicos.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING CHAT WIDGET -->
+<div id="chat-widget" style="
+  position: fixed; bottom: 100px; right: 28px; width: 360px; max-height: 520px;
+  background: var(--card); border: 1px solid rgba(53,80,126,0.3); border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(30,36,48,0.25); z-index: 998; display: none;
+  flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease;
+">
+  <div style="background:var(--cream2);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border2);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--leaf),var(--leaf-deep));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;">⚖️</div>
+      <div>
+        <div style="font-weight:600;font-size:0.88rem;color:var(--ink);">Assistente ORBI Jurídico</div>
+        <div style="font-size:0.68rem;color:var(--leaf-deep);display:flex;align-items:center;gap:4px;"><span style="width:5px;height:5px;background:var(--leaf-deep);border-radius:50%;display:inline-block;"></span> Online agora</div>
+      </div>
+    </div>
+    <button onclick="toggleChat()" style="background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:1.2rem;padding:4px;line-height:1;">✕</button>
+  </div>
+  <div style="padding:8px 16px;background:var(--leaf-tint);border-bottom:1px solid var(--border2);font-size:0.72rem;color:var(--ink-soft);text-align:center;">
+    💡 A IA atende e organiza — o parecer é sempre do advogado
+  </div>
+  <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;max-height:280px;scroll-behavior:smooth;">
+    <div class="msg bot"><div class="msg-bubble">Olá! Sou o assistente do ORBI Jurídico. Posso te contar como o agente de IA funciona dentro do seu escritório — pra sua área de atuação. ⚖️</div><div class="msg-time">agora</div></div>
+  </div>
+  <div id="quick-qs" style="padding:8px 12px;background:var(--cream2);border-top:1px solid var(--border2);display:flex;flex-wrap:wrap;gap:6px;">
+    <button class="quick-q" onclick="sendQuick(this)">Como funciona no meu escritório?</button>
+    <button class="quick-q" onclick="sendQuick(this)">A IA dá parecer jurídico?</button>
+    <button class="quick-q" onclick="sendQuick(this)">Funciona pra minha área?</button>
+    <button class="quick-q" onclick="sendQuick(this)">Quanto custa?</button>
+  </div>
+  <div style="padding:10px 12px;background:var(--cream2);border-top:1px solid var(--border2);display:flex;gap:8px;align-items:flex-end;">
+    <textarea id="chat-input" placeholder="Digite sua pergunta..." rows="1" style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--ink);font-family:var(--font-body);font-size:0.83rem;resize:none;outline:none;line-height:1.4;max-height:80px;transition:border-color 0.2s;"></textarea>
+    <button id="chat-send" onclick="sendMessage()" style="background:var(--leaf);border:none;border-radius:8px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- CHAT TRIGGER BUTTON -->
+<button id="chat-trigger" onclick="toggleChat()" style="
+  position: fixed; bottom: 28px; right: 96px; z-index: 999;
+  width: 60px; height: 60px; background: var(--leaf); border: none; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(53,80,126,0.4); transition: all 0.2s;
+" title="Tire suas dúvidas com o assistente">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<!-- WA FLOAT -->
+<a class="wa-float" href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20sou%20advogado(a)%20e%20quero%20saber%20mais%20sobre%20o%20ORBI%20Jur%C3%ADdico" target="_blank" title="Fale conosco">
+  <svg viewBox="0 0 32 32" fill="white" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.4a11.34 11.34 0 0 1-5.78-1.58l-.42-.24-4.44 1.04 1.06-4.32-.28-.44A11.36 11.36 0 0 1 4.6 16C4.6 9.7 9.7 4.6 16 4.6S27.4 9.7 27.4 16 22.3 27.4 16 27.4zm6.22-8.5c-.34-.17-2-.98-2.3-1.1-.32-.1-.54-.16-.78.18-.22.34-.88 1.1-1.08 1.32-.2.22-.4.24-.74.08-.34-.18-1.42-.52-2.7-1.66a10.1 10.1 0 0 1-1.88-2.32c-.2-.34-.02-.52.14-.7.16-.14.34-.38.52-.56.16-.18.22-.3.34-.52.1-.22.06-.42-.02-.58-.08-.18-.78-1.88-1.06-2.58-.28-.68-.56-.58-.78-.6-.2-.02-.42-.02-.64-.02s-.58.08-.88.42c-.3.34-1.16 1.14-1.16 2.78s1.18 3.22 1.34 3.44c.18.22 2.34 3.56 5.66 5 .78.34 1.4.54 1.88.68.78.24 1.5.2 2.06.12.62-.1 1.94-.8 2.22-1.56.28-.76.28-1.4.2-1.56-.08-.14-.3-.22-.64-.38z"/></svg>
+</a>
+
+<script>
+// ── RELÓGIO DO PAINEL ──
+document.getElementById('painel-hora').textContent = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+// ── JORNADA DO CLIENTE ──
+const cicloData = {
+  contato: {
+    risco: "Lead chega fora do horário, ninguém responde, e no dia seguinte ele já fechou com outro escritório.",
+    solucao: "Responde na hora, qualifica o caso com perguntas certas e agenda a conversa com você — sem dar nenhuma orientação jurídica no seu lugar."
+  },
+  andamento: {
+    risco: "Cliente pergunta \"como está meu processo\" toda semana — e cada resposta manual come 15 minutos do seu dia.",
+    solucao: "Explica a última movimentação registrada em linguagem simples, quantas vezes for preciso — e você só entra quando há decisão de verdade."
+  },
+  audiencia: {
+    risco: "A família liga e manda mensagem justo durante a audiência — na hora em que você não pode atender ninguém.",
+    solucao: "Acolhe a família na hora, informa que você está em audiência e registra tudo. Você sai da sala e encontra o resumo pronto."
+  },
+  decisao: {
+    risco: "Saiu decisão, o cliente fica sabendo por terceiros antes de você conseguir ligar — e a confiança sofre.",
+    solucao: "Assim que o escritório registra a decisão, o agente comunica o cliente do jeito que você definiu — e agenda a conversa com você pra explicar os próximos passos."
+  }
+};
+function showStage(stage, el) {
+  document.querySelectorAll('.ciclo-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('ciclo-risco-text').textContent = cicloData[stage].risco;
+  document.getElementById('ciclo-solucao-text').textContent = cicloData[stage].solucao;
+}
+
+// ── CHAT WIDGET TOGGLE ──
+function toggleChat() {
+  const widget = document.getElementById('chat-widget');
+  const isOpen = widget.style.display === 'flex';
+  widget.style.display = isOpen ? 'none' : 'flex';
+  if (!isOpen) {
+    const msgs = document.getElementById('chat-msgs');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+}
+
+// ── COUNTERS ──
+function animCounter(el, target, suffix, dur) {
+  let v = 0;
+  const step = target / (dur / 16);
+  const t = setInterval(() => {
+    v = Math.min(v + step, target);
+    el.textContent = Math.floor(v) + suffix;
+    if (v >= target) clearInterval(t);
+  }, 16);
+}
+setTimeout(() => {
+  animCounter(document.getElementById('c1'), 24, 'h', 1200);
+  animCounter(document.getElementById('c2'), 3, 's', 900);
+  animCounter(document.getElementById('c3'), 100, '%', 1400);
+}, 500);
+
+// ── AI CHAT ──
+const msgsEl = document.getElementById('chat-msgs');
+const inputEl = document.getElementById('chat-input');
+const sendBtn = document.getElementById('chat-send');
+let chatHistory = [];
+let leadSaved = false;
+
+function extractLeadMarker(rawText) {
+  const match = rawText.match(/<!--LEAD:([\s\S]*?)-->/);
+  if (!match) return { visibleText: rawText.trim(), leadFields: null };
+  const visibleText = rawText.replace(match[0], '').trim();
+  let leadFields = null;
+  try { leadFields = JSON.parse(match[1]); } catch { leadFields = null; }
+  return { visibleText, leadFields };
+}
+
+async function maybeSaveLead(leadFields) {
+  if (!leadFields || leadSaved) return;
+  if (!leadFields.nome || !leadFields.telefone) return;
+  leadSaved = true;
+  try {
+    const res = await fetch('/api/lead-advogados', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(leadFields),
+    });
+    if (res.ok) {
+      // ── TODO: criar conversão "Lead ADV" no Google Ads e trocar o rótulo abaixo.
+      // NÃO usar o rótulo do Agro (YVgbCOe6380cEN-xiYZD) — mistura relatório.
+      // try {
+      //   if (typeof gtag === 'function') {
+      //     gtag('event', 'conversion', {
+      //       'send_to': 'AW-17997912287/TODO_LABEL_LEAD_ADV',
+      //       'value': 120.00,
+      //       'currency': 'BRL'
+      //     });
+      //   }
+      // } catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
+      try {
+        if (typeof fbq === 'function') {
+          fbq('track', 'Lead', {
+            content_name: 'Lead Advogados ORBI',
+            content_category: 'Lead Qualificado',
+            value: 120.00,
+            currency: 'BRL',
+            lead_type: 'Chat Landing Advogados'
+          });
+        }
+      } catch (fbqErr) { console.error('Falha Lead Meta:', fbqErr); }
+    }
+  } catch (err) {
+    console.error('Falha ao salvar lead de advogados:', err);
+    leadSaved = false;
+  }
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+function appendMsg(text, role) {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `<div class="msg-bubble">${text.replace(/\n/g, '<br>')}</div><div class="msg-time">${getTime()}</div>`;
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function appendWhatsappButton(leadFields) {
+  const nome = leadFields?.nome || '';
+  const area = leadFields?.area_atuacao ? `, atuo na área ${leadFields.area_atuacao}` : '';
+  const cidade = leadFields?.cidade ? ` em ${leadFields.cidade}` : '';
+  const msg = `Oi! Sou ${nome || 'advogado(a) visitante do site'}${area}${cidade}. Vim do site da ORBI Jurídico e quero conversar melhor.`;
+  const link = `https://wa.me/5566981320667?text=${encodeURIComponent(msg)}`;
+
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = `
+    <a href="${link}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:0.9rem;text-decoration:none;">
+      <svg viewBox="0 0 32 32" fill="white" width="18" height="18"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.4a11.34 11.34 0 0 1-5.78-1.58l-.42-.24-4.44 1.04 1.06-4.32-.28-.44A11.36 11.36 0 0 1 4.6 16C4.6 9.7 9.7 4.6 16 4.6S27.4 9.7 27.4 16 22.3 27.4 16 27.4z"/></svg>
+      Falar com a ORBI no WhatsApp
+    </a>`;
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function showTyping() {
+  const d = document.createElement('div');
+  d.className = 'msg bot';
+  d.id = 'typing-indicator';
+  d.innerHTML = '<div class="typing-bubble"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div>';
+  msgsEl.appendChild(d);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+async function sendMessage() {
+  const text = inputEl.value.trim();
+  if (!text) return;
+  const qqs = document.getElementById('quick-qs');
+  if (qqs) qqs.style.display = 'none';
+
+  appendMsg(text, 'user');
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+  sendBtn.disabled = true;
+  showTyping();
+
+  chatHistory.push({ role: 'user', content: text });
+
+  try {
+    const res = await fetch('/api/chat-advogados', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory }),
+    });
+    const data = await res.json();
+    hideTyping();
+
+    const rawReply = data.response || 'Não consegui processar sua pergunta. Tente novamente.';
+    const { visibleText, leadFields } = extractLeadMarker(rawReply);
+    appendMsg(visibleText, 'bot');
+    if (leadFields?.mostrar_link) appendWhatsappButton(leadFields);
+    chatHistory.push({ role: 'assistant', content: rawReply });
+    maybeSaveLead(leadFields);
+  } catch (err) {
+    hideTyping();
+    appendMsg('Erro de conexão. Por favor, tente novamente.', 'bot');
+  }
+  sendBtn.disabled = false;
+}
+
+function sendQuick(btn) {
+  inputEl.value = btn.textContent;
+  sendMessage();
+}
+
+inputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
+});
+
+// ── RESPEITA "REDUZIR MOVIMENTO" ──
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('video[autoplay]').forEach(v => { v.pause(); v.removeAttribute('autoplay'); });
+}
+
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+reveals.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
