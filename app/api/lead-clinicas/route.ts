@@ -1,10 +1,80 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+
+// ID do pixel "Orbi Plena/Clínicas" no Business Manager ORBI IA 2026.
+// NÃO reutilizar com outro nicho — cada LP tem o próprio pixel e o próprio token CAPI.
+const META_PIXEL_ID = "1772566967429029";
+
+function sha256(input: string) {
+  return crypto.createHash("sha256").update(input).digest("hex");
+}
+
+async function sendMetaCAPI(params: {
+  telefoneNormalizado: string;
+  eventId?: string;
+  fbp?: string;
+  fbc?: string;
+  clientIp?: string;
+  userAgent?: string;
+}) {
+  const accessToken = process.env.META_CAPI_TOKEN_CLINICAS;
+  if (!accessToken) {
+    console.error("META_CAPI_TOKEN_CLINICAS não configurado — pulando envio CAPI (pixel do navegador continua funcionando normal).");
+    return;
+  }
+
+  const userData: Record<string, any> = {
+    ph: [sha256(params.telefoneNormalizado)],
+  };
+  if (params.fbp) userData.fbp = params.fbp;
+  if (params.fbc) userData.fbc = params.fbc;
+  if (params.clientIp) userData.client_ip_address = params.clientIp;
+  if (params.userAgent) userData.client_user_agent = params.userAgent;
+
+  const payload = {
+    data: [
+      {
+        event_name: "Lead",
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: params.eventId, // mesmo event_id do fbq() no navegador -> evita contar o lead 2x
+        action_source: "chat",
+        event_source_url: "https://agenteorbiia.com/clinicas",
+        user_data: userData,
+        custom_data: {
+          content_name: "Lead Clinicas ORBI",
+          content_category: "Lead Qualificado",
+          value: 65.0,
+          currency: "BRL",
+        },
+      },
+    ],
+  };
+
+  try {
+    const res = await fetch(
+      `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${accessToken}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    const json = await res.json();
+    if (!res.ok) {
+      console.error("META CAPI ERROR:", res.status, json);
+    } else {
+      console.log("META CAPI OK:", json);
+    }
+  } catch (err) {
+    console.error("META CAPI FETCH FAILED:", err);
+  }
+}
 
 const PERSONAS: Record<string, string> = {
   estetica: "Lari",
@@ -64,7 +134,19 @@ function normalizarTelefone(raw: string) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { nome, telefone, segmento, clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual, encerrar } = body;
+    const {
+      nome,
+      telefone,
+      segmento,
+      clinica,
+      sinal_fora_horario,
+      sinal_perdeu_paciente,
+      sinal_confirmacao_manual,
+      encerrar,
+      event_id,
+      fbp,
+      fbc,
+    } = body;
 
     if (!nome || !telefone || !segmento) {
       return NextResponse.json(
@@ -171,9 +253,28 @@ export async function POST(req: Request) {
       .eq("phone", telefoneNormalizado);
     if (marcaError) console.error("ERRO AO MARCAR handoff_enviado:", marcaError);
 
-    return NextResponse.json({ success: true, notified: true, whatsappLink, persona });
+    // =====================
+    // META CONVERSIONS API — evento Lead server-side.
+    // Dispara no MESMO ponto em que o front-end dispara o fbq('track','Lead')
+    // (ou seja, só quando "encerrar" é confirmado e ainda não tinha notificado),
+    // usando o mesmo event_id que o navegador manda, pra Meta deduplicar.
+    // =====================
+    const clientIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      undefined;
+    const userAgent = req.headers.get("user-agent") || undefined;
 
-    return NextResponse.json({ success: true, notified: true });
+    await sendMetaCAPI({
+      telefoneNormalizado,
+      eventId: event_id,
+      fbp,
+      fbc,
+      clientIp,
+      userAgent,
+    });
+
+    return NextResponse.json({ success: true, notified: true, whatsappLink, persona });
   } catch (error: any) {
     console.error("ERRO GERAL:", error);
     return NextResponse.json({ success: false, error: "Erro interno" }, { status: 500 });
