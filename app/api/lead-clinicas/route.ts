@@ -161,6 +161,12 @@ export async function POST(req: Request) {
       event_id,
       fbp,
       fbc,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_content,
+      utm_term,
+      fbclid,
     } = body;
 
     if (!nome || !telefone || !segmento) {
@@ -183,6 +189,8 @@ export async function POST(req: Request) {
     // =====================
     // SEMPRE salva/atualiza — protege contra perder o lead se a pessoa sumir
     // no meio da conversa, mesmo antes de "encerrar" virar true.
+    // Também grava UTM/fbclid (só na criação — se o lead já existe, mantemos
+    // a origem original em vez de sobrescrever com uma sessão nova).
     // =====================
     if (existente) {
       await supabase
@@ -197,6 +205,12 @@ export async function POST(req: Request) {
           segment: segmento,
           source: "chat_landing_clinicas",
           resumo_conversa: montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual),
+          utm_source: utm_source || null,
+          utm_medium: utm_medium || null,
+          utm_campaign: utm_campaign || null,
+          utm_content: utm_content || null,
+          utm_term: utm_term || null,
+          fbclid: fbclid || null,
         },
       ]);
     }
@@ -227,6 +241,7 @@ export async function POST(req: Request) {
           <p><strong>Área:</strong> ${segmento}</p>
           <p><strong>Clínica:</strong> ${clinica || "não informado"}</p>
           <p><strong>Diagnóstico:</strong> ${montaDiagnosticoResumido(sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual)}</p>
+          <p><strong>Origem:</strong> ${utm_source || "direto/não identificado"} ${utm_campaign ? `· Campanha: ${utm_campaign}` : ""}</p>
         `,
       }),
     });
