@@ -42,6 +42,11 @@ function getCookie(name) {
   return match ? match[2] : null;
 }
 
+function getQueryParam(name) {
+  if (typeof window === 'undefined') return null;
+  return new URLSearchParams(window.location.search).get(name);
+}
+
 export default function ClinicasPage() {
   const [chatOpen, setChatOpen] = useState(false);
   const [chatNudged, setChatNudged] = useState(false);
@@ -56,10 +61,24 @@ export default function ClinicasPage() {
   const lastLeadSnapshotRef = useRef('');
   const chatHistoryRef = useRef([]);
   const msgsEndRef = useRef(null);
+  const utmRef = useRef({});
 
   useEffect(() => {
     msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // UTM / fbclid: captura na 1ª carga e persiste na sessão pra não perder o dado
+  // enquanto a pessoa navega pela página antes de conversar.
+  useEffect(() => {
+    const campos = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'];
+    const dados = {};
+    campos.forEach((campo) => {
+      const daUrl = getQueryParam(campo);
+      if (daUrl) sessionStorage.setItem('orbi_' + campo, daUrl);
+      dados[campo] = daUrl || sessionStorage.getItem('orbi_' + campo) || null;
+    });
+    utmRef.current = dados;
+  }, []);
 
   // Nudge: depois de ~35% de rolagem sem abrir o chat, pulsa chat + WhatsApp
   useEffect(() => {
@@ -121,7 +140,7 @@ export default function ClinicasPage() {
       const res = await fetch('/api/lead-clinicas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc }),
+        body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc, ...utmRef.current }),
       });
       const data = await res.json();
       if (data?.whatsappLink) {
@@ -507,39 +526,76 @@ export default function ClinicasPage() {
         </div>
       </footer>
 
-      {/* WHATSAPP FLOAT */}
+      {/* WHATSAPP FLOAT — posição/tamanho via style inline (não depende do Tailwind compilar a classe) */}
       <a
         href="https://wa.me/5566981320667"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-7 right-7 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative"
+        style={{
+          position: 'fixed',
+          bottom: '28px',
+          right: '28px',
+          zIndex: 9999,
+          width: '60px',
+          height: '60px',
+          background: '#25D366',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 20px rgba(37,211,102,0.4)',
+        }}
+        className="hover:scale-110 transition-transform"
       >
         {chatNudged && !chatOpen && (
-          <span className="absolute -top-1 -right-1 flex items-center justify-center pointer-events-none">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping" />
-            <span className="relative inline-flex w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full items-center justify-center">1</span>
+          <span style={{ position: 'absolute', top: '-4px', right: '-4px', width: '20px', height: '20px', pointerEvents: 'none' }}>
+            <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#e53935', opacity: 0.75, animation: 'orbiPulseRing 1.4s ease-out infinite' }} />
+            <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '50%', background: '#e53935', color: '#fff', fontSize: '11px', fontWeight: 700 }}>1</span>
           </span>
         )}
-        <svg viewBox="0 0 32 32" fill="white" width="28" height="28" className="relative z-10">
+        <svg viewBox="0 0 32 32" fill="white" width="28" height="28" style={{ position: 'relative', zIndex: 1 }}>
           <path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.4a11.34 11.34 0 0 1-5.78-1.58l-.42-.24-4.44 1.04 1.06-4.32-.28-.44A11.36 11.36 0 0 1 4.6 16C4.6 9.7 9.7 4.6 16 4.6S27.4 9.7 27.4 16 22.3 27.4 16 27.4z"/>
         </svg>
       </a>
 
-      {/* CHAT WIDGET */}
+      {/* CHAT WIDGET — mesmo padrão, offset pra não sobrepor o WhatsApp */}
       <button
         onClick={() => { setChatNudged(false); setChatOpen((v) => !v); }}
-        className="fixed bottom-7 right-24 z-50 w-14 h-14 bg-[#22262B] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative"
+        style={{
+          position: 'fixed',
+          bottom: '28px',
+          right: '96px',
+          zIndex: 9999,
+          width: '60px',
+          height: '60px',
+          background: '#22262B',
+          border: 'none',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.35)',
+          cursor: 'pointer',
+        }}
+        className="hover:scale-110 transition-transform"
       >
         {chatNudged && !chatOpen && (
-          <span className="absolute -top-1 -right-1 flex items-center justify-center pointer-events-none">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping" />
-            <span className="relative inline-flex w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full items-center justify-center">1</span>
+          <span style={{ position: 'absolute', top: '-4px', right: '-4px', width: '20px', height: '20px', pointerEvents: 'none' }}>
+            <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#e53935', opacity: 0.75, animation: 'orbiPulseRing 1.4s ease-out infinite' }} />
+            <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '50%', background: '#e53935', color: '#fff', fontSize: '11px', fontWeight: 700 }}>1</span>
           </span>
         )}
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" className="relative z-10">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" style={{ position: 'relative', zIndex: 1 }}>
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
       </button>
+
+      <style jsx global>{`
+        @keyframes orbiPulseRing {
+          0% { transform: scale(1); opacity: 0.75; }
+          100% { transform: scale(2.2); opacity: 0; }
+        }
+      `}</style>
 
       {chatOpen && (
         <div className="fixed bottom-24 right-4 sm:right-7 z-50 w-[calc(100vw-2rem)] sm:w-[380px] max-h-[560px] bg-white rounded-2xl shadow-2xl border border-black/10 flex flex-col overflow-hidden">
