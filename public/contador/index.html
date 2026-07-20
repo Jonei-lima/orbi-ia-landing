@@ -372,16 +372,31 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
 <style>
 /* ── Extras exclusivos da página /contador ── */
 #dores { position: relative; overflow: hidden; padding: 110px 0; }
-.dores-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.dores-video { width: 100%; height: 100%; object-fit: cover; }
-.dores-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(8,14,13,0.90) 0%, rgba(8,14,13,0.78) 45%, rgba(8,14,13,0.45) 100%); }
 .dores-inner { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 56px; color: #F1F4F3; }
 .dores-title { font-family: var(--font-head); font-size: clamp(1.6rem, 3.2vw, 2.4rem); font-weight: 700; line-height: 1.2; margin-bottom: 28px; max-width: 560px; }
 .dores-list { list-style: none; display: flex; flex-direction: column; gap: 16px; max-width: 560px; }
 .dores-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.95rem; line-height: 1.6; color: rgba(241,244,243,0.92); }
 .dores-list li strong { color: #fff; }
-.dores-x { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(201,125,63,0.25); border: 1px solid rgba(201,125,63,0.6); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #E3A96B; margin-top: 2px; }
+.dores-x { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #fff; margin-top: 2px; }
 @media (max-width: 720px) { .dores-inner { padding: 0 24px; } }
+
+/* Dados: agora com vídeo de fundo (cont4.mp4) — texto claro sobre escrim escuro */
+#dados { position: relative; overflow: hidden; }
+.dados-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.dados-video { width: 100%; height: 100%; object-fit: cover; }
+.dados-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(10,20,18,0.62) 0%, rgba(10,20,18,0.87) 100%); }
+#dados .section-inner { position: relative; z-index: 2; }
+#dados .s-label { color: #9FD6C9; }
+#dados .s-label::before { background: #9FD6C9; }
+#dados .s-title { color: #F1F4F3; }
+#dados .s-title em { color: #E3A96B; }
+#dados .dados-intro p { color: rgba(241,244,243,0.85); }
+#dados .data-stat { background: rgba(241,244,243,0.06); border-color: rgba(241,244,243,0.16); }
+#dados .data-stat:hover { border-color: rgba(241,244,243,0.32); }
+#dados .data-stat-n { color: #E3A96B; }
+#dados .data-stat-desc { color: #F1F4F3; }
+#dados .data-stat-source, #dados .data-stat-source a { color: rgba(241,244,243,0.65); }
+#dados .dados-note { color: rgba(241,244,243,0.7); }
 </style>
 
 <!-- Google Ads (mesma conta dos demais nichos — a CONVERSÃO é separada, veja TODO abaixo) -->
@@ -478,13 +493,7 @@ src="https://www.facebook.com/tr?id=PIXEL_CONTADOR_ID&ev=PageView&noscript=1"
 <div class="divider"></div>
 
 <!-- DORES -->
-<section id="dores">
-  <div class="dores-video-wrap">
-    <video class="dores-video" autoplay muted loop playsinline poster="/contador/img/dores-poster.jpg">
-      <source src="/contador/video/con2.mp4" type="video/mp4">
-    </video>
-  </div>
-  <div class="dores-scrim"></div>
+<section id="dores" style="background: #1E7A6C;">
   <div class="dores-inner reveal">
     <h2 class="dores-title">Você reconhece esse dia 20?</h2>
     <ul class="dores-list">
@@ -500,6 +509,12 @@ src="https://www.facebook.com/tr?id=PIXEL_CONTADOR_ID&ev=PageView&noscript=1"
 
 <!-- DADOS REAIS -->
 <section id="dados">
+  <div class="dados-video-wrap">
+    <video class="dados-video" autoplay muted loop playsinline poster="/contador/img/dados-poster.jpg">
+      <source src="/contador/video/cont4.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="dados-scrim"></div>
   <div class="section-inner">
     <div class="dados-intro reveal">
       <p class="s-label" style="justify-content:center;">Dado real, não promessa</p>
@@ -821,13 +836,7 @@ src="https://www.facebook.com/tr?id=PIXEL_CONTADOR_ID&ev=PageView&noscript=1"
 </section>
 
 <!-- CTA -->
-<section id="cta">
-  <div class="cta-video-wrap">
-    <video class="cta-video" autoplay muted loop playsinline poster="/contador/img/cta-poster.jpg">
-      <source src="/contador/video/cont4.mp4" type="video/mp4">
-    </video>
-  </div>
-  <div class="cta-scrim"></div>
+<section id="cta" style="background: #0A1412;">
   <div class="cta-inner reveal">
     <h2 class="cta-title">Pronto pra tirar seu escritório do modo correria?</h2>
     <p class="cta-sub">Agenda uma conversa com a gente. A gente escuta o gargalo real do seu atendimento antes de propor qualquer coisa.</p>
@@ -1048,8 +1057,8 @@ function appendMsg(text, role) {
 
 function appendWhatsappButton(leadFields) {
   const nome = leadFields?.nome || '';
-  const cidade = leadFields?.cidade ? ` em ${leadFields.cidade}` : '';
-  const msg = `Oi! Sou ${nome || 'contador(a) visitante do site'}${cidade}. Vim do site da ORBI Contabilidade e quero conversar melhor.`;
+  const municipio = leadFields?.municipio ? ` em ${leadFields.municipio}` : '';
+  const msg = `Oi! Sou ${nome || 'contador(a) visitante do site'}${municipio}. Vim do site da ORBI Contabilidade e quero conversar melhor.`;
   const link = `https://wa.me/5566981320667?text=${encodeURIComponent(msg)}`;
 
   const div = document.createElement('div');
