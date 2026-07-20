@@ -259,6 +259,17 @@ export default function ClinicasPage() {
         </div>
       </section>
 
+      {/* CTA INICIAL (logo após o Hero) — fundo sólido, sem vídeo */}
+      <section className="relative py-16 overflow-hidden bg-[#141712]">
+        <div className="relative z-10 max-w-3xl mx-auto px-6 text-center text-white">
+          <h2 className="text-2xl lg:text-3xl font-bold mb-4">Pronto pra parar de perder paciente por demora?</h2>
+          <p className="text-lg text-white/80 mb-7">Fala com a IA agora e vê como funciona pra sua especialidade.</p>
+          <button onClick={() => setChatOpen(true)} className="inline-flex items-center justify-center px-8 py-4 bg-[#D9B36A] text-[#22262B] font-semibold rounded-lg hover:bg-[#e5c584] transition-all shadow-lg">
+            Conversar com a IA agora
+          </button>
+        </div>
+      </section>
+
       {/* DADOS REAIS */}
       <section className="py-20 bg-[#F7F5F2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
