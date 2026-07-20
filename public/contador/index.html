@@ -325,6 +325,11 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
   box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: all 0.2s; text-decoration: none;
 }
 .wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.5); }
+#chat-trigger.attention { animation: chatPulse 1.8s ease-in-out infinite; }
+@keyframes chatPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(30,122,108,0.4); }
+  50% { box-shadow: 0 4px 20px rgba(30,122,108,0.4), 0 0 0 10px rgba(30,122,108,0.25); }
+}
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -850,6 +855,20 @@ src="https://www.facebook.com/tr?id=3122808851241867&ev=PageView&noscript=1"
   </div>
 </section>
 
+<div class="divider"></div>
+
+<!-- CTA FINAL (antes do rodapé) — fecha a página com mais um chamado, fundo sólido preto -->
+<section id="cta-final" style="background: #0A1412; padding: 76px 0;">
+  <div class="cta-inner reveal" style="max-width: 600px;">
+    <h2 class="cta-title" style="font-size: clamp(1.4rem, 2.6vw, 2rem);">Ficou alguma dúvida sobre o ORBI Contabilidade?</h2>
+    <p class="cta-sub" style="margin-bottom: 26px;">Fala com a gente agora — no chat ou direto no WhatsApp. Sem compromisso.</p>
+    <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+      <a href="#" onclick="toggleChat(); return false;" class="btn-wheat">Falar no chat</a>
+      <a href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20sou%20contador(a)%20e%20quero%20saber%20mais%20sobre%20o%20ORBI%20Contabilidade" class="btn-outline-light" target="_blank">Chamar no WhatsApp</a>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div style="max-width:1200px;margin:0 auto;width:100%;">
@@ -878,7 +897,7 @@ src="https://www.facebook.com/tr?id=3122808851241867&ev=PageView&noscript=1"
       </div>
     </div>
     <div style="padding-top:20px;">
-      <p style="font-size:0.72rem;color:var(--ink-soft);">© 2026 ORBI IA — Todos os direitos reservados. Lei 9.610/1998 · Lei 9.279/1996 · LGPD 13.709/2020 · A ORBI IA fornece tecnologia de atendimento para escritórios de contabilidade e não presta serviços contábeis.</p>
+      <p style="font-size:0.72rem;color:var(--ink-soft);">© 2026 ORBI IA — Todos os direitos reservados. Lei 9.610/1998 · Lei 9.279/1996 · LGPD 13.709/2020 · A ORBI IA fornece tecnologia de atendimento para escritórios de contabilidade e não presta serviços contábeis. · <a href="https://www.agenteorbiia.com/politica" style="color:var(--ink-soft);text-decoration:underline;">Política de Privacidade</a></p>
     </div>
   </div>
 </footer>
@@ -928,6 +947,12 @@ src="https://www.facebook.com/tr?id=3122808851241867&ev=PageView&noscript=1"
   box-shadow: 0 4px 20px rgba(30,122,108,0.4); transition: all 0.2s;
 " title="Tire suas dúvidas com o assistente">
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <span id="chat-badge" style="
+    display: none; position: absolute; top: -4px; right: -4px;
+    width: 20px; height: 20px; background: #E3A96B; color: #241A0E;
+    border-radius: 50%; font-size: 0.68rem; font-weight: 700;
+    align-items: center; justify-content: center; border: 2px solid var(--cream);
+  ">1</span>
 </button>
 
 <!-- WA FLOAT -->
@@ -973,6 +998,11 @@ function toggleChat() {
   if (!isOpen) {
     const msgs = document.getElementById('chat-msgs');
     msgs.scrollTop = msgs.scrollHeight;
+    // Assim que a pessoa abre o chat, para o nudge — já conseguiu o que queria
+    const trigger = document.getElementById('chat-trigger');
+    const badge = document.getElementById('chat-badge');
+    if (trigger) trigger.classList.remove('attention');
+    if (badge) badge.style.display = 'none';
   }
 }
 
@@ -1170,6 +1200,25 @@ const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.08 });
 reveals.forEach(el => obs.observe(el));
+
+// ── NUDGE NO BOTÃO DE CHAT ──
+// Depois que a pessoa rola ~35% da página (mais ou menos na altura da
+// seção de Dores) e ainda não abriu o chat, chama atenção pro botão
+// flutuante com um pulso + badge. Some assim que ela abrir o chat.
+let chatNudged = false;
+window.addEventListener('scroll', () => {
+  if (chatNudged) return;
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  if (scrollable <= 0) return;
+  const scrollPercent = window.scrollY / scrollable;
+  if (scrollPercent > 0.35) {
+    chatNudged = true;
+    const trigger = document.getElementById('chat-trigger');
+    const badge = document.getElementById('chat-badge');
+    if (trigger) trigger.classList.add('attention');
+    if (badge) badge.style.display = 'flex';
+  }
+}, { passive: true });
 </script>
 </body>
 </html>
