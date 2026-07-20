@@ -372,15 +372,18 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
 <style>
 /* ── Extras exclusivos da página /contador ── */
 #dores { position: relative; overflow: hidden; padding: 110px 0; }
+.dores-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.dores-video { width: 100%; height: 100%; object-fit: cover; }
+.dores-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(8,14,13,0.90) 0%, rgba(8,14,13,0.78) 45%, rgba(8,14,13,0.45) 100%); }
 .dores-inner { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 56px; color: #F1F4F3; }
 .dores-title { font-family: var(--font-head); font-size: clamp(1.6rem, 3.2vw, 2.4rem); font-weight: 700; line-height: 1.2; margin-bottom: 28px; max-width: 560px; }
 .dores-list { list-style: none; display: flex; flex-direction: column; gap: 16px; max-width: 560px; }
 .dores-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.95rem; line-height: 1.6; color: rgba(241,244,243,0.92); }
 .dores-list li strong { color: #fff; }
-.dores-x { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #fff; margin-top: 2px; }
+.dores-x { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(201,125,63,0.25); border: 1px solid rgba(201,125,63,0.6); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #E3A96B; margin-top: 2px; }
 @media (max-width: 720px) { .dores-inner { padding: 0 24px; } }
 
-/* Dados: agora com vídeo de fundo (cont4.mp4) — texto claro sobre escrim escuro */
+/* Dados: vídeo de fundo (cont4.mp4) — texto claro sobre escrim escuro */
 #dados { position: relative; overflow: hidden; }
 .dados-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .dados-video { width: 100%; height: 100%; object-fit: cover; }
@@ -409,20 +412,14 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
 </script>
 
 <!-- ════════════════════════════════════════════════════════════════════
-     TODO OBRIGATÓRIO ANTES DE RODAR TRÁFEGO (NÃO PULE):
-     1. META PIXEL: criar pixel exclusivo "ORBI Contador" no Gerenciador
-        de Eventos (Business Manager ORBI IA 2026). NÃO reutilizar o pixel
-        do Agro (1029192646552967), da Plena/Clínicas (1772566967429029)
-        nem do ADV (1030105936066490) — mistura conversão.
-        Depois de criado, descomente o bloco abaixo e troque PIXEL_CONTADOR_ID.
-     2. GOOGLE ADS: criar conversão "Lead Contador" e trocar o rótulo
-        TODO_LABEL_LEAD_CONTADOR no evento de conversão lá embaixo no chat.
-        NÃO reutilizar o rótulo do Agro (YVgbCOe6380cEN-xiYZD) nem o da
-        Plena/Clínicas (FnWMCI_Rvc4cEN-xiYZD).
-     Enquanto isso não for feito, a página funciona normal — só não
-     rastreia conversão de anúncio.
+     TODO PENDENTE (só isso falta):
+     GOOGLE ADS: criar conversão "Lead Contador" e trocar o rótulo
+     TODO_LABEL_LEAD_CONTADOR no evento de conversão lá embaixo no chat.
+     NÃO reutilizar o rótulo do Agro (YVgbCOe6380cEN-xiYZD) nem o da
+     Plena/Clínicas (FnWMCI_Rvc4cEN-xiYZD).
+     O Meta Pixel abaixo já está ativo e rastreando normal.
 ════════════════════════════════════════════════════════════════════ -->
-<!--
+<!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -432,13 +429,13 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'PIXEL_CONTADOR_ID');
+fbq('init', '3122808851241867');
 fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=PIXEL_CONTADOR_ID&ev=PageView&noscript=1"
+src="https://www.facebook.com/tr?id=3122808851241867&ev=PageView&noscript=1"
 /></noscript>
--->
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -492,8 +489,26 @@ src="https://www.facebook.com/tr?id=PIXEL_CONTADOR_ID&ev=PageView&noscript=1"
 
 <div class="divider"></div>
 
+<!-- CTA (logo após o Hero) — fundo sólido preto, sem vídeo -->
+<section id="cta" style="background: #0A1412;">
+  <div class="cta-inner reveal">
+    <h2 class="cta-title">Pronto pra tirar seu escritório do modo correria?</h2>
+    <p class="cta-sub">Agenda uma conversa com a gente. A gente escuta o gargalo real do seu atendimento antes de propor qualquer coisa.</p>
+    <a href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20sou%20contador(a)%20e%20quero%20saber%20mais%20sobre%20o%20ORBI%20Contabilidade" class="btn-wheat" target="_blank">Falar com a ORBI Contabilidade</a>
+    <p class="cta-note">Sem promessa vazia · Diagnóstico antes da proposta</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- DORES -->
-<section id="dores" style="background: #1E7A6C;">
+<section id="dores">
+  <div class="dores-video-wrap">
+    <video class="dores-video" autoplay muted loop playsinline poster="/contador/img/dores-poster.jpg">
+      <source src="/contador/video/con2.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="dores-scrim"></div>
   <div class="dores-inner reveal">
     <h2 class="dores-title">Você reconhece esse dia 20?</h2>
     <ul class="dores-list">
@@ -832,16 +847,6 @@ src="https://www.facebook.com/tr?id=PIXEL_CONTADOR_ID&ev=PageView&noscript=1"
         <div class="trust-text">O sistema se identifica como assistente. E quando o assunto exige o contador, ele escala — na hora, sem enrolar o cliente.</div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section id="cta" style="background: #0A1412;">
-  <div class="cta-inner reveal">
-    <h2 class="cta-title">Pronto pra tirar seu escritório do modo correria?</h2>
-    <p class="cta-sub">Agenda uma conversa com a gente. A gente escuta o gargalo real do seu atendimento antes de propor qualquer coisa.</p>
-    <a href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20sou%20contador(a)%20e%20quero%20saber%20mais%20sobre%20o%20ORBI%20Contabilidade" class="btn-wheat" target="_blank">Falar com a ORBI Contabilidade</a>
-    <p class="cta-note">Sem promessa vazia · Diagnóstico antes da proposta</p>
   </div>
 </section>
 
