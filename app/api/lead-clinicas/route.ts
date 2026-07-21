@@ -7,13 +7,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const PERSONAS: Record<string, string> = {
-  estetica: "Lari",
-  odontologica: "Ana",
-  medica: "Beatriz",
-  fisioterapia: "Duda",
-};
-
 const META_PIXEL_ID = "1772566967429029";
 const META_CAPI_TOKEN = process.env.META_CAPI_TOKEN_CLINICAS;
 const EVENT_SOURCE_URL = "https://www.agenteorbiia.com/clinicas";
@@ -157,6 +150,7 @@ export async function POST(req: Request) {
       sinal_fora_horario,
       sinal_perdeu_paciente,
       sinal_confirmacao_manual,
+      email,
       encerrar,
       event_id,
       fbp,
@@ -176,7 +170,6 @@ export async function POST(req: Request) {
       );
     }
 
-    const persona = PERSONAS[segmento] || "nossa equipe";
     const telefoneNormalizado = normalizarTelefone(telefone);
 
     // Busca se esse telefone já existe (tabela "leads" é compartilhada, UNIQUE em phone)
@@ -191,11 +184,18 @@ export async function POST(req: Request) {
     // no meio da conversa, mesmo antes de "encerrar" virar true.
     // Também grava UTM/fbclid (só na criação — se o lead já existe, mantemos
     // a origem original em vez de sobrescrever com uma sessão nova).
+    // Email é atualizado nas duas situações, pois normalmente só chega
+    // no fim da conversa, quando o registro já existe.
     // =====================
     if (existente) {
       await supabase
         .from("leads")
-        .update({ name: nome, segment: segmento, resumo_conversa: montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual) })
+        .update({
+          name: nome,
+          segment: segmento,
+          email: email || null,
+          resumo_conversa: montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual),
+        })
         .eq("id", existente.id);
     } else {
       await supabase.from("leads").insert([
@@ -204,6 +204,7 @@ export async function POST(req: Request) {
           phone: telefoneNormalizado,
           segment: segmento,
           source: "chat_landing_clinicas",
+          email: email || null,
           resumo_conversa: montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual),
           utm_source: utm_source || null,
           utm_medium: utm_medium || null,
@@ -240,6 +241,7 @@ export async function POST(req: Request) {
           <p><strong>Telefone:</strong> ${telefone}</p>
           <p><strong>Área:</strong> ${segmento}</p>
           <p><strong>Clínica:</strong> ${clinica || "não informado"}</p>
+          <p><strong>E-mail:</strong> ${email || "não informado ainda"}</p>
           <p><strong>Diagnóstico:</strong> ${montaDiagnosticoResumido(sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual)}</p>
           <p><strong>Origem:</strong> ${utm_source || "direto/não identificado"} ${utm_campaign ? `· Campanha: ${utm_campaign}` : ""}</p>
         `,
@@ -254,27 +256,11 @@ export async function POST(req: Request) {
         headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY! },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\nClínica: ${clinica || "não informado"}\nDiagnóstico: ${montaDiagnosticoResumido(sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual)}\n\nLink de test-drive já mostrado pro lead no site.`,
+          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\nClínica: ${clinica || "não informado"}\nE-mail: ${email || "não informado ainda"}\nDiagnóstico: ${montaDiagnosticoResumido(sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual)}`,
         }),
       }
     );
     console.log("EVOLUTION NOTIFY STATUS:", evolutionNotifyJonei.status);
-
-    // =====================
-    // Link de WhatsApp pra PESSOA clicar e mandar a primeira mensagem —
-    // em vez da automação mandar primeiro (isso estava disparando bloqueio
-    // de spam da Meta/WhatsApp em contas não-oficiais como o Evolution).
-    // A mensagem pré-preenchida já carrega nome/clinica/segmento no texto,
-    // pro prompt de cada persona (Lari/Ana/Beatriz/Duda) já saber quem é.
-    // =====================
-    const segmentoLegivel: Record<string, string> = {
-      estetica: "estética",
-      odontologica: "odontológica",
-      medica: "médica",
-      fisioterapia: "fisioterapia",
-    };
-    const mensagemPreenchida = `Oi! Sou ${nome}${clinica ? `, da ${clinica}` : ""}. Quero testar como funcionaria pra uma clínica de ${segmentoLegivel[segmento] || segmento}.`;
-    const whatsappLink = `https://wa.me/5519971336498?text=${encodeURIComponent(mensagemPreenchida)}`;
 
     // Marca como notificado (coluna própria), pra nunca reenviar/reexibir de novo
     const { error: marcaError } = await supabase
@@ -302,7 +288,9 @@ export async function POST(req: Request) {
       userAgent,
     });
 
-    return NextResponse.json({ success: true, notified: true, whatsappLink, persona, eventId });
+    // Não devolve mais link/persona — igual ao ADV/Contador, o botão de
+    // WhatsApp no frontend é fixo (mesmo número real, sem simulação de atendente).
+    return NextResponse.json({ success: true, notified: true, eventId });
   } catch (error: any) {
     console.error("ERRO GERAL:", error);
     return NextResponse.json({ success: false, error: "Erro interno" }, { status: 500 });
