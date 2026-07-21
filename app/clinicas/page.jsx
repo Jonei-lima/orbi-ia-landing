@@ -57,7 +57,7 @@ export default function ClinicasPage() {
   const [sending, setSending] = useState(false);
   const [leadSaved, setLeadSaved] = useState(false);
   const [segmentoEscolhido, setSegmentoEscolhido] = useState(false);
-  const [whatsappLink, setWhatsappLink] = useState(null);
+  const [showWaCta, setShowWaCta] = useState(false);
   const lastLeadSnapshotRef = useRef('');
   const chatHistoryRef = useRef([]);
   const msgsEndRef = useRef(null);
@@ -143,8 +143,10 @@ export default function ClinicasPage() {
         body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc, ...utmRef.current }),
       });
       const data = await res.json();
-      if (data?.whatsappLink) {
-        setWhatsappLink({ url: data.whatsappLink, persona: data.persona });
+      if (data?.notified) {
+        // Botão fixo pro WhatsApp real (mesmo número do Agro/ADV/Contador) —
+        // sem simulação de atendente nem número separado de "piloto".
+        setShowWaCta(true);
 
         if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
           window.fbq('track', 'Lead', {
@@ -626,16 +628,16 @@ export default function ClinicasPage() {
                 </div>
               </div>
             )}
-            {whatsappLink && (
+            {showWaCta && (
               <div className="flex justify-start">
                 <a
-                  href={whatsappLink.url}
+                  href="https://wa.me/5566981320667"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-[#25D366] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
                 >
                   <svg viewBox="0 0 32 32" fill="white" width="18" height="18"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2z"/></svg>
-                  Clique pra falar com a {whatsappLink.persona} no WhatsApp
+                  Clique aqui para falar no WhatsApp
                 </a>
               </div>
             )}
