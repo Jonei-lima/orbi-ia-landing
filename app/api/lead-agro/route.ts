@@ -106,6 +106,7 @@ export async function POST(req: Request) {
       municipio,
       hectares_aproximado,
       culturas,
+      email,
       event_id,
       fbp,
       fbc,
@@ -145,6 +146,7 @@ export async function POST(req: Request) {
         municipio: municipio || null,
         hectares_aproximado: hectares_aproximado || null,
         culturas: culturas || null,
+        email: email || null,
         utm_source: utm_source || null,
         utm_medium: utm_medium || null,
         utm_campaign: utm_campaign || null,
@@ -182,6 +184,7 @@ export async function POST(req: Request) {
           <p><strong>Município:</strong> ${municipio || "não informado ainda"}</p>
           <p><strong>Hectares (aprox.):</strong> ${hectares_aproximado || "não informado ainda"}</p>
           <p><strong>Culturas:</strong> ${culturas || "não informado ainda"}</p>
+          <p><strong>E-mail:</strong> ${email || "não informado ainda"}</p>
           <p><strong>Origem:</strong> ${utm_source || "direto/não identificado"} ${utm_campaign ? `· Campanha: ${utm_campaign}` : ""}</p>
         `,
       }),
@@ -203,7 +206,7 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `🌾 Novo Lead - Agro\n\nNome: ${nome}\nTelefone: ${telefone}\nFazenda: ${fazenda || "não informado ainda"}\nMunicípio: ${municipio || "não informado ainda"}\nHectares: ${hectares_aproximado || "não informado ainda"}\nCulturas: ${culturas || "não informado ainda"}`,
+          text: `🌾 Novo Lead - Agro\n\nNome: ${nome}\nTelefone: ${telefone}\nFazenda: ${fazenda || "não informado ainda"}\nMunicípio: ${municipio || "não informado ainda"}\nHectares: ${hectares_aproximado || "não informado ainda"}\nCulturas: ${culturas || "não informado ainda"}\nE-mail: ${email || "não informado ainda"}`,
         }),
       }
     );
