@@ -95,9 +95,16 @@ export async function POST(req: Request) {
       area_atuacao,
       cidade,
       clientes_ativos_aproximado,
+      email,
       event_id,
       fbp,
       fbc,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_content,
+      utm_term,
+      fbclid,
     } = body;
 
     // Lead vem de conversa em andamento (igual ao agro) — campos chegam aos
@@ -111,12 +118,9 @@ export async function POST(req: Request) {
 
     // =====================
     // 1️⃣ SALVAR NO BANCO (tabela compartilhada "leads")
-    // ⚠️ Se ainda não rodou, precisa antes:
-    //   ALTER TABLE leads
-    //     ADD COLUMN IF NOT EXISTS area_atuacao text,
-    //     ADD COLUMN IF NOT EXISTS cidade text,
-    //     ADD COLUMN IF NOT EXISTS clientes_ativos_aproximado text;
-    // Sem isso, o insert abaixo FALHA e o lead se perde silenciosamente do banco.
+    // Agora também gravando email + utm_source/utm_medium/utm_campaign/utm_content/utm_term/fbclid
+    // (mesma tabela usada por agro/contador/clinicas — colunas já existem via
+    // add-colunas-agro-utm.sql, rodado uma vez só).
     // =====================
     const { error } = await supabase.from("leads").insert([
       {
@@ -127,6 +131,13 @@ export async function POST(req: Request) {
         area_atuacao: area_atuacao || null,
         cidade: cidade || null,
         clientes_ativos_aproximado: clientes_ativos_aproximado || null,
+        email: email || null,
+        utm_source: utm_source || null,
+        utm_medium: utm_medium || null,
+        utm_campaign: utm_campaign || null,
+        utm_content: utm_content || null,
+        utm_term: utm_term || null,
+        fbclid: fbclid || null,
       },
     ]);
 
@@ -158,6 +169,8 @@ export async function POST(req: Request) {
           <p><strong>Área de atuação:</strong> ${area_atuacao || "não informado ainda"}</p>
           <p><strong>Cidade/UF:</strong> ${cidade || "não informado ainda"}</p>
           <p><strong>Clientes ativos (aprox.):</strong> ${clientes_ativos_aproximado || "não informado ainda"}</p>
+          <p><strong>E-mail:</strong> ${email || "não informado ainda"}</p>
+          <p><strong>Origem:</strong> ${utm_source || "direto/não identificado"} ${utm_campaign ? `· Campanha: ${utm_campaign}` : ""}</p>
         `,
       }),
     });
@@ -179,7 +192,7 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `⚖️ Novo Lead - Advogados\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${area_atuacao || "não informado ainda"}\nCidade: ${cidade || "não informado ainda"}\nClientes ativos: ${clientes_ativos_aproximado || "não informado ainda"}`,
+          text: `⚖️ Novo Lead - Advogados\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${area_atuacao || "não informado ainda"}\nCidade: ${cidade || "não informado ainda"}\nClientes ativos: ${clientes_ativos_aproximado || "não informado ainda"}\nE-mail: ${email || "não informado ainda"}`,
         }),
       }
     );
