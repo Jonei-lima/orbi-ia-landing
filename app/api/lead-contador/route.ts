@@ -106,6 +106,7 @@ export async function POST(req: Request) {
       municipio,
       quantidade_clientes_aproximada,
       perfil_carteira,
+      email,
       event_id,
       fbp,
       fbc,
@@ -145,6 +146,7 @@ export async function POST(req: Request) {
         municipio: municipio || null,
         quantidade_clientes_aproximada: quantidade_clientes_aproximada || null,
         perfil_carteira: perfil_carteira || null,
+        email: email || null,
         utm_source: utm_source || null,
         utm_medium: utm_medium || null,
         utm_campaign: utm_campaign || null,
@@ -182,6 +184,7 @@ export async function POST(req: Request) {
           <p><strong>Município:</strong> ${municipio || "não informado ainda"}</p>
           <p><strong>Clientes na carteira (aprox.):</strong> ${quantidade_clientes_aproximada || "não informado ainda"}</p>
           <p><strong>Perfil da carteira:</strong> ${perfil_carteira || "não informado ainda"}</p>
+          <p><strong>E-mail:</strong> ${email || "não informado ainda"}</p>
           <p><strong>Origem:</strong> ${utm_source || "direto/não identificado"} ${utm_campaign ? `· Campanha: ${utm_campaign}` : ""}</p>
         `,
       }),
@@ -203,7 +206,7 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           number: "5566981320667",
-          text: `📊 Novo Lead - Contador\n\nNome: ${nome}\nTelefone: ${telefone}\nEscritório: ${escritorio || "não informado ainda"}\nMunicípio: ${municipio || "não informado ainda"}\nClientes na carteira: ${quantidade_clientes_aproximada || "não informado ainda"}\nPerfil da carteira: ${perfil_carteira || "não informado ainda"}`,
+          text: `📊 Novo Lead - Contador\n\nNome: ${nome}\nTelefone: ${telefone}\nEscritório: ${escritorio || "não informado ainda"}\nMunicípio: ${municipio || "não informado ainda"}\nClientes na carteira: ${quantidade_clientes_aproximada || "não informado ainda"}\nPerfil da carteira: ${perfil_carteira || "não informado ainda"}\nE-mail: ${email || "não informado ainda"}`,
         }),
       }
     );
