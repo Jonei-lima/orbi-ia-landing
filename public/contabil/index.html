@@ -144,7 +144,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
     <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
     <div class="login-err" id="login-err"></div>
-    <div class="login-badge">Acesso exclusivo · <span>Pinharas Contabilidade</span></div>
+    <div class="login-badge">Acesso exclusivo · <span id="escNomeLogin">Pinharas Contabilidade</span></div>
   </div>
 </div>
 
@@ -157,7 +157,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div style="display:flex;align-items:center;gap:12px">
       <div class="user-pill">
         <div class="user-avatar">SA</div>
-        <span class="user-name">Sérgio Araújo</span>
+        <span class="user-name" id="contNomeTopbar">Sérgio Araújo</span>
       </div>
       <button class="logout-btn" onclick="fazerLogout()">sair</button>
     </div>
@@ -258,7 +258,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="chat-avatar">OC</div>
         <div class="chat-info">
           <strong>Assistente ORBI Contábil</strong>
-          <span><div class="online-dot"></div> online · exclusivo para Pinharas Contabilidade</span>
+          <span><div class="online-dot"></div> online · exclusivo para <span id="escNomeHeader">Pinharas Contabilidade</span></span>
         </div>
       </div>
 
@@ -267,7 +267,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="msg-avatar">OC</div>
           <div class="msg-content">
             <span class="msg-name">ORBI Contábil</span>
-            <div class="msg-bubble">Olá! Bem-vindo à Pinharas Contabilidade 😊<br><br>Sou o assistente virtual do escritório. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, obrigações fiscais, folha de pagamento</strong> e consultoria financeira para o seu segmento — enquanto o Sérgio e a equipe estão em atendimento.<br><br>Como posso te ajudar hoje?</div>
+            <div class="msg-bubble" id="msgBoasVindas">Olá! Bem-vindo à Pinharas Contabilidade 😊<br><br>Sou o assistente virtual do escritório. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, obrigações fiscais, folha de pagamento</strong> e consultoria financeira para o seu segmento — enquanto o Sérgio e a equipe estão em atendimento.<br><br>Como posso te ajudar hoje?</div>
             <span class="msg-time">agora</span>
           </div>
         </div>
@@ -290,7 +290,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <button class="sug" onclick="enviarSug(this)">Posso emitir nota fiscal como MEI?</button>
       </div>
 
-      <div class="disclaimer">Demo exclusivo · Pinharas Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
+      <div class="disclaimer" id="disclaimerNome">Demo exclusivo · Pinharas Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018 · v1-parametrizado</div>
 
       <div class="input-area">
         <textarea class="chat-input" id="chat-input" placeholder="Digite como se fosse um cliente do escritório..." rows="1"
@@ -305,17 +305,32 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
-const SYSTEM = `Você é o assistente virtual da Pinharas Contabilidade, escritório de contabilidade consultiva e consultoria financeira, com sede em Patos, Paraíba, atuando também no Rio Grande do Norte e Pernambuco (região do Sertão Paraibano).
+// Customização rápida via URL: ?escritorio=Nome%20Contabilidade&contador=Fulano%20de%20Tal&cidade=Cidade/UF&login=fulano&senha=1234
+const params = new URLSearchParams(window.location.search);
+const ESC_NOME = params.get('escritorio') || 'Pinharas Contabilidade';
+const CONT_NOME = params.get('contador') || 'Sérgio Araújo';
+const CIDADE = params.get('cidade') || 'Patos/PB';
+const LOGIN = params.get('login') || 'sergio';
+const SENHA = params.get('senha') || '6525';
 
-Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais do dia a dia enquanto o Sérgio e a equipe estão em atendimento.
+document.title = `ORBI Contábil — ${ESC_NOME}`;
+document.getElementById('escNomeLogin').textContent = ESC_NOME;
+document.getElementById('contNomeTopbar').textContent = CONT_NOME;
+document.getElementById('escNomeHeader').textContent = ESC_NOME;
+document.getElementById('msgBoasVindas').innerHTML = document.getElementById('msgBoasVindas').innerHTML
+  .replace('Pinharas Contabilidade', ESC_NOME)
+  .replace('o Sérgio', `${CONT_NOME.split(' ')[0]}`);
+document.getElementById('disclaimerNome').textContent = document.getElementById('disclaimerNome').textContent.replace('Pinharas Contabilidade', ESC_NOME);
+
+const SYSTEM = `Você é o assistente virtual da ${ESC_NOME}, escritório de contabilidade consultiva e consultoria financeira, com sede em ${CIDADE}.
+
+Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais do dia a dia enquanto o(a) ${CONT_NOME} e a equipe estão em atendimento.
 
 SOBRE O ESCRITÓRIO:
-- Nome: Pinharas Contabilidade
-- Contador responsável: Sérgio Araújo — graduado pela Universidade Estadual da Paraíba (UEPB), atuação em contábil, pessoal, fiscal e financeiro
+- Nome: ${ESC_NOME}
+- Contador(a) responsável: ${CONT_NOME}
 - Posicionamento: consultoria financeira e contabilidade consultiva, com foco em resultados de alto retorno para o cliente
-- Endereço: Rua Dr. Pedro Firmino, sala 604, nº 107, Centro, Patos/PB
-- Contato: WhatsApp 83 99646-6525 · Instagram @pinharas
-- Segmentos atendidos: Marketing, Advocacia, Profissionais da Saúde, Engenheiros e Arquitetos, Instituições de Ensino, Consultórios e Clínicas, Empregadores Domésticos, Condomínios e Imobiliárias
+- Cidade: ${CIDADE}
 - Especialidades gerais: Abertura MEI/ME, Assessoria Contábil, IRPF/IRPJ, Lucro Presumido/Real, Departamento Pessoal, Simples Nacional
 
 SKILL — SIMPLES NACIONAL:
@@ -370,10 +385,10 @@ OBRIGAÇÕES JULHO/2026:
 REGRAS DE ATENDIMENTO:
 - Seja simpático, paciente e claro — muitos clientes são pequenos empreendedores sem conhecimento técnico
 - Use linguagem simples, explique termos quando necessário
-- Quando a dúvida for específica do caso do cliente, oriente a agendar consulta com o Sérgio
+- Quando a dúvida for específica do caso do cliente, oriente a agendar consulta com ${CONT_NOME.split(' ')[0]}
 - Máximo 4 parágrafos por resposta
 - Emojis com moderação
-- Sempre termine com: "Para o seu caso específico, o Sérgio pode te atender pessoalmente no escritório ou pelo WhatsApp 😊"
+- Sempre termine com: "Para o seu caso específico, ${CONT_NOME.split(' ')[0]} pode te atender pessoalmente no escritório ou pelo WhatsApp 😊"
 - ⚠️ Orientação geral — não substitui assessoria contábil formal. Dados protegidos pela LGPD — Lei 13.709/2018.`;
 
 let historico = [];
@@ -457,7 +472,7 @@ function fazerLogin(){
   const user = document.getElementById('login-user').value.trim().toLowerCase();
   const pass = document.getElementById('login-pass').value.trim();
   const err = document.getElementById('login-err');
-  if(user==='sergio' && pass==='6525'){
+  if(user===LOGIN && pass===SENHA){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='flex';
     err.textContent='';
