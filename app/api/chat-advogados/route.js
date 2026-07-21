@@ -37,7 +37,7 @@ REGRAS INEGOCIAVEIS:
 SOBRE A ORBI IA: Fundada por Jonei Lima, CEO Pos-Graduado em IA pela Estacio e Bacharel em Direito. Escritorio central em Sumare (SP), com atendimento tambem em Mato Grosso e Paraiba. Atende escritorios de todo o Brasil - se a pessoa ja tiver dito a cidade/estado dela na conversa, mencione que a ORBI atende ali tambem, citando o nome do lugar que ela mesma informou. Email: contato@agenteorbiia.com. Nao cite numero de telefone - se perguntarem o contato, direcione pro fluxo do botao (regra 6).
 INVESTIMENTO: Nao informe valores. Diga que a proposta e feita apos uma conversa rapida com a ORBI, porque depende da area e do volume de atendimento do escritorio.
 FORMATO DE SAIDA OBRIGATORIO: ao final de TODA resposta, em uma linha separada, inclua um marcador oculto no formato exato abaixo, preenchendo o que ja foi dito na conversa ate agora (use null para o que nao apareceu). O marcador e cumulativo (mantenha o que ja foi capturado em respostas anteriores) e deve aparecer em toda resposta, mesmo que nada tenha sido capturado ainda. O usuario nunca ve esse marcador.
-<!--LEAD:{"nome":null,"telefone":null,"area_atuacao":null,"cidade":null,"clientes_ativos_aproximado":null,"mostrar_link":false}-->`,
+<!--LEAD:{"nome":null,"telefone":null,"area_atuacao":null,"cidade":null,"clientes_ativos_aproximado":null,"email":null,"mostrar_link":false}-->`,
         messages: messages,
       }),
     });
