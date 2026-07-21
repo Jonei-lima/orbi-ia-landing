@@ -1012,7 +1012,7 @@ function toggleChat() {
 // ── NUDGE: pulsa chat + WhatsApp depois de ~35% de rolagem sem abrir o chat ──
 let chatNudged = false;
 function clearNudge() {
-  chatNudged = true; // já não pulsa mais depois de abrir uma vez
+  chatNudged = true;
   document.getElementById('chat-trigger')?.classList.remove('is-nudged');
   document.getElementById('wa-float')?.classList.remove('is-nudged');
 }
@@ -1092,17 +1092,15 @@ async function maybeSaveLead(leadFields) {
       body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc, ...orbiUtm }),
     });
     if (res.ok) {
-      // ── TODO: criar conversão "Lead ADV" no Google Ads e trocar o rótulo abaixo.
-      // NÃO usar o rótulo do Agro (YVgbCOe6380cEN-xiYZD) — mistura relatório.
-      // try {
-      //   if (typeof gtag === 'function') {
-      //     gtag('event', 'conversion', {
-      //       'send_to': 'AW-17997912287/TODO_LABEL_LEAD_ADV',
-      //       'value': 120.00,
-      //       'currency': 'BRL'
-      //     });
-      //   }
-      // } catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
+      try {
+        if (typeof gtag === 'function') {
+          gtag('event', 'conversion', {
+            'send_to': 'AW-17997912287/bgZ1COuLttQcEN-xiYZD',
+            'value': 120.00,
+            'currency': 'BRL'
+          });
+        }
+      } catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
       try {
         if (typeof fbq === 'function') {
           fbq('track', 'Lead', {
