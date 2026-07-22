@@ -155,6 +155,7 @@ export async function POST(req: Request) {
           quantidade_clientes_aproximada: quantidade_clientes_aproximada || null,
           perfil_carteira: perfil_carteira || null,
           email: email || null,
+          last_seen_at: new Date().toISOString(),
         })
         .eq("id", existente.id);
       if (error) {
@@ -180,6 +181,7 @@ export async function POST(req: Request) {
           utm_content: utm_content || null,
           utm_term: utm_term || null,
           fbclid: fbclid || null,
+          last_seen_at: new Date().toISOString(),
         }]);
       if (error) {
         console.error("SUPABASE ERROR:", error);
