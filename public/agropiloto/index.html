@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORBI Agro — Marcelo Mecena</title>
+<title id="pageTitle">ORBI Agro — Demonstração</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -154,8 +154,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="user-pill">
-        <div class="user-avatar">MM</div>
-        <span class="user-name">Marcelo Mecena</span>
+        <div class="user-avatar" id="userAvatar">P</div>
+        <span class="user-name" id="userNameTopbar">Produtor</span>
       </div>
       <button class="logout-btn" onclick="fazerLogout()">sair</button>
     </div>
@@ -185,7 +185,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="sidebar-divider"></div>
 
       <div class="sidebar-section">
-        <div class="sidebar-label">Talhões da fazenda</div>
+        <div class="sidebar-label">Talhões — exemplo</div>
       </div>
 
       <div class="caso-card">
@@ -236,7 +236,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="msg-avatar">OA</div>
           <div class="msg-content">
             <span class="msg-name">ORBI Agro</span>
-            <div class="msg-bubble" id="msgBoasVindas">Oi, Marcelo! 👋<br><br>Sou seu assistente da Fazenda Serra da Petrovina. Pode me contar o que está vendo na lavoura — folha, praga, dúvida de manejo ou planejamento de safra — que eu te ajudo com base no histórico dos seus talhões.<br><br>Como posso ajudar?</div>
+            <div class="msg-bubble" id="msgBoasVindas">Carregando...</div>
             <span class="msg-time">agora</span>
           </div>
         </div>
@@ -252,8 +252,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
       <div class="suggestions" id="suggestions">
         <button class="sug" onclick="enviarSug(this)">Minhas folhas de soja estão com manchas amarronzadas</button>
-        <button class="sug" onclick="enviarSug(this)">Vi lagartas no milho do Talhão Y hoje</button>
-        <button class="sug" onclick="enviarSug(this)">Quando plantar soja na próxima safra em Rondonópolis?</button>
+        <button class="sug" onclick="enviarSug(this)">Vi lagartas no milho hoje</button>
+        <button class="sug" onclick="enviarSug(this)">Quando plantar soja na próxima safra?</button>
         <button class="sug" onclick="enviarSug(this)">Como identificar ferrugem asiática?</button>
         <button class="sug" onclick="enviarSug(this)">Folha do milho com fileiras de ovos</button>
       </div>
@@ -261,7 +261,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="disclaimer">Demo exclusivo · ORBI IA — Decisões de manejo, dosagem e aplicação são de responsabilidade exclusiva do Agrônomo responsável</div>
 
       <div class="input-area">
-        <textarea class="chat-input" id="chat-input" placeholder="Digite aqui — como se fosse o Marcelo..." rows="1"
+        <textarea class="chat-input" id="chat-input" placeholder="Digite aqui — como se fosse o produtor..." rows="1"
           onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviar()}"
           oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
         <button class="send-btn" id="send-btn" onclick="enviar()">
@@ -273,17 +273,35 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
-const AGRO_LOGIN = 'marcelo';
-const AGRO_SENHA = 'mecena';
+// Customização via URL, mesmo padrão do /contabil e /adv:
+// ?fazenda=Fazenda%20Modelo&produtor=Nome&cidade=Cidade/UF&login=usuario&senha=senha
+const params = new URLSearchParams(window.location.search);
+const FAZENDA_NOME = params.get('fazenda') || 'Fazenda Modelo';
+const PRODUTOR_NOME = params.get('produtor') || 'Produtor';
+const CIDADE = params.get('cidade') || 'Rondonópolis/MT';
+const AGRO_LOGIN = (params.get('login') || 'demo').toLowerCase();
+const AGRO_SENHA = params.get('senha') || 'demo123';
 
-const SYSTEM = `Você é o Assistente ORBI Agro exclusivo de Marcelo Mecena, produtor rural na Fazenda Serra da Petrovina, próximo a Rondonópolis/MT.
+function iniciais(nome){
+  const partes = nome.trim().split(/\s+/);
+  if(partes.length === 1) return partes[0].substring(0,2).toUpperCase();
+  return (partes[0][0] + partes[partes.length-1][0]).toUpperCase();
+}
 
-CONTEXTO DA FAZENDA (dados fictícios de demonstração):
+document.getElementById('pageTitle').textContent = `ORBI Agro — ${PRODUTOR_NOME}`;
+document.getElementById('userAvatar').textContent = iniciais(PRODUTOR_NOME);
+document.getElementById('userNameTopbar').textContent = PRODUTOR_NOME;
+document.getElementById('msgBoasVindas').innerHTML =
+  `Oi, ${PRODUTOR_NOME}! 👋<br><br>Sou seu assistente da ${FAZENDA_NOME}. Pode me contar o que está vendo na lavoura — folha, praga, dúvida de manejo ou planejamento de safra — que eu te ajudo com base no histórico dos seus talhões.<br><br>Como posso ajudar?`;
+
+const SYSTEM = `Você é o Assistente ORBI Agro exclusivo de ${PRODUTOR_NOME}, produtor rural na ${FAZENDA_NOME}, em ${CIDADE}.
+
+CONTEXTO DA FAZENDA (dados fictícios de demonstração, ilustrativos — não são registros reais):
 - Talhão X: 480 ha de soja, safra 2025/26 já colhida, histórico de ferrugem asiática em safras anteriores.
 - Talhão Y: 370 ha de milho safrinha 2026, estágio vegetativo (cartucho formado), alerta ativo de lagarta-do-cartucho.
 - Total: 850 ha, 2 talhões ativos.
 
-CONHECIMENTO TÉCNICO (região de Rondonópolis/MT, solo Latossolo):
+CONHECIMENTO TÉCNICO (calibrado para a região de Rondonópolis/MT, solo Latossolo — ajuste manual se o produtor for de outra região):
 - Janela de plantio ZARC para soja e milho safrinha na região.
 - Ferrugem asiática na soja: sintomas (pústulas amarronzadas na face inferior da folha), condições favoráveis (umidade alta, temperatura amena), orientação geral de controle.
 - Lagarta-do-cartucho no milho: identificação (folhas raspadas, fileiras de ovos, orifícios no cartucho), nível de controle, quando acionar o agrônomo.
@@ -293,11 +311,12 @@ CONHECIMENTO TÉCNICO (região de Rondonópolis/MT, solo Latossolo):
 REGRAS OBRIGATÓRIAS:
 1. Nunca afirme dados que não foram informados pelo produtor — pergunte antes de assumir.
 2. Nunca decida manejo, dosagem ou aplicação de defensivos — isso é exclusivo do Agrônomo responsável. Oriente e recomende buscar o agrônomo quando o caso exigir.
-3. SEJA DIRETO E CURTO: máximo 2 parágrafos curtos por resposta. Vá direto ao ponto prático.
-4. FORMATO WHATSAPP, NÃO RELATÓRIO: nunca use títulos com #, nunca use listas numeradas ou com marcadores. Escreva como uma mensagem de WhatsApp corrida.
-5. Este é um ambiente de demonstração com dados fictícios — se perguntado, seja transparente sobre isso.
-6. Emojis com moderação.
-7. Sempre termine com: "⚠️ Orientação geral — decisões de manejo, dosagem e aplicação são de responsabilidade exclusiva do Agrônomo responsável."`;
+3. Os talhões acima são exemplo ilustrativo de demonstração — nunca afirme que são o histórico real da fazenda de ${PRODUTOR_NOME}.
+4. SEJA DIRETO E CURTO: máximo 2 parágrafos curtos por resposta. Vá direto ao ponto prático.
+5. FORMATO WHATSAPP, NÃO RELATÓRIO: nunca use títulos com #, nunca use listas numeradas ou com marcadores. Escreva como uma mensagem de WhatsApp corrida.
+6. Este é um ambiente de demonstração com dados fictícios — se perguntado, seja transparente sobre isso.
+7. Emojis com moderação.
+8. Sempre termine com: "⚠️ Orientação geral — decisões de manejo, dosagem e aplicação são de responsabilidade exclusiva do Agrônomo responsável."`;
 
 let historico = [];
 let enviando = false;
@@ -356,7 +375,7 @@ async function enviar(){
   enviando = true;
   mostrarTyping(true);
   try{
-    const res = await fetch('/api/adv', {
+    const res = await fetch('/api/agro', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({messages: historico, system: SYSTEM})
