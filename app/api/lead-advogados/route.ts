@@ -11,8 +11,11 @@ const supabase = createClient(
 // NÃO reutilizar com outro nicho — cada LP tem o próprio pixel e o próprio token CAPI.
 const META_PIXEL_ID = "1030105936066490";
 
+// Trim + lowercase antes de hashear — Meta espera exatamente esse normalização
+// pra bater com o hash que ele calcula do lado dele (email/nome/cidade). Sem
+// isso, fn/ln/ct podem sair "preenchidos" no payload mas não terem match nenhum.
 function sha256(input: string) {
-  return crypto.createHash("sha256").update(input).digest("hex");
+  return crypto.createHash("sha256").update(input.trim().toLowerCase()).digest("hex");
 }
 
 // Normaliza telefone BR pro formato que o Meta espera pra hash: só dígitos,
@@ -25,8 +28,18 @@ function normalizePhoneBR(raw?: string | null) {
   return digits;
 }
 
+// Divide "João da Silva" em primeiro/último nome pra Advanced Matching (fn/ln).
+function splitNome(nomeCompleto?: string | null) {
+  const partes = (nomeCompleto || "").trim().split(/\s+/).filter(Boolean);
+  const primeiro = partes[0] || "";
+  const ultimo = partes.length > 1 ? partes[partes.length - 1] : "";
+  return { primeiro, ultimo };
+}
+
 async function sendMetaCAPI(params: {
+  nome?: string;
   telefone?: string;
+  cidade?: string | null;
   eventId?: string;
   fbp?: string;
   fbc?: string;
@@ -40,8 +53,13 @@ async function sendMetaCAPI(params: {
   }
 
   const phoneDigits = normalizePhoneBR(params.telefone);
+  const { primeiro, ultimo } = splitNome(params.nome);
+
   const userData: Record<string, any> = {};
   if (phoneDigits) userData.ph = [sha256(phoneDigits)];
+  if (primeiro) userData.fn = [sha256(primeiro)];
+  if (ultimo) userData.ln = [sha256(ultimo)];
+  if (params.cidade) userData.ct = [sha256(params.cidade)];
   if (params.fbp) userData.fbp = params.fbp;
   if (params.fbc) userData.fbc = params.fbc;
   if (params.clientIp) userData.client_ip_address = params.clientIp;
@@ -202,7 +220,8 @@ export async function POST(req: Request) {
     // 4️⃣ META CONVERSIONS API — evento Lead server-side
     // Resiliente a ad blocker / Safari ITP / cookie bloqueado no navegador.
     // Usa o MESMO event_id que o fbq() do navegador manda, pra Meta deduplicar
-    // e não contar o lead 2x.
+    // e não contar o lead 2x. Advanced Matching agora com telefone + nome (fn/ln)
+    // + cidade (ct) hasheados — igual ao Agro/Contador/Clínicas.
     // =====================
     const clientIp =
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -211,7 +230,9 @@ export async function POST(req: Request) {
     const userAgent = req.headers.get("user-agent") || undefined;
 
     await sendMetaCAPI({
+      nome,
       telefone,
+      cidade,
       eventId: event_id,
       fbp,
       fbc,
