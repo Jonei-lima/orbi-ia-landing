@@ -163,6 +163,7 @@ export async function POST(req: Request) {
           cidade: cidade || null,
           clientes_ativos_aproximado: clientes_ativos_aproximado || null,
           email: email || null,
+          last_seen_at: new Date().toISOString(),
         })
         .eq("id", existente.id);
       if (error) {
@@ -186,6 +187,7 @@ export async function POST(req: Request) {
           utm_content: utm_content || null,
           utm_term: utm_term || null,
           fbclid: fbclid || null,
+          last_seen_at: new Date().toISOString(),
         },
       ]);
       if (error) {
