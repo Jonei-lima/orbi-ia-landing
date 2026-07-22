@@ -195,6 +195,7 @@ export async function POST(req: Request) {
           segment: segmento,
           email: email || null,
           resumo_conversa: montaResumo(clinica, sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual),
+          last_seen_at: new Date().toISOString(),
         })
         .eq("id", existente.id);
     } else {
@@ -212,6 +213,7 @@ export async function POST(req: Request) {
           utm_content: utm_content || null,
           utm_term: utm_term || null,
           fbclid: fbclid || null,
+          last_seen_at: new Date().toISOString(),
         },
       ]);
     }
