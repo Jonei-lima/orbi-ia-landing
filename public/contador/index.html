@@ -417,14 +417,6 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
   gtag('config', 'AW-17997912287');
 </script>
 
-<!-- ════════════════════════════════════════════════════════════════════
-     TODO PENDENTE (só isso falta):
-     GOOGLE ADS: criar conversão "Lead Contador" e trocar o rótulo
-     TODO_LABEL_LEAD_CONTADOR no evento de conversão lá embaixo no chat.
-     NÃO reutilizar o rótulo do Agro (YVgbCOe6380cEN-xiYZD) nem o da
-     Plena/Clínicas (FnWMCI_Rvc4cEN-xiYZD).
-     O Meta Pixel abaixo já está ativo e rastreando normal.
-════════════════════════════════════════════════════════════════════ -->
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -1053,7 +1045,17 @@ const msgsEl = document.getElementById('chat-msgs');
 const inputEl = document.getElementById('chat-input');
 const sendBtn = document.getElementById('chat-send');
 let chatHistory = [];
-let leadSaved = false;
+// Antes: "leadSaved" travava a 1ª chamada pra sempre — a conversa continuava,
+// mas o /api/lead-contador nunca era chamado de novo, então o "mostrar_link:true"
+// do fim da conversa nunca chegava no backend. Trocado por um snapshot: só reenvia
+// quando o conteúdo do marcador realmente mudou (permite reenviar a cada novo
+// campo capturado, inclusive o "mostrar_link" final).
+let lastLeadSnapshot = '';
+// event_id fixo por conversa (gerado uma vez, reaproveitado em toda chamada) —
+// necessário pro Meta deduplicar corretamente entre client-pixel e CAPI. Antes
+// era gerado de novo a cada chamada, o que geraria eventos de Lead diferentes
+// (não deduplicados) se a trava antiga não estivesse mascarando o problema.
+let leadEventId = null;
 
 function extractLeadMarker(rawText) {
   const match = rawText.match(/<!--LEAD:([\s\S]*?)-->/);
@@ -1065,13 +1067,18 @@ function extractLeadMarker(rawText) {
 }
 
 async function maybeSaveLead(leadFields) {
-  if (!leadFields || leadSaved) return;
+  if (!leadFields) return;
   if (!leadFields.nome || !leadFields.telefone) return;
-  leadSaved = true;
 
-  const eventId = (typeof crypto !== 'undefined' && crypto.randomUUID)
-    ? crypto.randomUUID()
-    : `evt_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  const snapshot = JSON.stringify(leadFields);
+  if (snapshot === lastLeadSnapshot) return;
+  lastLeadSnapshot = snapshot;
+
+  if (!leadEventId) {
+    leadEventId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `evt_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  }
   const fbp = getCookie('_fbp');
   const fbc = getCookie('_fbc');
 
@@ -1079,33 +1086,39 @@ async function maybeSaveLead(leadFields) {
     const res = await fetch('/api/lead-contador', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc, ...orbiUtm }),
+      body: JSON.stringify({ ...leadFields, event_id: leadEventId, fbp, fbc, ...orbiUtm }),
     });
     if (res.ok) {
-      try {
-        if (typeof gtag === 'function') {
-          gtag('event', 'conversion', {
-            'send_to': 'AW-17997912287/pjwfCKX7sdQcEN-xiYZD',
-            'value': 100.00,
-            'currency': 'BRL'
-          });
-        }
-      } catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
-      try {
-        if (typeof fbq === 'function') {
-          fbq('track', 'Lead', {
-            content_name: 'Lead Contador ORBI',
-            content_category: 'Lead Qualificado',
-            value: 100.00,
-            currency: 'BRL',
-            lead_type: 'Chat Landing Contador'
-          }, { eventID: eventId });
-        }
-      } catch (fbqErr) { console.error('Falha Lead Meta:', fbqErr); }
+      const data = await res.json().catch(() => null);
+      // Só dispara o pixel/gtag de conversão no momento real da notificação
+      // (backend confirma "notified:true") — nunca nos saves parciais de cada
+      // turno, senão infla o número de Leads reportado pro Meta/Google.
+      if (data?.notified) {
+        try {
+          if (typeof gtag === 'function') {
+            gtag('event', 'conversion', {
+              'send_to': 'AW-17997912287/pjwfCKX7sdQcEN-xiYZD',
+              'value': 100.00,
+              'currency': 'BRL'
+            });
+          }
+        } catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
+        try {
+          if (typeof fbq === 'function') {
+            fbq('track', 'Lead', {
+              content_name: 'Lead Contador ORBI',
+              content_category: 'Lead Qualificado',
+              value: 100.00,
+              currency: 'BRL',
+              lead_type: 'Chat Landing Contador'
+            }, { eventID: leadEventId });
+          }
+        } catch (fbqErr) { console.error('Falha Lead Meta:', fbqErr); }
+      }
     }
   } catch (err) {
     console.error('Falha ao salvar lead de contador:', err);
-    leadSaved = false;
+    lastLeadSnapshot = ''; // permite tentar de novo no próximo turno
   }
 }
 
