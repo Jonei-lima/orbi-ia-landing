@@ -11,15 +11,18 @@ const supabase = createClient(
 // NÃO reutilizar com outro nicho — cada LP tem o próprio pixel e o próprio token CAPI.
 const META_PIXEL_ID = "1030105936066490";
 
-// Trim + lowercase antes de hashear — Meta espera exatamente esse normalização
+// Trim + lowercase antes de hashear — Meta espera exatamente essa normalização
 // pra bater com o hash que ele calcula do lado dele (email/nome/cidade). Sem
 // isso, fn/ln/ct podem sair "preenchidos" no payload mas não terem match nenhum.
 function sha256(input: string) {
   return crypto.createHash("sha256").update(input.trim().toLowerCase()).digest("hex");
 }
 
-// Normaliza telefone BR pro formato que o Meta espera pra hash: só dígitos,
-// com código do país (55) na frente.
+// Normaliza telefone BR pro formato que o Meta espera pra hash, e também pro
+// formato ÚNICO usado na coluna "phone" da tabela compartilhada: só dígitos,
+// com código do país (55) na frente. Antes esse arquivo salvava o telefone
+// cru (sem normalizar) no banco — diferente de Agro/Contador/Clínicas, o que
+// quebrava a ideia de "telefone único" entre os 4 verticais.
 function normalizePhoneBR(raw?: string | null) {
   if (!raw) return null;
   let digits = raw.replace(/\D/g, "");
@@ -38,7 +41,7 @@ function splitNome(nomeCompleto?: string | null) {
 
 async function sendMetaCAPI(params: {
   nome?: string;
-  telefone?: string;
+  telefoneNormalizado?: string | null;
   cidade?: string | null;
   eventId?: string;
   fbp?: string;
@@ -52,11 +55,10 @@ async function sendMetaCAPI(params: {
     return;
   }
 
-  const phoneDigits = normalizePhoneBR(params.telefone);
   const { primeiro, ultimo } = splitNome(params.nome);
 
   const userData: Record<string, any> = {};
-  if (phoneDigits) userData.ph = [sha256(phoneDigits)];
+  if (params.telefoneNormalizado) userData.ph = [sha256(params.telefoneNormalizado)];
   if (primeiro) userData.fn = [sha256(primeiro)];
   if (ultimo) userData.ln = [sha256(ultimo)];
   if (params.cidade) userData.ct = [sha256(params.cidade)];
@@ -114,6 +116,7 @@ export async function POST(req: Request) {
       cidade,
       clientes_ativos_aproximado,
       email,
+      mostrar_link,
       event_id,
       fbp,
       fbc,
@@ -134,37 +137,70 @@ export async function POST(req: Request) {
       );
     }
 
-    // =====================
-    // 1️⃣ SALVAR NO BANCO (tabela compartilhada "leads")
-    // Agora também gravando email + utm_source/utm_medium/utm_campaign/utm_content/utm_term/fbclid
-    // (mesma tabela usada por agro/contador/clinicas — colunas já existem via
-    // add-colunas-agro-utm.sql, rodado uma vez só).
-    // =====================
-    const { error } = await supabase.from("leads").insert([
-      {
-        name: nome,
-        phone: telefone,
-        segment: "advogados",
-        source: "chat_landing_advogados",
-        area_atuacao: area_atuacao || null,
-        cidade: cidade || null,
-        clientes_ativos_aproximado: clientes_ativos_aproximado || null,
-        email: email || null,
-        utm_source: utm_source || null,
-        utm_medium: utm_medium || null,
-        utm_campaign: utm_campaign || null,
-        utm_content: utm_content || null,
-        utm_term: utm_term || null,
-        fbclid: fbclid || null,
-      },
-    ]);
+    const telefoneNormalizado = normalizePhoneBR(telefone);
 
-    if (error) {
-      console.error("SUPABASE ERROR:", error);
-      return NextResponse.json(
-        { success: false, error: "Erro banco." },
-        { status: 500 }
-      );
+    // Busca se esse telefone já existe (tabela "leads" é compartilhada entre os
+    // 4 verticais, UNIQUE em phone). Sem essa checagem, um insert() cego quebra
+    // com "duplicate key" toda vez que o telefone já apareceu antes — em
+    // QUALQUER vertical — e a função morre ali, sem notificar nada.
+    const { data: existente } = await supabase
+      .from("leads")
+      .select("id, handoff_enviado")
+      .eq("phone", telefoneNormalizado)
+      .maybeSingle();
+
+    // =====================
+    // SEMPRE salva/atualiza — protege contra perder o lead e evita o erro de
+    // chave duplicada. UTM/fbclid só são gravados na criação. Telefone agora
+    // normalizado (igual Agro/Contador/Clínicas), não mais salvo cru.
+    // =====================
+    if (existente) {
+      const { error } = await supabase
+        .from("leads")
+        .update({
+          name: nome,
+          area_atuacao: area_atuacao || null,
+          cidade: cidade || null,
+          clientes_ativos_aproximado: clientes_ativos_aproximado || null,
+          email: email || null,
+        })
+        .eq("id", existente.id);
+      if (error) {
+        console.error("SUPABASE ERROR:", error);
+        return NextResponse.json({ success: false, error: "Erro banco." }, { status: 500 });
+      }
+    } else {
+      const { error } = await supabase.from("leads").insert([
+        {
+          name: nome,
+          phone: telefoneNormalizado,
+          segment: "advogados",
+          source: "chat_landing_advogados",
+          area_atuacao: area_atuacao || null,
+          cidade: cidade || null,
+          clientes_ativos_aproximado: clientes_ativos_aproximado || null,
+          email: email || null,
+          utm_source: utm_source || null,
+          utm_medium: utm_medium || null,
+          utm_campaign: utm_campaign || null,
+          utm_content: utm_content || null,
+          utm_term: utm_term || null,
+          fbclid: fbclid || null,
+        },
+      ]);
+      if (error) {
+        console.error("SUPABASE ERROR:", error);
+        return NextResponse.json({ success: false, error: "Erro banco." }, { status: 500 });
+      }
+    }
+
+    // =====================
+    // Só dispara e-mail + WhatsApp + CAPI quando a IA sinalizar "mostrar_link":true,
+    // e só uma vez por telefone (reaproveita handoff_enviado, mesma coluna da Clínicas).
+    // =====================
+    const jaNotificado = existente?.handoff_enviado === true;
+    if (!mostrar_link || jaNotificado) {
+      return NextResponse.json({ success: true, notified: false });
     }
 
     // =====================
@@ -196,9 +232,6 @@ export async function POST(req: Request) {
 
     // =====================
     // 3️⃣ ENVIAR WHATSAPP (EVOLUTION) — notifica VOCÊ
-    // ⚠️ ATENÇÃO: a instância ORBI_Trafego estava com restrição da Meta
-    // (falha silenciosa, status PENDING/500). Confirme que reconectou antes
-    // de contar com esse canal — o e-mail acima é o canal confiável hoje.
     // =====================
     const evolutionResponse = await fetch(
       `${process.env.EVOLUTION_URL}/message/sendText/ORBI_Trafego`,
@@ -216,12 +249,17 @@ export async function POST(req: Request) {
     );
     console.log("EVOLUTION STATUS:", evolutionResponse.status);
 
+    // Marca como notificado, pra nunca reenviar de novo pro mesmo telefone
+    const { error: marcaError } = await supabase
+      .from("leads")
+      .update({ handoff_enviado: true })
+      .eq("phone", telefoneNormalizado);
+    if (marcaError) console.error("ERRO AO MARCAR handoff_enviado:", marcaError);
+
     // =====================
     // 4️⃣ META CONVERSIONS API — evento Lead server-side
-    // Resiliente a ad blocker / Safari ITP / cookie bloqueado no navegador.
-    // Usa o MESMO event_id que o fbq() do navegador manda, pra Meta deduplicar
-    // e não contar o lead 2x. Advanced Matching agora com telefone + nome (fn/ln)
-    // + cidade (ct) hasheados — igual ao Agro/Contador/Clínicas.
+    // Advanced Matching agora com telefone + nome (fn/ln) + cidade (ct) hasheados
+    // — igual ao Agro/Contador/Clínicas.
     // =====================
     const clientIp =
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -231,7 +269,7 @@ export async function POST(req: Request) {
 
     await sendMetaCAPI({
       nome,
-      telefone,
+      telefoneNormalizado,
       cidade,
       eventId: event_id,
       fbp,
@@ -240,7 +278,7 @@ export async function POST(req: Request) {
       userAgent,
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, notified: true });
   } catch (error: any) {
     console.error("ERRO GERAL:", error);
     return NextResponse.json(
