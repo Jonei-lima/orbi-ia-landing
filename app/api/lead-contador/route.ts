@@ -107,6 +107,7 @@ export async function POST(req: Request) {
       quantidade_clientes_aproximada,
       perfil_carteira,
       email,
+      mostrar_link,
       event_id,
       fbp,
       fbc,
@@ -129,38 +130,70 @@ export async function POST(req: Request) {
 
     const telefoneNormalizado = normalizePhoneBR(telefone);
 
-    // =====================
-    // 1️⃣ SALVAR NO BANCO (tabela compartilhada "leads")
-    // Colunas novas do contador (escritorio/quantidade_clientes_aproximada/perfil_carteira)
-    // + UTM/fbclid já devem ter sido criadas via add-colunas-contador.sql e
-    // add-colunas-agro-utm.sql (mesma tabela, só precisa rodar uma vez cada).
-    // =====================
-    const { error } = await supabase
+    // Busca se esse telefone já existe (tabela "leads" é compartilhada entre os
+    // 4 verticais, UNIQUE em phone). Sem essa checagem, um insert() cego quebra
+    // com "duplicate key" toda vez que o telefone já apareceu antes — em
+    // QUALQUER vertical — e a função morre ali, sem notificar nada (foi o que
+    // aconteceu no teste de hoje: o Agro já tinha criado esse telefone antes).
+    const { data: existente } = await supabase
       .from("leads")
-      .insert([{
-        name: nome,
-        phone: telefoneNormalizado,
-        segment: "contador",
-        source: "chat_landing_contador",
-        escritorio: escritorio || null,
-        municipio: municipio || null,
-        quantidade_clientes_aproximada: quantidade_clientes_aproximada || null,
-        perfil_carteira: perfil_carteira || null,
-        email: email || null,
-        utm_source: utm_source || null,
-        utm_medium: utm_medium || null,
-        utm_campaign: utm_campaign || null,
-        utm_content: utm_content || null,
-        utm_term: utm_term || null,
-        fbclid: fbclid || null,
-      }]);
+      .select("id, handoff_enviado")
+      .eq("phone", telefoneNormalizado)
+      .maybeSingle();
 
-    if (error) {
-      console.error("SUPABASE ERROR:", error);
-      return NextResponse.json(
-        { success: false, error: "Erro banco." },
-        { status: 500 }
-      );
+    // =====================
+    // SEMPRE salva/atualiza — protege contra perder o lead e evita o erro de
+    // chave duplicada. UTM/fbclid só são gravados na criação.
+    // =====================
+    if (existente) {
+      const { error } = await supabase
+        .from("leads")
+        .update({
+          name: nome,
+          escritorio: escritorio || null,
+          municipio: municipio || null,
+          quantidade_clientes_aproximada: quantidade_clientes_aproximada || null,
+          perfil_carteira: perfil_carteira || null,
+          email: email || null,
+        })
+        .eq("id", existente.id);
+      if (error) {
+        console.error("SUPABASE ERROR:", error);
+        return NextResponse.json({ success: false, error: "Erro banco." }, { status: 500 });
+      }
+    } else {
+      const { error } = await supabase
+        .from("leads")
+        .insert([{
+          name: nome,
+          phone: telefoneNormalizado,
+          segment: "contador",
+          source: "chat_landing_contador",
+          escritorio: escritorio || null,
+          municipio: municipio || null,
+          quantidade_clientes_aproximada: quantidade_clientes_aproximada || null,
+          perfil_carteira: perfil_carteira || null,
+          email: email || null,
+          utm_source: utm_source || null,
+          utm_medium: utm_medium || null,
+          utm_campaign: utm_campaign || null,
+          utm_content: utm_content || null,
+          utm_term: utm_term || null,
+          fbclid: fbclid || null,
+        }]);
+      if (error) {
+        console.error("SUPABASE ERROR:", error);
+        return NextResponse.json({ success: false, error: "Erro banco." }, { status: 500 });
+      }
+    }
+
+    // =====================
+    // Só dispara e-mail + WhatsApp + CAPI quando a IA sinalizar "mostrar_link":true,
+    // e só uma vez por telefone (reaproveita handoff_enviado, mesma coluna da Clínicas).
+    // =====================
+    const jaNotificado = existente?.handoff_enviado === true;
+    if (!mostrar_link || jaNotificado) {
+      return NextResponse.json({ success: true, notified: false });
     }
 
     // =====================
@@ -193,8 +226,6 @@ export async function POST(req: Request) {
 
     // =====================
     // 3️⃣ ENVIAR WHATSAPP (EVOLUTION) — notifica VOCÊ
-    // ⚠️ ATENÇÃO: a instância ORBI_Trafego pode estar com restrição da Meta.
-    // Se o aviso não chegar, o e-mail acima é o canal confiável.
     // =====================
     const evolutionResponse = await fetch(
       `${process.env.EVOLUTION_URL}/message/sendText/ORBI_Trafego`,
@@ -211,6 +242,13 @@ export async function POST(req: Request) {
       }
     );
     console.log("EVOLUTION STATUS:", evolutionResponse.status);
+
+    // Marca como notificado, pra nunca reenviar de novo pro mesmo telefone
+    const { error: marcaError } = await supabase
+      .from("leads")
+      .update({ handoff_enviado: true })
+      .eq("phone", telefoneNormalizado);
+    if (marcaError) console.error("ERRO AO MARCAR handoff_enviado:", marcaError);
 
     // =====================
     // 4️⃣ Meta CAPI — mesmo event_id do fbq disparado no navegador (dedup),
@@ -232,7 +270,7 @@ export async function POST(req: Request) {
       userAgent,
     });
 
-    return NextResponse.json({ success: true, eventId });
+    return NextResponse.json({ success: true, notified: true, eventId });
   } catch (error: any) {
     console.error("ERRO GERAL:", error);
     return NextResponse.json(
