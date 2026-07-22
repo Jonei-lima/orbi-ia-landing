@@ -349,12 +349,6 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
 }
 .wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.5); }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ── NUDGE (pulso + badge no chat e no WhatsApp após ~35% de rolagem) ── */
-@keyframes orbiPulseRing { 0% { transform: scale(1); opacity: 0.75; } 100% { transform: scale(1.9); opacity: 0; } }
-.orbi-nudge-ring { position: absolute; top: -2px; right: -2px; bottom: -2px; left: -2px; border-radius: 50%; background: #e53935; opacity: 0.75; animation: orbiPulseRing 1.4s ease-out infinite; pointer-events: none; display: none; }
-.orbi-nudge-badge { position: absolute; top: -4px; right: -4px; width: 20px; height: 20px; background: #e53935; color: #fff; font-size: 11px; font-weight: 700; border-radius: 50%; display: none; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
-.is-nudged .orbi-nudge-ring, .is-nudged .orbi-nudge-badge { display: flex; }
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -417,19 +411,6 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
 .dores-list li strong { color: #fff; }
 .dores-x { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(168,132,44,0.25); border: 1px solid rgba(168,132,44,0.6); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #D9B45A; margin-top: 2px; }
 @media (max-width: 720px) { .dores-inner { padding: 0 24px; } }
-
-/* ── DADOS REAIS agora com vídeo de fundo (mãos passando pasta) ── */
-#dados { position: relative; overflow: hidden; }
-.dados-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.dados-video { width: 100%; height: 100%; object-fit: cover; }
-.dados-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(20,16,10,0.62) 0%, rgba(20,16,10,0.85) 100%); }
-#dados .section-inner { position: relative; z-index: 2; }
-#dados .s-label { color: #C9E0AE; }
-#dados .s-label::before { background: #C9E0AE; }
-#dados .s-title { color: #F7F1E4; }
-#dados .s-title em { color: #F0C878; }
-#dados .dados-intro p { color: rgba(247,241,228,0.85); }
-#dados .dados-note { color: rgba(247,241,228,0.7); }
 </style>
 
 <!-- Google Ads (mesma conta do Agro — a CONVERSÃO é separada, veja TODO abaixo) -->
@@ -445,7 +426,10 @@ footer { padding: 44px 56px; border-top: 1px solid var(--border); background: va
      TODO AINDA PENDENTE:
      1. GOOGLE ADS: criar conversão "Lead ADV" e trocar o rótulo
         TODO_LABEL_LEAD_ADV no evento de conversão lá embaixo no chat.
-     Meta Pixel: já configurado (ORBI ADV, id 1030105936066490).
+        NÃO usar o rótulo do Agro (YVgbCOe6380cEN-xiYZD) — mistura relatório.
+     Meta Pixel: já configurado (ORBI ADV, id 1030105936066490) — reativado
+     abaixo. Estava comentado nesse arquivo, ou seja, o pixel client-side
+     nunca disparou em produção até agora (só a CAPI server-side rodava).
 ════════════════════════════════════════════════════════════════════ -->
 <!-- Meta Pixel Code -->
 <script>
@@ -517,13 +501,22 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
 
 <div class="divider"></div>
 
-<!-- CTA (logo após o Hero) — fundo sólido, sem vídeo -->
-<section id="cta" style="background: #14100A;">
-  <div class="cta-inner reveal">
-    <h2 class="cta-title">Pronto pra tirar seu escritório do modo espera?</h2>
-    <p class="cta-sub">Agenda uma conversa com a gente. A gente escuta o gargalo real do seu atendimento antes de propor qualquer coisa.</p>
-    <a href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20sou%20advogado(a)%20e%20quero%20saber%20mais%20sobre%20o%20ORBI%20Jur%C3%ADdico" class="btn-wheat" target="_blank">Falar com a ORBI Jurídico</a>
-    <p class="cta-note">Sem promessa vazia · Diagnóstico antes da proposta</p>
+<!-- DORES -->
+<section id="dores">
+  <div class="dores-video-wrap">
+    <video class="dores-video" autoplay muted loop playsinline poster="/advogados/img/dores-poster.jpg">
+      <source src="/advogados/video/dores-mesa-processos.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="dores-scrim"></div>
+  <div class="dores-inner reveal">
+    <h2 class="dores-title">Você reconhece esse dia?</h2>
+    <ul class="dores-list">
+      <li><span class="dores-x">✕</span><span><strong>Cliente cobrando resposta às 22h</strong> — e de novo às 7h, antes do seu primeiro café.</span></li>
+      <li><span class="dores-x">✕</span><span><strong>Família ligando durante a audiência</strong> — justo na hora em que você não pode atender ninguém.</span></li>
+      <li><span class="dores-x">✕</span><span><strong>"Doutor, como está meu processo?"</strong> pela quinta vez na semana — sobre a mesma movimentação que você já explicou.</span></li>
+      <li><span class="dores-x">✕</span><span><strong>Horas caçando jurisprudência</strong> que deveriam estar indo pra estratégia do caso.</span></li>
+    </ul>
   </div>
 </section>
 
@@ -531,12 +524,6 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
 
 <!-- DADOS REAIS -->
 <section id="dados">
-  <div class="dados-video-wrap">
-    <video class="dados-video" autoplay muted loop playsinline poster="/advogados/img/cta-poster.jpg">
-      <source src="/advogados/video/cta-fechamento-contrato.mp4" type="video/mp4">
-    </video>
-  </div>
-  <div class="dados-scrim"></div>
   <div class="section-inner">
     <div class="dados-intro reveal">
       <p class="s-label" style="justify-content:center;">Dado real, não promessa</p>
@@ -566,27 +553,6 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
       </div>
     </div>
     <p class="dados-note">Números do setor, citados com fonte. O que o ORBI Jurídico faz no seu escritório, a gente mostra no chat — sem prometer o que não entrega.</p>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- DORES -->
-<section id="dores">
-  <div class="dores-video-wrap">
-    <video class="dores-video" autoplay muted loop playsinline poster="/advogados/img/dores-poster.jpg">
-      <source src="/advogados/video/dores-mesa-processos.mp4" type="video/mp4">
-    </video>
-  </div>
-  <div class="dores-scrim"></div>
-  <div class="dores-inner reveal">
-    <h2 class="dores-title">Você reconhece esse dia?</h2>
-    <ul class="dores-list">
-      <li><span class="dores-x">✕</span><span><strong>Cliente cobrando resposta às 22h</strong> — e de novo às 7h, antes do seu primeiro café.</span></li>
-      <li><span class="dores-x">✕</span><span><strong>Família ligando durante a audiência</strong> — justo na hora em que você não pode atender ninguém.</span></li>
-      <li><span class="dores-x">✕</span><span><strong>"Doutor, como está meu processo?"</strong> pela quinta vez na semana — sobre a mesma movimentação que você já explicou.</span></li>
-      <li><span class="dores-x">✕</span><span><strong>Horas caçando jurisprudência</strong> que deveriam estar indo pra estratégia do caso.</span></li>
-    </ul>
   </div>
 </section>
 
@@ -658,7 +624,7 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
   <div class="manifesto-inner reveal">
     <div class="manifesto-mark">"</div>
     <p class="manifesto-text">
-      Heráclito, filósofo grego, já resumia o que a advocacia vive agora: <strong>"Nada é permanente, exceto a mudança."</strong> Na advocacia, essa régua já está correndo: 77% dos colegas já usam IA toda semana. Quem ainda atende tudo na mão vai continuar competindo — só que cada vez mais atrás.
+      Seth Godin, em <em style="font-style:normal;">A Vaca Roxa</em>, chama de <strong>"adaptadores"</strong> quem só muda quando o que usava virou passado — quando não sobra mais opção. Na advocacia, essa régua já está correndo: 77% dos colegas já usam IA toda semana. Quem ainda atende tudo na mão vai continuar competindo — só que cada vez mais atrás.
     </p>
     <p class="manifesto-source">A pergunta não é <em style="font-style:normal;color:inherit;">se</em> a IA vai entrar no escritório — isso já é fato. É se você entra agora, decidindo primeiro, ou depois, quando não decidir mais for opção.</p>
   </div>
@@ -671,7 +637,7 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
   <div class="section-inner">
     <div class="ciclo-intro reveal">
       <p class="s-label" style="justify-content:center;">Onde a IA entra</p>
-      <h2 class="s-title">A <em>jornada do cliente</em>, etapa por&nbsp;etapa</h2>
+      <h2 class="s-title">A <em>jornada do cliente</em>, etapa por etapa</h2>
       <p>Clique em cada fase e veja o que costuma dar errado — e onde o ORBI Jurídico ajuda.</p>
     </div>
     <div class="ciclo-tabs">
@@ -855,7 +821,7 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
       <div class="trust-card reveal">
         <div class="trust-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="trust-title">Sigilo e LGPD</div>
-        <div class="trust-text">Dado do cliente é tratado com o cuidado que o sigilo profissional exige. Coleta e uso seguem a LGPD (Lei 13.709/2020) — veja nossa <a href="https://www.agenteorbiia.com/politica" target="_blank" rel="noopener" style="color:var(--leaf-deep);text-decoration:underline;">política de privacidade</a>.</div>
+        <div class="trust-text">Dado do cliente é tratado com o cuidado que o sigilo profissional exige. Coleta e uso seguem a LGPD (Lei 13.709/2020).</div>
       </div>
       <div class="trust-card reveal">
         <div class="trust-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--leaf-deep)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
@@ -866,14 +832,18 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
   </div>
 </section>
 
-<div class="divider"></div>
-
-<!-- CTA FINAL (antes do rodapé) -->
-<section id="cta-final" style="background: #14100A;">
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-video-wrap">
+    <video class="cta-video" autoplay muted loop playsinline poster="/advogados/img/cta-poster.jpg">
+      <source src="/advogados/video/cta-fechamento-contrato.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="cta-scrim"></div>
   <div class="cta-inner reveal">
-    <h2 class="cta-title">Não deixe seu cliente esperando resposta</h2>
-    <p class="cta-sub">Fala com a gente agora e vê como o agente de IA funcionaria no seu escritório.</p>
-    <a href="#" onclick="toggleChat(); return false;" class="btn-wheat">Conversar com a IA agora</a>
+    <h2 class="cta-title">Pronto pra tirar seu escritório do modo espera?</h2>
+    <p class="cta-sub">Agenda uma conversa com a gente. A gente escuta o gargalo real do seu atendimento antes de propor qualquer coisa.</p>
+    <a href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20sou%20advogado(a)%20e%20quero%20saber%20mais%20sobre%20o%20ORBI%20Jur%C3%ADdico" class="btn-wheat" target="_blank">Falar com a ORBI Jurídico</a>
     <p class="cta-note">Sem promessa vazia · Diagnóstico antes da proposta</p>
   </div>
 </section>
@@ -906,7 +876,7 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
       </div>
     </div>
     <div style="padding-top:20px;">
-      <p style="font-size:0.72rem;color:var(--ink-soft);">© 2026 ORBI IA — Todos os direitos reservados. Lei 9.610/1998 · Lei 9.279/1996 · LGPD 13.709/2020 · A ORBI IA fornece tecnologia de atendimento para escritórios de advocacia e não presta serviços jurídicos. · <a href="https://www.agenteorbiia.com/politica" target="_blank" rel="noopener" style="color:var(--ink-soft);text-decoration:underline;">Política de Privacidade</a></p>
+      <p style="font-size:0.72rem;color:var(--ink-soft);">© 2026 ORBI IA — Todos os direitos reservados. Lei 9.610/1998 · Lei 9.279/1996 · LGPD 13.709/2020 · A ORBI IA fornece tecnologia de atendimento para escritórios de advocacia e não presta serviços jurídicos.</p>
     </div>
   </div>
 </footer>
@@ -955,15 +925,11 @@ src="https://www.facebook.com/tr?id=1030105936066490&ev=PageView&noscript=1"
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 20px rgba(53,80,126,0.4); transition: all 0.2s;
 " title="Tire suas dúvidas com o assistente">
-  <span class="orbi-nudge-ring"></span>
-  <span class="orbi-nudge-badge">1</span>
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 </button>
 
 <!-- WA FLOAT -->
-<a id="wa-float" class="wa-float" href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20sou%20advogado(a)%20e%20quero%20saber%20mais%20sobre%20o%20ORBI%20Jur%C3%ADdico" target="_blank" title="Fale conosco">
-  <span class="orbi-nudge-ring"></span>
-  <span class="orbi-nudge-badge">1</span>
+<a class="wa-float" href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20sou%20advogado(a)%20e%20quero%20saber%20mais%20sobre%20o%20ORBI%20Jur%C3%ADdico" target="_blank" title="Fale conosco">
   <svg viewBox="0 0 32 32" fill="white" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path d="M16 2C8.28 2 2 8.28 2 16c0 2.46.66 4.76 1.8 6.76L2 30l7.48-1.76A13.93 13.93 0 0 0 16 30c7.72 0 14-6.28 14-14S23.72 2 16 2zm0 25.4a11.34 11.34 0 0 1-5.78-1.58l-.42-.24-4.44 1.04 1.06-4.32-.28-.44A11.36 11.36 0 0 1 4.6 16C4.6 9.7 9.7 4.6 16 4.6S27.4 9.7 27.4 16 22.3 27.4 16 27.4zm6.22-8.5c-.34-.17-2-.98-2.3-1.1-.32-.1-.54-.16-.78.18-.22.34-.88 1.1-1.08 1.32-.2.22-.4.24-.74.08-.34-.18-1.42-.52-2.7-1.66a10.1 10.1 0 0 1-1.88-2.32c-.2-.34-.02-.52.14-.7.16-.14.34-.38.52-.56.16-.18.22-.3.34-.52.1-.22.06-.42-.02-.58-.08-.18-.78-1.88-1.06-2.58-.28-.68-.56-.58-.78-.6-.2-.02-.42-.02-.64-.02s-.58.08-.88.42c-.3.34-1.16 1.14-1.16 2.78s1.18 3.22 1.34 3.44c.18.22 2.34 3.56 5.66 5 .78.34 1.4.54 1.88.68.78.24 1.5.2 2.06.12.62-.1 1.94-.8 2.22-1.56.28-.76.28-1.4.2-1.56-.08-.14-.3-.22-.64-.38z"/></svg>
 </a>
 
@@ -1005,41 +971,7 @@ function toggleChat() {
   if (!isOpen) {
     const msgs = document.getElementById('chat-msgs');
     msgs.scrollTop = msgs.scrollHeight;
-    clearNudge();
   }
-}
-
-// ── NUDGE: pulsa chat + WhatsApp depois de ~35% de rolagem sem abrir o chat ──
-let chatNudged = false;
-function clearNudge() {
-  chatNudged = true;
-  document.getElementById('chat-trigger')?.classList.remove('is-nudged');
-  document.getElementById('wa-float')?.classList.remove('is-nudged');
-}
-window.addEventListener('scroll', () => {
-  if (chatNudged) return;
-  const total = document.documentElement.scrollHeight - window.innerHeight;
-  if (total > 0 && window.scrollY / total >= 0.35) {
-    chatNudged = true;
-    document.getElementById('chat-trigger')?.classList.add('is-nudged');
-    document.getElementById('wa-float')?.classList.add('is-nudged');
-  }
-}, { passive: true });
-
-// ── UTM / fbclid: captura na 1ª carga e persiste na sessão pra não perder o dado ──
-function getQueryParam(name) {
-  return new URLSearchParams(window.location.search).get(name);
-}
-const orbiUtm = {};
-['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'].forEach((k) => {
-  const fromUrl = getQueryParam(k);
-  if (fromUrl) sessionStorage.setItem('orbi_' + k, fromUrl);
-  orbiUtm[k] = fromUrl || sessionStorage.getItem('orbi_' + k) || null;
-});
-
-function getCookie(name) {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? match[2] : null;
 }
 
 // ── COUNTERS ──
@@ -1058,12 +990,30 @@ setTimeout(() => {
   animCounter(document.getElementById('c3'), 100, '%', 1400);
 }, 500);
 
+// ── UTM / fbclid: captura na 1ª carga e persiste na sessão pra não perder o dado ──
+// (faltava inteiramente nesse arquivo — Agro/Contador já capturavam isso.)
+function getQueryParam(name) {
+  return new URLSearchParams(window.location.search).get(name);
+}
+const orbiUtm = {};
+['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'].forEach((k) => {
+  const fromUrl = getQueryParam(k);
+  if (fromUrl) sessionStorage.setItem('orbi_' + k, fromUrl);
+  orbiUtm[k] = fromUrl || sessionStorage.getItem('orbi_' + k) || null;
+});
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
 // ── AI CHAT ──
 const msgsEl = document.getElementById('chat-msgs');
 const inputEl = document.getElementById('chat-input');
 const sendBtn = document.getElementById('chat-send');
 let chatHistory = [];
-let leadSaved = false;
+let lastLeadSnapshot = '';
+let leadEventId = null;
 
 function extractLeadMarker(rawText) {
   const match = rawText.match(/<!--LEAD:([\s\S]*?)-->/);
@@ -1075,13 +1025,20 @@ function extractLeadMarker(rawText) {
 }
 
 async function maybeSaveLead(leadFields) {
-  if (!leadFields || leadSaved) return;
+  if (!leadFields) return;
   if (!leadFields.nome || !leadFields.telefone) return;
-  leadSaved = true;
+  // Antes: um boolean "leadSaved" travava pra sempre depois da 1ª chamada
+  // (nome+telefone), então o POST final com mostrar_link:true nunca saía.
+  // Agora: compara snapshot do JSON e só reenvia quando os dados mudaram.
+  const snapshot = JSON.stringify(leadFields);
+  if (snapshot === lastLeadSnapshot) return;
+  lastLeadSnapshot = snapshot;
 
-  const eventId = (typeof crypto !== 'undefined' && crypto.randomUUID)
-    ? crypto.randomUUID()
-    : `evt_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  if (!leadEventId) {
+    leadEventId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `evt_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  }
   const fbp = getCookie('_fbp');
   const fbc = getCookie('_fbc');
 
@@ -1089,33 +1046,39 @@ async function maybeSaveLead(leadFields) {
     const res = await fetch('/api/lead-advogados', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...leadFields, event_id: eventId, fbp, fbc, ...orbiUtm }),
+      body: JSON.stringify({ ...leadFields, event_id: leadEventId, fbp, fbc, ...orbiUtm }),
     });
     if (res.ok) {
-      try {
-        if (typeof gtag === 'function') {
-          gtag('event', 'conversion', {
-            'send_to': 'AW-17997912287/bgZ1COuLttQcEN-xiYZD',
-            'value': 120.00,
-            'currency': 'BRL'
-          });
-        }
-      } catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
-      try {
-        if (typeof fbq === 'function') {
-          fbq('track', 'Lead', {
-            content_name: 'Lead Advogados ORBI',
-            content_category: 'Lead Qualificado',
-            value: 120.00,
-            currency: 'BRL',
-            lead_type: 'Chat Landing Advogados'
-          }, { eventID: eventId });
-        }
-      } catch (fbqErr) { console.error('Falha Lead Meta:', fbqErr); }
+      const data = await res.json().catch(() => null);
+      // Só dispara conversão quando o backend confirma "notified:true".
+      if (data?.notified) {
+        // ── TODO: criar conversão "Lead ADV" no Google Ads e trocar o rótulo abaixo.
+        // NÃO usar o rótulo do Agro (YVgbCOe6380cEN-xiYZD) — mistura relatório.
+        // try {
+        //   if (typeof gtag === 'function') {
+        //     gtag('event', 'conversion', {
+        //       'send_to': 'AW-17997912287/TODO_LABEL_LEAD_ADV',
+        //       'value': 120.00,
+        //       'currency': 'BRL'
+        //     });
+        //   }
+        // } catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
+        try {
+          if (typeof fbq === 'function') {
+            fbq('track', 'Lead', {
+              content_name: 'Lead Advogados ORBI',
+              content_category: 'Lead Qualificado',
+              value: 120.00,
+              currency: 'BRL',
+              lead_type: 'Chat Landing Advogados'
+            }, { eventID: leadEventId });
+          }
+        } catch (fbqErr) { console.error('Falha Lead Meta:', fbqErr); }
+      }
     }
   } catch (err) {
     console.error('Falha ao salvar lead de advogados:', err);
-    leadSaved = false;
+    lastLeadSnapshot = '';
   }
 }
 
