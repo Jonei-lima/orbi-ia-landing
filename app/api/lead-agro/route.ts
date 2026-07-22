@@ -107,6 +107,7 @@ export async function POST(req: Request) {
       hectares_aproximado,
       culturas,
       email,
+      mostrar_link,
       event_id,
       fbp,
       fbc,
@@ -130,37 +131,74 @@ export async function POST(req: Request) {
 
     const telefoneNormalizado = normalizePhoneBR(telefone);
 
-    // =====================
-    // 1️⃣ SALVAR NO BANCO (tabela compartilhada "leads")
-    // Agora também gravando utm_source/utm_medium/utm_campaign/utm_content/utm_term/fbclid
-    // — sem isso não dá pra saber qual anúncio/criativo trouxe cada lead.
-    // =====================
-    const { error } = await supabase
+    // Busca se esse telefone já existe (tabela "leads" é compartilhada entre os
+    // 4 verticais, UNIQUE em phone). Sem essa checagem, um insert() cego quebra
+    // com "duplicate key" toda vez que o telefone já apareceu antes — em
+    // QUALQUER vertical, não só no Agro — e a função morre ali, sem notificar
+    // nada. Foi exatamente isso que aconteceu com o Contador no teste de hoje.
+    const { data: existente } = await supabase
       .from("leads")
-      .insert([{
-        name: nome,
-        phone: telefoneNormalizado,
-        segment: "agro",
-        source: "chat_landing_agro",
-        fazenda: fazenda || null,
-        municipio: municipio || null,
-        hectares_aproximado: hectares_aproximado || null,
-        culturas: culturas || null,
-        email: email || null,
-        utm_source: utm_source || null,
-        utm_medium: utm_medium || null,
-        utm_campaign: utm_campaign || null,
-        utm_content: utm_content || null,
-        utm_term: utm_term || null,
-        fbclid: fbclid || null,
-      }]);
+      .select("id, handoff_enviado")
+      .eq("phone", telefoneNormalizado)
+      .maybeSingle();
 
-    if (error) {
-      console.error("SUPABASE ERROR:", error);
-      return NextResponse.json(
-        { success: false, error: "Erro banco." },
-        { status: 500 }
-      );
+    // =====================
+    // SEMPRE salva/atualiza — protege contra perder o lead se a pessoa sumir
+    // no meio da conversa, e evita o erro de chave duplicada. UTM/fbclid só
+    // são gravados na criação, pra manter a origem original do lead.
+    // =====================
+    if (existente) {
+      const { error } = await supabase
+        .from("leads")
+        .update({
+          name: nome,
+          fazenda: fazenda || null,
+          municipio: municipio || null,
+          hectares_aproximado: hectares_aproximado || null,
+          culturas: culturas || null,
+          email: email || null,
+        })
+        .eq("id", existente.id);
+      if (error) {
+        console.error("SUPABASE ERROR:", error);
+        return NextResponse.json({ success: false, error: "Erro banco." }, { status: 500 });
+      }
+    } else {
+      const { error } = await supabase
+        .from("leads")
+        .insert([{
+          name: nome,
+          phone: telefoneNormalizado,
+          segment: "agro",
+          source: "chat_landing_agro",
+          fazenda: fazenda || null,
+          municipio: municipio || null,
+          hectares_aproximado: hectares_aproximado || null,
+          culturas: culturas || null,
+          email: email || null,
+          utm_source: utm_source || null,
+          utm_medium: utm_medium || null,
+          utm_campaign: utm_campaign || null,
+          utm_content: utm_content || null,
+          utm_term: utm_term || null,
+          fbclid: fbclid || null,
+        }]);
+      if (error) {
+        console.error("SUPABASE ERROR:", error);
+        return NextResponse.json({ success: false, error: "Erro banco." }, { status: 500 });
+      }
+    }
+
+    // =====================
+    // Só dispara e-mail + WhatsApp + CAPI quando a IA sinalizar "mostrar_link":true
+    // (ela só faz isso depois da pergunta/confirmação final — ver chat-agro-route),
+    // e só uma vez por telefone (reaproveita handoff_enviado, mesma coluna da Clínicas).
+    // Sem isso, todo turno da conversa (nome+telefone já capturados) disparava
+    // notificação completa com o resto ainda em branco.
+    // =====================
+    const jaNotificado = existente?.handoff_enviado === true;
+    if (!mostrar_link || jaNotificado) {
+      return NextResponse.json({ success: true, notified: false });
     }
 
     // =====================
@@ -212,6 +250,13 @@ export async function POST(req: Request) {
     );
     console.log("EVOLUTION STATUS:", evolutionResponse.status);
 
+    // Marca como notificado, pra nunca reenviar de novo pro mesmo telefone
+    const { error: marcaError } = await supabase
+      .from("leads")
+      .update({ handoff_enviado: true })
+      .eq("phone", telefoneNormalizado);
+    if (marcaError) console.error("ERRO AO MARCAR handoff_enviado:", marcaError);
+
     // =====================
     // 4️⃣ Meta CAPI — mesmo event_id do fbq disparado no navegador (dedup),
     // Advanced Matching com telefone + nome (fn/ln) + município (ct) hasheados,
@@ -232,7 +277,7 @@ export async function POST(req: Request) {
       userAgent,
     });
 
-    return NextResponse.json({ success: true, eventId });
+    return NextResponse.json({ success: true, notified: true, eventId });
   } catch (error: any) {
     console.error("ERRO GERAL:", error);
     return NextResponse.json(
