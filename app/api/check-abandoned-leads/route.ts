@@ -88,21 +88,21 @@ export async function GET(req: Request) {
         (camposColetados ? `\n${camposColetados}` : "");
 
       try {
-        const evolutionResponse = await fetch(
-          `${process.env.EVOLUTION_URL}/message/sendText/ORBI_Trafego`,
+        const zapiResponse = await fetch(
+          `${process.env.ZAPI_URL}/send-text`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              apikey: process.env.EVOLUTION_API_KEY!,
+              "Client-Token": process.env.ZAPI_CLIENT_TOKEN!,
             },
             body: JSON.stringify({
-              number: "5566981320667",
-              text: texto,
+              phone: "5566981320667",
+              message: texto,
             }),
           }
         );
-        console.log(`EVOLUTION ABANDONO STATUS (${lead.phone}):`, evolutionResponse.status);
+        console.log(`ZAPI ABANDONO STATUS (${lead.phone}):`, zapiResponse.status);
 
         const { error: marcaError } = await supabase
           .from("leads")
