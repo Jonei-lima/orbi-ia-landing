@@ -232,25 +232,23 @@ export async function POST(req: Request) {
     console.log("RESEND STATUS:", resendResponse.status);
 
     // =====================
-    // 3️⃣ ENVIAR WHATSAPP (EVOLUTION) - notifica VOCÊ
-    // Instância: ORBI_Trafego (a antiga "orbi_ia_landing" não existe mais)
-    // ATENÇÃO: precisa estar CONECTADA no Evolution pra isso funcionar.
+    // 3️⃣ ENVIAR WHATSAPP (Z-API) - notifica VOCÊ
     // =====================
-    const evolutionResponse = await fetch(
-      `${process.env.EVOLUTION_URL}/message/sendText/ORBI_Trafego`,
+    const zapiResponse = await fetch(
+      `${process.env.ZAPI_URL}/send-text`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          apikey: process.env.EVOLUTION_API_KEY!,
+          "Client-Token": process.env.ZAPI_CLIENT_TOKEN!,
         },
         body: JSON.stringify({
-          number: "5566981320667",
-          text: `🌾 Novo Lead - Agro\n\nNome: ${nome}\nTelefone: ${telefone}\nFazenda: ${fazenda || "não informado ainda"}\nMunicípio: ${municipio || "não informado ainda"}\nHectares: ${hectares_aproximado || "não informado ainda"}\nCulturas: ${culturas || "não informado ainda"}\nE-mail: ${email || "não informado ainda"}`,
+          phone: "5566981320667",
+          message: `🌾 Novo Lead - Agro\n\nNome: ${nome}\nTelefone: ${telefone}\nFazenda: ${fazenda || "não informado ainda"}\nMunicípio: ${municipio || "não informado ainda"}\nHectares: ${hectares_aproximado || "não informado ainda"}\nCulturas: ${culturas || "não informado ainda"}\nE-mail: ${email || "não informado ainda"}`,
         }),
       }
     );
-    console.log("EVOLUTION STATUS:", evolutionResponse.status);
+    console.log("ZAPI STATUS:", zapiResponse.status);
 
     // Marca como notificado, pra nunca reenviar de novo pro mesmo telefone
     const { error: marcaError } = await supabase
