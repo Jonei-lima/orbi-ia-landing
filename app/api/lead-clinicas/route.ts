@@ -251,18 +251,18 @@ export async function POST(req: Request) {
     });
     console.log("RESEND STATUS:", resendResponse.status);
 
-    const evolutionNotifyJonei = await fetch(
-      `${process.env.EVOLUTION_URL}/message/sendText/ORBI_Trafego`,
+    const zapiNotifyJonei = await fetch(
+      `${process.env.ZAPI_URL}/send-text`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY! },
+        headers: { "Content-Type": "application/json", "Client-Token": process.env.ZAPI_CLIENT_TOKEN! },
         body: JSON.stringify({
-          number: "5566981320667",
-          text: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\nClínica: ${clinica || "não informado"}\nE-mail: ${email || "não informado ainda"}\nDiagnóstico: ${montaDiagnosticoResumido(sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual)}`,
+          phone: "5566981320667",
+          message: `🩺 Novo Lead - ORBI Plena\n\nNome: ${nome}\nTelefone: ${telefone}\nÁrea: ${segmento}\nClínica: ${clinica || "não informado"}\nE-mail: ${email || "não informado ainda"}\nDiagnóstico: ${montaDiagnosticoResumido(sinal_fora_horario, sinal_perdeu_paciente, sinal_confirmacao_manual)}`,
         }),
       }
     );
-    console.log("EVOLUTION NOTIFY STATUS:", evolutionNotifyJonei.status);
+    console.log("ZAPI NOTIFY STATUS:", zapiNotifyJonei.status);
 
     // Marca como notificado (coluna própria), pra nunca reenviar/reexibir de novo
     const { error: marcaError } = await supabase
