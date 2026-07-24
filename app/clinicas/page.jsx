@@ -600,7 +600,7 @@ export default function ClinicasPage() {
       `}</style>
 
       {chatOpen && (
-        <div className="fixed bottom-24 right-4 sm:right-7 z-50 w-[calc(100vw-2rem)] sm:w-[380px] max-h-[560px] bg-white rounded-2xl shadow-2xl border border-black/10 flex flex-col overflow-hidden">
+        <div className="fixed bottom-24 right-4 sm:right-7 z-50 w-[calc(100vw-2rem)] sm:w-[450px] max-h-[700px] bg-white rounded-2xl shadow-2xl border border-black/10 flex flex-col overflow-hidden">
           <div className="bg-[#22262B] text-white px-5 py-4 flex items-center justify-between">
             <div>
               <p className="font-semibold text-sm">Assistente ORBI Plena</p>
@@ -611,7 +611,7 @@ export default function ClinicasPage() {
           <div className="px-4 py-2 bg-[#4F7A5A]/10 text-[10px] text-[#22262B]/60 text-center border-b border-black/5">
             💡 A IA analisa e agenda (decisão clínica é sempre do profissional) — seus dados seguem a LGPD
           </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ maxHeight: 320 }}>
+          <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ maxHeight: 460 }}>
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[80%] rounded-xl px-4 py-2 text-sm ${m.role === 'user' ? 'bg-[#4F7A5A]/10 text-[#22262B]' : 'bg-[#F7F5F2] text-[#22262B]'}`}>
