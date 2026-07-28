@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">ORBI Agro — Demonstração</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080c12;--surface:#0e1520;--surface2:#131d2b;--surface3:#0f1825;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --green:#4eca7f;--green-dim:rgba(78,202,127,.1);--green-border:rgba(78,202,127,.18);
+  --blue:#5b8af0;--text:#e8edf5;--text2:rgba(232,237,245,.55);--text3:rgba(232,237,245,.28);
+  --font:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;background-image:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(78,202,127,.06) 0%,transparent 70%)}
+.login-box{width:100%;max-width:380px;padding:2.5rem;background:var(--surface);border:1px solid var(--border2);border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.login-brand{display:flex;align-items:center;gap:10px;margin-bottom:2rem;justify-content:center}
+.login-ring{width:32px;height:32px;border:2.5px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
+.login-name{font-size:18px;font-weight:700;color:#fff}
+.login-name em{color:var(--green);font-style:normal}
+.login-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;margin-top:16px;display:block}
+.login-label:first-of-type{margin-top:0}
+.login-input{width:100%;height:44px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:0 14px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s}
+.login-input:focus{border-color:var(--green)}
+.login-input::placeholder{color:var(--text3)}
+.login-btn{width:100%;height:46px;background:var(--green);color:#050e08;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;margin-top:20px;transition:opacity .15s}
+.login-btn:hover{opacity:.88}
+.login-err{font-size:12px;color:#e05555;margin-top:10px;text-align:center;min-height:18px}
+.login-badge{text-align:center;margin-top:1.5rem;font-size:11px;color:var(--text3)}
+.login-badge span{color:var(--green);font-weight:600}
+
+/* APP */
+#app{display:none;flex-direction:column;height:100vh}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px}
+.ring{width:24px;height:24px;border:2px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
+.brand-name{font-size:15px;font-weight:700;color:#fff}
+.brand-name em{color:var(--green);font-style:normal}
+.user-pill{display:flex;align-items:center;gap:8px;background:var(--green-dim);border:1px solid var(--green-border);border-radius:20px;padding:5px 14px 5px 8px}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#050e08}
+.user-name{font-size:12px;font-weight:600;color:var(--green)}
+.logout-btn{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:var(--font);margin-left:8px}
+.logout-btn:hover{color:var(--text2)}
+
+/* MAIN */
+.main{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:270px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-section{padding:1.25rem 1rem .5rem}
+.sidebar-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px}
+.sidebar-item.active{background:var(--green-dim);border:1px solid var(--green-border)}
+.sidebar-item-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:rgba(255,255,255,.05)}
+.sidebar-item.active .sidebar-item-icon{background:rgba(78,202,127,.15)}
+.sidebar-item-text strong{font-size:13px;font-weight:500;color:var(--text);display:block}
+.sidebar-item-text span{font-size:11px;color:var(--text3)}
+.sidebar-item.active .sidebar-item-text strong{color:var(--green)}
+.sidebar-divider{height:1px;background:var(--border);margin:.5rem 1rem}
+
+/* CASOS / TALHOES */
+.caso-card{margin:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.75rem}
+.caso-nome{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.caso-detail{font-size:11px;color:rgba(232,237,245,.78);line-height:1.6}
+.caso-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:6px}
+.s-verde{background:rgba(78,202,127,.1);color:var(--green);border:1px solid var(--green-border)}
+.s-amarelo{background:rgba(232,151,58,.1);color:#e8973a;border:1px solid rgba(232,151,58,.2)}
+.s-azul{background:rgba(91,138,240,.1);color:var(--blue);border:1px solid rgba(91,138,240,.2)}
+
+/* CHAT */
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.chat-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.chat-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green),#2a7a4f);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#050e08;flex-shrink:0}
+.chat-info strong{font-size:14px;font-weight:600;color:var(--text);display:block}
+.chat-info span{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.chat-messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:4px}
+
+.msg{display:flex;gap:10px;max-width:75%}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
+.msg.agent .msg-avatar{background:linear-gradient(135deg,var(--green),#2a7a4f);color:#050e08}
+.msg.user .msg-avatar{background:rgba(91,138,240,.12);border:1px solid rgba(91,138,240,.2);color:var(--blue);font-size:10px}
+.msg-content{display:flex;flex-direction:column;gap:4px}
+.msg.user .msg-content{align-items:flex-end}
+.msg-name{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.04em;text-transform:uppercase;padding:0 4px}
+.msg-bubble{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;color:var(--text)}
+.msg.agent .msg-bubble{background:var(--surface2);border:1px solid var(--border);border-top-left-radius:4px}
+.msg.user .msg-bubble{background:rgba(91,138,240,.1);border:1px solid rgba(91,138,240,.18);border-top-right-radius:4px}
+.msg-time{font-size:10px;color:var(--text3);padding:0 4px;font-family:var(--mono)}
+
+.typing-wrap{display:flex;gap:10px;max-width:75%}
+.typing-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green),#2a7a4f);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#050e08;flex-shrink:0;margin-top:2px}
+.typing-bubble{padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;border-top-left-radius:4px;display:flex;gap:4px;align-items:center}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:tdot 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+
+.suggestions{padding:.75rem 1.5rem;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);background:var(--surface2)}
+.sug{font-size:11px;padding:5px 14px 5px 11px;border-radius:20px;border:1px solid var(--green-border);color:var(--green);background:var(--green-dim);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .15s;white-space:nowrap}
+.sug:hover{opacity:.85}
+
+.disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:rgba(232,237,245,.65);text-align:center;border-top:1px solid var(--border)}
+
+.input-area{padding:1rem 1.5rem;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+.chat-input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;resize:none;min-height:50px;max-height:140px;line-height:1.6;transition:border-color .15s}
+.chat-input:focus{border-color:var(--green)}
+.chat-input::placeholder{color:var(--text3)}
+.send-btn{width:50px;height:50px;background:var(--green);border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
+.send-btn:hover{opacity:.85}
+.send-btn:disabled{opacity:.35;cursor:not-allowed}
+
+@media(max-width:700px){.sidebar{display:none}.msg{max-width:90%}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="login-ring"></div>
+      <span class="login-name">ORBI <em>Agro</em></span>
+    </div>
+    <label class="login-label">Usuário</label>
+    <input class="login-input" id="login-user" type="text" placeholder="seu usuário" autocomplete="off">
+    <label class="login-label">Senha</label>
+    <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
+    <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-badge">Acesso ao painel</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="ring"></div>
+      <span class="brand-name">ORBI <em>Agro</em></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="user-pill">
+        <div class="user-avatar" id="userAvatar">P</div>
+        <span class="user-name" id="userNameTopbar">Produtor</span>
+      </div>
+      <button class="logout-btn" onclick="fazerLogout()">sair</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Menu</div>
+        <div class="sidebar-item active">
+          <div class="sidebar-item-icon">💬</div>
+          <div class="sidebar-item-text">
+            <strong>Assistente IA</strong>
+            <span>Atendimento ao produtor</span>
+          </div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-item-icon">🌱</div>
+          <div class="sidebar-item-text"><strong>Talhões</strong><span>Em breve</span></div>
+        </div>
+        <div class="sidebar-item">
+          <div class="sidebar-item-icon">🔔</div>
+          <div class="sidebar-item-text"><strong>Alertas</strong><span>Em breve</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Talhões — exemplo</div>
+      </div>
+
+      <div class="caso-card">
+        <div class="caso-nome">Talhão X — 480 ha</div>
+        <div class="caso-detail">Soja · Safra 2025/26 · Histórico de ferrugem asiática</div>
+        <div class="caso-status s-verde">✅ Colhida</div>
+      </div>
+
+      <div class="caso-card">
+        <div class="caso-nome">Talhão Y — 370 ha</div>
+        <div class="caso-detail">Milho safrinha 2026 · Estágio vegetativo, cartucho formado</div>
+        <div class="caso-status s-amarelo">⚠️ Alerta — lagarta-do-cartucho</div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">O que o agente faz</div>
+      </div>
+      <div class="caso-card" style="background:transparent">
+        <div class="caso-detail" style="line-height:1.9;color:var(--text)">
+          💬 Atendimento inteligente no WhatsApp<br>
+          🐛 Diagnóstico de pragas e doenças<br>
+          📅 Calendário agrícola da região<br>
+          📁 Histórico dos talhões<br>
+          🔁 Alertas de monitoramento<br>
+          👨‍🌾 Encaminha ao Agrônomo quando o caso exige
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <div class="sidebar-label" style="font-size:10px;color:var(--text3);line-height:1.6">Demo exclusivo · ORBI IA<br>agenteorbiia.com</div>
+      </div>
+    </div>
+
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="chat-avatar">OA</div>
+        <div class="chat-info">
+          <strong>Assistente ORBI Agro</strong>
+          <span><div class="online-dot"></div> online · exclusivo para sua fazenda</span>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="messages">
+        <div class="msg agent">
+          <div class="msg-avatar">OA</div>
+          <div class="msg-content">
+            <span class="msg-name">ORBI Agro</span>
+            <div class="msg-bubble" id="msgBoasVindas">Carregando...</div>
+            <span class="msg-time">agora</span>
+          </div>
+        </div>
+        <div class="typing-wrap" id="typing-wrap" style="display:none">
+          <div class="typing-av">OA</div>
+          <div class="typing-bubble">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="suggestions" id="suggestions">
+        <button class="sug" onclick="enviarSug(this)">Minhas folhas de soja estão com manchas amarronzadas</button>
+        <button class="sug" onclick="enviarSug(this)">Vi lagartas no milho hoje</button>
+        <button class="sug" onclick="enviarSug(this)">Quando plantar soja na próxima safra?</button>
+        <button class="sug" onclick="enviarSug(this)">Como identificar ferrugem asiática?</button>
+        <button class="sug" onclick="enviarSug(this)">Folha do milho com fileiras de ovos</button>
+      </div>
+
+      <div class="disclaimer">Demo desenvolvido exclusivamente para Agronomix · ORBI IA — Decisões de manejo, dosagem e aplicação são de responsabilidade exclusiva do Agrônomo responsável</div>
+
+      <div class="input-area">
+        <textarea class="chat-input" id="chat-input" placeholder="Digite aqui — como se fosse o produtor..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviar()}"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button class="send-btn" id="send-btn" onclick="enviar()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Customização via URL, mesmo padrão do /contabil e /adv:
+// ?fazenda=Fazenda%20Modelo&produtor=Nome&cidade=Cidade/UF&login=usuario&senha=senha
+const params = new URLSearchParams(window.location.search);
+const FAZENDA_NOME = params.get('fazenda') || 'Fazenda Modelo';
+const PRODUTOR_NOME = params.get('produtor') || 'Produtor';
+const CIDADE = params.get('cidade') || 'Rondonópolis/MT';
+const AGRO_LOGIN = (params.get('login') || 'demo').toLowerCase();
+const AGRO_SENHA = params.get('senha') || 'demo123';
+
+function iniciais(nome){
+  const partes = nome.trim().split(/\s+/);
+  if(partes.length === 1) return partes[0].substring(0,2).toUpperCase();
+  return (partes[0][0] + partes[partes.length-1][0]).toUpperCase();
+}
+
+document.getElementById('pageTitle').textContent = `ORBI Agro — ${PRODUTOR_NOME}`;
+document.getElementById('userAvatar').textContent = iniciais(PRODUTOR_NOME);
+document.getElementById('userNameTopbar').textContent = PRODUTOR_NOME;
+document.getElementById('msgBoasVindas').innerHTML =
+  `Oi, ${PRODUTOR_NOME}! 👋<br><br>Sou seu assistente da ${FAZENDA_NOME}. Pode me contar o que está vendo na lavoura — folha, praga, dúvida de manejo ou planejamento de safra — que eu te ajudo com base no histórico dos seus talhões.<br><br>Como posso ajudar?`;
+
+const SYSTEM = `Você é o Assistente ORBI Agro exclusivo de ${PRODUTOR_NOME}, produtor rural na ${FAZENDA_NOME}, em ${CIDADE}.
+
+CONTEXTO DA FAZENDA (dados fictícios de demonstração, ilustrativos — não são registros reais):
+- Talhão X: 480 ha de soja, safra 2025/26 já colhida, histórico de ferrugem asiática em safras anteriores.
+- Talhão Y: 370 ha de milho safrinha 2026, estágio vegetativo (cartucho formado), alerta ativo de lagarta-do-cartucho.
+- Total: 850 ha, 2 talhões ativos.
+
+CONHECIMENTO TÉCNICO (calibrado para a região de Rondonópolis/MT, solo Latossolo — ajuste manual se o produtor for de outra região):
+- Janela de plantio ZARC para soja e milho safrinha na região.
+- Ferrugem asiática na soja: sintomas (pústulas amarronzadas na face inferior da folha), condições favoráveis (umidade alta, temperatura amena), orientação geral de controle.
+- Lagarta-do-cartucho no milho: identificação (folhas raspadas, fileiras de ovos, orifícios no cartucho), nível de controle, quando acionar o agrônomo.
+- Cercosporiose no milho, cigarrinha-do-milho, deficiência de nitrogênio.
+- Calendário agrícola da região: safrinha de milho com janela ideal em jan/fev, risco de veranico em mar/abr.
+
+CONHECIMENTO ADICIONAL — SETOR DE SEMENTES (relevante para produtores/empresas ligados a associações de sementeiros, como a Aprosmat em MT):
+- RENASEM (Registro Nacional de Sementes e Mudas): registro obrigatório no MAPA pra quem produz, beneficia ou comercializa sementes certificadas no Brasil.
+- Marco legal: Lei de Sementes e Mudas (Lei 10.711/2003) e seu decreto regulamentador (Decreto 5.153/2004); Lei de Proteção de Cultivares (Lei 9.456/1997) rege os direitos do obtentor e o pagamento de royalties sobre cultivares protegidas.
+- Categorias de semente: genética, básica, certificada (C1, C2) e S1/S2 — cada categoria tem exigência própria de pureza varietal e geração de multiplicação.
+- Pureza varietal e física, poder germinativo mínimo e sanidade são atestados por análise de laboratório credenciado, seguindo as Regras de Análise de Sementes (RAS) do MAPA — os padrões mínimos variam por espécie e categoria.
+- TSI (Tratamento de Sementes na Indústria): aplicação industrial de fungicida/inseticida na semente antes da comercialização — diferente do TSF (tratamento feito na fazenda pelo próprio produtor).
+- Armazenamento: controle de umidade e temperatura é crítico pra manter poder germinativo e vigor da semente durante a entressafra.
+- IMPORTANTE: números exatos de germinação mínima, pureza mínima ou prazos de análise variam por cultivar, categoria e safra — NUNCA cite um percentual ou prazo específico de memória. Explique o conceito e diga que o valor exato deve ser confirmado na Instrução Normativa do MAPA vigente ou direto com a Aprosmat/laboratório credenciado.
+
+REGRAS OBRIGATÓRIAS:
+1. Nunca afirme dados que não foram informados pelo produtor — pergunte antes de assumir. Isso vale também para números regulatórios (germinação mínima, pureza, prazos RENASEM) — se não tiver certeza do valor exato, diga isso e oriente a confirmar na fonte oficial.
+2. Nunca decida manejo, dosagem ou aplicação de defensivos — isso é exclusivo do Agrônomo responsável. Oriente e recomende buscar o agrônomo quando o caso exigir.
+3. Os talhões acima são exemplo ilustrativo de demonstração — nunca afirme que são o histórico real da fazenda de ${PRODUTOR_NOME}.
+4. SEJA DIRETO E CURTO: máximo 2 parágrafos curtos por resposta. Vá direto ao ponto prático.
+5. FORMATO WHATSAPP, NÃO RELATÓRIO: nunca use títulos com #, nunca use listas numeradas ou com marcadores. Escreva como uma mensagem de WhatsApp corrida.
+6. Este é um ambiente de demonstração com dados fictícios — se perguntado, seja transparente sobre isso.
+7. Emojis com moderação.
+8. Sempre termine com: "⚠️ Orientação geral — decisões de manejo, dosagem e aplicação são de responsabilidade exclusiva do Agrônomo responsável."`;
+
+let historico = [];
+let enviando = false;
+
+function hora(){
+  const d=new Date();
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function adicionarMsg(role, texto){
+  const msgs = document.getElementById('messages');
+  const typing = document.getElementById('typing-wrap');
+  const div = document.createElement('div');
+  div.className = `msg ${role==='user'?'user':'agent'}`;
+  const av = document.createElement('div');
+  av.className = 'msg-avatar';
+  av.textContent = role==='user'?'Você':'OA';
+  const content = document.createElement('div');
+  content.className = 'msg-content';
+  const name = document.createElement('span');
+  name.className = 'msg-name';
+  name.textContent = role==='user'?'Você':'ORBI Agro';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.innerHTML = texto
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:var(--green);text-decoration:underline;word-break:break-all">$1</a>')
+    .replace(/\n/g,'<br>')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  const time = document.createElement('span');
+  time.className = 'msg-time';
+  time.textContent = hora();
+  content.appendChild(name);
+  content.appendChild(bubble);
+  content.appendChild(time);
+  div.appendChild(av);
+  div.appendChild(content);
+  msgs.insertBefore(div, typing);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function mostrarTyping(show){
+  document.getElementById('typing-wrap').style.display = show?'flex':'none';
+  document.getElementById('messages').scrollTop = 99999;
+}
+
+async function enviar(){
+  if(enviando) return;
+  const input = document.getElementById('chat-input');
+  const texto = input.value.trim();
+  if(!texto) return;
+  input.value=''; input.style.height='auto';
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('suggestions').style.display = 'none';
+  adicionarMsg('user', texto);
+  historico.push({role:'user', content:texto});
+  enviando = true;
+  mostrarTyping(true);
+  try{
+    const res = await fetch('/api/agro', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({messages: historico, system: SYSTEM})
+    });
+    const data = await res.json();
+    const resp = data.content || 'Não consegui processar. Tente novamente.';
+    mostrarTyping(false);
+    adicionarMsg('agent', resp);
+    historico.push({role:'assistant', content:resp});
+  } catch(e){
+    mostrarTyping(false);
+    adicionarMsg('agent', 'Problema de conexão. Tente novamente.');
+  }
+  enviando = false;
+  document.getElementById('send-btn').disabled = false;
+}
+
+function enviarSug(btn){
+  document.getElementById('chat-input').value = btn.textContent;
+  enviar();
+}
+
+function fazerLogin(){
+  const user = document.getElementById('login-user').value.trim().toLowerCase();
+  const pass = document.getElementById('login-pass').value.trim();
+  const err = document.getElementById('login-err');
+  if(user===AGRO_LOGIN && pass===AGRO_SENHA){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    err.textContent='';
+  } else {
+    err.textContent='Usuário ou senha incorretos.';
+    document.getElementById('login-pass').value='';
+  }
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e=>{
+  if(e.key==='Enter') fazerLogin();
+});
+
+function fazerLogout(){
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  historico=[];
+}
+</script>
+</body>
+</html>
