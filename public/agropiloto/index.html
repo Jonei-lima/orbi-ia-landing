@@ -69,7 +69,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* CASOS / TALHOES */
 .caso-card{margin:.5rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.75rem}
 .caso-nome{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
-.caso-detail{font-size:11px;color:var(--text3);line-height:1.6}
+.caso-detail{font-size:11px;color:rgba(232,237,245,.78);line-height:1.6}
 .caso-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:6px}
 .s-verde{background:rgba(78,202,127,.1);color:var(--green);border:1px solid var(--green-border)}
 .s-amarelo{background:rgba(232,151,58,.1);color:#e8973a;border:1px solid rgba(232,151,58,.2)}
@@ -113,7 +113,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .sug{font-size:11px;padding:5px 14px 5px 11px;border-radius:20px;border:1px solid var(--green-border);color:var(--green);background:var(--green-dim);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .15s;white-space:nowrap}
 .sug:hover{opacity:.85}
 
-.disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:var(--text3);text-align:center;border-top:1px solid var(--border)}
+.disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:rgba(232,237,245,.65);text-align:center;border-top:1px solid var(--border)}
 
 .input-area{padding:1rem 1.5rem;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
 .chat-input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;resize:none;min-height:50px;max-height:140px;line-height:1.6;transition:border-color .15s}
@@ -258,7 +258,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <button class="sug" onclick="enviarSug(this)">Folha do milho com fileiras de ovos</button>
       </div>
 
-      <div class="disclaimer">Demo exclusivo · ORBI IA — Decisões de manejo, dosagem e aplicação são de responsabilidade exclusiva do Agrônomo responsável</div>
+      <div class="disclaimer">Demo desenvolvido exclusivamente para Agronomix · ORBI IA — Decisões de manejo, dosagem e aplicação são de responsabilidade exclusiva do Agrônomo responsável</div>
 
       <div class="input-area">
         <textarea class="chat-input" id="chat-input" placeholder="Digite aqui — como se fosse o produtor..." rows="1"
@@ -308,8 +308,17 @@ CONHECIMENTO TÉCNICO (calibrado para a região de Rondonópolis/MT, solo Latoss
 - Cercosporiose no milho, cigarrinha-do-milho, deficiência de nitrogênio.
 - Calendário agrícola da região: safrinha de milho com janela ideal em jan/fev, risco de veranico em mar/abr.
 
+CONHECIMENTO ADICIONAL — SETOR DE SEMENTES (relevante para produtores/empresas ligados a associações de sementeiros, como a Aprosmat em MT):
+- RENASEM (Registro Nacional de Sementes e Mudas): registro obrigatório no MAPA pra quem produz, beneficia ou comercializa sementes certificadas no Brasil.
+- Marco legal: Lei de Sementes e Mudas (Lei 10.711/2003) e seu decreto regulamentador (Decreto 5.153/2004); Lei de Proteção de Cultivares (Lei 9.456/1997) rege os direitos do obtentor e o pagamento de royalties sobre cultivares protegidas.
+- Categorias de semente: genética, básica, certificada (C1, C2) e S1/S2 — cada categoria tem exigência própria de pureza varietal e geração de multiplicação.
+- Pureza varietal e física, poder germinativo mínimo e sanidade são atestados por análise de laboratório credenciado, seguindo as Regras de Análise de Sementes (RAS) do MAPA — os padrões mínimos variam por espécie e categoria.
+- TSI (Tratamento de Sementes na Indústria): aplicação industrial de fungicida/inseticida na semente antes da comercialização — diferente do TSF (tratamento feito na fazenda pelo próprio produtor).
+- Armazenamento: controle de umidade e temperatura é crítico pra manter poder germinativo e vigor da semente durante a entressafra.
+- IMPORTANTE: números exatos de germinação mínima, pureza mínima ou prazos de análise variam por cultivar, categoria e safra — NUNCA cite um percentual ou prazo específico de memória. Explique o conceito e diga que o valor exato deve ser confirmado na Instrução Normativa do MAPA vigente ou direto com a Aprosmat/laboratório credenciado.
+
 REGRAS OBRIGATÓRIAS:
-1. Nunca afirme dados que não foram informados pelo produtor — pergunte antes de assumir.
+1. Nunca afirme dados que não foram informados pelo produtor — pergunte antes de assumir. Isso vale também para números regulatórios (germinação mínima, pureza, prazos RENASEM) — se não tiver certeza do valor exato, diga isso e oriente a confirmar na fonte oficial.
 2. Nunca decida manejo, dosagem ou aplicação de defensivos — isso é exclusivo do Agrônomo responsável. Oriente e recomende buscar o agrônomo quando o caso exigir.
 3. Os talhões acima são exemplo ilustrativo de demonstração — nunca afirme que são o histórico real da fazenda de ${PRODUTOR_NOME}.
 4. SEJA DIRETO E CURTO: máximo 2 parágrafos curtos por resposta. Vá direto ao ponto prático.
