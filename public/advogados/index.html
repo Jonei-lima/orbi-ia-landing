@@ -1019,17 +1019,15 @@ async function maybeSaveLead(leadFields) {
       body: JSON.stringify(leadFields),
     });
     if (res.ok) {
-      // ── TODO: criar conversão "Lead ADV" no Google Ads e trocar o rótulo abaixo.
-      // NÃO usar o rótulo do Agro (YVgbCOe6380cEN-xiYZD) — mistura relatório.
-      // try {
-      //   if (typeof gtag === 'function') {
-      //     gtag('event', 'conversion', {
-      //       'send_to': 'AW-17997912287/TODO_LABEL_LEAD_ADV',
-      //       'value': 120.00,
-      //       'currency': 'BRL'
-      //     });
-      //   }
-      // } catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
+try {
+  if (typeof gtag === 'function') {
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17997912287/g7niCM60g9wcEN-xiYZD',
+      'value': 120.00,
+      'currency': 'BRL'
+    });
+  }
+} catch (gtagErr) { console.error('Falha conversão Google:', gtagErr); }
       try {
         if (typeof fbq === 'function') {
           fbq('track', 'Lead', {
