@@ -499,7 +499,7 @@ export default function ClinicasPage() {
             </div>
             <div>
               <h3 className="font-semibold mb-4">Contato</h3>
-              <p className="text-sm mb-2"><a href="https://wa.me/5566981320667" className="hover:text-[#D9B36A] transition-colors">WhatsApp: (66) 98132-0667</a></p>
+              <p className="text-sm mb-2"><a href="https://wa.me/5519997505888" className="hover:text-[#D9B36A] transition-colors">WhatsApp: (66) 98132-0667</a></p>
               <p className="text-sm mb-2">Tel: (83) 9.8914-8253</p>
               <p className="text-sm"><a href="mailto:contato@agenteorbiia.com" className="hover:text-[#D9B36A] transition-colors">contato@agenteorbiia.com</a></p>
             </div>
@@ -530,7 +530,7 @@ export default function ClinicasPage() {
 
       {/* WHATSAPP FLOAT — posição/tamanho via style inline (não depende do Tailwind compilar a classe) */}
       <a
-        href="https://wa.me/5566981320667"
+        href="https://wa.me/5519997505888"
         target="_blank"
         rel="noopener noreferrer"
         style={{
