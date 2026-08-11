@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORBI Contábil — Pinharas Contabilidade</title>
+<title>ORBI Contábil — Digital Contabilidade</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -49,7 +49,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 .main{display:flex;flex:1;overflow:hidden}
 
-.sidebar{width:270px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar{width:275px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
 .sidebar-section{padding:1.25rem 1rem .5rem}
 .sidebar-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px}
 .sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px}
@@ -66,14 +66,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .obrig-nome{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
 .obrig-detail{font-size:11px;color:var(--text3);line-height:1.5}
 .obrig-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:5px}
+.s-verde{background:rgba(78,202,127,.1);color:var(--green);border:1px solid var(--green-border)}
+.s-amarelo{background:rgba(232,151,58,.1);color:#e8973a;border:1px solid rgba(232,151,58,.2)}
+.s-vermelho{background:rgba(224,85,85,.1);color:#e05555;border:1px solid rgba(224,85,85,.2)}
+
 .scope-card{margin:.5rem 1rem;background:var(--surface2);border:1px solid var(--green-border);border-radius:10px;padding:.85rem}
 .scope-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px}
 .scope-line{font-size:11px;color:rgba(232,237,245,.9);line-height:1.55;margin-bottom:5px;padding-left:16px;position:relative}
 .scope-line::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
-.scope-note{font-size:10.5px;color:rgba(232,237,245,.85);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-.s-verde{background:rgba(78,202,127,.1);color:var(--green);border:1px solid var(--green-border)}
-.s-amarelo{background:rgba(232,151,58,.1);color:#e8973a;border:1px solid rgba(232,151,58,.2)}
-.s-vermelho{background:rgba(224,85,85,.1);color:#e05555;border:1px solid rgba(224,85,85,.2)}
+.scope-note{font-size:10.5px;color:rgba(232,237,245,.75);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
 
 .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:.5rem 1rem}
 .stat-mini{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .75rem}
@@ -118,7 +119,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .sug:hover{background:var(--green-dim)}
 
 .disclaimer{padding:6px 1.5rem;background:var(--surface);font-size:10px;color:var(--text3);text-align:center;border-top:1px solid var(--border)}
-
 .input-area{padding:1rem 1.5rem;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
 .chat-input{flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;resize:none;min-height:50px;max-height:140px;line-height:1.6;transition:border-color .15s}
 .chat-input:focus{border-color:var(--green)}
@@ -144,7 +144,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
     <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
     <div class="login-err" id="login-err"></div>
-    <div class="login-badge">Acesso exclusivo · <span id="escNomeLogin">Pinharas Contabilidade</span></div>
+    <div class="login-badge">Acesso exclusivo · <span>Digital Contabilidade</span></div>
   </div>
 </div>
 
@@ -156,8 +156,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="user-pill">
-        <div class="user-avatar">SA</div>
-        <span class="user-name" id="contNomeTopbar">Sérgio Araújo</span>
+        <div class="user-avatar">FE</div>
+        <span class="user-name">Felipe</span>
       </div>
       <button class="logout-btn" onclick="fazerLogout()">sair</button>
     </div>
@@ -179,6 +179,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="sidebar-item-text"><strong>Calendário Fiscal</strong><span>Em breve</span></div>
         </div>
         <div class="sidebar-item">
+          <div class="sidebar-item-icon">🔗</div>
+          <div class="sidebar-item-text"><strong>Integrações</strong><span>Conta Azul · Em breve</span></div>
+        </div>
+        <div class="sidebar-item">
           <div class="sidebar-item-icon">🔔</div>
           <div class="sidebar-item-text"><strong>Alertas</strong><span>Em breve</span></div>
         </div>
@@ -187,30 +191,30 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="sidebar-divider"></div>
 
       <div class="sidebar-section" style="padding-bottom:.25rem">
-        <div class="sidebar-label">O que este piloto faz</div>
+        <div class="sidebar-label">O que este agente faz</div>
       </div>
       <div class="scope-card">
-        <div class="scope-title">ORBI Contábil</div>
-        <div class="scope-line">Conversa com o cliente final em linguagem natural, no WhatsApp do escritório</div>
-        <div class="scope-line">Responde dúvidas fiscais reais com o conhecimento do escritório, não uma resposta genérica</div>
-        <div class="scope-line">Busca documentos específicos por CNPJ direto no sistema de gestão (fase de integração)</div>
-        <div class="scope-line">Sabe o que responder sozinho e o que escalar pra equipe humana</div>
-        <div class="scope-note">Diferente de robôs de busca de nota fiscal e de assistentes de IA genéricos: essas ferramentas organizam o back-office (armazenam, buscam, calculam), mas não conversam com o seu cliente. O ORBI é a camada de atendimento — uma coisa não substitui a outra, elas se somam.</div>
+        <div class="scope-title">ORBI Contábil — Digital Contabilidade</div>
+        <div class="scope-line">Atende clientes no WhatsApp do escritório 24h — enquanto você está em reunião ou fora do horário</div>
+        <div class="scope-line">Responde dúvidas fiscais reais com o conhecimento do seu escritório, não uma resposta genérica</div>
+        <div class="scope-line">Sabe o que responder sozinho e o que escalar para o Felipe</div>
+        <div class="scope-line">Futuro: integração com Conta Azul para consultar dados reais dos clientes em tempo real</div>
+        <div class="scope-note">Diferente de ferramentas como o Codex do ChatGPT (que gera scripts pontuais) ou robôs de busca de nota fiscal: essas ferramentas organizam o back-office. O ORBI é a camada de atendimento ao cliente — elas se somam, não se substituem.</div>
       </div>
 
       <div class="sidebar-divider"></div>
 
       <div class="sidebar-section">
-        <div class="sidebar-label">Julho 2026 — Obrigações</div>
+        <div class="sidebar-label">Agosto 2026 — Obrigações</div>
       </div>
 
       <div class="stats-row">
         <div class="stat-mini">
-          <div class="stat-mini-val">8</div>
+          <div class="stat-mini-val">7</div>
           <div class="stat-mini-lbl">Obrigações no mês</div>
         </div>
         <div class="stat-mini">
-          <div class="stat-mini-val">2</div>
+          <div class="stat-mini-val">3</div>
           <div class="stat-mini-lbl">Vencem em 7 dias</div>
         </div>
       </div>
@@ -220,31 +224,38 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       </div>
 
       <div class="obrig-card">
-        <div class="obrig-sigla">DAS — Simples Nacional</div>
+        <div class="obrig-sigla">EFD-Contribuições</div>
         <div class="obrig-nome">Competência junho/2026</div>
-        <div class="obrig-detail">Pagamento unificado de tributos<br>para empresas do Simples</div>
-        <div class="obrig-status s-vermelho">🔴 Vence dia 20/07</div>
+        <div class="obrig-detail">PIS, Cofins e CPRB<br>Lucro Presumido e Real</div>
+        <div class="obrig-status s-vermelho">🔴 Vence dia 14/08</div>
       </div>
 
       <div class="obrig-card">
-        <div class="obrig-sigla">DCTFWeb</div>
-        <div class="obrig-nome">Competência junho/2026</div>
-        <div class="obrig-detail">Declaração de débitos e créditos<br>tributários federais</div>
-        <div class="obrig-status s-amarelo">⚠️ Vence dia 25/07</div>
+        <div class="obrig-sigla">EFD-Reinf</div>
+        <div class="obrig-nome">Competência julho/2026</div>
+        <div class="obrig-detail">Retenções tributárias<br>Integra automaticamente à DCTFWeb</div>
+        <div class="obrig-status s-vermelho">🔴 Vence dia 17/08</div>
       </div>
 
       <div class="obrig-card">
-        <div class="obrig-sigla">ECF — Anual</div>
-        <div class="obrig-nome">Ano-calendário 2025</div>
-        <div class="obrig-detail">Escrituração Contábil Fiscal<br>Lucro Presumido e Real</div>
-        <div class="obrig-status s-amarelo">⚠️ Vence dia 31/07</div>
+        <div class="obrig-sigla">PGDAS-D + DIRBI</div>
+        <div class="obrig-nome">Competência julho/2026</div>
+        <div class="obrig-detail">Declaração Simples Nacional<br>e incentivos fiscais</div>
+        <div class="obrig-status s-amarelo">⚠️ Vence dia 20/08</div>
       </div>
 
       <div class="obrig-card">
-        <div class="obrig-sigla">eSocial</div>
-        <div class="obrig-nome">Folha junho/2026</div>
-        <div class="obrig-detail">Eventos de folha de pagamento<br>e encargos trabalhistas</div>
-        <div class="obrig-status s-verde">✅ Enviado dia 07/07</div>
+        <div class="obrig-sigla">DCTFWeb + DME + DeCripto</div>
+        <div class="obrig-nome">Competência julho/2026</div>
+        <div class="obrig-detail">Consolidação de débitos tributários<br>+ operações em espécie e criptoativos</div>
+        <div class="obrig-status s-amarelo">⚠️ Vence dia 31/08</div>
+      </div>
+
+      <div class="obrig-card">
+        <div class="obrig-sigla">IBS/CBS nas NF-e</div>
+        <div class="obrig-nome">Reforma Tributária — vigente</div>
+        <div class="obrig-detail">Obrigatório desde 03/08/2026<br>para Lucro Presumido e Real</div>
+        <div class="obrig-status s-verde">✅ Vigente desde 03/08</div>
       </div>
 
       <div class="sidebar-divider"></div>
@@ -258,7 +269,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="chat-avatar">OC</div>
         <div class="chat-info">
           <strong>Assistente ORBI Contábil</strong>
-          <span><div class="online-dot"></div> online · exclusivo para <span id="escNomeHeader">Pinharas Contabilidade</span></span>
+          <span><div class="online-dot"></div> online · exclusivo para Digital Contabilidade</span>
         </div>
       </div>
 
@@ -267,7 +278,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="msg-avatar">OC</div>
           <div class="msg-content">
             <span class="msg-name">ORBI Contábil</span>
-            <div class="msg-bubble" id="msgBoasVindas">Olá! Bem-vindo à Pinharas Contabilidade 😊<br><br>Sou o assistente virtual do escritório. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, obrigações fiscais, folha de pagamento</strong> e consultoria financeira para o seu segmento — enquanto o Sérgio e a equipe estão em atendimento.<br><br>Como posso te ajudar hoje?</div>
+            <div class="msg-bubble">Olá! Bem-vindo à Digital Contabilidade 😊<br><br>Sou o assistente virtual do escritório do Felipe. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, obrigações fiscais, Reforma Tributária, folha de pagamento</strong> e muito mais — enquanto o Felipe está em atendimento.<br><br>Como posso te ajudar hoje?</div>
             <span class="msg-time">agora</span>
           </div>
         </div>
@@ -283,14 +294,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
       <div class="suggestions" id="suggestions">
         <button class="sug" onclick="enviarSug(this)">Quando vence o DAS do meu MEI?</button>
-        <button class="sug" onclick="enviarSug(this)">Como abrir minha empresa?</button>
+        <button class="sug" onclick="enviarSug(this)">O que muda com a Reforma Tributária?</button>
+        <button class="sug" onclick="enviarSug(this)">Minha nota fiscal precisa mudar em agosto?</button>
         <button class="sug" onclick="enviarSug(this)">Quero migrar meu MEI para ME</button>
+        <button class="sug" onclick="enviarSug(this)">O que é o IBS e CBS?</button>
         <button class="sug" onclick="enviarSug(this)">Preciso declarar Imposto de Renda?</button>
-        <button class="sug" onclick="enviarSug(this)">Quanto pago de imposto no Simples?</button>
-        <button class="sug" onclick="enviarSug(this)">Posso emitir nota fiscal como MEI?</button>
+        <button class="sug" onclick="enviarSug(this)">Posso usar IA para gerar planilha da SEFAZ?</button>
       </div>
 
-      <div class="disclaimer" id="disclaimerNome">Demo exclusivo · Pinharas Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018 · v1-parametrizado</div>
+      <div class="disclaimer">Demo exclusivo · Digital Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
 
       <div class="input-area">
         <textarea class="chat-input" id="chat-input" placeholder="Digite como se fosse um cliente do escritório..." rows="1"
@@ -305,44 +317,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
-// Customização rápida via URL: ?escritorio=Nome%20Contabilidade&contador=Fulano%20de%20Tal&cidade=Cidade/UF&login=fulano&senha=1234
-const params = new URLSearchParams(window.location.search);
-const ESC_NOME = params.get('escritorio') || 'Pinharas Contabilidade';
-const CONT_NOME = params.get('contador') || 'Sérgio Araújo';
-const CIDADE = params.get('cidade') || 'Patos/PB';
-const LOGIN = params.get('login') || 'sergio';
-const SENHA = params.get('senha') || '6525';
+const SYSTEM = `Você é o assistente virtual da Digital Contabilidade, escritório de contabilidade consultiva com sede em Patos/PB, sob responsabilidade do contador Felipe.
 
-document.title = `ORBI Contábil — ${ESC_NOME}`;
-document.getElementById('escNomeLogin').textContent = ESC_NOME;
-document.getElementById('contNomeTopbar').textContent = CONT_NOME;
-document.getElementById('escNomeHeader').textContent = ESC_NOME;
-document.getElementById('msgBoasVindas').innerHTML = document.getElementById('msgBoasVindas').innerHTML
-  .replace('Pinharas Contabilidade', ESC_NOME)
-  .replace('o Sérgio', `${CONT_NOME.split(' ')[0]}`);
-document.getElementById('disclaimerNome').textContent = document.getElementById('disclaimerNome').textContent.replace('Pinharas Contabilidade', ESC_NOME);
-
-const SYSTEM = `Você é o assistente virtual da ${ESC_NOME}, escritório de contabilidade consultiva e consultoria financeira, com sede em ${CIDADE}.
-
-Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais do dia a dia enquanto o(a) ${CONT_NOME} e a equipe estão em atendimento.
-
-FLUXO DE QUALIFICAÇÃO DO VISITANTE (só pra essa conversa de demonstração):
-- A primeira mensagem já pediu nome e WhatsApp — não repita essas duas perguntas.
-- Assim que a pessoa responder nome e WhatsApp, agradeça usando o nome dela, e SÓ DEPOIS pergunte — numa mensagem separada, uma pergunta de cada vez — o nome do escritório (ou fazenda) e a cidade onde atua.
-- Depois disso, siga a conversa normalmente, respondendo dúvidas sobre o produto.
-- Se a pessoa demonstrar interesse em falar direto com o Jonei, pedir contato, ou perguntar sobre fechar/contratar, ANTES de mandar o link do WhatsApp dele, pergunte o e-mail da pessoa. Só envie o link depois de receber o e-mail.
-- NUNCA junte duas perguntas de qualificação na mesma mensagem. Peça uma de cada vez, com espaçamento natural, como numa conversa real — nunca como lista ou formulário.
-- Quando for enviar o link do Jonei, use: https://wa.me/5566981320667
+Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais enquanto o Felipe está em atendimento.
 
 SOBRE O ESCRITÓRIO:
-- Nome: ${ESC_NOME}
-- Contador(a) responsável: ${CONT_NOME}
-- Posicionamento: consultoria financeira e contabilidade consultiva, com foco em resultados de alto retorno para o cliente
-- Cidade: ${CIDADE}
-- Especialidades gerais: Abertura MEI/ME, Assessoria Contábil, IRPF/IRPJ, Lucro Presumido/Real, Departamento Pessoal, Simples Nacional
+- Nome: Digital Contabilidade
+- Contador responsável: Felipe
+- Cidade: Patos/PB
+- Especialidades: MEI, ME, Simples Nacional, Lucro Presumido, IRPF/IRPJ, Departamento Pessoal, Reforma Tributária
 
 SKILL — SIMPLES NACIONAL:
-- Quem pode optar: ME até R$4,8M/ano, MEI até R$81.000/ano
+- ME até R$4,8M/ano, MEI até R$81.000/ano
 - DAS vence todo dia 20 do mês seguinte
 - PGDAS-D deve ser declarado antes do pagamento
 - Tributação unificada: IRPJ, CSLL, PIS, Cofins, CPP, ISS ou ICMS
@@ -350,148 +336,148 @@ SKILL — SIMPLES NACIONAL:
 - Exclusão por débito: 30 dias para regularizar após edital no DOU
 
 SKILL — MEI:
-- Limite de faturamento: R$81.000/ano (R$6.750/mês)
-- DAS MEI: valor fixo mensal — Comércio/Indústria R$76,90 + ICMS R$1,00; Serviços R$76,90 + ISS R$5,00; Comércio e Serviços R$76,90 + ICMS R$1,00 + ISS R$5,00
-- Pode ter 1 empregado pagando salário mínimo
-- Não pode ter sócio
-- DASN (declaração anual) vence em 31 de maio de cada ano
-- Pode emitir nota fiscal sim
+- Limite: R$81.000/ano (R$6.750/mês)
+- DAS MEI fixo: Comércio/Indústria R$76,90 + ICMS R$1,00; Serviços R$76,90 + ISS R$5,00
+- Pode ter 1 empregado com salário mínimo
+- DASN anual: vence 31 de maio
+- Pode emitir nota fiscal
 
-SKILL — ABERTURA DE EMPRESA:
-- MEI: cadastro pelo Portal do Empreendedor (gov.br) — gratuito e rápido
-- ME: requer contrato social, registro na Junta Comercial, CNPJ, inscrição estadual/municipal
-- Prazo médio: MEI no mesmo dia, ME de 5 a 15 dias úteis
-- Documentos necessários: RG, CPF, comprovante de residência, endereço do negócio
+SKILL — REFORMA TRIBUTÁRIA (CBS/IBS) — AGOSTO 2026:
+- A partir de 03/08/2026: NF-e, NFC-e, CT-e e NFS-e de empresas do Lucro Presumido e Lucro Real DEVEM sair com campos IBS e CBS preenchidos — nota sem esses campos é rejeitada automaticamente
+- Simples Nacional e MEI: exigência começa só em janeiro de 2027
+- 2026 é ano-piloto: alíquota simbólica de 1% (0,1% IBS + 0,9% CBS) sem recolhimento efetivo — só para calibrar o sistema
+- Quem não adaptou o emissor de NF-e até 03/08 está com nota travada = venda travada = faturamento parado
+- IBS: Imposto sobre Bens e Serviços — substitui ICMS e ISS, gerido pelo Comitê Gestor IBS
+- CBS: Contribuição sobre Bens e Serviços — substitui PIS e Cofins, gerida pela Receita Federal
 
-SKILL — IMPOSTO DE RENDA PESSOA FÍSICA:
-- Obrigatório declarar se: rendimentos acima de R$33.888/ano (2026), bens acima de R$800.000, recebeu rendimentos isentos acima de R$200.000
-- Prazo: geralmente março a maio de cada ano
-- Malha fina: divergência entre informações declaradas e cruzamento da Receita
+SKILL — OBRIGAÇÕES AGOSTO/2026 (dados reais da Receita Federal):
+- EFD-Contribuições (junho/2026): vence 14/08 — PIS, Cofins, CPRB
+- EFD-Reinf (julho/2026): vence 17/08 — retenções tributárias, integra DCTFWeb
+- PGDAS-D (julho/2026): vence 20/08 — declaração mensal Simples Nacional
+- DIRBI (julho/2026): vence 20/08 — incentivos e benefícios fiscais
+- DCTFWeb (julho/2026): vence 31/08 — consolida eSocial + EFD-Reinf
+- DME (julho/2026): vence 31/08 — operações em espécie acima de R$30.000
+- DeCripto (julho/2026): vence 31/08 — operações com criptoativos
 
 SKILL — LUCRO PRESUMIDO:
 - Faturamento até R$78M/ano
-- IRPJ: 15% sobre base presumida (8% comércio, 32% serviços)
+- IRPJ: 15% sobre base presumida (8% comércio, 32% serviços) + adicional 10% acima de R$60.000/trimestre
 - CSLL: 9% sobre base presumida
 - PIS/Cofins cumulativo: 0,65% + 3%
 - Apuração trimestral
 
-SKILL — REFORMA TRIBUTÁRIA (CBS/IBS) — ANO-PILOTO 2026:
-- A partir de 3 de agosto de 2026, toda nota fiscal eletrônica (NF-e, NFC-e, CT-e, NFS-e) de empresas do regime regular (Lucro Presumido ou Lucro Real) precisa sair com os campos de IBS e CBS preenchidos, sob pena de rejeição automática pelo sistema
-- Empresas do Simples Nacional e MEI NÃO entram nessa obrigatoriedade agora — a exigência para elas começa só em janeiro de 2027
-- Prazo de carência (sem multa) para adaptar os sistemas emissores: até 31 de julho de 2026 — depois disso, nota fora do padrão é nota rejeitada
-- 2026 é ano de transição: empresas destacam IBS/CBS com alíquota-teste simbólica de 1% (0,1% IBS + 0,9% CBS), sem recolhimento efetivo, apenas para calibrar o sistema
-- Pessoa física que se torna contribuinte de IBS/CBS (ex: quem aluga mais de 3 imóveis e fatura acima de R$240 mil/ano, produtor rural com receita acima de R$3,6 milhões, autônomos que optarem por ser contribuintes regulares) precisará de CNPJ (só para fins cadastrais) — prazo originalmente previsto para julho/2026 foi ADIADO para janeiro de 2027 pela Receita Federal e pelo Comitê Gestor do IBS
-- Impacto prático: emissor de nota que não estiver homologado no novo layout trava a nota fiscal, o que trava a venda e o faturamento do cliente
+SKILL — IA NA CONTABILIDADE (tema atual):
+- Ferramentas como o Codex do ChatGPT conseguem gerar scripts para extrair dados de sistemas como SEFAZ — é uma automação pontual e útil
+- Limitação: se o layout do portal mudar, o script quebra e precisa ser refeito manualmente
+- O ORBI Contábil complementa essas ferramentas: cuida do atendimento ao cliente final no WhatsApp, o que o Codex não faz
+- Conta Azul: sistema de gestão financeira com API aberta — futuramente o agente poderá consultar dados reais dos clientes do escritório em tempo real (status de boletos, notas emitidas, inadimplentes)
 
-OBRIGAÇÕES JULHO/2026:
-- DAS Simples: vence dia 20/07 — URGENTE
-- DCTFWeb: vence dia 25/07
-- ECF anual (2025): vence dia 31/07
-- eSocial junho: já enviado em 07/07
-- Adaptação do emissor de NF-e/NFC-e para campos IBS/CBS (empresas Lucro Presumido/Real): prazo final de carência 31/07, obrigatoriedade vale a partir de 03/08 — URGENTE
+SKILL — IRPF 2026:
+- Obrigatório declarar: rendimentos acima de R$33.888/ano, bens acima de R$800.000, rendimentos isentos acima de R$200.000
+- Prazo: março a maio de cada ano
+- Malha fina: divergência nos cruzamentos da Receita Federal
 
-REGRAS DE ATENDIMENTO:
-- Seja simpático, paciente e claro — muitos clientes são pequenos empreendedores sem conhecimento técnico
-- Use linguagem simples, explique termos quando necessário
-- Quando a dúvida for específica do caso do cliente, oriente a agendar consulta com ${CONT_NOME.split(' ')[0]}
+REGRAS:
+- Seja simpático, paciente e claro
+- Use linguagem simples, explique termos técnicos
 - Máximo 4 parágrafos por resposta
+- Quando a dúvida for específica do caso do cliente, oriente a falar com o Felipe
+- Sempre termine com: "Para o seu caso específico, o Felipe pode te atender pessoalmente no escritório ou pelo WhatsApp 😊"
 - Emojis com moderação
-- Sempre termine com: "Para o seu caso específico, ${CONT_NOME.split(' ')[0]} pode te atender pessoalmente no escritório ou pelo WhatsApp 😊"
 - ⚠️ Orientação geral — não substitui assessoria contábil formal. Dados protegidos pela LGPD — Lei 13.709/2018.`;
 
-let historico = [];
-let enviando = false;
+let historico=[];
+let enviando=false;
 
 function hora(){
   const d=new Date();
-  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
 
-function adicionarMsg(role, texto){
-  const msgs = document.getElementById('messages');
-  const typing = document.getElementById('typing-wrap');
-  const div = document.createElement('div');
-  div.className = `msg ${role==='user'?'user':'agent'}`;
-  const av = document.createElement('div');
-  av.className = 'msg-avatar';
-  av.textContent = role==='user'?'Você':'OC';
-  const content = document.createElement('div');
-  content.className = 'msg-content';
-  const name = document.createElement('span');
-  name.className = 'msg-name';
-  name.textContent = role==='user'?'Você':'ORBI Contábil';
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-  bubble.innerHTML = texto.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
-  const time = document.createElement('span');
-  time.className = 'msg-time';
-  time.textContent = hora();
+function adicionarMsg(role,texto){
+  const msgs=document.getElementById('messages');
+  const typing=document.getElementById('typing-wrap');
+  const div=document.createElement('div');
+  div.className='msg '+(role==='user'?'user':'agent');
+  const av=document.createElement('div');
+  av.className='msg-avatar';
+  av.textContent=role==='user'?'Você':'OC';
+  const content=document.createElement('div');
+  content.className='msg-content';
+  const name=document.createElement('span');
+  name.className='msg-name';
+  name.textContent=role==='user'?'Você':'ORBI Contábil';
+  const bubble=document.createElement('div');
+  bubble.className='msg-bubble';
+  bubble.innerHTML=texto.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  const time=document.createElement('span');
+  time.className='msg-time';
+  time.textContent=hora();
   content.appendChild(name);
   content.appendChild(bubble);
   content.appendChild(time);
   div.appendChild(av);
   div.appendChild(content);
-  msgs.insertBefore(div, typing);
-  msgs.scrollTop = msgs.scrollHeight;
+  msgs.insertBefore(div,typing);
+  msgs.scrollTop=msgs.scrollHeight;
 }
 
 function mostrarTyping(show){
-  document.getElementById('typing-wrap').style.display = show?'flex':'none';
-  document.getElementById('messages').scrollTop = 99999;
+  document.getElementById('typing-wrap').style.display=show?'flex':'none';
+  document.getElementById('messages').scrollTop=99999;
 }
 
 async function enviar(){
-  if(enviando) return;
-  const input = document.getElementById('chat-input');
-  const texto = input.value.trim();
-  if(!texto) return;
-  input.value=''; input.style.height='auto';
-  document.getElementById('send-btn').disabled = true;
-  document.getElementById('suggestions').style.display = 'none';
-  adicionarMsg('user', texto);
-  historico.push({role:'user', content:texto});
-  enviando = true;
+  if(enviando)return;
+  const input=document.getElementById('chat-input');
+  const texto=input.value.trim();
+  if(!texto)return;
+  input.value='';input.style.height='auto';
+  document.getElementById('send-btn').disabled=true;
+  document.getElementById('suggestions').style.display='none';
+  adicionarMsg('user',texto);
+  historico.push({role:'user',content:texto});
+  enviando=true;
   mostrarTyping(true);
   try{
-    const res = await fetch('/api/adv', {
+    const res=await fetch('/api/adv',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({messages: historico, system: SYSTEM})
+      body:JSON.stringify({messages:historico,system:SYSTEM})
     });
-    const data = await res.json();
-    const resp = data.content || 'Não consegui processar. Tente novamente.';
+    const data=await res.json();
+    const resp=data.content||'Não consegui processar. Tente novamente.';
     mostrarTyping(false);
-    adicionarMsg('agent', resp);
-    historico.push({role:'assistant', content:resp});
-  } catch(e){
+    adicionarMsg('agent',resp);
+    historico.push({role:'assistant',content:resp});
+  }catch(e){
     mostrarTyping(false);
-    adicionarMsg('agent', 'Problema de conexão. Tente novamente.');
+    adicionarMsg('agent','Problema de conexão. Tente novamente.');
   }
-  enviando = false;
-  document.getElementById('send-btn').disabled = false;
+  enviando=false;
+  document.getElementById('send-btn').disabled=false;
 }
 
 function enviarSug(btn){
-  document.getElementById('chat-input').value = btn.textContent;
+  document.getElementById('chat-input').value=btn.textContent;
   enviar();
 }
 
 function fazerLogin(){
-  const user = document.getElementById('login-user').value.trim().toLowerCase();
-  const pass = document.getElementById('login-pass').value.trim();
-  const err = document.getElementById('login-err');
-  if(user===LOGIN && pass===SENHA){
+  const user=document.getElementById('login-user').value.trim().toLowerCase();
+  const pass=document.getElementById('login-pass').value.trim();
+  if(user==='felipe'&&pass==='9301'){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='flex';
-    err.textContent='';
-  } else {
-    err.textContent='Usuário ou senha incorretos.';
+    document.getElementById('login-err').textContent='';
+  }else{
+    document.getElementById('login-err').textContent='Usuário ou senha incorretos.';
     document.getElementById('login-pass').value='';
   }
 }
 
-document.getElementById('login-pass').addEventListener('keydown', e=>{
-  if(e.key==='Enter') fazerLogin();
+document.getElementById('login-pass').addEventListener('keydown',e=>{
+  if(e.key==='Enter')fazerLogin();
 });
 
 function fazerLogout(){
