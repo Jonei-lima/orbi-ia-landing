@@ -184,12 +184,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .cmp-desc{font-size:0.79rem;color:var(--muted);line-height:1.55;}
 
 /* Node flow animation */
-.orbit{position:relative;height:440px;border-radius:16px;overflow:hidden;border:1px solid rgba(76,175,120,0.15);background:radial-gradient(ellipse at 50% 50%,rgba(76,175,120,0.16) 0%,rgba(76,175,120,0) 45%),linear-gradient(135deg,#07100d,#0d1a25);}
+#orbita{background:#07100d;}
+.orbit{position:relative;height:100vh;height:100svh;min-height:560px;max-height:920px;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,rgba(76,175,120,0.16) 0%,rgba(76,175,120,0) 45%),linear-gradient(135deg,#07100d,#0d1a25);}
 .orbit::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:32px 32px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);}
 .orbit-rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
 .orbit-rings ellipse{fill:none;stroke:rgba(76,175,120,0.18);stroke-width:1;stroke-dasharray:3 6;}
-.orbit-logo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:150px;z-index:2;filter:drop-shadow(0 0 24px rgba(76,175,120,0.35));}
-.orbit-pill{position:absolute;left:0;top:0;padding:11px 20px;border-radius:12px;background:rgba(18,22,26,0.82);border:1px solid rgba(255,255,255,0.10);box-shadow:0 10px 28px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.06);color:#fff;font-family:var(--font-head);font-weight:800;font-size:0.74rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);will-change:transform;}
+.orbit-logo{position:absolute;left:50%;top:calc(50% + var(--orbit-top,0px) / 2);transform:translate(-50%,-50%);width:clamp(150px,18vw,260px);z-index:2;filter:drop-shadow(0 0 24px rgba(76,175,120,0.35));}
+.orbit-pill{position:absolute;left:0;top:0;padding:clamp(11px,1.2vw,16px) clamp(20px,2.2vw,32px);border-radius:12px;background:rgba(18,22,26,0.82);border:1px solid rgba(255,255,255,0.10);box-shadow:0 10px 28px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.06);color:#fff;font-family:var(--font-head);font-weight:800;font-size:clamp(0.74rem,0.95vw,0.95rem);letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);will-change:transform;}
 
 /* ─── DEPOIMENTOS ─── */
 #depoimentos{background:var(--light);padding:100px 0;}
@@ -264,6 +265,13 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
 .f-col-t{font-size:0.67rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:14px;}
 .f-a{display:block;color:rgba(255,255,255,0.45);font-size:0.8rem;text-decoration:none;margin-bottom:7px;transition:color 0.2s;}
 .f-a:hover{color:var(--green);}
+.f-sig{margin-top:18px;font-size:0.78rem;line-height:1.5;color:rgba(255,255,255,0.45);}
+.f-sig strong{display:block;color:rgba(255,255,255,0.8);font-weight:700;}
+.f-phones{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px;margin-bottom:7px;}
+.f-phones .f-a{display:inline;margin:0;}
+.f-phones span{color:rgba(255,255,255,0.2);font-size:0.8rem;}
+.f-phones em{font-style:normal;color:var(--green);opacity:0.8;}
+.f-legal{margin-top:12px;font-size:0.7rem;line-height:1.6;color:rgba(255,255,255,0.3);}
 .f-bottom{padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
 .f-bottom p{color:rgba(255,255,255,0.2);font-size:0.68rem;}
 
@@ -280,13 +288,14 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
   .ceo-grid,.simios-grid,.ia-grid,.fale-grid{grid-template-columns:1fr;gap:36px;}
   .s-wrap{padding:0 24px;}
   .vgrid{grid-template-columns:1fr 1fr;}
-  .orbit{height:380px;}
-  .orbit-logo{width:84px;}
-  .orbit-pill{padding:8px 12px;font-size:0.6rem;}
+  .orbit-logo{width:120px;}
+  .orbit-pill{padding:9px 14px;font-size:0.66rem;}
+  .orbit-extra{display:none;}
+  .orbit{max-height:720px;}
 }
 @media(max-width:480px){
   .orbit-pill{padding:8px 10px;letter-spacing:0.04em;}
-  .orbit-logo{width:72px;}
+  .orbit-logo{width:100px;}
   .dep-grid{grid-template-columns:1fr;}
   .dep-vgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:8px;margin:0 -16px;padding-left:16px;padding-right:16px;}
   .dvid{flex:0 0 62%;scroll-snap-align:start;}
@@ -332,7 +341,7 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
         <a href="#ia" class="btn btn-ghost" style="color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.15);">Ver como funciona</a>
       </div>
       <div class="hero-nums">
-        <div><span class="h-n" data-target="1200" data-suffix="+">0+</span><span class="h-l">filmes produzidos</span></div>
+        <div><span class="h-n" data-target="3400" data-suffix="+">0+</span><span class="h-l">filmes produzidos</span></div>
         <div><span class="h-n" data-target="200" data-suffix="+">0+</span><span class="h-l">clientes atendidos</span></div>
         <div><span class="h-n" data-target="4" data-suffix="×">0×</span><span class="h-l">Prêmio TVCA-MT</span></div>
       </div>
@@ -358,6 +367,15 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
 </section>
 
 <!-- CEO -->
+<!-- ORBITA -->
+<section id="orbita" aria-label="Processos que os agentes da ORBI IA automatizam: Atendimento, Agendamento, Vendas, Triagem, Cobrança, Follow-up, Relatórios, Integrações">
+  <div class="orbit" id="orbit">
+    <svg class="orbit-rings" aria-hidden="true"><ellipse id="orbit-r1"/><ellipse id="orbit-r2"/></svg>
+    <img src="logo-orbi-white.png" alt="ORBI IA" class="orbit-logo">
+    <div class="orbit-pill">Atendimento</div><div class="orbit-pill">Agendamento</div><div class="orbit-pill">Vendas</div><div class="orbit-pill orbit-extra">Triagem</div><div class="orbit-pill">Cobrança</div><div class="orbit-pill">Follow-up</div><div class="orbit-pill orbit-extra">Relatórios</div><div class="orbit-pill">Integrações</div>
+  </div>
+</section>
+
 <section id="ceo">
   <div class="s-wrap">
     <div class="ceo-grid">
@@ -371,7 +389,7 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
         <h2 class="s-title">Uma história que começa em 1990.</h2>
         <p>Meu nome é Jonei Lima e comecei desde cedo nas "artes". Em 1990 levei um desenho do Bob Cuspe pra uma serigrafia de Rondonópolis e a pessoa perguntou quem havia feito o desenho e tchananan... adivinhe... euuuuu... kkk — acho que foi aí que entrei na área.</p>
         <p>Depois vieram as gráficas, a chegada em Cuiabá em 1995 e a passagem pelo Grupo Gazeta de Comunicação, onde aprendi muito com o mestre Dielcio Moreira.</p>
-        <p>Em 2005, com apoio da família, nasceu a <strong>Símios Agência &amp; Filmes</strong>. Já no primeiro ano veio o primeiro prêmio da TVCA — 19 anos de história, 1.200 filmes e 4 prêmios conquistados.</p>
+        <p>Em 2005, com apoio da família, nasceu a <strong>Símios Agência &amp; Filmes</strong>. Já no primeiro ano veio o primeiro prêmio da TVCA — 19 anos de história, 3.400 filmes e 4 prêmios conquistados.</p>
         <p>A obsessão sempre foi a mesma: resultado de verdade — não só algo bonito, mas algo que realmente ajude o negócio a crescer.</p>
         <p>Em 2026, após a Pós-Graduação em Inteligência Artificial, nasceu a ORBI IA. Os agentes que criamos vão além de conversar — eles executam tarefas, tomam decisões e geram resultados consistentes.</p>
         <p style="font-size:0.85rem;color:var(--muted);margin-top:6px;"><strong style="color:var(--dark);">Formação:</strong> Publicitário · Bacharel em Direito · Pós-Graduado em Inteligência Artificial — Estácio</p>
@@ -395,7 +413,7 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
         <p>Em quase duas décadas, passou por todos os cenários — pequenos negócios, grandes indústrias, campanhas políticas, gastronomia, agronegócio e a natureza do Mato Grosso.</p>
         <p>Toda essa bagagem prática é a base da ORBI IA.</p>
         <div class="simios-nums">
-          <div class="sn"><span class="sn-n" data-target="1200" data-suffix="+">0+</span><span class="sn-l">filmes produzidos</span></div>
+          <div class="sn"><span class="sn-n" data-target="3400" data-suffix="+">0+</span><span class="sn-l">filmes produzidos</span></div>
           <div class="sn"><span class="sn-n" data-target="200" data-suffix="+">0+</span><span class="sn-l">clientes atendidos</span></div>
           <div class="sn"><span class="sn-n" data-target="4" data-suffix="">0</span><span class="sn-l">prêmios TVCA-MT</span></div>
         </div>
@@ -481,11 +499,6 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
           <div class="cmp"><div><div class="cmp-dot r"></div></div><div><div class="cmp-name">Chatbot Simples</div><p class="cmp-desc">Responde perguntas pré-definidas como FAQ. Não aprende, não integra, não executa tarefas.</p></div></div>
           <div class="cmp"><div><div class="cmp-dot b"></div></div><div><div class="cmp-name">Assistente de IA (ChatGPT)</div><p class="cmp-desc">Inteligente, mas só age quando você pede. Não integra com seu negócio nem executa tarefas externas.</p></div></div>
           <div class="cmp hi"><div><div class="cmp-dot g"></div></div><div><div class="cmp-name">Agente de IA — ORBI IA</div><p class="cmp-desc">Tem objetivos, memória e ferramentas reais. Integra com WhatsApp, ERP e agenda. Age sozinho 24h.</p></div></div>
-        </div>
-        <div class="orbit" id="orbit" aria-label="Processos que os agentes da ORBI IA automatizam: Atendimento, Agendamento, Vendas, Cobrança, Follow-up, Integrações">
-          <svg class="orbit-rings" aria-hidden="true"><ellipse id="orbit-r1"/><ellipse id="orbit-r2"/></svg>
-          <img src="logo-orbi-white.png" alt="ORBI IA" class="orbit-logo">
-          <div class="orbit-pill">Atendimento</div><div class="orbit-pill">Agendamento</div><div class="orbit-pill">Vendas</div><div class="orbit-pill">Cobrança</div><div class="orbit-pill">Follow-up</div><div class="orbit-pill">Integrações</div>
         </div>
       </div>
     </div>
@@ -632,6 +645,7 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
       <div>
         <img src="logo-orbi-white.png" alt="ORBI IA" class="f-logo" style="height:64px;">
         <p class="f-desc">Automação inteligente com Agentes de IA — construída com 19 anos de experiência prática em comunicação e resultado.</p>
+        <p class="f-sig"><strong>Jonei Lima — CEO ORBI IA</strong><span>Publicitário · Pós-Graduado em IA</span></p>
       </div>
       <div>
         <div class="f-col-t">Navegação</div>
@@ -639,7 +653,7 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
       </div>
       <div>
         <div class="f-col-t">Contato</div>
-        <a href="https://wa.me/5566981320667" class="f-a">(66) 9.8132-0667</a><a href="https://wa.me/5519981410667" class="f-a">(19) 9.8141-0667</a><a href="mailto:contato@agenteorbiia.com" class="f-a">contato@agenteorbiia.com</a><span class="f-a" style="cursor:default;">GO · MT · PR · SP · PB</span>
+        <p class="f-phones"><a href="https://wa.me/5566981320667" class="f-a">(66) 98132-0667</a><span>·</span><a href="https://wa.me/5519981410667" class="f-a">(19) 98141-0667</a><span>·</span><a href="https://wa.me/5519997505888" class="f-a">(19) 99750-5888 <em>(Atendimento por IA)</em></a></p><a href="mailto:contato@agenteorbiia.com" class="f-a">contato@agenteorbiia.com</a><span class="f-a" style="cursor:default;">GO · MT · PB · SP</span><p class="f-legal">J MARCELIO LIMA LTDA — CNPJ 68.308.327/0001-69<br>Protegido por direitos autorais e conforme a LGPD</p>
       </div>
     </div>
     <div class="f-bottom">
@@ -681,19 +695,22 @@ document.querySelectorAll('.hero-nums,.simios-nums').forEach(el=>counterObs.obse
 // ── ORBIT ──
 (function(){
   const box=document.getElementById('orbit');if(!box)return;
-  const pills=[...box.querySelectorAll('.orbit-pill')];
+  let pills=[];
   const r1=document.getElementById('orbit-r1'),r2=document.getElementById('orbit-r2');
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let W=0,H=0,pw=0,ph=0,t=0,last=0,visible=false;
+  let W=0,H=0,T=0,pw=0,ph=0,t=0,last=0,visible=false;
   function size(){
-    W=box.clientWidth;H=box.clientHeight;
+    pills=[...box.querySelectorAll('.orbit-pill')].filter(p=>p.offsetParent!==null);
+    const nav=document.querySelector('nav');T=nav?nav.offsetHeight:0;
+    W=box.clientWidth;H=box.clientHeight-T;
+    box.style.setProperty('--orbit-top',T+'px');
     pw=Math.max(...pills.map(p=>p.offsetWidth));ph=Math.max(...pills.map(p=>p.offsetHeight));
     const o=orbits();
-    [[r1,o[0]],[r2,o[1]]].forEach(([e,v])=>{e.setAttribute('cx',W/2);e.setAttribute('cy',H/2);e.setAttribute('rx',v.rx);e.setAttribute('ry',v.ry);});
+    [[r1,o[0]],[r2,o[1]]].forEach(([e,v])=>{e.setAttribute('cx',W/2);e.setAttribute('cy',T+H/2);e.setAttribute('rx',v.rx);e.setAttribute('ry',v.ry);});
     place();
   }
   function orbits(){
-    const m=W<340?2:W<420?6:14,ox=W/2-pw/2-m,oy=H/2-ph/2-m;
+    const m=W<340?2:W<420?6:Math.max(14,W*0.06),ox=Math.min(W/2-pw/2-m,(H/2-ph/2-m)*1.9),oy=H/2-ph/2-m;
     return [{rx:ox,ry:oy},{rx:ox*0.55,ry:oy*0.55}];
   }
   function place(){
@@ -701,7 +718,7 @@ document.querySelectorAll('.hero-nums,.simios-nums').forEach(el=>counterObs.obse
     pills.forEach((p,i)=>{
       const a=(i/pills.length)*Math.PI*2+t;
       const x=W/2+Math.cos(a)*o[0].rx-p.offsetWidth/2;
-      const y=H/2+Math.sin(a)*o[0].ry-p.offsetHeight/2;
+      const y=T+H/2+Math.sin(a)*o[0].ry-p.offsetHeight/2;
       const depth=(Math.sin(a)+1)/2;
       p.style.transform=`translate(${x}px,${y}px) scale(${0.9+depth*0.12})`;
       p.style.opacity=0.72+depth*0.28;
