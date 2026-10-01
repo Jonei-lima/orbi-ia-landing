@@ -184,11 +184,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .cmp-desc{font-size:0.79rem;color:var(--muted);line-height:1.55;}
 
 /* Node flow animation */
-.node-flow{background:linear-gradient(135deg,#07100d,#0d1a25);border:1px solid rgba(76,175,120,0.15);border-radius:16px;padding:32px;position:relative;overflow:hidden;}
-.flow-canvas-wrap{height:200px;position:relative;}
-#flow-canvas{width:100%;height:100%;}
-.flow-labels{margin-top:16px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.flow-label{text-align:center;font-size:0.68rem;color:rgba(255,255,255,0.5);padding:6px;}
+.orbit{position:relative;height:440px;border-radius:16px;overflow:hidden;border:1px solid rgba(76,175,120,0.15);background:radial-gradient(ellipse at 50% 50%,rgba(76,175,120,0.16) 0%,rgba(76,175,120,0) 45%),linear-gradient(135deg,#07100d,#0d1a25);}
+.orbit::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:32px 32px;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);}
+.orbit-rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.orbit-rings ellipse{fill:none;stroke:rgba(76,175,120,0.18);stroke-width:1;stroke-dasharray:3 6;}
+.orbit-logo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:150px;z-index:2;filter:drop-shadow(0 0 24px rgba(76,175,120,0.35));}
+.orbit-pill{position:absolute;left:0;top:0;padding:11px 20px;border-radius:12px;background:rgba(18,22,26,0.82);border:1px solid rgba(255,255,255,0.10);box-shadow:0 10px 28px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.06);color:#fff;font-family:var(--font-head);font-weight:800;font-size:0.74rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);will-change:transform;}
 
 /* ─── DEPOIMENTOS ─── */
 #depoimentos{background:var(--light);padding:100px 0;}
@@ -279,6 +280,13 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
   .ceo-grid,.simios-grid,.ia-grid,.fale-grid{grid-template-columns:1fr;gap:36px;}
   .s-wrap{padding:0 24px;}
   .vgrid{grid-template-columns:1fr 1fr;}
+  .orbit{height:380px;}
+  .orbit-logo{width:84px;}
+  .orbit-pill{padding:8px 12px;font-size:0.6rem;}
+}
+@media(max-width:480px){
+  .orbit-pill{padding:8px 10px;letter-spacing:0.04em;}
+  .orbit-logo{width:72px;}
   .dep-grid{grid-template-columns:1fr;}
   .dep-vgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:8px;margin:0 -16px;padding-left:16px;padding-right:16px;}
   .dvid{flex:0 0 62%;scroll-snap-align:start;}
@@ -474,14 +482,10 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
           <div class="cmp"><div><div class="cmp-dot b"></div></div><div><div class="cmp-name">Assistente de IA (ChatGPT)</div><p class="cmp-desc">Inteligente, mas só age quando você pede. Não integra com seu negócio nem executa tarefas externas.</p></div></div>
           <div class="cmp hi"><div><div class="cmp-dot g"></div></div><div><div class="cmp-name">Agente de IA — ORBI IA</div><p class="cmp-desc">Tem objetivos, memória e ferramentas reais. Integra com WhatsApp, ERP e agenda. Age sozinho 24h.</p></div></div>
         </div>
-        <div class="node-flow">
-          <div class="flow-canvas-wrap"><canvas id="flow-canvas"></canvas></div>
-          <div class="flow-labels">
-            <div class="flow-label">Percebe</div>
-            <div class="flow-label">Raciocina</div>
-            <div class="flow-label">Executa</div>
-            <div class="flow-label">Entrega</div>
-          </div>
+        <div class="orbit" id="orbit" aria-label="Processos que os agentes da ORBI IA automatizam: Atendimento, Agendamento, Vendas, Cobrança, Follow-up, Integrações">
+          <svg class="orbit-rings" aria-hidden="true"><ellipse id="orbit-r1"/><ellipse id="orbit-r2"/></svg>
+          <img src="logo-orbi-white.png" alt="ORBI IA" class="orbit-logo">
+          <div class="orbit-pill">Atendimento</div><div class="orbit-pill">Agendamento</div><div class="orbit-pill">Vendas</div><div class="orbit-pill">Cobrança</div><div class="orbit-pill">Follow-up</div><div class="orbit-pill">Integrações</div>
         </div>
       </div>
     </div>
@@ -674,44 +678,46 @@ function animCount(el){
 const counterObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const els=e.target.querySelectorAll('[data-target]');els.forEach(animCount);counterObs.unobserve(e.target);}});},{threshold:0.3});
 document.querySelectorAll('.hero-nums,.simios-nums').forEach(el=>counterObs.observe(el));
 
-// ── FLOW CANVAS ──
-const fc=document.getElementById('flow-canvas');
-const fcCtx=fc.getContext('2d');
-function resizeFlow(){const w=fc.parentElement.offsetWidth;const h=fc.parentElement.offsetHeight;fc.width=w;fc.height=h;}
-resizeFlow();window.addEventListener('resize',resizeFlow);
-const nodes=[{x:0.12,y:0.5,label:'Input',color:'#4CAF78'},{x:0.38,y:0.5,label:'IA',color:'#5B76B8'},{x:0.62,y:0.5,label:'Tools',color:'#4CAF78'},{x:0.88,y:0.5,label:'Output',color:'#4CAF78'}];
-let flowT=0;
-function drawFlow(){
-  const w=fc.width;const h=fc.height;
-  fcCtx.clearRect(0,0,w,h);
-  // draw connections
-  for(let i=0;i<nodes.length-1;i++){
-    const a=nodes[i];const b=nodes[i+1];
-    const ax=a.x*w;const ay=a.y*h;const bx=b.x*w;const by=b.y*h;
-    fcCtx.beginPath();fcCtx.moveTo(ax,ay);fcCtx.lineTo(bx,by);
-    fcCtx.strokeStyle='rgba(76,175,120,0.2)';fcCtx.lineWidth=2;fcCtx.stroke();
-    // animated dot
-    const t=(flowT/100+i*0.25)%1;
-    const px=ax+(bx-ax)*t;const py=ay+(by-ay)*t;
-    fcCtx.beginPath();fcCtx.arc(px,py,4,0,Math.PI*2);
-    fcCtx.fillStyle='rgba(76,175,120,0.8)';fcCtx.fill();
+// ── ORBIT ──
+(function(){
+  const box=document.getElementById('orbit');if(!box)return;
+  const pills=[...box.querySelectorAll('.orbit-pill')];
+  const r1=document.getElementById('orbit-r1'),r2=document.getElementById('orbit-r2');
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W=0,H=0,pw=0,ph=0,t=0,last=0,visible=false;
+  function size(){
+    W=box.clientWidth;H=box.clientHeight;
+    pw=Math.max(...pills.map(p=>p.offsetWidth));ph=Math.max(...pills.map(p=>p.offsetHeight));
+    const o=orbits();
+    [[r1,o[0]],[r2,o[1]]].forEach(([e,v])=>{e.setAttribute('cx',W/2);e.setAttribute('cy',H/2);e.setAttribute('rx',v.rx);e.setAttribute('ry',v.ry);});
+    place();
   }
-  // draw nodes
-  nodes.forEach((n,i)=>{
-    const x=n.x*w;const y=n.y*h;
-    const pulse=1+Math.sin(flowT/20+i*1.2)*0.08;
-    fcCtx.beginPath();fcCtx.arc(x,y,18*pulse,0,Math.PI*2);
-    fcCtx.fillStyle=n.color+'22';fcCtx.fill();
-    fcCtx.beginPath();fcCtx.arc(x,y,14,0,Math.PI*2);
-    fcCtx.fillStyle=n.color;fcCtx.fill();
-    // glow
-    fcCtx.beginPath();fcCtx.arc(x,y,18*pulse,0,Math.PI*2);
-    fcCtx.strokeStyle=n.color+'44';fcCtx.lineWidth=2;fcCtx.stroke();
-  });
-  flowT+=0.6;
-  requestAnimationFrame(drawFlow);
-}
-setTimeout(drawFlow,500);
+  function orbits(){
+    const m=W<340?2:W<420?6:14,ox=W/2-pw/2-m,oy=H/2-ph/2-m;
+    return [{rx:ox,ry:oy},{rx:ox*0.55,ry:oy*0.55}];
+  }
+  function place(){
+    const o=orbits();
+    pills.forEach((p,i)=>{
+      const a=(i/pills.length)*Math.PI*2+t;
+      const x=W/2+Math.cos(a)*o[0].rx-p.offsetWidth/2;
+      const y=H/2+Math.sin(a)*o[0].ry-p.offsetHeight/2;
+      const depth=(Math.sin(a)+1)/2;
+      p.style.transform=`translate(${x}px,${y}px) scale(${0.9+depth*0.12})`;
+      p.style.opacity=0.72+depth*0.28;
+      p.style.zIndex=depth>0.5?3:1;
+    });
+  }
+  function tick(ts){
+    if(!visible){last=0;return;}
+    if(last)t+=(ts-last)/1000*0.12;
+    last=ts;place();requestAnimationFrame(tick);
+  }
+  size();window.addEventListener('resize',size);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(size);
+  if(reduce)return;
+  new IntersectionObserver(es=>{es.forEach(e=>{const was=visible;visible=e.isIntersecting;if(visible&&!was)requestAnimationFrame(tick);});}).observe(box);
+})();
 
 // ── VIDEO ──
 function openVid(id,vert){document.getElementById('vframe').src=`https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;const m=document.getElementById('vmodal');m.classList.toggle('vert',!!vert);m.classList.add('open');document.body.style.overflow='hidden';}
