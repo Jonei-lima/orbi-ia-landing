@@ -26,6 +26,24 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .nav-links{display:flex;gap:0;list-style:none;}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:0.83rem;font-weight:500;padding:7px 13px;border-radius:6px;transition:all 0.2s;display:block;}
 .nav-links a:hover,.nav-links a.active{color:var(--green);background:rgba(76,175,120,0.07);}
+.nav-dd{position:relative;}
+.nav-dd-btn{display:flex;align-items:center;gap:5px;background:none;border:0;cursor:pointer;color:var(--muted);font:inherit;font-size:0.83rem;font-weight:500;padding:7px 13px;border-radius:6px;transition:all 0.2s;}
+.nav-dd-btn svg{transition:transform 0.2s;}
+.nav-dd:hover .nav-dd-btn,.nav-dd:focus-within .nav-dd-btn{color:var(--green);background:rgba(76,175,120,0.07);}
+.nav-dd:hover .nav-dd-btn svg,.nav-dd:focus-within .nav-dd-btn svg{transform:rotate(180deg);}
+.nav-dd-menu{position:absolute;top:100%;left:50%;transform:translate(-50%,6px);min-width:270px;background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:12px;box-shadow:0 18px 48px rgba(0,0,0,0.12);padding:8px;opacity:0;visibility:hidden;transition:opacity 0.18s,transform 0.18s,visibility 0.18s;}
+.nav-dd-menu::before{content:'';position:absolute;left:0;right:0;top:-10px;height:10px;}
+.nav-dd:hover .nav-dd-menu,.nav-dd:focus-within .nav-dd-menu{opacity:1;visibility:visible;transform:translate(-50%,0);}
+.nav-links .nav-dd-menu a{display:block;padding:10px 12px;border-radius:8px;}
+.nav-dd-menu strong{display:block;color:var(--dark);font-size:0.84rem;font-weight:700;}
+.nav-dd-menu span{display:block;color:var(--muted);font-size:0.72rem;margin-top:2px;}
+.nav-links .nav-dd-menu a:hover strong{color:var(--green);}
+.nav-links .nav-dd-menu .nav-dd-all{border-top:1px solid rgba(0,0,0,0.06);border-radius:0 0 8px 8px;margin-top:4px;color:var(--green);font-weight:700;font-size:0.78rem;}
+.nav-burger{display:none;width:40px;height:40px;border:0;background:none;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:5px;}
+.nav-burger span{display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:transform 0.2s,opacity 0.2s;}
+nav.open .nav-burger span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+nav.open .nav-burger span:nth-child(2){opacity:0;}
+nav.open .nav-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 .nav-cta-btn{background:var(--green);color:#fff!important;border-radius:7px;margin-left:8px;}
 .nav-cta-btn:hover{background:var(--green2)!important;transform:translateY(-1px);}
 
@@ -283,8 +301,19 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
 .wa:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,0.5);}
 
 /* RESPONSIVE */
-@media(max-width:960px){
+@media(max-width:1099px){
   nav .nav-links{display:none;}
+  .nav-burger{display:flex;}
+  nav.open .nav-links{display:flex;flex-direction:column;position:absolute;top:66px;left:0;right:0;background:#fff;padding:10px 16px 18px;border-bottom:1px solid rgba(0,0,0,0.07);box-shadow:0 18px 40px rgba(0,0,0,0.1);max-height:calc(100vh - 66px);overflow-y:auto;}
+  nav.open .nav-links a,nav.open .nav-dd-btn{font-size:0.95rem;padding:12px 8px;}
+  nav.open .nav-dd-btn{width:100%;justify-content:space-between;}
+  nav.open .nav-dd .nav-dd-menu{position:static;transform:none!important;opacity:1;visibility:visible;box-shadow:none;border:0;min-width:0;padding:0 0 4px 8px;display:none;}
+  nav.open .nav-dd .nav-dd-btn svg{transform:none;}
+  nav.open .nav-dd.open .nav-dd-btn svg{transform:rotate(180deg);}
+  nav.open .nav-dd.open .nav-dd-menu{display:block;}
+  nav.open .nav-cta-btn{margin:10px 0 0;text-align:center;}
+}
+@media(max-width:960px){
   .nav-inner{padding:0 24px;}
   .hero-inner{grid-template-columns:1fr;gap:40px;padding:72px 24px;}
   .chat-mockup{display:none;}
@@ -320,10 +349,14 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
       <li><a href="#simios">A Símios</a></li>
       <li><a href="#filmes">Filmes</a></li>
       <li><a href="#ia">Agentes de IA</a></li>
+      <li class="nav-dd"><button type="button" class="nav-dd-btn" aria-haspopup="true" aria-expanded="false">Soluções <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="nav-dd-menu" role="menu"><a href="/advogados" role="menuitem"><strong>ORBI Jurídico</strong><span>Escritórios de advocacia</span></a><a href="/clinicas" role="menuitem"><strong>ORBI Clínicas</strong><span>Médica, odonto, estética e fisio</span></a><a href="/contador" role="menuitem"><strong>ORBI Contábil</strong><span>Escritórios de contabilidade</span></a><a href="/agro" role="menuitem"><strong>ORBI Agro</strong><span>Produtores e empresas do campo</span></a><a href="/politico" role="menuitem"><strong>ORBI Político</strong><span>Mandatos e campanhas</span></a><a href="/agentes" class="nav-dd-all" role="menuitem">Ver todos os agentes →</a></div>
+      </li>
       <li><a href="#depoimentos">Depoimentos</a></li>
       <li><a href="#fale">Fale conosco</a></li>
       <li><a href="#fale" class="nav-cta-btn">Falar agora</a></li>
     </ul>
+    <button type="button" class="nav-burger" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -574,7 +607,7 @@ footer{background:#0d1117;padding:52px 48px;border-top:1px solid rgba(255,255,25
             <span class="dep-role">G5News · Goiânia-GO</span>
           </div>
         </div>
-        <p class="dep-text">Com a automação desenvolvida pela ORBI, conseguimos manter o portal atualizado de forma muito mais eficiente. A IA organiza o fluxo editorial e acelera a publicação de conteúdos nacionais, aumentando nossa produtividade. A indexação do portal no Google cresceu 300%.</p>
+        <p class="dep-text">Com a automação desenvolvida pela ORBI, conseguimos manter o portal atualizado de forma muito mais eficiente. A IA organiza o fluxo editorial e acelera a publicação de conteúdos nacionais, aumentando nossa produtividade. Em 3 meses, a indexação do portal no Google cresceu 300%.</p>
       </div>
 
 
@@ -747,6 +780,14 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeVidBtn();});
 
 // ── FORM ──
 function submitForm(e){e.preventDefault();document.getElementById('contact-form').style.display='none';document.getElementById('form-ok').style.display='block';setTimeout(()=>{window.open('https://wa.me/5566981320667?text=Ol%C3%A1%2C%20enviei%20uma%20mensagem%20pelo%20site%20ORBI%20IA','_blank');},1200);}
+
+// ── NAV MENU ──
+(function(){
+  const nav=document.querySelector('nav'),burger=nav.querySelector('.nav-burger'),dd=nav.querySelector('.nav-dd'),ddBtn=dd.querySelector('.nav-dd-btn');
+  burger.addEventListener('click',()=>{const o=nav.classList.toggle('open');burger.setAttribute('aria-expanded',o);burger.setAttribute('aria-label',o?'Fechar menu':'Abrir menu');});
+  ddBtn.addEventListener('click',()=>{const o=dd.classList.toggle('open');ddBtn.setAttribute('aria-expanded',o);});
+  nav.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');burger.setAttribute('aria-expanded',false);}));
+})();
 
 // ── NAV ACTIVE ──
 const secs=document.querySelectorAll('section[id]');
