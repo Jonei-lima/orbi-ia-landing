@@ -274,6 +274,17 @@ p{margin:0;font-size:24px;line-height:1.5;color:var(--muted);max-width:62ch}
 .vt{font-family:var(--f-display);font-size:24px;font-weight:600;line-height:1.15}
 .vcard iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
+.pat-head{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
+.pat-stats{display:flex;gap:36px}
+.pat-stats>div{display:flex;flex-direction:column;gap:6px;max-width:190px}
+.pat-stats .num{font-family:var(--f-display);font-weight:800;font-size:52px;line-height:1;color:var(--saffron);font-variant-numeric:tabular-nums}
+.pat-stats .lbl{font-family:var(--f-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);line-height:1.4}
+.pat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:6px}
+.pat-grid figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.pat-grid .photo{position:relative;aspect-ratio:1/1;max-height:470px;border-radius:6px;overflow:hidden}
+.pat-grid .photo img{position:absolute;inset:0}
+.pat-grid figcaption{font-family:var(--f-mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone)}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
@@ -362,6 +373,26 @@ p{margin:0;font-size:24px;line-height:1.5;color:var(--muted);max-width:62ch}
         <span class="vplay" aria-hidden="true"></span>
         <span class="vmeta"><span class="vk">6ª edição</span><span class="vt">Chefs Jack Calhao e Carol Paiva</span></span>
       </a>
+    </div>
+  </section>
+
+  <!-- PATROCINADORES -->
+  <section class="slide" data-title="Patrocinadores">
+    <div class="pat-head">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="eyebrow rise">Quem já patrocinou</div>
+        <h2 class="rise d1" style="font-size:52px">Cada edição lotava de <em>marcas</em>.</h2>
+      </div>
+      <div class="pat-stats rise d2">
+        <div><span class="num">15 a 17</span><span class="lbl">patrocinadores por edição</span></div>
+        <div><span class="num">30+</span><span class="lbl">marcas diferentes em três edições</span></div>
+        <div><span class="num">11</span><span class="lbl">marcas voltaram em mais de uma edição</span></div>
+      </div>
+    </div>
+    <div class="pat-grid">
+      <figure class="rise d2"><div class="photo kb1"><img src="/cozinhagourmet/img/pat-2ed.jpg" alt="Painel com os 17 parceiros da 2ª edição do Cozinha Gourmet"></div><figcaption>2ª edição · 17 marcas</figcaption></figure>
+      <figure class="rise d3"><div class="photo kb2"><img src="/cozinhagourmet/img/pat-braseiro.jpg" alt="Painel com os 16 patrocinadores da edição especial Braseiro"></div><figcaption>Especial Braseiro · 16 marcas</figcaption></figure>
+      <figure class="rise d4"><div class="photo kb3"><img src="/cozinhagourmet/img/pat-6ed.jpg" alt="Painel com os 15 patrocinadores da 6ª edição"></div><figcaption>6ª edição · 15 marcas</figcaption></figure>
     </div>
   </section>
 
@@ -634,18 +665,6 @@ p{margin:0;font-size:24px;line-height:1.5;color:var(--muted);max-width:62ch}
     </div>
   </section>
 
-  <!-- PRÓXIMOS 15 DIAS -->
-  <section class="slide" data-title="Próximos 15 dias">
-    <div class="eyebrow rise">Próximos 15 dias</div>
-    <h2 class="rise d1">Quinze dias para sair do papel.</h2>
-    <ol class="steps15 rise d2">
-      <li><span>Dias 1 a 3</span>Registrar a marca Cozinha Gourmet: consulta no INPI, @ e domínio</li>
-      <li><span>Dias 1 a 5</span>Definir a cozinha-palco e o chef do episódio piloto</li>
-      <li><span>Dias 4 a 10</span>Levar a proposta a pelo menos 3 candidatos à cota máster</li>
-      <li><span>Dias 10 a 15</span>Fechar o primeiro patrocinador e a data de gravação do piloto</li>
-    </ol>
-    <img class="end-logo rise d3" src="/cozinhagourmet/img/nexo-logo.png" alt="Nexo">
-  </section>
 </div>
 </div>
 
