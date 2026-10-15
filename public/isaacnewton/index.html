@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Proposta · Agente de atendimento · Isaac Newton Kids</title>
+<meta name="description" content="Proposta da ORBI IA para o agente de atendimento com inteligência artificial da Escola Isaac Newton Kids, unidade Campinas.">
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#F5F3EE; --branco:#FFFFFF; --cinza:#ECE9E2;
+  --tinta:#1E2421; --tinta2:#4D5550; --tinta3:#7E8580;
+  --verde:#2F5B41; --verde2:#264A36; --linha:#DCD7CC;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--papel);color:var(--tinta);font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+section{padding:88px 0;border-top:1px solid var(--linha)}
+h1,h2,h3{font-weight:500;letter-spacing:-.015em;line-height:1.15}
+h1{font-size:clamp(34px,5.4vw,58px)}
+h2{font-size:clamp(28px,3.8vw,42px);max-width:900px}
+h3{font-size:20px}
+.sec{font-size:15px;font-weight:500;color:var(--verde);margin-bottom:14px}
+.lead{font-size:clamp(17px,1.8vw,20px);color:var(--tinta2);max-width:760px;margin-top:18px}
+p{color:var(--tinta2)}
+.r{opacity:0;transform:translateY(14px);transition:opacity .8s ease,transform .8s ease}
+.r.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}}
+
+/* topo */
+.topo{background:var(--papel);border-top:none;padding:0}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;min-height:92vh}
+.hero .txt{padding:56px 24px 56px max(24px,calc((100vw - 1120px)/2 + 24px));display:flex;flex-direction:column}
+.hero .logo{width:210px}
+.hero .tipo{margin-top:auto;padding-top:64px;font-size:15px;font-weight:500;color:var(--verde)}
+.hero h1{margin:14px 0 22px;max-width:620px}
+.hero .meta{margin-top:40px;font-size:14px;color:var(--tinta3)}
+.hero .foto{background:#d6cdbd url('https://campinas.isaacnewton.com.br/wp-content/uploads/2026/03/IMG_4218-1-scaled.webp') center/cover}
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero .foto{height:42vh;order:-1}
+  .hero .txt{padding:36px 24px 48px}
+  .hero .tipo{padding-top:36px}
+}
+
+/* ouvimos */
+.ouv{display:grid;grid-template-columns:1fr 1fr;gap:28px 64px;margin-top:44px}
+.ouv > div{display:grid;grid-template-columns:36px 1fr;border-top:1px solid var(--linha);padding-top:18px}
+.ouv .n{font-size:18px;color:var(--verde);font-weight:500}
+.ouv h3{margin-bottom:6px}
+@media (max-width:720px){.ouv{grid-template-columns:1fr}}
+
+/* estudos */
+.est2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px}
+.est{background:var(--branco);padding:30px 32px}
+.est .fonte{font-size:13.5px;color:var(--tinta3);margin-bottom:18px}
+.est .fonte a{color:var(--tinta2)}
+.est .big{font-size:clamp(64px,8vw,92px);font-weight:300;line-height:1;color:var(--verde);letter-spacing:-.03em}
+.est .big span{font-size:26px;margin-left:6px;letter-spacing:0}
+.est p{font-size:17px;margin-top:12px}
+.est .mais{margin-top:18px;padding-top:16px;border-top:1px solid var(--cinza);font-size:15.5px}
+.est .mais b{color:var(--tinta);font-weight:500}
+.nota{font-size:13.5px;color:var(--tinta3);margin-top:18px;max-width:900px}
+.destaque{margin-top:32px;padding:20px 24px;border-left:3px solid var(--verde);background:var(--branco);font-size:17px;color:var(--tinta);max-width:900px}
+@media (max-width:720px){.est2{grid-template-columns:1fr}}
+
+/* comparação */
+.cmp{width:100%;border-collapse:collapse;margin-top:36px}
+.cmp th{text-align:left;font-size:15px;font-weight:600;padding:0 24px 14px 0;border-bottom:2px solid var(--tinta)}
+.cmp th.ag{color:var(--verde)}
+.cmp td{padding:15px 24px 15px 0;border-bottom:1px solid var(--linha);font-size:16px;color:var(--tinta2);vertical-align:top}
+.cmp td:first-child{width:230px;color:var(--tinta);font-weight:500}
+.cmp td:last-child{color:var(--tinta)}
+@media (max-width:720px){
+  .cmp thead{display:none}
+  .cmp,.cmp tbody,.cmp tr,.cmp td{display:block;width:100%}
+  .cmp tr{padding:16px 0;border-bottom:1px solid var(--linha)}
+  .cmp td{border:none;padding:4px 0}
+  .cmp td:first-child{width:auto;font-size:17px;margin-bottom:4px}
+  .cmp td:nth-child(2)::before{content:"IA comum: ";font-weight:600;color:var(--tinta3)}
+  .cmp td:nth-child(3)::before{content:"Agente ORBI: ";font-weight:600;color:var(--verde)}
+}
+
+/* agente */
+.g-ag{display:grid;grid-template-columns:260px 1fr;gap:56px;margin-top:40px}
+.nums > div{padding:14px 0;border-top:1px solid var(--linha)}
+.nums b{font-size:56px;font-weight:300;line-height:1;color:var(--verde);display:block}
+.nums span{font-size:15px;color:var(--tinta2)}
+.faz{list-style:none;background:var(--branco);padding:12px 28px}
+.faz li{padding:14px 0 14px 30px;border-bottom:1px solid var(--cinza);position:relative;font-size:16.5px;color:var(--tinta)}
+.faz li:last-child{border-bottom:none}
+.faz li::before{content:"";position:absolute;left:4px;top:23px;width:9px;height:9px;border-radius:50%;background:var(--verde)}
+.faz li span{display:block;font-size:14.5px;color:var(--tinta2)}
+.depois{margin-top:18px;font-size:15px;color:var(--tinta3)}
+@media (max-width:820px){.g-ag{grid-template-columns:1fr;gap:24px}.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.nums b{font-size:44px}}
+
+/* painel */
+.g-pn{display:grid;grid-template-columns:1.5fr 1fr;gap:48px;margin-top:40px;align-items:start}
+.tela{background:var(--branco);border:1px solid var(--linha);box-shadow:0 18px 40px rgba(30,36,33,.08);overflow:hidden;font-size:13px}
+.tela .bar{display:flex;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--cinza);color:var(--tinta2)}
+.tela .bar b{color:var(--tinta);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--cinza)}
+.kpis div{padding:14px 16px;border-right:1px solid var(--cinza)}
+.kpis div:last-child{border-right:none}
+.kpis span{font-size:12px;color:var(--tinta3);display:block}
+.kpis b{font-size:26px;font-weight:400;display:block}
+.kpis small{font-size:11.5px;color:var(--verde)}
+.lin{display:flex;justify-content:space-between;gap:10px;padding:11px 16px;border-bottom:1px solid var(--cinza)}
+.lin b{font-weight:500;display:block}
+.lin span{color:var(--tinta3);font-size:12px}
+.st{font-size:11.5px;padding:3px 8px;border-radius:3px;align-self:center;white-space:nowrap}
+.ok{background:#E3EEE6;color:var(--verde)}.at{background:#F1ECDF;color:#7A6328}.tr{background:#F4E4E1;color:#8E3328}
+.ilus{font-size:12.5px;color:var(--tinta3);margin-top:10px}
+.lista h3{margin-bottom:10px}
+.lista ul{list-style:none}
+.lista li{padding:9px 0 9px 20px;position:relative;font-size:16px;color:var(--tinta2)}
+.lista li::before{content:"";position:absolute;left:0;top:18px;width:7px;height:7px;border-radius:50%;background:var(--verde)}
+@media (max-width:820px){.g-pn{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.kpis div:nth-child(2){border-right:none}.kpis div:nth-child(-n+2){border-bottom:1px solid var(--cinza)}}
+
+/* cronograma */
+.crono{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
+.crono > div{background:var(--branco);padding:26px 28px;border-top:3px solid var(--verde)}
+.crono .q{font-size:14px;font-weight:600;color:var(--verde)}
+.crono h3{margin:6px 0 8px}
+.crono p{font-size:15.5px}
+@media (max-width:820px){.crono{grid-template-columns:1fr}}
+
+/* conta */
+.g-ct{display:grid;grid-template-columns:340px 1fr;gap:48px;margin-top:40px;align-items:center}
+.prem label{display:flex;justify-content:space-between;align-items:baseline;font-weight:500}
+.prem output{font-size:24px;font-weight:400}
+.prem input{width:100%;margin-top:12px;accent-color:var(--verde)}
+.prem small{display:block;font-size:13.5px;color:var(--tinta3);margin-top:6px}
+.aluno{margin-top:26px;padding:18px 22px;background:var(--branco)}
+.aluno span{font-size:14px;color:var(--tinta3)}
+.aluno b{display:block;font-size:34px;font-weight:400}
+.res{background:var(--verde);color:#fff;padding:36px 40px}
+.res .l{font-size:14px;color:rgba(255,255,255,.65)}
+.res .big{font-size:clamp(80px,10vw,120px);font-weight:300;line-height:.95;letter-spacing:-.03em;margin:8px 0}
+.res .big small{font-size:24px;letter-spacing:0;margin-left:8px;font-weight:400}
+.res p{color:rgba(255,255,255,.85);font-size:17px}
+.res .det{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.2);font-size:14px;color:rgba(255,255,255,.65)}
+@media (max-width:820px){.g-ct{grid-template-columns:1fr}}
+
+/* compromissos */
+.termos{display:grid;grid-template-columns:repeat(3,1fr);gap:0 48px;margin-top:36px}
+.termo{padding:20px 0;border-top:1px solid var(--linha)}
+.termo h3{font-size:17px;font-weight:600;margin-bottom:6px}
+.termo p{font-size:15.5px}
+.fora{margin-top:22px;background:var(--branco);padding:18px 24px;font-size:15.5px;color:var(--tinta2)}
+.fora b{color:var(--tinta);font-weight:600}
+@media (max-width:820px){.termos{grid-template-columns:1fr}}
+
+/* investimento */
+.inv{width:100%;border-collapse:collapse;margin-top:32px}
+.inv th{text-align:left;font-size:15px;font-weight:600;padding:0 16px 12px 0;border-bottom:2px solid var(--tinta)}
+.inv th.vv,.inv td.vv{text-align:right}
+.inv td{padding:18px 16px 18px 0;border-bottom:1px solid var(--linha);vertical-align:top}
+.inv td .n{font-size:18px;font-weight:500;display:block}
+.inv td small{display:block;font-size:14px;color:var(--tinta3);margin-top:2px}
+.inv td.vv{font-size:24px;white-space:nowrap}
+.inv td.cd{font-size:15px;color:var(--tinta2);width:280px}
+@media (max-width:720px){
+  .inv thead{display:none}
+  .inv,.inv tbody,.inv tr,.inv td{display:block;width:100%}
+  .inv tr{padding:16px 0;border-bottom:1px solid var(--linha)}
+  .inv td{border:none;padding:2px 0;text-align:left!important}
+  .inv td.cd{width:auto}
+}
+.obs{margin-top:16px;font-size:14px;color:var(--tinta3)}
+
+/* aprovação */
+.aprova{background:var(--verde2);color:#fff;border-top:none}
+.aprova h2{color:#fff}
+.aprova .sec{color:#B9D3C2}
+.aprova p{color:rgba(255,255,255,.82)}
+.botoes{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 26px;font-size:16.5px;font-weight:500;text-decoration:none;border-radius:4px;transition:transform .15s ease,background .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.p{background:#fff;color:var(--verde2)}
+.btn.s{border:1px solid rgba(255,255,255,.45);color:#fff}
+.btn svg{width:20px;height:20px}
+.ass{margin-top:56px;padding-top:28px;border-top:1px solid rgba(255,255,255,.2);display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px}
+.ass .nome{font-size:24px;font-weight:500;color:#fff}
+.ass .cargo{font-size:15px;font-weight:600;color:#B9D3C2;margin-top:4px}
+.ass .form{font-size:14.5px;color:rgba(255,255,255,.75);margin-top:2px}
+.ass .ct{font-size:14.5px;line-height:1.75;color:rgba(255,255,255,.8);text-align:right}
+.ass .ct a{text-decoration:none}
+@media (max-width:720px){.ass .ct{text-align:left}}
+
+/* rodapé */
+footer{padding:56px 0 64px;background:var(--papel)}
+footer .logo{width:170px;margin-bottom:28px}
+.conf{font-size:12.5px;color:var(--tinta3);max-width:860px;line-height:1.6}
+.conf b{color:var(--tinta2);font-weight:600;display:block;margin-bottom:4px}
+.conf ol{margin:8px 0 8px 18px}
+.cnpj{margin-top:18px;font-size:12.5px;color:var(--tinta3)}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="hero">
+    <div class="txt">
+      <img class="logo r" src="/isaacnewton/logo-escola.svg" alt="Escola Isaac Newton · Campinas-SP">
+      <div class="tipo r">Proposta comercial · ORBI IA</div>
+      <h1 class="r">Agente de atendimento com IA para a Isaac Newton Kids</h1>
+      <p class="lead r">Atendimento completo no WhatsApp da unidade, 24 horas por dia, em operação em até 20 dias.</p>
+      <div class="meta r">Escola Isaac Newton Kids, unidade Campinas · Outubro de 2026 · Documento confidencial</div>
+    </div>
+    <div class="foto" role="img" aria-label="Espaço da escola"></div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="sec r">1. Ponto de partida</div>
+    <h2 class="r">O que ouvimos na nossa conversa</h2>
+    <div class="ouv">
+      <div class="r"><span class="n">1</span><div><h3>A IA anterior não era confiável</h3><p>Errava com frequência. Hoje a escola usa a IA apenas para triagem.</p></div></div>
+      <div class="r"><span class="n">2</span><div><h3>O atendimento é a prioridade agora</h3><p>Com as matrículas de 2027 em andamento, cada família precisa de resposta rápida e completa.</p></div></div>
+      <div class="r"><span class="n">3</span><div><h3>A direção quer acompanhar</h3><p>Saber o que está sendo dito às famílias e o que precisa de atenção da equipe.</p></div></div>
+      <div class="r"><span class="n">4</span><div><h3>Implantação no ritmo da escola</h3><p>Começar pelo que resolve o problema mais urgente, sem colocar tudo no ar de uma vez.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec r">2. Contexto</div>
+    <h2 class="r">O tempo de resposta pesa na decisão da família</h2>
+    <div class="est2">
+      <div class="est r">
+        <div class="fonte"><a href="https://www.mortech.com/hs-fs/hub/25649/file-13535879-pdf/docs/mit_study.pdf" target="_blank" rel="noopener">MIT e InsideSales · Lead Response Management Study, 2007</a></div>
+        <div class="big">21<span>vezes</span></div>
+        <p>é quanto aumenta a chance de qualificar um contato quando a resposta vem em 5 minutos, em vez de 30.</p>
+        <div class="mais">Entre 5 e 10 minutos, essa chance já cai <b>4 vezes</b>.</div>
+      </div>
+      <div class="est r">
+        <div class="fonte"><a href="https://scholarsarchive.byu.edu/facpub/9711" target="_blank" rel="noopener">Harvard Business Review · The Short Life of Online Sales Leads, 2011</a></div>
+        <div class="big">7<span>vezes</span></div>
+        <p>mais chance de avançar a conversa para quem respondeu em até 1 hora, comparado a quem demorou mais.</p>
+        <div class="mais">Contra quem levou 24 horas ou mais, a diferença passou de <b>60 vezes</b>. O estudo avaliou 2.241 empresas.</div>
+      </div>
+    </div>
+    <p class="destaque r">A família que escreve à noite ou no fim de semana costuma conversar com mais de uma escola ao mesmo tempo. Quem responde primeiro, e com informação completa, tem vantagem na visita.</p>
+    <p class="nota r">Os dois estudos foram feitos com empresas nos Estados Unidos e medem a chance de contato e qualificação, não de matrícula. Servem como referência de comportamento, não como previsão para a escola.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec r">3. Confiança</div>
+    <h2 class="r">Por que um agente de automação é diferente de uma IA comum?</h2>
+    <table class="cmp r">
+      <thead><tr><th></th><th>IA comum</th><th class="ag">Agente de automação ORBI</th></tr></thead>
+      <tbody>
+        <tr><td>De onde vem a resposta</td><td>Cria um texto com base no que parece provável. Pode inventar.</td><td>Consulta uma base aprovada pela direção. Se não encontrar a informação, encaminha para a equipe.</td></tr>
+        <tr><td>O que faz</td><td>Responde perguntas.</td><td>Executa tarefas: agenda a visita, envia o lembrete, retoma o contato e registra tudo no painel.</td></tr>
+        <tr><td>Limites</td><td>Tenta responder tudo.</td><td>Segue regras do que pode e do que não pode dizer, como descontos, exceções e temas pedagógicos.</td></tr>
+        <tr><td>Quando a família quer uma pessoa</td><td>Nem sempre consegue.</td><td>Transfere na hora para a equipe, com o resumo da conversa.</td></tr>
+        <tr><td>Quando algo sai errado</td><td>Ninguém fica sabendo, e o erro se repete.</td><td>O agente tem acompanhamento e evolução contínuos. Qualquer situação ainda não validada é identificada e corrigida.</td></tr>
+      </tbody>
+    </table>
+    <p class="destaque r"><b>Critério de aceite:</b> o agente só começa a atender as famílias depois de testado com perguntas reais e aprovado formalmente pela direção.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec r">4. O agente</div>
+    <h2 class="r">Um atendente dedicado às famílias interessadas, o ano inteiro</h2>
+    <div class="g-ag">
+      <div class="nums r">
+        <div><b>24</b><span>horas por dia</span></div>
+        <div><b>7</b><span>dias por semana</span></div>
+        <div><b>365</b><span>dias por ano</span></div>
+      </div>
+      <div class="r">
+        <ul class="faz">
+          <li>Responde na hora<span>Valores, períodos, programa bilíngue e o que a direção aprovar, no tom da escola.</span></li>
+          <li>Agenda a visita<span>Direto na agenda de visitas, sem a família precisar esperar retorno.</span></li>
+          <li>Lembra na véspera<span>Confirma a visita e reduz as faltas.</span></li>
+          <li>Retoma quem ainda não decidiu<span>Volta a falar com quem visitou e não matriculou, sem pressão.</span></li>
+          <li>Passa para a equipe o que precisa de uma pessoa<span>Com o resumo da conversa, para ninguém começar do zero.</span></li>
+        </ul>
+        <p class="depois">Atende quem chega por indicação, Google, Instagram ou site, com ou sem campanha no ar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec r">5. Painel da direção</div>
+    <h2 class="r">A direção acompanha tudo em um só lugar</h2>
+    <div class="g-pn">
+      <div class="r">
+        <div class="tela">
+          <div class="bar"><b>Painel da direção · Isaac Newton Kids</b><span>Esta semana</span></div>
+          <div class="kpis">
+            <div><span>Conversas</span><b>38</b><small>12 fora do horário</small></div>
+            <div><span>Visitas agendadas</span><b>11</b><small>4 confirmadas</small></div>
+            <div><span>Com a equipe</span><b>3</b><small>aguardando retorno</small></div>
+            <div><span>Conversa para visita</span><b>29%</b><small>últimos 7 dias</small></div>
+          </div>
+          <div class="lin"><div><b>Mãe da Helena · Infantil 4 anos</b><span>Novo contato · sáb, 21h40</span></div><span class="st ok">Visita agendada</span></div>
+          <div class="lin"><div><b>Pai do Miguel · 2º ano</b><span>Novo contato · sáb, 10h12</span></div><span class="st at">Em atendimento</span></div>
+          <div class="lin"><div><b>Mãe do Davi · Infantil 3 anos</b><span>Novo contato · sex, 19h05</span></div><span class="st tr">Com a secretaria</span></div>
+          <div class="lin"><div><b>Mãe da Alice · 1º ano</b><span>Novo contato · sex, 14h30</span></div><span class="st ok">Visita agendada</span></div>
+        </div>
+        <div class="ilus">Imagem ilustrativa, com dados fictícios.</div>
+      </div>
+      <div class="lista r">
+        <h3>O que a direção pode fazer</h3>
+        <ul>
+          <li>Ler qualquer conversa, do início ao fim</li>
+          <li>Ver a agenda de visitas e quem confirmou</li>
+          <li>Saber o que foi passado para a equipe e o que já foi resolvido</li>
+          <li>Acompanhar quantas conversas viram visita</li>
+          <li>Acessar pelo computador ou pelo celular, com login próprio</li>
+        </ul>
+        <p class="nota">O comparecimento à visita e a matrícula são marcados pela secretaria no painel, com um clique.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec r">6. Implantação</div>
+    <h2 class="r">Em até 20 dias, o agente está atendendo as famílias</h2>
+    <div class="crono">
+      <div class="r"><div class="q">Semana 1</div><h3>Levantamento</h3><p>Reunião com a secretaria para reunir valores, regras, horários de visita e as perguntas mais comuns dos pais.</p></div>
+      <div class="r"><div class="q">Semanas 2 e 3</div><h3>Construção e testes</h3><p>O agente é montado e testado com perguntas reais. A direção aprova antes de publicar.</p></div>
+      <div class="r"><div class="q">A partir do dia 20</div><h3>No ar, com acompanhamento</h3><p>O agente começa a atender as famílias, com acompanhamento e evolução contínuos.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec r">7. A conta</div>
+    <h2 class="r">Quantas matrículas pagam o primeiro ano</h2>
+    <div class="g-ct">
+      <div class="prem r">
+        <label for="iM">Mensalidade <output id="oM"></output></label>
+        <input type="range" id="iM" min="800" max="3000" step="50" value="1300">
+        <small>Ajuste para o valor real da escola.</small>
+        <div class="aluno"><span>Um aluno durante um ano</span><b id="oA"></b></div>
+      </div>
+      <div class="res r">
+        <div class="l">Agente de atendimento · primeiro ano</div>
+        <div class="big" id="eA"></div>
+        <p id="cA"></p>
+        <div class="det" id="dA"></div>
+      </div>
+    </div>
+    <p class="nota r">Conta de equilíbrio, não promessa de resultado. Considera a implantação, 12 mensalidades e a licença anual. Taxa de matrícula, material e permanência maior que um ano não entram no cálculo.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec r">8. Compromissos</div>
+    <h2 class="r">O que assumimos por escrito</h2>
+    <div class="termos">
+      <div class="termo r"><h3>Prazo</h3><p>Agente no ar em até 20 dias, contados a partir do envio das informações pela escola.</p></div>
+      <div class="termo r"><h3>Aceite</h3><p>Nada vai para as famílias sem a aprovação formal da direção.</p></div>
+      <div class="termo r"><h3>Suporte</h3><p>Canal direto com a equipe responsável, com prazo de resposta definido em contrato.</p></div>
+      <div class="termo r"><h3>Evolução contínua</h3><p>O agente é acompanhado e ajustado ao longo de toda a operação, não só na implantação.</p></div>
+      <div class="termo r"><h3>Transparência</h3><p>Todas as conversas ficam disponíveis para a direção no painel.</p></div>
+      <div class="termo r"><h3>Dados e LGPD</h3><p>Dados das famílias usados só para o atendimento da escola. O agente conversa apenas com os responsáveis.</p></div>
+    </div>
+    <div class="fora r"><b>Não está incluso:</b> integração com o sistema de gestão escolar (avaliada à parte), atendimento pedagógico pelo agente, tráfego pago e produção de conteúdo.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec r">9. Investimento</div>
+    <h2 class="r">Investimento</h2>
+    <table class="inv r">
+      <thead><tr><th>Serviço</th><th class="vv">Valor</th><th>Condição</th></tr></thead>
+      <tbody>
+        <tr><td><span class="n">Implantação do agente</span><small>Levantamento, construção, testes, painel da direção e ativação</small></td><td class="vv">R$ 2.200</td><td class="cd">Entrada e mais 2 parcelas</td></tr>
+        <tr><td><span class="n">Gestão e evolução contínua</span><small>Acompanhamento, ajustes e evolução do agente, com suporte</small></td><td class="vv">R$ 697</td><td class="cd">Por mês · primeiro pagamento 30 dias após a validação</td></tr>
+        <tr><td><span class="n">Licença anual de infraestrutura</span><small>Servidores, integrações e manutenção da operação</small></td><td class="vv">R$ 980</td><td class="cd">A cada 12 meses, à parte da mensalidade</td></tr>
+      </tbody>
+    </table>
+    <p class="obs r">Valores válidos por 15 dias.</p>
+  </div>
+</section>
+
+<section class="aprova">
+  <div class="wrap">
+    <div class="sec r">10. Próximo passo</div>
+    <h2 class="r">Aprovando hoje, o levantamento com a secretaria começa nesta semana</h2>
+    <p class="lead r" style="color:rgba(255,255,255,.82)">É só confirmar pelo WhatsApp. Em seguida, enviamos o contrato e agendamos a reunião de levantamento.</p>
+    <div class="botoes r">
+      <a class="btn p" target="_blank" rel="noopener" href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20Jonei.%20Aprovo%20a%20proposta%20do%20agente%20de%20atendimento%20com%20IA%20para%20a%20Isaac%20Newton%20Kids.%20Podemos%20agendar%20o%20levantamento%3F">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.3-.4.8-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+        Aprovar a proposta
+      </a>
+      <a class="btn s" target="_blank" rel="noopener" href="https://wa.me/5566981320667?text=Ol%C3%A1%2C%20Jonei.%20Tenho%20uma%20d%C3%BAvida%20sobre%20a%20proposta%20do%20agente%20de%20atendimento%20da%20Isaac%20Newton%20Kids.">Tirar uma dúvida</a>
+    </div>
+    <div class="ass r">
+      <div>
+        <div class="nome">Jonei Lima</div>
+        <div class="cargo">CEO ORBI IA</div>
+        <div class="form">Diretor de criação e MKT | Agentes de Automação</div>
+      </div>
+      <div class="ct">
+        <a href="https://wa.me/5519981410667">(19) 98141-0667</a><br>
+        <a href="https://wa.me/5566981320667">(66) 98132-0667</a><br>
+        <a href="https://instagram.com/agenteorbi.ia" target="_blank" rel="noopener">@agenteorbi.ia</a><br>
+        <a href="https://agenteorbiia.com">agenteorbiia.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <img class="logo" src="/logo-orbi.png" alt="ORBI IA">
+    <div class="conf">
+      <b>Documento confidencial</b>
+      Esta proposta é de propriedade da ORBI IA e foi enviada exclusivamente à Escola Isaac Newton Kids, unidade Campinas, para avaliação do serviço de atendimento com inteligência artificial. Ao recebê-la, o destinatário se compromete a:
+      <ol>
+        <li>Não reproduzir, encaminhar, publicar ou compartilhar este documento, no todo ou em parte, sem autorização prévia e por escrito da ORBI IA.</li>
+        <li>Não utilizar a metodologia, a estrutura da proposta, as condições comerciais, os textos e as estratégias aqui apresentados para fins próprios ou de terceiros.</li>
+        <li>Tratar os dados pessoais aqui contidos (nomes e informações de contato) somente para a finalidade desta proposta, nos termos da Lei Geral de Proteção de Dados (Lei nº 13.709/2018).</li>
+      </ol>
+      Lei nº 9.610/1998, Lei de Direitos Autorais.
+    </div>
+    <div class="cnpj">ORBI IA · J MARCELIO LIMA LTDA · CNPJ 68.308.327/0001-69 · Protegido por direitos autorais e conforme a LGPD</div>
+  </div>
+</footer>
+
+<script>
+const IMPL=2200,MES=697,ANO=980;
+const R=v=>'R$ '+Math.round(v).toLocaleString('pt-BR');
+const iM=document.getElementById('iM');
+function calc(){
+  const m=+iM.value,aluno=m*12,c=IMPL+MES*12+ANO,n=c/aluno,alvo=Math.max(1,Math.ceil(n));
+  document.getElementById('oM').textContent=R(m);
+  document.getElementById('oA').textContent=R(aluno);
+  document.getElementById('eA').innerHTML=alvo+'<small>'+(alvo===1?'matrícula':'matrículas')+'</small>';
+  document.getElementById('cA').textContent=alvo===1?'Uma matrícula nova cobre todo o investimento do primeiro ano.':alvo+' matrículas novas cobrem todo o investimento do primeiro ano.';
+  document.getElementById('dA').innerHTML='Investimento no 1º ano: '+R(c)+' · Equilíbrio exato: '+n.toLocaleString('pt-BR',{maximumFractionDigits:1})+' matrícula'+(n>1?'s':'');
+}
+iM.addEventListener('input',calc);calc();
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.r').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
