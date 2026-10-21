@@ -1,1 +1,512 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Anamnese empresarial | Imobiliária Dom Barreto | ORBI IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #16212C;
+    --ink-2: #3A4855;
+    --steel: #677685;
+    --rule: #DCE1E5;
+    --rule-strong: #C3CBD2;
+    --paper: #F4F6F5;
+    --sheet: #FFFFFF;
+    --field: #F8FAF9;
+    --accent: #1E5A6E;
+    --accent-soft: #E4EEF1;
+    --done: #2F7A5B;
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 16px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  .layout {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 56px;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 48px 32px 120px;
+  }
+
+  /* Coluna lateral */
+  aside { position: sticky; top: 40px; align-self: start; }
+  .brand { font-weight: 600; font-size: 15px; letter-spacing: .02em; color: var(--ink); margin-bottom: 4px; }
+  .brand-sub { font-size: 13px; color: var(--steel); margin-bottom: 32px; }
+  .progress-label { font-size: 13px; color: var(--steel); margin-bottom: 8px; }
+  .bar { height: 3px; background: var(--rule); border-radius: 2px; overflow: hidden; margin-bottom: 28px; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+  nav ol { list-style: none; margin: 0 0 32px; padding: 0; }
+  nav a {
+    display: flex; align-items: baseline; gap: 12px;
+    padding: 7px 0; text-decoration: none; color: var(--ink-2); font-size: 14.5px;
+    border-bottom: 1px solid transparent;
+  }
+  nav a:hover { color: var(--accent); }
+  nav .n { font-variant-numeric: tabular-nums; color: var(--steel); width: 14px; flex: none; }
+  nav .mark {
+    margin-left: auto; width: 7px; height: 7px; border-radius: 50%;
+    border: 1.5px solid var(--rule-strong); flex: none; align-self: center;
+  }
+  nav .mark.partial { border-color: var(--accent); }
+  nav .mark.full { background: var(--done); border-color: var(--done); }
+
+  .actions { display: grid; gap: 8px; }
+  .btn {
+    display: block; width: 100%; text-align: left;
+    padding: 10px 14px; border-radius: 6px; cursor: pointer;
+    border: 1px solid var(--rule-strong); background: var(--sheet); font-size: 14.5px;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.quiet { border-color: transparent; background: transparent; color: var(--steel); padding-left: 0; }
+  .btn.quiet:hover { color: #A13B2F; }
+  .saved { font-size: 12.5px; color: var(--steel); margin-top: 14px; line-height: 1.45; }
+
+  /* Folha */
+  .sheet {
+    background: var(--sheet);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 64px 72px 56px;
+  }
+  .masthead { border-bottom: 2px solid var(--ink); padding-bottom: 28px; margin-bottom: 8px; }
+  .doc-type { font-size: 14px; color: var(--steel); margin: 0 0 10px; }
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(34px, 4.6vw, 48px); line-height: 1.08; letter-spacing: -.01em;
+    margin: 0 0 14px;
+  }
+  .client { font-family: var(--serif); font-size: 21px; color: var(--ink-2); margin: 0; }
+  .meta {
+    display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 6px 40px;
+    margin-top: 26px; font-size: 13.5px; color: var(--steel);
+  }
+  .meta b { display: block; font-weight: 500; color: var(--ink); font-size: 14.5px; }
+
+  details.brief {
+    margin: 36px 0 8px; background: var(--accent-soft); border-radius: 4px; padding: 18px 24px;
+  }
+  details.brief summary { cursor: pointer; font-weight: 600; font-size: 15px; color: var(--accent); }
+  details.brief ol { margin: 14px 0 4px; padding-left: 20px; color: var(--ink-2); font-size: 15px; }
+  details.brief li { margin: 6px 0; }
+
+  section.sec { padding-top: 56px; scroll-margin-top: 24px; }
+  .sec-head { display: grid; grid-template-columns: 44px 1fr; align-items: baseline; margin-bottom: 6px; }
+  .sec-num { font-family: var(--serif); font-size: 26px; color: var(--steel); font-variant-numeric: lining-nums; }
+  h2 { font-family: var(--serif); font-weight: 600; font-size: 26px; line-height: 1.2; margin: 0; }
+  .lead { margin: 6px 0 22px 44px; color: var(--ink-2); max-width: 62ch; font-size: 15.5px; }
+  .steps { margin: 0 0 22px 44px; padding-left: 20px; color: var(--ink-2); font-size: 15px; max-width: 64ch; }
+  .steps li { margin: 6px 0; }
+
+  .q {
+    display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr); gap: 20px;
+    padding: 16px 0 16px 44px; border-top: 1px solid var(--rule);
+  }
+  .q:last-child { border-bottom: 1px solid var(--rule); }
+  .q label, .q .qlabel { font-size: 15px; color: var(--ink); padding-top: 9px; }
+  .q .hint { display: block; font-size: 13px; color: var(--steel); margin-top: 3px; }
+  textarea {
+    width: 100%; min-height: 44px; resize: none; overflow: hidden;
+    border: 1px solid transparent; border-bottom-color: var(--rule-strong);
+    background: var(--field); border-radius: 3px 3px 0 0;
+    padding: 9px 12px; line-height: 1.5; font-size: 15.5px;
+    transition: border-color .15s, background .15s;
+  }
+  textarea:hover { border-bottom-color: var(--steel); }
+  textarea:focus { outline: none; background: #fff; border-color: var(--accent); border-radius: 3px; }
+  .pv { display: none; }
+
+  .choices { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px; }
+  .choices input { position: absolute; opacity: 0; pointer-events: none; }
+  .choices label {
+    padding: 8px 16px; border: 1px solid var(--rule-strong); border-radius: 999px;
+    cursor: pointer; font-size: 14.5px; background: var(--sheet); user-select: none;
+  }
+  .choices input:checked + label { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .choices input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .skipped .q.dep { display: none; }
+  .skip-note { display: none; margin: 10px 0 0 44px; font-size: 14px; color: var(--steel); }
+  .skipped .skip-note { display: block; }
+
+  footer.sig {
+    margin-top: 72px; padding-top: 22px; border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    font-size: 13px; color: var(--steel); line-height: 1.6;
+  }
+  footer.sig strong { color: var(--ink); font-weight: 600; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px);
+    background: var(--ink); color: #fff; padding: 11px 18px; border-radius: 6px; font-size: 14px;
+    opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* Tablet e celular */
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; gap: 0; padding: 0 0 96px; }
+    aside { position: static; padding: 20px 20px 0; }
+    .brand-sub { margin-bottom: 16px; }
+    nav ol { display: flex; overflow-x: auto; gap: 18px; margin: 0 -20px 16px; padding: 0 20px 4px; }
+    nav a { white-space: nowrap; }
+    nav .mark { margin-left: 2px; }
+    .actions {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+      grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(255,255,255,.96); border-top: 1px solid var(--rule);
+    }
+    .btn { text-align: center; padding: 10px 8px; font-size: 14px; }
+    .btn.quiet { display: none; }
+    .saved { margin: 0 0 14px; }
+    .sheet { border-left: 0; border-right: 0; border-radius: 0; padding: 40px 20px 40px; }
+    .meta { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .q { grid-template-columns: 1fr; gap: 8px; padding-left: 0; }
+    .q label, .q .qlabel { padding-top: 0; }
+    .lead, .steps, .skip-note { margin-left: 0; }
+    .sec-head { grid-template-columns: 34px 1fr; }
+    .sec-num, h2 { font-size: 23px; }
+  }
+
+  /* Impressão / PDF */
+  @media print {
+    @page { size: A4; margin: 16mm 15mm; }
+    body { background: #fff; font-size: 11pt; }
+    aside, .toast, details.brief { display: none !important; }
+    .layout { display: block; padding: 0; max-width: none; }
+    .sheet { border: 0; padding: 0; }
+    section.sec { padding-top: 26px; break-inside: auto; }
+    .sec-head { break-after: avoid; }
+    .q { break-inside: avoid; padding-top: 9px; padding-bottom: 9px; }
+    textarea, .choices { display: none; }
+    .pv { display: block; white-space: pre-wrap; padding-top: 9px; min-height: 2.2em; border-bottom: 1px dotted var(--rule-strong); }
+    .pv.filled { border-bottom: 0; }
+    footer.sig { margin-top: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside>
+    <div class="brand">ORBI IA</div>
+    <div class="brand-sub">Diagnóstico de processos</div>
+    <div class="progress-label" id="progressLabel">Nenhuma resposta ainda</div>
+    <div class="bar"><span id="bar"></span></div>
+    <nav aria-label="Seções da ficha"><ol id="nav"></ol></nav>
+    <p class="saved" id="saved">As anotações ficam salvas apenas neste aparelho.</p>
+    <div class="actions">
+      <button class="btn primary" type="button" id="btnPdf">Gerar PDF</button>
+      <button class="btn" type="button" id="btnCopy">Copiar texto</button>
+      <button class="btn" type="button" id="btnDownload">Baixar arquivo</button>
+      <button class="btn quiet" type="button" id="btnClear">Limpar ficha</button>
+    </div>
+  </aside>
+
+  <main class="sheet">
+    <header class="masthead">
+      <p class="doc-type">Anamnese empresarial</p>
+      <h1>Diagnóstico de atendimento e operação</h1>
+      <p class="client">Imobiliária Dom Barreto, Sumaré</p>
+      <div class="meta">
+        <div>Conduzido por<b>Jonei Lima, ORBI IA</b></div>
+        <div>Escopo<b>Vendas e locação</b></div>
+        <div>Devolutiva<b>Em até 48 horas</b></div>
+      </div>
+    </header>
+
+    <details class="brief" open>
+      <summary>Roteiro de condução</summary>
+      <ol>
+        <li>Abertura: “Hoje eu não venho apresentar solução. Venho entender como a imobiliária funciona e onde está travando. Em até 48 horas eu volto com um diagnóstico por escrito.”</li>
+        <li>Direcione as perguntas à administradora. O Rodrigo abriu a porta; o problema é dela.</li>
+        <li>Peça números, não opiniões. “Muito” vira quantos, “demora” vira quanto tempo.</li>
+        <li>Não fale de IA, ferramenta ou preço antes do encerramento.</li>
+        <li>Nunca trate a equipe como problema. Fale em capacidade: o mesmo time fazendo mais.</li>
+        <li>Anote as frases exatas dela. Elas entram no diagnóstico.</li>
+      </ol>
+    </details>
+
+    <div id="sections"></div>
+
+    <footer class="sig">
+      <div><strong>Jonei Lima</strong>, CEO ORBI IA<br>Publicitário, bacharel em Direito, pós-graduado em IA<br>agenteorbiia.com &nbsp;|&nbsp; @agenteorbi.ia</div>
+      <div>J MARCELIO LIMA LTDA<br>CNPJ 68.308.327/0001-69<br>Documento confidencial, tratado conforme a LGPD</div>
+    </footer>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var STORE_KEY = "orbi-anamnese-dom-barreto-v1";
+
+  var SECTIONS = [
+    { id: "identificacao", title: "Identificação",
+      lead: "Quem está na mesa e quem decide. Preencha antes de começar as perguntas.",
+      fields: [
+        { k: "data", label: "Data e horário" },
+        { k: "local", label: "Local" },
+        { k: "presentes", label: "Presentes", hint: "Nome e cargo de cada um" },
+        { k: "administra", label: "Quem administra a imobiliária" },
+        { k: "aprova", label: "Quem aprova investimento" },
+        { k: "porte", label: "Tempo de mercado e número de unidades" }
+      ] },
+    { id: "queixa", title: "Queixa principal",
+      lead: "Pergunta de abertura: “Se você pudesse resolver uma coisa na imobiliária amanhã, o que seria?”",
+      fields: [
+        { k: "trava", label: "O que mais trava hoje", hint: "Nas palavras dela" },
+        { k: "desde", label: "Desde quando acontece" },
+        { k: "custo", label: "O que isso custa", hint: "Venda perdida, retrabalho, reclamação" },
+        { k: "rodrigo", label: "O que o Rodrigo vê de diferente" }
+      ] },
+    { id: "vendas", title: "Vendas",
+      lead: "O sintoma já foi relatado: o lead de portal espera, ninguém qualifica, a visita é agendada à mão e o follow-up morre. Aqui o objetivo é medir.",
+      fields: [
+        { k: "leads", label: "Leads por mês e de onde vêm", hint: "Zap, VivaReal, Instagram, placa, indicação" },
+        { k: "recebe", label: "Quem recebe o lead e por qual canal" },
+        { k: "tempo", label: "Tempo médio até a primeira resposta" },
+        { k: "fora", label: "Lead fora do horário ou no fim de semana", hint: "O que acontece com ele" },
+        { k: "qualifica", label: "Quem qualifica o comprador", hint: "Renda, financiamento, FGTS, entrada, prazo" },
+        { k: "visita", label: "Como a visita é agendada e confirmada" },
+        { k: "conversao", label: "Visitas por mês e quantas viram proposta" },
+        { k: "followup", label: "Follow-up de quem não respondeu", hint: "Quem faz e quando" },
+        { k: "historico", label: "Como o corretor sabe o histórico do cliente" },
+        { k: "corretores", label: "Número de corretores e rodízio de leads" }
+      ] },
+    { id: "locacao", title: "Locação",
+      lead: "Confirme primeiro se há administração de aluguel. Se houver, é provável que o maior volume repetitivo esteja aqui.",
+      gate: "administra_loc",
+      fields: [
+        { k: "administra_loc", label: "Administram locação?", type: "choice", options: ["Sim", "Não", "Não sei"] },
+        { k: "contratos", label: "Contratos ativos", dep: true },
+        { k: "volume", label: "Mensagens de inquilinos por dia ou semana", dep: true },
+        { k: "assuntos", label: "Assuntos mais comuns", hint: "2ª via, boleto, manutenção, vistoria, rescisão", dep: true },
+        { k: "manutencao", label: "Como chega o pedido de manutenção e quem acompanha", dep: true },
+        { k: "cobranca", label: "Como é feita a cobrança de atraso", dep: true },
+        { k: "renovacao", label: "Renovação e reajuste", hint: "Como e quando avisam", dep: true },
+        { k: "proprietario", label: "O que o proprietário mais pergunta", dep: true },
+        { k: "equipe_loc", label: "Pessoas dedicadas só à locação", dep: true }
+      ] },
+    { id: "equipe", title: "Equipe e sistemas",
+      lead: "O nome do sistema imobiliário é a informação técnica mais importante da reunião. Sem saber se ele permite integração, não prometa nada.",
+      fields: [
+        { k: "funcionarios", label: "Funcionários e divisão", hint: "Vendas, locação, administrativo, financeiro" },
+        { k: "repetitiva", label: "Tarefa repetitiva que mais consome horas" },
+        { k: "sistema", label: "Sistema ou CRM imobiliário", hint: "Nome exato" },
+        { k: "whatsapp", label: "WhatsApp", hint: "Número único ou cada corretor no seu" },
+        { k: "planilhas", label: "Planilhas usadas em paralelo ao sistema" },
+        { k: "ti", label: "Quem cuida de TI ou do sistema hoje" }
+      ] },
+    { id: "decisao", title: "Histórico, prioridade e decisão",
+      fields: [
+        { k: "tentativas", label: "Tentativas anteriores", hint: "Chatbot, automação, outra empresa. O que deu errado" },
+        { k: "prioridade", label: "Um único processo para arrumar em 30 dias" },
+        { k: "metrica", label: "Como saberiam que funcionou", hint: "A métrica dela, não a sua" },
+        { k: "aprovacao", label: "Quem precisa aprovar além dos dois" },
+        { k: "verba", label: "Verba ou prazo já pensado" },
+        { k: "receio", label: "Receios dela ou da equipe com IA" }
+      ] },
+    { id: "encerramento", title: "Encerramento",
+      steps: [
+        "Resuma em voz alta os 2 ou 3 gargalos que ouviu, com os números dela, e pergunte: “É isso?”",
+        "Peça a prioridade: “Desses, qual resolvemos primeiro?”",
+        "Marque a devolutiva: diagnóstico por escrito em até 48 horas e uma segunda reunião com data.",
+        "Se perguntarem preço: “Depende do processo e da integração com o sistema. Trago na devolutiva.”"
+      ],
+      fields: [
+        { k: "confirmados", label: "Gargalos confirmados por ela" },
+        { k: "escolhida", label: "Prioridade escolhida" },
+        { k: "devolutiva", label: "Data da devolutiva" },
+        { k: "contato", label: "Contato direto da administradora" }
+      ] },
+    { id: "diagnostico", title: "Diagnóstico preliminar",
+      lead: "Preencha no mesmo dia, depois da reunião, enquanto ainda lembra do tom da conversa.",
+      fields: [
+        { k: "g1", label: "Gargalo 1 e o número que o comprova" },
+        { k: "g2", label: "Gargalo 2 e o número que o comprova" },
+        { k: "g3", label: "Gargalo 3 e o número que o comprova" },
+        { k: "inicio", label: "Processo indicado para começar e por quê" },
+        { k: "risco_tec", label: "Risco técnico", hint: "Sistema, integração, WhatsApp" },
+        { k: "risco_hum", label: "Risco humano", hint: "Resistência, quem decide" },
+        { k: "temperatura", label: "Temperatura da administradora", type: "choice", options: ["Fria", "Morna", "Quente"] }
+      ] }
+  ];
+
+  // Armazenamento local (somente neste aparelho)
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; } catch (e) { state = {}; }
+  var storageOk = true;
+  function persist() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); storageOk = true; }
+    catch (e) { storageOk = false; }
+    var el = document.getElementById("saved");
+    if (!storageOk) { el.textContent = "Este navegador não está salvando. Exporte antes de fechar a página."; return; }
+    var t = new Date();
+    el.textContent = "Salvo neste aparelho às " + pad(t.getHours()) + ":" + pad(t.getMinutes()) + ".";
+  }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function key(s, f) { return s.id + "." + f.k; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  // Montagem
+  var secHtml = "", navHtml = "";
+  SECTIONS.forEach(function (s, i) {
+    var n = i + 1;
+    navHtml += '<li><a href="#' + s.id + '"><span class="n">' + n + '</span>' + esc(s.title) + '<span class="mark" data-mark="' + s.id + '"></span></a></li>';
+    secHtml += '<section class="sec" id="' + s.id + '"><div class="sec-head"><span class="sec-num">' + n + '</span><h2>' + esc(s.title) + '</h2></div>';
+    if (s.lead) secHtml += '<p class="lead">' + esc(s.lead) + '</p>';
+    if (s.steps) secHtml += '<ol class="steps">' + s.steps.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol>";
+    secHtml += '<div class="qs">';
+    s.fields.forEach(function (f) {
+      var id = "f_" + s.id + "_" + f.k;
+      var hint = f.hint ? '<span class="hint">' + esc(f.hint) + '</span>' : "";
+      var cls = "q" + (f.dep ? " dep" : "");
+      if (f.type === "choice") {
+        secHtml += '<div class="' + cls + '"><div class="qlabel" id="' + id + '_l">' + esc(f.label) + hint + '</div><div><div class="choices" role="radiogroup" aria-labelledby="' + id + '_l">';
+        f.options.forEach(function (o, j) {
+          secHtml += '<input type="radio" name="' + id + '" id="' + id + j + '" value="' + esc(o) + '" data-key="' + key(s, f) + '"><label for="' + id + j + '">' + esc(o) + '</label>';
+        });
+        secHtml += '</div><div class="pv" data-pv="' + key(s, f) + '"></div></div></div>';
+      } else {
+        secHtml += '<div class="' + cls + '"><label for="' + id + '">' + esc(f.label) + hint + '</label><div><textarea id="' + id + '" rows="1" data-key="' + key(s, f) + '"></textarea><div class="pv" data-pv="' + key(s, f) + '"></div></div></div>';
+      }
+    });
+    secHtml += '</div>';
+    if (s.gate) secHtml += '<p class="skip-note">Sem carteira de locação. Seção dispensada.</p>';
+    secHtml += '</section>';
+  });
+  document.getElementById("sections").innerHTML = secHtml;
+  document.getElementById("nav").innerHTML = navHtml;
+
+  function grow(t) { t.style.height = "auto"; t.style.height = t.scrollHeight + "px"; }
+  function mirror(k) {
+    var pv = document.querySelector('[data-pv="' + k + '"]');
+    if (!pv) return;
+    var v = (state[k] || "").trim();
+    pv.textContent = v;
+    pv.classList.toggle("filled", !!v);
+  }
+
+  // Restaura valores
+  document.querySelectorAll("textarea[data-key]").forEach(function (t) {
+    t.value = state[t.dataset.key] || "";
+    mirror(t.dataset.key);
+    t.addEventListener("input", function () {
+      state[t.dataset.key] = t.value; grow(t); mirror(t.dataset.key); refresh(); persistSoon();
+    });
+  });
+  document.querySelectorAll('input[type="radio"][data-key]').forEach(function (r) {
+    if (state[r.dataset.key] === r.value) r.checked = true;
+    r.addEventListener("change", function () {
+      state[r.dataset.key] = r.value; mirror(r.dataset.key); refresh(); persist();
+    });
+  });
+  SECTIONS.forEach(function (s) { s.fields.forEach(function (f) { if (f.type === "choice") mirror(key(s, f)); }); });
+
+  var timer;
+  function persistSoon() { clearTimeout(timer); timer = setTimeout(persist, 400); }
+
+  function visibleFields(s) {
+    var skip = s.gate && state[s.id + "." + s.gate] === "Não";
+    return s.fields.filter(function (f) { return !(skip && f.dep); });
+  }
+
+  function refresh() {
+    var total = 0, done = 0;
+    SECTIONS.forEach(function (s) {
+      var sec = document.getElementById(s.id);
+      if (s.gate) sec.classList.toggle("skipped", state[s.id + "." + s.gate] === "Não");
+      var fs = visibleFields(s), d = 0;
+      fs.forEach(function (f) { if ((state[key(s, f)] || "").trim()) d++; });
+      total += fs.length; done += d;
+      var m = document.querySelector('[data-mark="' + s.id + '"]');
+      m.classList.toggle("full", d === fs.length && d > 0);
+      m.classList.toggle("partial", d > 0 && d < fs.length);
+    });
+    document.getElementById("bar").style.width = (total ? Math.round(done / total * 100) : 0) + "%";
+    document.getElementById("progressLabel").textContent = done ? done + " de " + total + " respondidas" : "Nenhuma resposta ainda";
+  }
+
+  // Exportação
+  function asText() {
+    var t = new Date();
+    var out = ["ANAMNESE EMPRESARIAL", "Imobiliária Dom Barreto, Sumaré", "Conduzido por Jonei Lima, ORBI IA",
+      "Exportado em " + pad(t.getDate()) + "/" + pad(t.getMonth() + 1) + "/" + t.getFullYear() + " às " + pad(t.getHours()) + ":" + pad(t.getMinutes()), ""];
+    SECTIONS.forEach(function (s, i) {
+      out.push((i + 1) + ". " + s.title.toUpperCase());
+      visibleFields(s).forEach(function (f) {
+        var v = (state[key(s, f)] || "").trim();
+        out.push("- " + f.label + ": " + (v ? v.replace(/\n/g, "\n  ") : "(sem resposta)"));
+      });
+      if (s.gate && state[s.id + "." + s.gate] === "Não") out.push("  Seção dispensada: sem carteira de locação.");
+      out.push("");
+    });
+    return out.join("\n");
+  }
+  function toast(msg) {
+    var el = document.getElementById("toast");
+    el.textContent = msg; el.classList.add("show");
+    clearTimeout(el._t); el._t = setTimeout(function () { el.classList.remove("show"); }, 2400);
+  }
+  document.getElementById("btnPdf").addEventListener("click", function () { window.print(); });
+  document.getElementById("btnCopy").addEventListener("click", function () {
+    var text = asText();
+    function fallback() {
+      var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("Anotações copiadas."); } catch (e) { toast("Não foi possível copiar. Use Baixar arquivo."); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function () { toast("Anotações copiadas."); }, fallback);
+    } else { fallback(); }
+  });
+  document.getElementById("btnDownload").addEventListener("click", function () {
+    var t = new Date();
+    var name = "anamnese-dom-barreto-" + t.getFullYear() + "-" + pad(t.getMonth() + 1) + "-" + pad(t.getDate()) + ".txt";
+    var blob = new Blob([asText()], { type: "text/plain;charset=utf-8" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    toast("Arquivo baixado.");
+  });
+  document.getElementById("btnClear").addEventListener("click", function () {
+    if (!confirm("Apagar todas as anotações desta ficha neste aparelho? Exporte antes se precisar delas.")) return;
+    state = {};
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    document.querySelectorAll("textarea[data-key]").forEach(function (t) { t.value = ""; grow(t); mirror(t.dataset.key); });
+    document.querySelectorAll('input[type="radio"][data-key]').forEach(function (r) { r.checked = false; mirror(r.dataset.key); });
+    refresh();
+    document.getElementById("saved").textContent = "Ficha limpa. As anotações ficam salvas apenas neste aparelho.";
+  });
+
+  window.addEventListener("load", function () { document.querySelectorAll("textarea").forEach(grow); });
+  window.addEventListener("resize", function () { document.querySelectorAll("textarea").forEach(grow); });
+  refresh();
+})();
+</script>
+</body>
+</html>
