@@ -18,7 +18,7 @@ html,body{height:100%}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
 
 #login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;background-image:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(78,202,127,.06) 0%,transparent 70%)}
-.login-box{width:100%;max-width:380px;padding:2.5rem;background:var(--surface);border:1px solid var(--border2);border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.login-box{width:100%;max-width:380px;padding:2.5rem;background:var(--surface);border:1px solid var(--border2);border-radius:20px;box-shadow:0 40px 80px rgba(0,0,0,.5);margin:0 16px}
 .login-brand{display:flex;align-items:center;gap:10px;margin-bottom:2rem;justify-content:center}
 .login-ring{width:32px;height:32px;border:2.5px solid var(--green);border-radius:50%;border-bottom-color:transparent;transform:rotate(-45deg)}
 .login-name{font-size:18px;font-weight:700;color:#fff}
@@ -49,7 +49,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 .main{display:flex;flex:1;overflow:hidden}
 
-.sidebar{width:275px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar{width:290px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;padding-bottom:1rem}
 .sidebar-section{padding:1.25rem 1rem .5rem}
 .sidebar-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px}
 .sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:2px}
@@ -65,16 +65,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .obrig-sigla{font-size:11.5px;font-weight:700;color:var(--green);font-family:var(--mono);margin-bottom:4px}
 .obrig-nome{font-size:12.5px;font-weight:600;color:#e8edf5;margin-bottom:4px}
 .obrig-detail{font-size:11.5px;color:rgba(232,237,245,.75);line-height:1.55}
-.obrig-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:5px}
+.obrig-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:6px}
 .s-verde{background:rgba(78,202,127,.1);color:var(--green);border:1px solid var(--green-border)}
 .s-amarelo{background:rgba(232,151,58,.1);color:#e8973a;border:1px solid rgba(232,151,58,.2)}
 .s-vermelho{background:rgba(224,85,85,.1);color:#e05555;border:1px solid rgba(224,85,85,.2)}
+.s-azul{background:rgba(91,138,240,.1);color:var(--blue);border:1px solid rgba(91,138,240,.22)}
 
 .scope-card{margin:.5rem 1rem;background:var(--surface2);border:1px solid var(--green-border);border-radius:10px;padding:.85rem}
 .scope-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px}
 .scope-line{font-size:11px;color:rgba(232,237,245,.9);line-height:1.55;margin-bottom:5px;padding-left:16px;position:relative}
 .scope-line::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
 .scope-note{font-size:10.5px;color:rgba(232,237,245,.75);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+
+.rt-card{margin:.5rem 1rem;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:.85rem}
+.rt-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:9px}
+.rt-row:last-child{margin-bottom:0}
+.rt-tag{flex-shrink:0;font-size:9px;font-weight:700;font-family:var(--mono);padding:2px 6px;border-radius:4px;margin-top:1px;min-width:62px;text-align:center}
+.rt-txt{font-size:11px;line-height:1.5;color:rgba(232,237,245,.85)}
+.rt-txt strong{color:#fff;font-weight:600}
 
 .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:.5rem 1rem}
 .stat-mini{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .75rem}
@@ -127,7 +135,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .send-btn:hover{opacity:.85}
 .send-btn:disabled{opacity:.35;cursor:not-allowed}
 
-@media(max-width:700px){.sidebar{display:none}.msg{max-width:90%}}
+@media(max-width:700px){.sidebar{display:none}.msg{max-width:90%}.suggestions{flex-wrap:nowrap;overflow-x:auto}.chat-messages,.input-area,.suggestions{padding-left:16px;padding-right:16px}}
 </style>
 </head>
 <body>
@@ -141,10 +149,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <label class="login-label">Usuário</label>
     <input class="login-input" id="login-user" type="text" placeholder="seu usuário" autocomplete="off">
     <label class="login-label">Senha</label>
-    <input class="login-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="off">
+    <input class="login-input" id="login-pass" type="password" placeholder="••••" autocomplete="off">
     <button class="login-btn" onclick="fazerLogin()">Entrar no sistema</button>
     <div class="login-err" id="login-err"></div>
-    <div class="login-badge">Acesso exclusivo · <span>Digital Contabilidade</span></div>
+    <div class="login-badge">Acesso exclusivo · <span class="cfg-escritorio">Digital Contabilidade</span></div>
   </div>
 </div>
 
@@ -156,8 +164,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <div class="user-pill">
-        <div class="user-avatar">FE</div>
-        <span class="user-name">Felipe</span>
+        <div class="user-avatar cfg-iniciais">VS</div>
+        <span class="user-name cfg-contador">Val Souza</span>
       </div>
       <button class="logout-btn" onclick="fazerLogout()">sair</button>
     </div>
@@ -169,10 +177,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="sidebar-label">Menu</div>
         <div class="sidebar-item active">
           <div class="sidebar-item-icon">💬</div>
-          <div class="sidebar-item-text">
-            <strong>Assistente IA</strong>
-            <span>Atendimento ao cliente</span>
-          </div>
+          <div class="sidebar-item-text"><strong>Assistente IA</strong><span>Atendimento ao cliente</span></div>
         </div>
         <div class="sidebar-item">
           <div class="sidebar-item-icon">📅</div>
@@ -180,7 +185,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         </div>
         <div class="sidebar-item">
           <div class="sidebar-item-icon">🔗</div>
-          <div class="sidebar-item-text"><strong>Integrações</strong><span>Conta Azul · Em breve</span></div>
+          <div class="sidebar-item-text"><strong>Integrações</strong><span>ERP contábil · Em breve</span></div>
         </div>
         <div class="sidebar-item">
           <div class="sidebar-item-icon">🔔</div>
@@ -194,73 +199,43 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="sidebar-label">O que este agente faz</div>
       </div>
       <div class="scope-card">
-        <div class="scope-title">ORBI Contábil — Digital Contabilidade</div>
-        <div class="scope-line">Atende clientes no WhatsApp do escritório 24h — enquanto você está em reunião ou fora do horário</div>
-        <div class="scope-line">Responde dúvidas fiscais reais com o conhecimento do seu escritório, não uma resposta genérica</div>
-        <div class="scope-line">Sabe o que responder sozinho e o que escalar para o Felipe</div>
-        <div class="scope-line">Futuro: integração com Conta Azul para consultar dados reais dos clientes em tempo real</div>
-        <div class="scope-note">Diferente de ferramentas como o Codex do ChatGPT (que gera scripts pontuais) ou robôs de busca de nota fiscal: essas ferramentas organizam o back-office. O ORBI é a camada de atendimento ao cliente — elas se somam, não se substituem.</div>
+        <div class="scope-title">ORBI Contábil — <span class="cfg-escritorio">Digital Contabilidade</span></div>
+        <div class="scope-line">Atende clientes no WhatsApp do escritório 24h, inclusive fora do horário e durante reuniões</div>
+        <div class="scope-line">Responde dúvidas fiscais com o conhecimento do escritório, separando o que já vale do que ainda vai valer</div>
+        <div class="scope-line">Sabe o que responder sozinho e o que encaminhar para <span class="cfg-contador">Val Souza</span></div>
+        <div class="scope-line">Próxima etapa: integração com o sistema do escritório para consultar guias, notas e pendências de cada cliente</div>
+        <div class="scope-note">Robôs de captura de notas e scripts de automação organizam o back-office. O ORBI é a camada de atendimento ao cliente: as ferramentas se somam, não se substituem.</div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section" style="padding-bottom:.25rem">
+        <div class="sidebar-label">Reforma Tributária — onde estamos</div>
+      </div>
+      <div class="rt-card">
+        <div class="rt-row"><span class="rt-tag s-verde">VIGENTE</span><span class="rt-txt"><strong>Ano-teste 2026:</strong> CBS 0,9% + IBS 0,1% destacados na nota, sem pagamento efetivo para quem cumpre as obrigações</span></div>
+        <div class="rt-row"><span class="rt-tag s-amarelo">FLEXIBILIZ.</span><span class="rt-txt"><strong>Campos IBS/CBS:</strong> exigidos na NF-e desde 03/08 e na NFS-e desde 01/10, mas a nota <strong>não é rejeitada</strong> em 2026 se faltarem</span></div>
+        <div class="rt-row"><span class="rt-tag s-vermelho">30/10/26</span><span class="rt-txt"><strong>Simples Nacional:</strong> último dia para optar por IBS/CBS fora do DAS no 1º semestre de 2027</span></div>
+        <div class="rt-row"><span class="rt-tag s-azul">01/12/26</span><span class="rt-txt">Nova onda de documentos: locações, condomínios, plataformas digitais, NF-e de venda de imóveis</span></div>
+        <div class="rt-row"><span class="rt-tag s-azul">01/01/27</span><span class="rt-txt"><strong>Virada:</strong> CBS cheia, fim do PIS/Cofins, IPI zerado (exceto ZFM), Imposto Seletivo, Simples/MEI entram no destaque</span></div>
+        <div class="rt-row"><span class="rt-tag s-azul">2028</span><span class="rt-txt">Split payment obrigatório entre empresas (facultativo e gradual em 2027)</span></div>
+        <div class="rt-row"><span class="rt-tag s-azul">2029–33</span><span class="rt-txt">ICMS e ISS caem gradualmente; extintos em 2033</span></div>
       </div>
 
       <div class="sidebar-divider"></div>
 
       <div class="sidebar-section">
-        <div class="sidebar-label">Agosto 2026 — Obrigações</div>
+        <div class="sidebar-label" id="obrig-titulo">Próximos vencimentos</div>
       </div>
-
       <div class="stats-row">
-        <div class="stat-mini">
-          <div class="stat-mini-val">7</div>
-          <div class="stat-mini-lbl">Obrigações no mês</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-val">3</div>
-          <div class="stat-mini-lbl">Vencem em 7 dias</div>
-        </div>
+        <div class="stat-mini"><div class="stat-mini-val" id="stat-30">0</div><div class="stat-mini-lbl">Prazos em 30 dias</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" id="stat-7">0</div><div class="stat-mini-lbl">Vencem em 7 dias</div></div>
       </div>
-
-      <div class="sidebar-section" style="padding-top:.75rem">
-        <div class="sidebar-label">Próximos vencimentos</div>
-      </div>
-
-      <div class="obrig-card">
-        <div class="obrig-sigla">EFD-Contribuições</div>
-        <div class="obrig-nome">Competência junho/2026</div>
-        <div class="obrig-detail">PIS, Cofins e CPRB<br>Lucro Presumido e Real</div>
-        <div class="obrig-status s-vermelho">🔴 Vence dia 14/08</div>
-      </div>
-
-      <div class="obrig-card">
-        <div class="obrig-sigla">EFD-Reinf</div>
-        <div class="obrig-nome">Competência julho/2026</div>
-        <div class="obrig-detail">Retenções tributárias<br>Integra automaticamente à DCTFWeb</div>
-        <div class="obrig-status s-vermelho">🔴 Vence dia 17/08</div>
-      </div>
-
-      <div class="obrig-card">
-        <div class="obrig-sigla">PGDAS-D + DIRBI</div>
-        <div class="obrig-nome">Competência julho/2026</div>
-        <div class="obrig-detail">Declaração Simples Nacional<br>e incentivos fiscais</div>
-        <div class="obrig-status s-amarelo">⚠️ Vence dia 20/08</div>
-      </div>
-
-      <div class="obrig-card">
-        <div class="obrig-sigla">DCTFWeb + DME + DeCripto</div>
-        <div class="obrig-nome">Competência julho/2026</div>
-        <div class="obrig-detail">Consolidação de débitos tributários<br>+ operações em espécie e criptoativos</div>
-        <div class="obrig-status s-amarelo">⚠️ Vence dia 31/08</div>
-      </div>
-
-      <div class="obrig-card">
-        <div class="obrig-sigla">IBS/CBS nas NF-e</div>
-        <div class="obrig-nome">Reforma Tributária — vigente</div>
-        <div class="obrig-detail">Obrigatório desde 03/08/2026<br>para Lucro Presumido e Real</div>
-        <div class="obrig-status s-verde">✅ Vigente desde 03/08</div>
-      </div>
+      <div id="obrig-lista"></div>
 
       <div class="sidebar-divider"></div>
       <div class="sidebar-section">
-        <div class="sidebar-label" style="font-size:10px;color:var(--text3);line-height:1.6">Demo exclusivo · ORBI IA<br>agenteorbiia.com</div>
+        <div class="sidebar-label" style="font-size:10px;color:var(--text3);line-height:1.6">Demo exclusivo · ORBI IA<br>agenteorbiia.com<br>Base normativa revisada em 21/10/2026</div>
       </div>
     </div>
 
@@ -269,40 +244,29 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <div class="chat-avatar">OC</div>
         <div class="chat-info">
           <strong>Assistente ORBI Contábil</strong>
-          <span><div class="online-dot"></div> online · exclusivo para Digital Contabilidade</span>
+          <span><div class="online-dot"></div> online · exclusivo para <span class="cfg-escritorio">Digital Contabilidade</span></span>
         </div>
       </div>
 
       <div class="chat-messages" id="messages">
-        <div class="msg agent">
-          <div class="msg-avatar">OC</div>
-          <div class="msg-content">
-            <span class="msg-name">ORBI Contábil</span>
-            <div class="msg-bubble">Olá! Bem-vindo à Digital Contabilidade 😊<br><br>Sou o assistente virtual do escritório do Felipe. Posso responder suas dúvidas sobre <strong>MEI, Simples Nacional, obrigações fiscais, Reforma Tributária, folha de pagamento</strong> e muito mais — enquanto o Felipe está em atendimento.<br><br>Como posso te ajudar hoje?</div>
-            <span class="msg-time">agora</span>
-          </div>
-        </div>
         <div class="typing-wrap" id="typing-wrap" style="display:none">
           <div class="typing-av">OC</div>
-          <div class="typing-bubble">
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-            <div class="typing-dot"></div>
-          </div>
+          <div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
         </div>
       </div>
 
       <div class="suggestions" id="suggestions">
-        <button class="sug" onclick="enviarSug(this)">Você pode me lembrar do vencimento do DAS?</button>
+        <button class="sug" onclick="enviarSug(this)">Minha nota vai ser rejeitada sem IBS e CBS?</button>
+        <button class="sug" onclick="enviarSug(this)">Sou do Simples. Vale tirar IBS e CBS do DAS?</button>
+        <button class="sug" onclick="enviarSug(this)">Quando o PIS e a Cofins acabam?</button>
+        <button class="sug" onclick="enviarSug(this)">Já vou pagar IBS e CBS de verdade este ano?</button>
+        <button class="sug" onclick="enviarSug(this)">O limite do MEI já subiu?</button>
+        <button class="sug" onclick="enviarSug(this)">Vou pagar imposto sobre os lucros que retiro da empresa?</button>
         <button class="sug" onclick="enviarSug(this)">Não recebi a guia que o escritório enviou</button>
-        <button class="sug" onclick="enviarSug(this)">Minha nota fiscal precisa mudar em agosto?</button>
-        <button class="sug" onclick="enviarSug(this)">Quero migrar meu MEI para ME</button>
-        <button class="sug" onclick="enviarSug(this)">O que é o IBS e CBS?</button>
-        <button class="sug" onclick="enviarSug(this)">Preciso declarar Imposto de Renda?</button>
-        <button class="sug" onclick="enviarSug(this)">Quais documentos preciso enviar pro escritório?</button>
+        <button class="sug" onclick="enviarSug(this)">Pode me lembrar do vencimento do DAS?</button>
       </div>
 
-      <div class="disclaimer">Demo exclusivo · Digital Contabilidade · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
+      <div class="disclaimer">Demo exclusivo · <span class="cfg-escritorio">Digital Contabilidade</span> · ORBI IA — Orientações gerais, não substituem assessoria contábil formal · LGPD — Lei 13.709/2018</div>
 
       <div class="input-area">
         <textarea class="chat-input" id="chat-input" placeholder="Digite como se fosse um cliente do escritório..." rows="1"
@@ -317,92 +281,202 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 
 <script>
-const SYSTEM = `Você é o assistente virtual da Digital Contabilidade, escritório de contabilidade consultiva com sede em Patos/PB, sob responsabilidade do contador Felipe.
+/* ===================== CONFIGURAÇÃO DO PILOTO ===================== */
+const CONFIG = {
+  escritorio: 'Digital Contabilidade',
+  cidade: 'Patos/PB',
+  contador: 'Val Souza',
+  iniciais: 'VS',
+  login: 'val',
+  senha: '3569',
+  baseRevisadaEm: '21/10/2026'
+};
 
-Seu papel é atender clientes com clareza, paciência e simpatia — respondendo dúvidas contábeis e fiscais enquanto o Felipe está em atendimento.
+/* Prazos exibidos na lateral. Status (vermelho/amarelo/azul) é calculado pela data de hoje;
+   prazos que já passaram somem sozinhos. Atualize esta lista a cada trimestre. */
+const PRAZOS = [
+  {data:'2026-10-30', sigla:'Simples · IBS/CBS fora do DAS', nome:'Opção para o 1º semestre de 2027', detail:'Portal do Simples Nacional<br>Quem não optar só terá nova janela em março/2027'},
+  {data:'2026-11-01', sigla:'NFS-e Nacional', nome:'Obrigatória para o Simples Nacional', detail:'Padrão nacional de nota de serviço<br>IBS/CBS no Simples só a partir de 2027', vigencia:true},
+  {data:'2026-11-13', sigla:'EFD-Reinf', nome:'Competência outubro/2026', detail:'Retenções · dia 15 cai no domingo<br>Alimenta a DCTFWeb'},
+  {data:'2026-11-16', sigla:'EFD-Contribuições', nome:'Competência setembro/2026', detail:'PIS, Cofins e CPRB<br>Lucro Presumido e Real'},
+  {data:'2026-11-23', sigla:'PGDAS-D + DAS / DAS-MEI', nome:'Competência outubro/2026', detail:'20/11 é feriado nacional<br>Vencimento passa para 23/11'},
+  {data:'2026-11-30', sigla:'DCTFWeb + DME + DeCripto', nome:'Competência outubro/2026', detail:'Último dia útil do mês<br>+ 1ª parcela do 13º salário'},
+  {data:'2026-12-01', sigla:'IBS/CBS · nova onda', nome:'Locações, condomínios, plataformas', detail:'NF-e ABI (venda de imóveis) e NFS-e<br>para atividades específicas', vigencia:true},
+  {data:'2026-12-14', sigla:'EFD-Contribuições', nome:'Competência outubro/2026', detail:'PIS, Cofins e CPRB<br>Lucro Presumido e Real'},
+  {data:'2026-12-15', sigla:'EFD-Reinf', nome:'Competência novembro/2026', detail:'Retenções tributárias'},
+  {data:'2026-12-18', sigla:'13º salário', nome:'2ª parcela', detail:'20/12 cai no domingo<br>Pagamento antecipado para 18/12'},
+  {data:'2026-12-21', sigla:'PGDAS-D + DAS / DAS-MEI', nome:'Competência novembro/2026', detail:'Simples Nacional e MEI'},
+  {data:'2026-12-31', sigla:'DCTFWeb + DeCripto', nome:'Competência novembro/2026', detail:'Último dia útil do mês'},
+  {data:'2027-01-01', sigla:'Reforma · virada 2027', nome:'CBS cheia e fim do PIS/Cofins', detail:'IPI zerado (exceto ZFM), Imposto Seletivo<br>Simples e MEI entram no destaque IBS/CBS', vigencia:true}
+];
 
-SOBRE O ESCRITÓRIO:
-- Nome: Digital Contabilidade
-- Contador responsável: Felipe
-- Cidade: Patos/PB
-- Especialidades: MEI, ME, Simples Nacional, Lucro Presumido, IRPF/IRPJ, Departamento Pessoal, Reforma Tributária
+/* ===================== DATA DE HOJE ===================== */
+function hojeSP(){
+  const p = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  return new Date(p+'T00:00:00');
+}
+const HOJE = hojeSP();
+const HOJE_TXT = HOJE.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
 
-SKILL — SIMPLES NACIONAL:
-- ME até R$4,8M/ano, MEI até R$81.000/ano
-- DAS vence todo dia 20 do mês seguinte
-- PGDAS-D deve ser declarado antes do pagamento
-- Tributação unificada: IRPJ, CSLL, PIS, Cofins, CPP, ISS ou ICMS
-- Alíquota varia por anexo (I a V) e faturamento acumulado 12 meses
-- Exclusão por débito: 30 dias para regularizar após edital no DOU
+/* ===================== PROMPT DO AGENTE ===================== */
+function montarSystem(){
+return `Você é o assistente virtual da ${CONFIG.escritorio}, escritório de contabilidade consultiva em ${CONFIG.cidade}, sob responsabilidade de ${CONFIG.contador} (contador(a) responsável).
 
-SKILL — MEI:
-- Limite: R$81.000/ano (R$6.750/mês)
-- DAS MEI fixo: Comércio/Indústria R$76,90 + ICMS R$1,00; Serviços R$76,90 + ISS R$5,00
-- Pode ter 1 empregado com salário mínimo
-- DASN anual: vence 31 de maio
-- Pode emitir nota fiscal
+DATA DE HOJE: ${HOJE_TXT}.
+A base de conhecimento abaixo foi revisada em ${CONFIG.baseRevisadaEm}. Use a DATA DE HOJE para dizer se algo "já vale", "vale a partir de" ou "já passou". Se hoje estiver mais de 60 dias depois da data de revisão, avise que regras e prazos podem ter mudado e que ${CONFIG.contador} confirma a versão atual.
 
-SKILL — REFORMA TRIBUTÁRIA (CBS/IBS) — AGOSTO 2026:
-- A partir de 03/08/2026: NF-e, NFC-e, CT-e e NFS-e de empresas do Lucro Presumido e Lucro Real DEVEM sair com campos IBS e CBS preenchidos — nota sem esses campos é rejeitada automaticamente
-- Simples Nacional e MEI: exigência começa só em janeiro de 2027
-- 2026 é ano-piloto: alíquota simbólica de 1% (0,1% IBS + 0,9% CBS) sem recolhimento efetivo — só para calibrar o sistema
-- Quem não adaptou o emissor de NF-e até 03/08 está com nota travada = venda travada = faturamento parado
-- IBS: Imposto sobre Bens e Serviços — substitui ICMS e ISS, gerido pelo Comitê Gestor IBS
-- CBS: Contribuição sobre Bens e Serviços — substitui PIS e Cofins, gerida pela Receita Federal
+Seu papel: atender clientes do escritório com clareza, paciência e simpatia, respondendo dúvidas contábeis e fiscais enquanto ${CONFIG.contador} está em atendimento. Refira-se a ${CONFIG.contador} sempre pelo nome, sem artigo ("fale com ${CONFIG.contador}", "${CONFIG.contador} vai te retornar").
 
-SKILL — OBRIGAÇÕES AGOSTO/2026 (dados reais da Receita Federal):
-- EFD-Contribuições (junho/2026): vence 14/08 — PIS, Cofins, CPRB
-- EFD-Reinf (julho/2026): vence 17/08 — retenções tributárias, integra DCTFWeb
-- PGDAS-D (julho/2026): vence 20/08 — declaração mensal Simples Nacional
-- DIRBI (julho/2026): vence 20/08 — incentivos e benefícios fiscais
-- DCTFWeb (julho/2026): vence 31/08 — consolida eSocial + EFD-Reinf
-- DME (julho/2026): vence 31/08 — operações em espécie acima de R$30.000
-- DeCripto (julho/2026): vence 31/08 — operações com criptoativos
+====================================================================
+COMO RESPONDER SOBRE REFORMA TRIBUTÁRIA (REGRA MAIS IMPORTANTE)
+====================================================================
+Toda resposta sobre reforma tributária (IBS, CBS, Imposto Seletivo, split payment, Simples, nota fiscal, PIS/Cofins, ICMS/ISS) deve deixar claro o STATUS do assunto, usando uma destas situações:
+1. JÁ ESTÁ VALENDO — diga desde quando e o efeito prático hoje.
+2. VALENDO, MAS COM FLEXIBILIZAÇÃO — explique o que é exigido e o que foi suspenso/adiado.
+3. AINDA NÃO ESTÁ VALENDO — diga: "Isso só entra em vigor em [data]. Até lá, [como funciona hoje]. A partir de [data], [o que muda]."
+4. AINDA NÃO É LEI / ESTÁ EM DISCUSSÃO — diga que é proposta em tramitação, que nada mudou ainda e qual é a regra atual.
+5. AINDA NÃO DEFINIDO — por exemplo, a alíquota exata da CBS de 2027: diga que ainda não foi fixada e quando deve ser.
+Nunca apresente algo futuro como se já valesse, nem invente datas, alíquotas ou números. Se o assunto não estiver nesta base, diga que a regulamentação está sendo publicada em etapas e que ${CONFIG.contador} confirma a regra exata.
 
-SKILL — LUCRO PRESUMIDO:
-- Faturamento até R$78M/ano
-- IRPJ: 15% sobre base presumida (8% comércio, 32% serviços) + adicional 10% acima de R$60.000/trimestre
-- CSLL: 9% sobre base presumida
-- PIS/Cofins cumulativo: 0,65% + 3%
-- Apuração trimestral
+--- LINHA DO TEMPO DA REFORMA DO CONSUMO (EC 132/2023, LC 214/2025, LC 227/2026) ---
+Regulamentos já publicados: CBS pelo Decreto 12.955/2026; IBS pela Resolução CGIBS nº 6/2026. Revisões desses regulamentos estão em andamento.
 
-SKILL — IA NA CONTABILIDADE (tema atual):
-- Ferramentas como o Codex do ChatGPT conseguem gerar scripts para extrair dados de sistemas como SEFAZ — é uma automação pontual e útil
-- Limitação: se o layout do portal mudar, o script quebra e precisa ser refeito manualmente
-- O ORBI Contábil complementa essas ferramentas: cuida do atendimento ao cliente final no WhatsApp, o que o Codex não faz
-- Conta Azul: sistema de gestão financeira com API aberta — futuramente o agente poderá consultar dados reais dos clientes do escritório em tempo real (status de boletos, notas emitidas, inadimplentes)
+[JÁ ESTÁ VALENDO — desde 01/01/2026] Ano-teste:
+- CBS (federal, substitui PIS e Cofins) com alíquota-teste de 0,9% e IBS (estados e municípios, substitui ICMS e ISS) com 0,1%, total 1%.
+- Em 2026 esse valor é destacado na nota, mas é compensável com PIS/Cofins e a empresa fica dispensada de recolher se cumprir as obrigações acessórias. Ou seja: em 2026 ninguém paga IBS/CBS "a mais" se estiver em dia com as obrigações. A apuração de 2026 tem caráter informativo.
+- PIS, Cofins, ICMS, ISS e IPI continuam sendo cobrados normalmente em 2026.
 
-SKILL — IRPF 2026:
-- Obrigatório declarar: rendimentos acima de R$33.888/ano, bens acima de R$800.000, rendimentos isentos acima de R$200.000
-- Prazo: março a maio de cada ano
-- Malha fina: divergência nos cruzamentos da Receita Federal
+[VALENDO COM FLEXIBILIZAÇÃO] Campos de IBS/CBS nas notas (empresas do regime regular: Lucro Presumido e Lucro Real):
+- Ato Conjunto RFB/CGIBS nº 4/2026 criou um cronograma escalonado:
+  • 03/08/2026: NF-e, NFC-e, CT-e, MDF-e e outros documentos de mercadoria/transporte.
+  • 01/10/2026: NFS-e (maior parte dos serviços sujeitos ao ISS), NFCom, DIR e eventos de tabela da DeRE.
+  • 15/11/2026: primeiros eventos periódicos mensais da DeRE (regimes específicos, como financeiras).
+  • 01/12/2026: locação de imóveis e bens móveis, administração de condomínios, plataformas digitais, NF-e ABI (alienação de bens imóveis), NFGas, NFAg e serviços específicos na NFS-e; também contribuintes de IBS/CBS que não são contribuintes de ICMS.
+  • 01/01/2027: Simples Nacional, Duimp, operações monofásicas, pessoas físicas contribuintes.
+- PORÉM: um Ato Técnico Conjunto CGIBS/RFB (31/07/2026) suspendeu a rejeição automática. Em 2026, a nota sem os campos de IBS/CBS NÃO é rejeitada. Na NFS-e nacional, a ausência não gera rejeição até 31/12/2026.
+- Resposta correta ao cliente: "A obrigação existe e o certo é preencher; o sistema só não está barrando a nota em 2026. Quem não adaptar agora corre o risco de ter nota travada quando a validação for ligada, além de inconsistência na apuração." Nunca diga que a nota está sendo rejeitada hoje por falta desses campos.
+- Erro de código de situação tributária (CST/cClassTrib) preenchido errado pode gerar problema mesmo assim: oriente a conferir com ${CONFIG.contador}.
 
-SITUAÇÕES ESPECIAIS — COMO RESPONDER:
+[PRAZO EM ANDAMENTO] Simples Nacional e IBS/CBS em 2027 (Resolução CGSN nº 194/2026):
+- A partir de 2027, a empresa do Simples pode: (a) manter IBS/CBS dentro do DAS (padrão), ou (b) recolher IBS/CBS "por fora", pelo regime regular (chamado de Simples híbrido), continuando no Simples para os demais tributos.
+- Opção pelo regime regular para jan–jun/2027: até 30/10/2026 no Portal do Simples Nacional. Quem não optar terá nova janela em março/2027 (efeitos a partir de julho/2027). Há prazo para desistir da opção; ${CONFIG.contador} confirma a data.
+- Dentro do DAS: o cliente da empresa só aproveita crédito limitado ao que foi pago no DAS. Por fora: o cliente aproveita crédito integral, mas a empresa paga IBS/CBS pelas alíquotas cheias e passa a ter apuração e obrigações próprias (e também toma créditos nas suas compras).
+- Não é vantajoso automaticamente. Tende a fazer mais sentido para quem vende para outras empresas (B2B) que querem crédito; para quem vende ao consumidor final, geralmente pesa contra. Sempre diga que a decisão exige simulação com os números da empresa, feita por ${CONFIG.contador}, e que o prazo é curto.
+- A opção de entrada no Simples Nacional para 2027 encerrou em 15/10/2026.
+- Fim do regime de caixa no Simples a partir de 01/01/2027.
 
-Guia não recebida:
-Se cliente disser que não recebeu guia, boleto ou documento — responda com empatia, peça confirmação do e-mail ou WhatsApp cadastrado e informe que vai avisar o Felipe para reenviar imediatamente. Nunca diga que foi enviado sem confirmar.
+[AINDA NÃO ESTÁ VALENDO — a partir de 01/01/2027]
+- CBS passa a ser cobrada de verdade, pela alíquota de referência menos 0,1 ponto (em 2027 e 2028).
+- PIS e Cofins deixam de existir.
+- IPI vai a zero para quase todos os produtos (mantido para proteger a Zona Franca de Manaus).
+- Imposto Seletivo começa (cigarros, bebidas alcoólicas, açucaradas, veículos, mineração etc.); não gera crédito. Existe proposta em discussão para ajustar a transição IPI → Imposto Seletivo no início de 2027; trate como "em discussão".
+- IBS segue em teste em 2027 e 2028: 0,1% (0,05% estadual + 0,05% municipal).
+- Simples Nacional e MEI passam a ter o destaque de IBS/CBS nos documentos fiscais.
 
-Lembrete de vencimento:
-Se cliente perguntar sobre lembretes — explique que o escritório da Digital Contabilidade pode configurar avisos automáticos de vencimento de DAS, guias e obrigações direto no WhatsApp dele. Oriente a confirmar com o Felipe para ativar esse serviço.
+[AINDA NÃO DEFINIDO] Alíquota de referência da CBS e do IBS:
+- Ainda não foi fixada. A Receita enviou a metodologia ao TCU em setembro/2026; o TCU deve mandar o cálculo ao Senado até 30/10/2026; o Senado fixa por resolução. Se não deliberar, vale o cálculo do TCU a partir de 01/01/2027.
+- Não informe percentual exato. Se perguntarem, diga que há projeções na casa dos 9% para a CBS, mas o número oficial ainda não saiu.
 
-Documentos pendentes:
-Se cliente perguntar quais documentos deve enviar — peça que confirme o serviço contratado (MEI, ME, declaração de IR, folha) e liste os documentos padrão para aquele serviço. Sempre termine pedindo para confirmar com o escritório se há algo específico.
+[AINDA NÃO ESTÁ VALENDO — 2028] Split payment (imposto separado automaticamente no pagamento):
+- Obrigatório entre empresas só a partir de 2028, segundo a Receita (anúncio de 30/08/2026). Em 2027, uso gradual e facultativo. MEI não participa. Consumidor final não percebe diferença.
 
-REGRAS:
-- Seja simpático, paciente e claro
-- Use linguagem simples, explique termos técnicos
-- Máximo 4 parágrafos por resposta
-- Quando a dúvida for específica do caso do cliente, oriente a falar com o Felipe
-- Sempre termine com: "Para o seu caso específico, o Felipe pode te atender pessoalmente no escritório ou pelo WhatsApp 😊"
-- Emojis com moderação
-- ⚠️ Orientação geral — não substitui assessoria contábil formal. Dados protegidos pela LGPD — Lei 13.709/2018.`;
+[AINDA NÃO ESTÁ VALENDO — 2029 a 2033] Transição do ICMS e ISS:
+- 2029: ICMS e ISS reduzidos a 90%; 2030: 80%; 2031: 70%; 2032: 60%; IBS aumenta na mesma proporção.
+- 2033: ICMS e ISS extintos; sistema novo completo.
 
+[REGRAS PERMANENTES DA REFORMA, quando estiverem em vigor]
+- Não cumulatividade ampla: imposto pago na compra vira crédito.
+- Cobrança no destino (onde está o consumidor).
+- Cesta Básica Nacional com alíquota zero; reduções de 60% (saúde, educação, alguns alimentos etc.) e 30% (algumas profissões regulamentadas); cashback para famílias de baixa renda.
+- Contratos de longo prazo e tabelas de preço devem ser revisados para a troca de PIS/Cofins por CBS em 2027.
+
+====================================================================
+MUDANÇAS JÁ VIGENTES EM 2026 FORA DA REFORMA DO CONSUMO
+====================================================================
+[JÁ ESTÁ VALENDO — Lei 15.270/2025, desde 01/01/2026] Imposto de Renda:
+- Isenção de IR para quem ganha até R$ 5.000 por mês; redução parcial para rendas entre R$ 5.000 e R$ 7.350; acima disso a tabela segue igual.
+- Isso afeta a retenção mensal desde janeiro/2026 e aparece na declaração de 2027 (ano-base 2026). A declaração entregue em 2026 (ano-base 2025) ainda seguiu a regra antiga.
+- Dividendos: retenção de 10% na fonte quando uma mesma empresa paga mais de R$ 50 mil no mês à mesma pessoa física. Lucros apurados até 2025 com distribuição aprovada até 31/12/2025 têm regra de transição.
+- Imposto mínimo para altas rendas (IRPFM): quem recebe mais de R$ 600 mil no ano pode ter de complementar no ajuste anual, até alíquota mínima de 10% (cheia acima de R$ 1,2 milhão).
+- Aplicação ao Simples Nacional na retenção sobre dividendos é tema com divergência jurídica: oriente a falar com ${CONFIG.contador}.
+- JCP: alíquota e regras devem ser confirmadas com ${CONFIG.contador}.
+
+[JÁ ESTÁ VALENDO — LC 224/2025, desde 2026] Lucro Presumido:
+- Acréscimo de 10% nos percentuais de presunção de IRPJ e CSLL só sobre a parcela da receita bruta anual que passar de R$ 5 milhões (controle trimestral: R$ 1,25 milhão por trimestre). Ex.: presunção de serviços 32% vira 35,2% sobre o excedente. Para a CSLL, efeitos a partir do 2º trimestre de 2026.
+- Não é aumento de alíquota; é aumento da base. Para quem fatura acima de R$ 5 milhões, vale refazer a comparação Presumido x Real com ${CONFIG.contador}. Há discussão judicial sobre a constitucionalidade.
+
+[EM DISCUSSÃO — NÃO É LEI] Novo limite do MEI:
+- O limite continua R$ 81.000 por ano (média de R$ 6.750 por mês) e 1 empregado.
+- Projetos em tramitação na Câmara (PLP 108/2021 e PLP 186/2026) preveem aumento (proposta mais recente: R$ 110 mil em 2027 e R$ 140 mil em 2028) e até 2 empregados. Ainda não foram aprovados nem sancionados. Nunca diga que o limite já subiu.
+
+====================================================================
+BASE TÉCNICA
+====================================================================
+SIMPLES NACIONAL:
+- ME até R$ 360 mil/ano; EPP até R$ 4,8 milhões/ano.
+- DAS vence no dia 20 do mês seguinte (se não for dia útil, passa para o próximo dia útil). PGDAS-D é transmitido antes de gerar o DAS.
+- Tributação unificada: IRPJ, CSLL, PIS, Cofins, CPP, IPI, ICMS ou ISS. Alíquota depende do anexo (I a V) e da receita acumulada de 12 meses.
+- Dívida em aberto pode levar à exclusão; há prazo para regularizar a partir da ciência do termo de exclusão no DTE-SN. Oriente a falar com ${CONFIG.contador} imediatamente.
+- NFS-e de padrão nacional obrigatória para o Simples a partir de 01/11/2026.
+
+MEI (valores 2026, salário mínimo R$ 1.621):
+- Limite: R$ 81.000/ano. Pode ter 1 empregado (salário mínimo ou piso da categoria).
+- DAS-MEI: R$ 81,05 de INSS + R$ 1,00 de ICMS (comércio/indústria) e/ou R$ 5,00 de ISS (serviços). Total: R$ 82,05 (comércio/indústria), R$ 86,05 (serviços), R$ 87,05 (comércio e serviços).
+- Vence todo dia 20 (próximo dia útil se cair em feriado/fim de semana). Atraso: multa de 0,33% ao dia (máx. 20%) + juros.
+- DASN-SIMEI: até 31 de maio. Estourou o limite em até 20%: desenquadra a partir do ano seguinte e paga a diferença; acima de 20%: efeito retroativo. Encaminhe para ${CONFIG.contador}.
+- Cuidado com golpes de boletos falsos de DAS: só emitir pelo Portal do Simples ou App MEI.
+
+LUCRO PRESUMIDO:
+- Faturamento até R$ 78 milhões/ano. Apuração trimestral de IRPJ/CSLL.
+- IRPJ: 15% sobre base presumida (8% comércio/indústria, 32% serviços em geral) + adicional de 10% sobre a parcela acima de R$ 60 mil por trimestre.
+- CSLL: 9% sobre base presumida (12% comércio/indústria, 32% serviços).
+- PIS/Cofins cumulativos: 0,65% + 3% (até o fim de 2026; em 2027 são substituídos pela CBS).
+- Acréscimo de 10% na presunção acima de R$ 5 milhões/ano (LC 224/2025).
+
+IRPF:
+- Declaração entregue em 2026 (ano-base 2025): prazo foi de 23/03 a 29/05/2026. Obrigado quem teve rendimentos tributáveis acima de R$ 35.584, rendimentos isentos/exclusivos na fonte acima de R$ 200 mil, bens acima de R$ 800 mil, entre outros casos. Quem perdeu o prazo deve entregar o quanto antes (multa mínima de R$ 165,74).
+- Declaração de 2027 (ano-base 2026): regras e prazos ainda serão publicados pela Receita, normalmente no início do ano; já refletirá a isenção até R$ 5 mil/mês.
+- Malha fina: divergência entre o que foi declarado e o que a Receita recebeu de terceiros.
+
+OBRIGAÇÕES ACESSÓRIAS (regra geral; datas exatas mudam com feriados):
+- eSocial (folha): até dia 15. EFD-Reinf: até dia 15 (antecipa se não for dia útil). DCTFWeb (com MIT): último dia útil do mês seguinte.
+- EFD-Contribuições: 10º dia útil do 2º mês seguinte (Lucro Presumido e Real).
+- DIRBI: dia 20 do 2º mês seguinte, só para quem usa benefícios fiscais listados (dispensada para Simples e MEI). A lista de benefícios aumentou para 173 itens em 2026.
+- DME (dinheiro em espécie acima de R$ 30 mil) e DeCripto: último dia útil do mês seguinte.
+- 13º salário: 1ª parcela até 30/11; 2ª parcela até 20/12 (em 2026, 20/12 é domingo: pagar até 18/12).
+Próximos prazos concretos (a partir de ${CONFIG.baseRevisadaEm}): opção IBS/CBS fora do DAS 30/10; EFD-Reinf (out) 13/11; EFD-Contribuições (set) 16/11; DAS e DAS-MEI (out) 23/11 por causa do feriado de 20/11; DCTFWeb, DME e DeCripto (out) 30/11; 13º 1ª parcela 30/11; nova onda de documentos IBS/CBS 01/12; EFD-Contribuições (out) 14/12; EFD-Reinf (nov) 15/12; 13º 2ª parcela 18/12; DAS (nov) 21/12; DCTFWeb (nov) 31/12.
+
+====================================================================
+SITUAÇÕES DE ATENDIMENTO
+====================================================================
+Guia não recebida: responda com empatia, peça para confirmar o e-mail ou WhatsApp cadastrado e diga que vai avisar ${CONFIG.contador} para reenviar. Nunca afirme que a guia foi enviada sem confirmação.
+Lembrete de vencimento: explique que o escritório pode ativar avisos automáticos de DAS, guias e obrigações direto no WhatsApp. Oriente a confirmar com ${CONFIG.contador} para ativar.
+Documentos pendentes: pergunte qual serviço o cliente tem (MEI, ME, IR, folha) e liste os documentos padrão daquele serviço. Termine pedindo para confirmar com o escritório se falta algo específico.
+Urgências (notificação da Receita, termo de exclusão do Simples, nota travada, malha fina, fiscalização): não tente resolver; acalme, diga o que o cliente pode separar (documento recebido, prazo) e encaminhe para ${CONFIG.contador} como prioridade.
+Dados de outros clientes ou dados que você não tem: nunca invente valor de guia, situação fiscal ou status de pagamento. Diga que vai verificar com ${CONFIG.contador}.
+
+REGRAS DE ESTILO:
+- Simpático, paciente e claro. Linguagem simples; explique siglas na primeira vez.
+- Respostas curtas, no máximo 4 parágrafos, como numa conversa de WhatsApp.
+- Use **negrito** só para datas e pontos-chave. Emojis com moderação.
+- Quando a dúvida depender dos números ou da situação do cliente, termine com algo como: "Para o seu caso, ${CONFIG.contador} pode te atender pessoalmente no escritório ou pelo WhatsApp 😊". Não repita essa frase em toda mensagem de uma mesma conversa; varie ou omita quando a resposta for geral.
+- Orientação geral, não substitui assessoria contábil formal. Dados protegidos pela LGPD (Lei 13.709/2018).`;
+}
+
+/* ===================== CHAT ===================== */
 let historico=[];
 let enviando=false;
 
 function hora(){
   const d=new Date();
   return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+
+function escaparHTML(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function formatar(texto){
+  return escaparHTML(texto).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
 }
 
 function adicionarMsg(role,texto){
@@ -420,15 +494,12 @@ function adicionarMsg(role,texto){
   name.textContent=role==='user'?'Você':'ORBI Contábil';
   const bubble=document.createElement('div');
   bubble.className='msg-bubble';
-  bubble.innerHTML=texto.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  bubble.innerHTML=formatar(texto);
   const time=document.createElement('span');
   time.className='msg-time';
   time.textContent=hora();
-  content.appendChild(name);
-  content.appendChild(bubble);
-  content.appendChild(time);
-  div.appendChild(av);
-  div.appendChild(content);
+  content.appendChild(name);content.appendChild(bubble);content.appendChild(time);
+  div.appendChild(av);div.appendChild(content);
   msgs.insertBefore(div,typing);
   msgs.scrollTop=msgs.scrollHeight;
 }
@@ -436,6 +507,10 @@ function adicionarMsg(role,texto){
 function mostrarTyping(show){
   document.getElementById('typing-wrap').style.display=show?'flex':'none';
   document.getElementById('messages').scrollTop=99999;
+}
+
+function boasVindas(){
+  adicionarMsg('agent',`Olá! Bem-vindo à ${CONFIG.escritorio} 😊\n\nSou o assistente virtual do escritório de ${CONFIG.contador}. Posso tirar dúvidas sobre **MEI, Simples Nacional, obrigações fiscais, Imposto de Renda, folha de pagamento** e sobre a **Reforma Tributária**: o que já está valendo e o que ainda vai mudar.\n\nComo posso te ajudar hoje?`);
 }
 
 async function enviar(){
@@ -454,7 +529,7 @@ async function enviar(){
     const res=await fetch('/api/adv',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:historico,system:SYSTEM})
+      body:JSON.stringify({messages:historico,system:montarSystem()})
     });
     const data=await res.json();
     const resp=data.content||'Não consegui processar. Tente novamente.';
@@ -464,6 +539,7 @@ async function enviar(){
   }catch(e){
     mostrarTyping(false);
     adicionarMsg('agent','Problema de conexão. Tente novamente.');
+    historico.pop();
   }
   enviando=false;
   document.getElementById('send-btn').disabled=false;
@@ -474,10 +550,57 @@ function enviarSug(btn){
   enviar();
 }
 
+/* ===================== LATERAL: PRAZOS DINÂMICOS ===================== */
+function renderPrazos(){
+  const lista=document.getElementById('obrig-lista');
+  const dia=86400000;
+  const futuros=PRAZOS
+    .map(p=>({...p,dt:new Date(p.data+'T00:00:00')}))
+    .filter(p=>p.dt>=HOJE)
+    .sort((a,b)=>a.dt-b.dt);
+  let em7=0,em30=0;
+  futuros.forEach(p=>{
+    const d=Math.round((p.dt-HOJE)/dia);
+    if(d<=7)em7++;
+    if(d<=30)em30++;
+  });
+  document.getElementById('stat-7').textContent=em7;
+  document.getElementById('stat-30').textContent=em30;
+
+  if(!futuros.length){
+    lista.innerHTML='<div class="obrig-card"><div class="obrig-detail">Calendário desta demo precisa ser atualizado.</div></div>';
+    return;
+  }
+  lista.innerHTML=futuros.slice(0,6).map(p=>{
+    const d=Math.round((p.dt-HOJE)/dia);
+    const dataBR=p.dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+    let cls,txt;
+    if(p.vigencia){cls='s-azul';txt=(d===0?'Começa hoje':'Começa em '+dataBR);}
+    else if(d===0){cls='s-vermelho';txt='Vence hoje';}
+    else if(d<=7){cls='s-vermelho';txt='Vence '+dataBR+' · '+d+(d===1?' dia':' dias');}
+    else if(d<=20){cls='s-amarelo';txt='Vence '+dataBR+' · '+d+' dias';}
+    else{cls='s-verde';txt='Vence '+dataBR;}
+    return `<div class="obrig-card">
+      <div class="obrig-sigla">${p.sigla}</div>
+      <div class="obrig-nome">${p.nome}</div>
+      <div class="obrig-detail">${p.detail}</div>
+      <div class="obrig-status ${cls}">${txt}</div>
+    </div>`;
+  }).join('');
+}
+
+function aplicarConfig(){
+  document.querySelectorAll('.cfg-escritorio').forEach(e=>e.textContent=CONFIG.escritorio);
+  document.querySelectorAll('.cfg-contador').forEach(e=>e.textContent=CONFIG.contador);
+  document.querySelectorAll('.cfg-iniciais').forEach(e=>e.textContent=CONFIG.iniciais);
+  document.title='ORBI Contábil — '+CONFIG.escritorio;
+}
+
+/* ===================== LOGIN (demo) ===================== */
 function fazerLogin(){
   const user=document.getElementById('login-user').value.trim().toLowerCase();
   const pass=document.getElementById('login-pass').value.trim();
-  if(user==='felipe'&&pass==='9301'){
+  if(user===CONFIG.login&&pass===CONFIG.senha){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='flex';
     document.getElementById('login-err').textContent='';
@@ -487,17 +610,23 @@ function fazerLogin(){
   }
 }
 
-document.getElementById('login-pass').addEventListener('keydown',e=>{
-  if(e.key==='Enter')fazerLogin();
-});
-
 function fazerLogout(){
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('app').style.display='none';
   document.getElementById('login-user').value='';
   document.getElementById('login-pass').value='';
   historico=[];
+  document.querySelectorAll('#messages .msg').forEach(m=>m.remove());
+  document.getElementById('suggestions').style.display='flex';
+  boasVindas();
 }
+
+document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')fazerLogin();});
+document.getElementById('login-user').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('login-pass').focus();});
+
+aplicarConfig();
+renderPrazos();
+boasVindas();
 </script>
 </body>
 </html>
