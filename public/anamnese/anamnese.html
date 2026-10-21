@@ -1,1 +1,555 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#16212C">
+<title>Pré-diagnóstico empresarial | ORBI IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #16212C;
+    --ink-2: #3A4855;
+    --steel: #677685;
+    --rule: #DCE1E5;
+    --rule-strong: #C3CBD2;
+    --paper: #F4F6F5;
+    --sheet: #FFFFFF;
+    --field: #F8FAF9;
+    --accent: #1E5A6E;
+    --accent-soft: #E4EEF1;
+    --error: #A13B2F;
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--paper); color: var(--ink);
+    font: 16px/1.55 var(--sans); -webkit-font-smoothing: antialiased;
+  }
+  button, input, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  .top {
+    position: sticky; top: 0; z-index: 4; background: rgba(244,246,245,.96);
+    border-bottom: 1px solid var(--rule);
+  }
+  .top-in { max-width: 640px; margin: 0 auto; padding: 14px 20px 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { font-weight: 600; font-size: 15px; letter-spacing: .02em; }
+  .step-label { font-size: 13px; color: var(--steel); }
+  .bar { height: 3px; background: var(--rule); }
+  .bar span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .35s ease; }
+
+  main { max-width: 640px; margin: 0 auto; padding: 32px 20px 140px; }
+  .step { display: none; }
+  .step.active { display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .step.active { animation: enter .3s ease both; }
+    @keyframes enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  }
+
+  .kicker { font-size: 14px; color: var(--steel); margin: 0 0 10px; }
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(32px, 8vw, 44px); line-height: 1.1; letter-spacing: -.01em; margin: 0 0 18px; }
+  h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(26px, 6.4vw, 32px); line-height: 1.15; margin: 0 0 8px; }
+  .intro { font-size: 17px; color: var(--ink-2); margin: 0 0 28px; max-width: 34em; }
+  .sub { color: var(--ink-2); margin: 0 0 28px; }
+
+  .facts { border-top: 1px solid var(--rule); margin: 0 0 32px; }
+  .facts div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
+  .facts dt { color: var(--steel); }
+  .facts dd { margin: 0; }
+
+  .q { margin: 0 0 28px; }
+  .q > .label { display: block; font-weight: 500; font-size: 16px; margin-bottom: 4px; }
+  .q > .hint { display: block; font-size: 13.5px; color: var(--steel); margin-bottom: 10px; }
+  .q > .label + .opts, .q > .label + input, .q > .label + textarea { margin-top: 10px; }
+  .req { color: var(--steel); font-weight: 400; font-size: 13px; margin-left: 4px; }
+
+  input[type=text], input[type=tel], input[type=email], textarea {
+    width: 100%; background: var(--sheet); border: 1px solid var(--rule-strong); border-radius: 6px;
+    padding: 13px 14px; font-size: 16px; line-height: 1.4;
+  }
+  textarea { min-height: 104px; resize: vertical; }
+  input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .invalid input, .invalid textarea { border-color: var(--error); }
+  .err { display: none; color: var(--error); font-size: 13.5px; margin-top: 6px; }
+  .invalid .err { display: block; }
+
+  .opts { display: grid; gap: 8px; }
+  .opts.cols { grid-template-columns: 1fr 1fr; }
+  .opt { position: relative; }
+  .opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .opt label {
+    display: flex; align-items: center; gap: 12px; min-height: 50px;
+    padding: 12px 14px; background: var(--sheet); border: 1px solid var(--rule-strong); border-radius: 6px;
+    cursor: pointer; font-size: 15.5px; line-height: 1.3; user-select: none;
+  }
+  .opt label::before {
+    content: ""; flex: none; width: 18px; height: 18px; border: 1.5px solid var(--rule-strong); background: #fff;
+  }
+  .opt input[type=radio] + label::before { border-radius: 50%; }
+  .opt input[type=checkbox] + label::before { border-radius: 4px; }
+  .opt input:checked + label { border-color: var(--ink); background: var(--accent-soft); }
+  .opt input[type=radio]:checked + label::before { border: 5px solid var(--ink); }
+  .opt input[type=checkbox]:checked + label::before {
+    background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E") center/12px no-repeat;
+    border-color: var(--ink);
+  }
+  .opt input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .consent { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; font-size: 14px; color: var(--ink-2); }
+  .consent .opt label { border: 0; padding: 0; min-height: 0; background: transparent; align-items: flex-start; font-size: 14.5px; color: var(--ink); }
+  .consent .opt input:checked + label { background: transparent; }
+  .consent .opt label::before { margin-top: 2px; }
+  .consent p { margin: 12px 0 0 30px; font-size: 13px; color: var(--steel); }
+
+  .nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 4;
+    background: rgba(255,255,255,.97); border-top: 1px solid var(--rule);
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  }
+  .nav-in { max-width: 600px; margin: 0 auto; display: flex; gap: 10px; }
+  .btn {
+    flex: 1; min-height: 50px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 16px;
+    border: 1px solid var(--rule-strong); background: var(--sheet);
+  }
+  .btn.primary { flex: 2; background: var(--ink); border-color: var(--ink); color: #fff; }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+  .btn[disabled] { opacity: .6; cursor: wait; }
+  .btn.hidden { display: none; }
+
+  .done-mark { width: 52px; height: 52px; border-radius: 50%; background: var(--accent-soft); display: grid; place-items: center; margin-bottom: 22px; }
+  .done-actions { display: grid; gap: 10px; margin-top: 28px; }
+  .link-btn {
+    display: flex; align-items: center; justify-content: center; min-height: 50px; border-radius: 6px;
+    text-decoration: none; font-weight: 500; border: 1px solid var(--rule-strong); background: var(--sheet); color: var(--ink);
+  }
+  .link-btn.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+  footer.sig { max-width: 640px; margin: 0 auto; padding: 0 20px 150px; font-size: 12.5px; color: var(--steel); line-height: 1.6; }
+  footer.sig strong { color: var(--ink-2); font-weight: 600; }
+
+  @media (min-width: 720px) {
+    main { padding-top: 56px; }
+    .opts.cols-wide { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-in">
+    <div class="brand">ORBI IA</div>
+    <div class="step-label" id="stepLabel">Cerca de 4 minutos</div>
+  </div>
+  <div class="bar"><span id="bar"></span></div>
+</div>
+
+<main>
+  <form id="form" novalidate>
+
+    <!-- Etapa 0: apresentação -->
+    <section class="step active" data-step="0">
+      <p class="kicker">Pré-diagnóstico empresarial</p>
+      <h1>Onde a sua operação está perdendo tempo?</h1>
+      <p class="intro">Responda algumas perguntas sobre o atendimento e os processos da sua empresa. As perguntas mudam conforme o seu ramo de atuação.</p>
+      <dl class="facts">
+        <div><dt>Duração</dt><dd>Cerca de 4 minutos, quase tudo com toques</dd></div>
+        <div><dt>Você recebe</dt><dd>Uma leitura dos principais gargalos, enviada pelo WhatsApp em até 2 dias úteis</dd></div>
+        <div><dt>Quem analisa</dt><dd>Jonei Lima, CEO da ORBI IA</dd></div>
+        <div><dt>Seus dados</dt><dd>Usados só para este contato, conforme a LGPD</dd></div>
+      </dl>
+    </section>
+
+    <!-- Etapa 1: perfil -->
+    <section class="step" data-step="1">
+      <h2>Você e a empresa</h2>
+      <p class="sub">Para saber com quem estamos falando.</p>
+      <div id="perfil"></div>
+    </section>
+
+    <!-- Etapa 2: operação geral -->
+    <section class="step" data-step="2">
+      <h2>Atendimento hoje</h2>
+      <p class="sub">Como os clientes chegam e quanto tempo esperam.</p>
+      <div id="operacao"></div>
+    </section>
+
+    <!-- Etapa 3: perguntas do ramo -->
+    <section class="step" data-step="3">
+      <h2 id="ramoTitle">Sobre o seu ramo</h2>
+      <p class="sub" id="ramoSub">Perguntas específicas para o seu tipo de empresa.</p>
+      <div id="ramo"></div>
+    </section>
+
+    <!-- Etapa 4: prioridade -->
+    <section class="step" data-step="4">
+      <h2>Prioridade</h2>
+      <p class="sub">O que mais pesa hoje.</p>
+      <div id="prioridade"></div>
+      <div class="q" id="q_consent">
+        <div class="consent">
+          <div class="opt">
+            <input type="checkbox" id="consent" name="consent">
+            <label for="consent">Autorizo a ORBI IA a usar estes dados para entrar em contato comigo sobre este pré-diagnóstico.</label>
+          </div>
+          <p>Os dados não são vendidos nem compartilhados com terceiros. Você pode pedir a exclusão a qualquer momento pelo WhatsApp (66) 98132-0667.</p>
+        </div>
+        <span class="err">Marque a autorização para enviar.</span>
+      </div>
+    </section>
+
+    <!-- Etapa 5: concluído -->
+    <section class="step" data-step="5">
+      <div class="done-mark" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7.5" fill="none" stroke="#1E5A6E" stroke-width="1.8"/></svg>
+      </div>
+      <h2 id="doneTitle">Respostas recebidas</h2>
+      <p class="sub" id="doneText">Vou analisar o que você respondeu e retorno pelo WhatsApp em até 2 dias úteis com os principais pontos de melhoria.</p>
+      <div class="done-actions" id="doneActions"></div>
+    </section>
+
+  </form>
+</main>
+
+<footer class="sig">
+  <strong>ORBI IA</strong>, agentes de IA para processos empresariais<br>
+  J MARCELIO LIMA LTDA, CNPJ 68.308.327/0001-69<br>
+  agenteorbiia.com &nbsp;|&nbsp; @agenteorbi.ia
+</footer>
+
+<div class="nav">
+  <div class="nav-in">
+    <button type="button" class="btn hidden" id="back">Voltar</button>
+    <button type="button" class="btn primary" id="next">Começar</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* ===== Configuração ===== */
+  var CONFIG = {
+    // URL do webhook do n8n (método POST). Deixe vazio para enviar pelo WhatsApp.
+    webhookUrl: "",
+    // Número que recebe o resumo quando não há webhook ou quando o envio falha.
+    whatsapp: "5566981320667"
+  };
+  var DRAFT_KEY = "orbi-pre-diagnostico-v1";
+
+  /* ===== Perguntas ===== */
+  var PERFIL = [
+    { k: "nome", label: "Seu nome", type: "text", req: true, auto: "name" },
+    { k: "cargo", label: "Cargo", type: "text", auto: "organization-title" },
+    { k: "empresa", label: "Empresa", type: "text", req: true, auto: "organization" },
+    { k: "cidade", label: "Cidade", type: "text", auto: "address-level2" },
+    { k: "whatsapp", label: "WhatsApp", type: "tel", req: true, hint: "É por aqui que você recebe o retorno", auto: "tel" },
+    { k: "ramo", label: "Ramo da empresa", type: "radio", req: true, wide: true,
+      options: ["Imobiliária", "Clínica ou saúde", "Advocacia", "Contabilidade", "Comércio e varejo", "Restaurante e alimentação", "Construção e indústria", "Serviços e outros"] },
+    { k: "porte", label: "Quantas pessoas trabalham na empresa", type: "radio", cols: true,
+      options: ["Até 5", "6 a 15", "16 a 50", "Mais de 50"] }
+  ];
+
+  var OPERACAO = [
+    { k: "canais", label: "Por onde os clientes chegam", hint: "Marque todos que se aplicam", type: "check", cols: true,
+      options: ["WhatsApp", "Instagram", "Telefone", "Site", "Presencial", "Indicação"] },
+    { k: "volume", label: "Mensagens de clientes por dia, somando todos os canais", type: "radio", cols: true,
+      options: ["Até 20", "20 a 50", "50 a 150", "Mais de 150"] },
+    { k: "resposta", label: "Tempo médio até a primeira resposta", type: "radio", cols: true,
+      options: ["Minutos", "Até 1 hora", "Algumas horas", "No dia seguinte"] },
+    { k: "foraHorario", label: "Quando a mensagem chega à noite ou no fim de semana", type: "radio",
+      options: ["Alguém responde na hora", "Fica para o próximo dia útil", "Muitas vezes se perde"] }
+  ];
+
+  var RAMOS = {
+    "Imobiliária": {
+      sub: "Venda, locação e o caminho do lead até a visita.",
+      q: [
+        { k: "atuacao", label: "A imobiliária trabalha com", type: "radio", options: ["Venda", "Locação", "Venda e locação"] },
+        { k: "leads", label: "Leads de portais e redes por mês", type: "radio", cols: true, options: ["Até 50", "50 a 200", "200 a 500", "Mais de 500"] },
+        { k: "qualifica", label: "Quem confere renda, financiamento e FGTS antes da visita", type: "radio", options: ["O corretor, quando dá tempo", "Uma pessoa dedicada", "Ninguém, isso aparece na visita"] },
+        { k: "visita", label: "Como a visita é agendada", type: "radio", options: ["Por mensagem, manualmente", "Por um sistema", "Por telefone"] },
+        { k: "locacaoDemandas", label: "Na locação, o que mais ocupa a equipe", hint: "Deixe em branco se não trabalha com locação", type: "check", options: ["2ª via de boleto", "Pedidos de manutenção", "Cobrança de atraso", "Vistorias", "Renovação e reajuste"] },
+        { k: "sistema", label: "Sistema ou CRM imobiliário usado", type: "text", hint: "Ex.: Vista, Jetimob, Imobzi, planilha" }
+      ] },
+    "Clínica ou saúde": {
+      sub: "Agenda, confirmação e retorno de pacientes.",
+      q: [
+        { k: "especialidade", label: "Especialidade principal", type: "text" },
+        { k: "agendamentos", label: "Agendamentos por semana", type: "radio", cols: true, options: ["Até 30", "30 a 100", "100 a 300", "Mais de 300"] },
+        { k: "faltas", label: "Faltas sem aviso", type: "radio", cols: true, options: ["Raras", "Algumas por semana", "Várias por dia", "Não medimos"] },
+        { k: "confirmacao", label: "Como a consulta é confirmada", type: "radio", options: ["Mensagem manual da recepção", "Sistema automático", "Não confirmamos"] },
+        { k: "repetitivo", label: "O que a recepção mais repete", type: "check", options: ["Valores e convênios", "Horários disponíveis", "Preparo para procedimentos", "Remarcações", "Resultados e retornos"] },
+        { k: "sistema", label: "Sistema de agenda usado", type: "text", hint: "Ex.: Feegow, iClinic, Doctoralia, agenda de papel" }
+      ] },
+    "Advocacia": {
+      sub: "Triagem de casos novos e acompanhamento de clientes.",
+      q: [
+        { k: "area", label: "Áreas de atuação", type: "text", hint: "Ex.: trabalhista, família, imobiliário" },
+        { k: "consultas", label: "Contatos de possíveis clientes por mês", type: "radio", cols: true, options: ["Até 20", "20 a 60", "60 a 150", "Mais de 150"] },
+        { k: "triagem", label: "Quem faz a primeira triagem do caso", type: "radio", options: ["O próprio advogado", "Secretária ou estagiário", "Não há triagem definida"] },
+        { k: "andamento", label: "Clientes perguntando sobre o andamento do processo", type: "radio", options: ["Raramente", "Toda semana", "Todo dia"] },
+        { k: "documentos", label: "Coleta de documentos do cliente", type: "radio", options: ["Organizada", "Demorada, precisa cobrar", "Caótica"] },
+        { k: "sistema", label: "Sistema jurídico usado", type: "text", hint: "Ex.: Astrea, Projuris, ADVBOX, planilha" }
+      ] },
+    "Contabilidade": {
+      sub: "Demandas repetitivas da carteira de clientes.",
+      q: [
+        { k: "clientes", label: "Clientes na carteira", type: "radio", cols: true, options: ["Até 50", "50 a 150", "150 a 400", "Mais de 400"] },
+        { k: "repetitivo", label: "Pedidos que mais se repetem", type: "check", options: ["Envio de guias e boletos", "Cobrança de documentos", "Dúvidas fiscais simples", "Folha e pró-labore", "Certidões e declarações"] },
+        { k: "documentos", label: "Como os documentos chegam do cliente", type: "radio", options: ["WhatsApp e e-mail, sem padrão", "Portal ou sistema", "O escritório precisa ir buscar"] },
+        { k: "atraso", label: "Clientes que atrasam documentos todo mês", type: "radio", cols: true, options: ["Poucos", "Uns 20%", "Metade ou mais", "Não medimos"] },
+        { k: "sistema", label: "Sistema contábil usado", type: "text", hint: "Ex.: Domínio, Alterdata, Questor" }
+      ] },
+    "Comércio e varejo": {
+      sub: "Vendas pelo WhatsApp, estoque e pós-venda.",
+      q: [
+        { k: "vendaOnline", label: "Vendem por WhatsApp ou internet", type: "radio", options: ["Sim, é boa parte das vendas", "Um pouco", "Não, só na loja"] },
+        { k: "pedidos", label: "Pedidos ou orçamentos pelo WhatsApp por dia", type: "radio", cols: true, options: ["Até 10", "10 a 30", "30 a 100", "Mais de 100"] },
+        { k: "catalogo", label: "Preço e estoque consultados", type: "radio", options: ["Na hora, no sistema", "Perguntando a alguém", "De cabeça"] },
+        { k: "repetitivo", label: "O que mais se repete no atendimento", type: "check", options: ["Preço e disponibilidade", "Prazo de entrega", "Formas de pagamento", "Trocas e garantia", "Status do pedido"] },
+        { k: "posVenda", label: "Existe contato depois da compra", type: "radio", options: ["Sim, com rotina", "Às vezes", "Não"] }
+      ] },
+    "Restaurante e alimentação": {
+      sub: "Pedidos, reservas e atendimento em horário de pico.",
+      q: [
+        { k: "modelo", label: "Como vocês vendem", type: "check", options: ["Salão", "Delivery próprio", "iFood e outros apps", "Encomendas", "Eventos"] },
+        { k: "pedidos", label: "Pedidos ou reservas pelo WhatsApp por dia", type: "radio", cols: true, options: ["Até 15", "15 a 40", "40 a 100", "Mais de 100"] },
+        { k: "pico", label: "No horário de pico, o WhatsApp", type: "radio", options: ["É atendido normalmente", "Atrasa bastante", "Fica sem resposta"] },
+        { k: "repetitivo", label: "Perguntas que mais se repetem", type: "check", options: ["Cardápio e preços", "Horário de funcionamento", "Taxa e área de entrega", "Status do pedido", "Reservas"] },
+        { k: "fidelizacao", label: "Vocês falam de novo com quem já comprou", type: "radio", options: ["Sim, com promoções", "Raramente", "Não"] }
+      ] },
+    "Construção e indústria": {
+      sub: "Orçamentos, prazos e comunicação com o cliente.",
+      q: [
+        { k: "cliente", label: "Para quem vocês vendem", type: "radio", options: ["Pessoa física", "Empresas", "Os dois"] },
+        { k: "orcamentos", label: "Pedidos de orçamento por mês", type: "radio", cols: true, options: ["Até 10", "10 a 40", "40 a 100", "Mais de 100"] },
+        { k: "tempoOrc", label: "Tempo para devolver um orçamento", type: "radio", cols: true, options: ["No mesmo dia", "2 a 3 dias", "Uma semana", "Mais que isso"] },
+        { k: "followup", label: "Orçamento enviado e sem resposta", type: "radio", options: ["Alguém cobra com rotina", "Às vezes alguém lembra", "Fica parado"] },
+        { k: "acompanhamento", label: "O cliente pergunta sobre prazo de obra ou pedido", type: "radio", options: ["Raramente", "Toda semana", "Todo dia"] }
+      ] },
+    "Serviços e outros": {
+      sub: "Como o serviço é vendido e entregue.",
+      q: [
+        { k: "servico", label: "Qual serviço a empresa oferece", type: "text" },
+        { k: "orcamentos", label: "Pedidos de orçamento ou contato por mês", type: "radio", cols: true, options: ["Até 20", "20 a 60", "60 a 150", "Mais de 150"] },
+        { k: "agenda", label: "Como os atendimentos são agendados", type: "radio", options: ["Por mensagem, manualmente", "Por um sistema", "Não há agendamento"] },
+        { k: "followup", label: "Quem não fechou recebe novo contato", type: "radio", options: ["Sim, com rotina", "Às vezes", "Não"] },
+        { k: "repetitivo", label: "Perguntas que mais se repetem", type: "text", hint: "As três que a equipe mais responde" }
+      ] }
+  };
+
+  var PRIORIDADE = [
+    { k: "gargalo", label: "O que mais trava a sua operação hoje", type: "area", req: true, hint: "Com suas palavras. Uma ou duas frases bastam." },
+    { k: "tarefa", label: "Tarefa repetitiva que mais toma tempo da equipe", type: "area" },
+    { k: "prazo", label: "Quando você quer resolver isso", type: "radio", options: ["Agora, é urgente", "Nos próximos 3 meses", "Estou só pesquisando"] }
+  ];
+
+  /* ===== Estado ===== */
+  var params = new URLSearchParams(location.search);
+  var origem = params.get("origem") || params.get("evento") || "direto";
+  var state = {};
+  try { state = JSON.parse(sessionStorage.getItem(DRAFT_KEY) || localStorage.getItem(DRAFT_KEY) || "{}") || {}; } catch (e) { state = {}; }
+  function saveDraft() {
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function clearDraft() {
+    try { localStorage.removeItem(DRAFT_KEY); sessionStorage.removeItem(DRAFT_KEY); } catch (e) {}
+  }
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  /* ===== Renderização ===== */
+  function renderQ(prefix, q) {
+    var key = prefix + "." + q.k, id = "q_" + prefix + "_" + q.k;
+    var lab = '<span class="label">' + esc(q.label) + (q.req ? '<span class="req">obrigatório</span>' : "") + '</span>';
+    var hint = q.hint ? '<span class="hint">' + esc(q.hint) + '</span>' : "";
+    var html = '<div class="q" id="' + id + '" data-key="' + key + '"' + (q.req ? ' data-req="1"' : "") + '>';
+    if (q.type === "text" || q.type === "tel") {
+      html += '<label class="label" for="' + id + '_i">' + esc(q.label) + (q.req ? '<span class="req">obrigatório</span>' : "") + '</label>' + hint +
+        '<input type="' + q.type + '" id="' + id + '_i" data-key="' + key + '"' + (q.auto ? ' autocomplete="' + q.auto + '"' : "") +
+        (q.type === "tel" ? ' inputmode="tel" placeholder="(00) 00000-0000"' : "") + '>';
+    } else if (q.type === "area") {
+      html += '<label class="label" for="' + id + '_i">' + esc(q.label) + (q.req ? '<span class="req">obrigatório</span>' : "") + '</label>' + hint +
+        '<textarea id="' + id + '_i" data-key="' + key + '"></textarea>';
+    } else {
+      var t = q.type === "check" ? "checkbox" : "radio";
+      html += '<span class="label" id="' + id + '_l">' + esc(q.label) + (q.req ? '<span class="req">obrigatório</span>' : "") + '</span>' + hint +
+        '<div class="opts' + (q.cols ? " cols" : "") + (q.wide ? " cols-wide" : "") + '" role="' + (t === "radio" ? "radiogroup" : "group") + '" aria-labelledby="' + id + '_l">';
+      q.options.forEach(function (o, j) {
+        html += '<div class="opt"><input type="' + t + '" name="' + id + '" id="' + id + '_' + j + '" value="' + esc(o) + '" data-key="' + key + '"><label for="' + id + '_' + j + '">' + esc(o) + '</label></div>';
+      });
+      html += '</div>';
+    }
+    html += '<span class="err">' + (q.type === "tel" ? "Informe um WhatsApp com DDD." : "Este campo é obrigatório.") + '</span></div>';
+    return html;
+  }
+  function renderBlock(el, prefix, list) {
+    el.innerHTML = list.map(function (q) { return renderQ(prefix, q); }).join("");
+    bind(el);
+  }
+  function bind(root) {
+    root.querySelectorAll("input[data-key], textarea[data-key]").forEach(function (inp) {
+      var k = inp.dataset.key;
+      if (inp.type === "radio") {
+        if (state[k] === inp.value) inp.checked = true;
+        inp.addEventListener("change", function () { state[k] = inp.value; clearErr(inp); saveDraft(); if (k === "perfil.ramo") renderRamo(); });
+      } else if (inp.type === "checkbox") {
+        if ((state[k] || []).indexOf(inp.value) > -1) inp.checked = true;
+        inp.addEventListener("change", function () {
+          var arr = (state[k] || []).filter(function (v) { return v !== inp.value; });
+          if (inp.checked) arr.push(inp.value);
+          state[k] = arr; saveDraft();
+        });
+      } else {
+        inp.value = state[k] || "";
+        inp.addEventListener("input", function () {
+          if (inp.type === "tel") inp.value = maskPhone(inp.value);
+          state[k] = inp.value; clearErr(inp); saveDraft();
+        });
+      }
+    });
+  }
+  function clearErr(inp) { var q = inp.closest(".q"); if (q) q.classList.remove("invalid"); }
+  function maskPhone(v) {
+    var d = v.replace(/\D/g, "").slice(0, 11);
+    if (d.length <= 2) return d.length ? "(" + d : "";
+    if (d.length <= 6) return "(" + d.slice(0, 2) + ") " + d.slice(2);
+    if (d.length <= 10) return "(" + d.slice(0, 2) + ") " + d.slice(2, 6) + "-" + d.slice(6);
+    return "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
+  }
+
+  var currentRamo = null;
+  function renderRamo() {
+    var r = state["perfil.ramo"];
+    if (!r || !RAMOS[r] || r === currentRamo) return;
+    currentRamo = r;
+    document.getElementById("ramoTitle").textContent = r;
+    document.getElementById("ramoSub").textContent = RAMOS[r].sub;
+    renderBlock(document.getElementById("ramo"), "ramo." + slug(r), RAMOS[r].q);
+  }
+  function slug(s) { return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-"); }
+
+  renderBlock(document.getElementById("perfil"), "perfil", PERFIL);
+  renderBlock(document.getElementById("operacao"), "operacao", OPERACAO);
+  renderBlock(document.getElementById("prioridade"), "prioridade", PRIORIDADE);
+  renderRamo();
+  document.getElementById("consent").addEventListener("change", function () { document.getElementById("q_consent").classList.remove("invalid"); });
+
+  /* ===== Navegação ===== */
+  var step = 0, LAST_INPUT = 4;
+  var nextBtn = document.getElementById("next"), backBtn = document.getElementById("back");
+  function show(n) {
+    step = n;
+    document.querySelectorAll(".step").forEach(function (s) { s.classList.toggle("active", +s.dataset.step === n); });
+    document.getElementById("bar").style.width = Math.round(n / 5 * 100) + "%";
+    document.getElementById("stepLabel").textContent = n === 0 ? "Cerca de 4 minutos" : n === 5 ? "Concluído" : "Etapa " + n + " de 4";
+    backBtn.classList.toggle("hidden", n === 0 || n === 5);
+    nextBtn.classList.toggle("hidden", n === 5);
+    nextBtn.textContent = n === 0 ? "Começar" : n === LAST_INPUT ? "Enviar respostas" : "Continuar";
+    document.querySelector(".nav").style.display = n === 5 ? "none" : "";
+    window.scrollTo(0, 0);
+  }
+  function validate(n) {
+    var sec = document.querySelector('.step[data-step="' + n + '"]');
+    var firstBad = null;
+    sec.querySelectorAll('.q[data-req="1"]').forEach(function (q) {
+      var k = q.dataset.key, v = state[k];
+      var ok = Array.isArray(v) ? v.length > 0 : !!(v && String(v).trim());
+      if (ok && q.querySelector('input[type="tel"]')) ok = String(v).replace(/\D/g, "").length >= 10;
+      q.classList.toggle("invalid", !ok);
+      if (!ok && !firstBad) firstBad = q;
+    });
+    if (n === LAST_INPUT && !document.getElementById("consent").checked) {
+      var c = document.getElementById("q_consent"); c.classList.add("invalid"); if (!firstBad) firstBad = c;
+    }
+    if (firstBad) { firstBad.scrollIntoView({ block: "center", behavior: "smooth" }); var f = firstBad.querySelector("input,textarea"); if (f) f.focus({ preventScroll: true }); }
+    return !firstBad;
+  }
+  nextBtn.addEventListener("click", function () {
+    if (step > 0 && !validate(step)) return;
+    if (step === LAST_INPUT) { submit(); return; }
+    show(step + 1);
+  });
+  backBtn.addEventListener("click", function () { if (step > 0) show(step - 1); });
+
+  /* ===== Envio ===== */
+  function collect() {
+    var ramo = state["perfil.ramo"];
+    function pack(prefix, list) {
+      return list.map(function (q) {
+        var v = state[prefix + "." + q.k];
+        return { pergunta: q.label, resposta: Array.isArray(v) ? v.join(", ") : (v || "") };
+      }).filter(function (x) { return x.resposta; });
+    }
+    var ramoPrefix = "ramo." + slug(ramo);
+    return {
+      enviadoEm: new Date().toISOString(),
+      origem: origem,
+      contato: {
+        nome: state["perfil.nome"] || "", cargo: state["perfil.cargo"] || "",
+        empresa: state["perfil.empresa"] || "", cidade: state["perfil.cidade"] || "",
+        whatsapp: (state["perfil.whatsapp"] || "").replace(/\D/g, ""),
+        ramo: ramo || "", porte: state["perfil.porte"] || ""
+      },
+      atendimento: pack("operacao", OPERACAO),
+      ramo: pack(ramoPrefix, RAMOS[ramo].q),
+      prioridade: pack("prioridade", PRIORIDADE),
+      consentimentoLGPD: true
+    };
+  }
+  function asText(d) {
+    var c = d.contato, out = [];
+    out.push("*Pré-diagnóstico ORBI IA*");
+    out.push(c.nome + (c.cargo ? ", " + c.cargo : "") + " | " + c.empresa + (c.cidade ? " | " + c.cidade : ""));
+    out.push("Ramo: " + c.ramo + (c.porte ? " | " + c.porte + " pessoas" : ""));
+    out.push("WhatsApp: " + c.whatsapp + " | Origem: " + d.origem);
+    [["Atendimento", d.atendimento], ["Ramo", d.ramo], ["Prioridade", d.prioridade]].forEach(function (b) {
+      out.push(""); out.push("*" + b[0] + "*");
+      b[1].forEach(function (x) { out.push("- " + x.pergunta + ": " + x.resposta); });
+    });
+    return out.join("\n");
+  }
+  function waLink(text) { return "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(text); }
+
+  function finish(sentByWebhook, data) {
+    var first = (data.contato.nome || "").split(" ")[0];
+    var actions = document.getElementById("doneActions");
+    if (sentByWebhook) {
+      document.getElementById("doneTitle").textContent = "Respostas recebidas" + (first ? ", " + first : "");
+      document.getElementById("doneText").textContent = "Vou analisar o que você respondeu e retorno pelo WhatsApp em até 2 dias úteis com os principais pontos de melhoria.";
+      actions.innerHTML = '<a class="link-btn" href="https://agenteorbiia.com">Conhecer a ORBI IA</a>';
+    } else {
+      document.getElementById("doneTitle").textContent = "Falta um toque" + (first ? ", " + first : "");
+      document.getElementById("doneText").textContent = "Toque no botão abaixo para enviar as respostas pelo WhatsApp. O resumo já vai pronto; é só enviar a mensagem. O retorno chega em até 2 dias úteis.";
+      actions.innerHTML = '<a class="link-btn primary" href="' + waLink(asText(data)) + '" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>';
+    }
+    clearDraft();
+    show(5);
+  }
+
+  function submit() {
+    var data = collect();
+    if (!CONFIG.webhookUrl) { finish(false, data); return; }
+    nextBtn.disabled = true; nextBtn.textContent = "Enviando…";
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var t = setTimeout(function () { if (ctrl) ctrl.abort(); }, 12000);
+    fetch(CONFIG.webhookUrl, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data), signal: ctrl ? ctrl.signal : undefined
+    }).then(function (r) {
+      clearTimeout(t);
+      finish(r.ok, data);
+    }).catch(function () {
+      clearTimeout(t);
+      finish(false, data);
+    }).finally(function () { nextBtn.disabled = false; });
+  }
+
+  show(0);
+})();
+</script>
+</body>
+</html>
