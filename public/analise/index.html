@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Análise de anamnese | ORBI IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #16212C; --ink-2: #3A4855; --steel: #677685;
+    --rule: #DCE1E5; --rule-strong: #C3CBD2;
+    --paper: #F4F6F5; --sheet: #FFFFFF; --field: #F8FAF9;
+    --accent: #1E5A6E; --accent-soft: #E4EEF1;
+    --warn: #9A4A1F; --warn-soft: #F7EBE3;
+    --gain: #2F6B52; --gain-soft: #E5F0EA;
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+  button, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 32px 96px; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 28px; }
+  .brand { font-weight: 600; font-size: 15px; letter-spacing: .02em; }
+  .tag { font-size: 13px; color: var(--steel); }
+
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(30px, 4vw, 42px); line-height: 1.1; margin: 0 0 10px; }
+  .lede { color: var(--ink-2); margin: 0 0 28px; max-width: 60ch; }
+
+  .panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 28px; }
+  .grid2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; }
+  label.f { display: block; font-weight: 500; margin-bottom: 4px; }
+  .hint { display: block; font-size: 13px; color: var(--steel); margin-bottom: 8px; }
+  textarea { width: 100%; min-height: 260px; resize: vertical; background: var(--field); border: 1px solid var(--rule-strong); border-radius: 4px; padding: 12px 14px; font-size: 14.5px; line-height: 1.5; }
+  textarea:focus { outline: none; border-color: var(--accent); background: #fff; }
+  .row { display: flex; align-items: center; gap: 16px; margin-top: 20px; flex-wrap: wrap; }
+  .btn { min-height: 46px; padding: 0 22px; border-radius: 6px; cursor: pointer; font-weight: 500; border: 1px solid var(--rule-strong); background: var(--sheet); }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn[disabled] { opacity: .55; cursor: wait; }
+  .status { font-size: 14px; color: var(--steel); }
+  .status.error { color: var(--warn); }
+
+  /* Resultado */
+  #result { display: none; margin-top: 40px; }
+  #result.show { display: block; }
+  .report { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 56px 64px; }
+  .r-head { border-bottom: 2px solid var(--ink); padding-bottom: 22px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
+  .r-kind { font-size: 14px; color: var(--steel); margin: 0 0 6px; }
+  .r-head h2 { font-family: var(--serif); font-weight: 600; font-size: 34px; line-height: 1.1; margin: 0; }
+  .r-date { font-size: 13px; color: var(--steel); }
+  .r-actions { display: flex; gap: 8px; }
+  .r-actions .btn { min-height: 38px; padding: 0 14px; font-size: 14px; }
+
+  .synth { font-family: var(--serif); font-size: 21px; line-height: 1.45; color: var(--ink); margin: 28px 0 8px; max-width: 62ch; }
+
+  section.s { padding-top: 44px; }
+  section.s > h3 { font-family: var(--serif); font-weight: 600; font-size: 24px; margin: 0 0 4px; }
+  section.s > .sub { color: var(--steel); font-size: 14.5px; margin: 0 0 18px; }
+
+  .gargalo { display: grid; grid-template-columns: 40px 1fr auto; gap: 4px 16px; padding: 18px 0; border-top: 1px solid var(--rule); }
+  .gargalo:last-child { border-bottom: 1px solid var(--rule); }
+  .g-num { font-family: var(--serif); font-size: 24px; color: var(--steel); line-height: 1.2; }
+  .g-title { font-weight: 600; font-size: 17px; }
+  .g-body { grid-column: 2 / 4; font-size: 15px; color: var(--ink-2); }
+  .g-body b { font-weight: 500; color: var(--ink); }
+  .base { font-size: 12.5px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--rule-strong); color: var(--ink-2); white-space: nowrap; align-self: start; }
+  .base.dado { border-color: var(--gain); color: var(--gain); }
+  .base.hipotese { border-style: dashed; }
+
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .box { border-left: 3px solid var(--warn); background: var(--warn-soft); padding: 16px 20px; border-radius: 0 4px 4px 0; }
+  .box.neutral { border-left-color: var(--accent); background: var(--accent-soft); }
+  .box h4 { margin: 0 0 8px; font-size: 15px; font-weight: 600; }
+  .box ul { margin: 0; padding-left: 18px; font-size: 15px; color: var(--ink-2); }
+  .box li { margin: 5px 0; }
+  .box .empty { font-size: 14px; color: var(--steel); }
+
+  .fases { display: grid; gap: 0; }
+  .fase { display: grid; grid-template-columns: 220px 1fr; gap: 24px; padding: 22px 0; border-top: 1px solid var(--rule); }
+  .fase:last-child { border-bottom: 1px solid var(--rule); }
+  .fase-name { font-family: var(--serif); font-weight: 600; font-size: 19px; line-height: 1.25; }
+  .fase-prazo { font-size: 13.5px; color: var(--steel); margin-top: 6px; }
+  .fase-obj { margin: 0 0 10px; }
+  .fase ul { margin: 0 0 12px; padding-left: 18px; color: var(--ink-2); font-size: 15px; }
+  .fase li { margin: 4px 0; }
+  .kv { font-size: 14px; color: var(--ink-2); margin: 4px 0; }
+  .kv span { color: var(--steel); }
+
+  /* Desenho do fluxo */
+  .flowtabs { display: inline-flex; border: 1px solid var(--rule-strong); border-radius: 6px; overflow: hidden; margin-bottom: 18px; }
+  .flowtabs button { border: 0; background: var(--sheet); padding: 9px 18px; cursor: pointer; font-size: 14.5px; }
+  .flowtabs button + button { border-left: 1px solid var(--rule-strong); }
+  .flowtabs button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .flow-scroll { overflow-x: auto; }
+  .flow { position: relative; min-width: 640px; }
+  .lanes { display: grid; gap: 0; }
+  .lanes { position: relative; z-index: 1; }
+  .lane-head { position: relative; background: transparent; font-size: 13.5px; font-weight: 600; color: var(--ink-2); padding: 10px 12px; border-bottom: 2px solid var(--ink); text-align: center; }
+  .lane-head.orbi { color: var(--accent); border-bottom-color: var(--accent); }
+  .cell { padding: 14px 12px; position: relative; min-height: 20px; }
+  .lanecol-bg { position: absolute; top: 0; bottom: 0; z-index: 0; }
+  .lanecol-bg.orbi { background: var(--accent-soft); opacity: .55; }
+  .card { position: relative; z-index: 2; background: var(--sheet); border: 1.5px solid var(--ink); border-radius: 6px; padding: 10px 12px 10px 38px; font-size: 14px; line-height: 1.35; }
+  .card .n { position: absolute; left: 10px; top: 9px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 11.5px; display: grid; place-items: center; font-weight: 600; }
+  .card.orbi { border-color: var(--accent); }
+  .card.orbi .n { background: var(--accent); }
+  .card .note { display: block; margin-top: 6px; font-size: 12.5px; padding-top: 6px; border-top: 1px solid var(--rule); }
+  .card .note.prob { color: var(--warn); }
+  .card .note.gain { color: var(--gain); }
+  svg.links { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: visible; }
+  .flow-legend { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13px; color: var(--steel); margin-top: 14px; }
+  .flow-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+  .riscos { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .riscos th { text-align: left; font-weight: 500; color: var(--steel); font-size: 13.5px; padding: 0 12px 8px 0; border-bottom: 1px solid var(--rule-strong); }
+  .riscos td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .riscos td:first-child { width: 42%; font-weight: 500; }
+
+  ol.perg { margin: 0; padding-left: 22px; font-size: 15.5px; }
+  ol.perg li { margin: 8px 0; }
+
+  .raw { white-space: pre-wrap; font-size: 14px; background: var(--field); border: 1px solid var(--rule); padding: 16px; border-radius: 4px; }
+  footer.sig { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-size: 12.5px; color: var(--steel); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  @media (max-width: 860px) {
+    .wrap { padding: 24px 16px 72px; }
+    .grid2, .twocol { grid-template-columns: 1fr; }
+    .panel { padding: 20px; }
+    .report { padding: 32px 20px; }
+    .fase { grid-template-columns: 1fr; gap: 8px; }
+    .r-head h2 { font-size: 28px; }
+    .synth { font-size: 18px; }
+  }
+  @media print {
+    @page { size: A4; margin: 14mm; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    section.s > h3, section.s > .sub { break-after: avoid; }
+    body { background: #fff; font-size: 10.5pt; }
+    .wrap { padding: 0; max-width: none; }
+    .top, h1, .lede, .panel, .r-actions, .flowtabs { display: none !important; }
+    #result { margin: 0; }
+    .report { border: 0; padding: 0; }
+    .flow-scroll { overflow: visible; }
+    .flow { min-width: 0; }
+    .flowpane { display: block !important; break-inside: avoid; margin-bottom: 18px; }
+    .flowpane-title { display: block !important; }
+    section.s { break-inside: auto; padding-top: 26px; }
+    .gargalo, .fase, .box, tr { break-inside: avoid; }
+  }
+  .flowpane-title { display: none; font-weight: 600; font-size: 15px; margin: 6px 0 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">ORBI IA</div>
+    <div class="tag">Uso interno</div>
+  </div>
+
+  <h1>Análise de anamnese</h1>
+  <p class="lede">Cole as respostas da anamnese e o que mais você souber do cliente. A análise aponta os gargalos, o que não fecha nos números e desenha como a solução funcionaria, usando só o que a ORBI entrega.</p>
+
+  <div class="panel">
+    <div class="grid2">
+      <div>
+        <label class="f" for="ficha">Respostas da anamnese</label>
+        <span class="hint">O texto de “Copiar texto” da ficha, o resumo que chegou pelo WhatsApp ou suas anotações</span>
+        <textarea id="ficha" placeholder="Cole aqui as respostas"></textarea>
+      </div>
+      <div>
+        <label class="f" for="extras">Informações complementares</label>
+        <span class="hint">O que o cliente contou depois, impressões suas, quem decide</span>
+        <textarea id="extras" placeholder="Ex.: 1.200 leads parados sem resposta. O pai acha o bot atual ineficiente."></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn primary" type="button" id="go">Gerar análise</button>
+      <span class="status" id="status" role="status" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<script>
+(function () {
+  var drawn = [];
+  var INPUT_KEY = "orbi-analise-entrada";
+  var LAST_KEY = "orbi-analise-ultima";
+  var fichaEl = document.getElementById("ficha");
+  var extrasEl = document.getElementById("extras");
+  var goBtn = document.getElementById("go");
+  var statusEl = document.getElementById("status");
+  var resultEl = document.getElementById("result");
+
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function arr(x) { return Array.isArray(x) ? x : []; }
+
+  var savedId = new URLSearchParams(location.search).get("id");
+
+  // Entrada vinda da ficha (botão Analisar) ou rascunho anterior
+  var entrada = savedId ? null : load(INPUT_KEY);
+  if (entrada) {
+    try { var e = JSON.parse(entrada); fichaEl.value = e.ficha || ""; extrasEl.value = e.extras || ""; } catch (err) {}
+  }
+  function persistInput() { if (savedId) return; save(INPUT_KEY, JSON.stringify({ ficha: fichaEl.value, extras: extrasEl.value })); }
+  fichaEl.addEventListener("input", persistInput);
+  extrasEl.addEventListener("input", persistInput);
+
+  var last = savedId ? null : load(LAST_KEY);
+  if (last) { try { render(JSON.parse(last)); } catch (err) {} }
+
+  /* ===== Pré-diagnóstico salvo (link do e-mail) ===== */
+  if (savedId) {
+    document.querySelector("h1").textContent = "Pré-diagnóstico recebido";
+    document.querySelector(".lede").textContent = "Respostas enviadas pelo formulário. Acrescente o que souber do cliente e gere a análise de novo, se precisar.";
+    goBtn.textContent = "Gerar de novo";
+    var tries = 0;
+    (function fetchSaved() {
+      setStatus("Abrindo o pré-diagnóstico…");
+      fetch("/api/analise?id=" + encodeURIComponent(savedId)).then(function (r) { return r.json(); }).then(function (d) {
+        if (d.error) { setStatus(d.error, true); return; }
+        fichaEl.value = d.ficha || "";
+        if (d.analise) { render({ analise: d.analise, em: d.analise_em || d.created_at }); setStatus(""); }
+        else if (d.analise_erro) setStatus("A análise automática falhou (" + d.analise_erro + "). Toque em Gerar de novo.", true);
+        else if (tries++ < 18) { setStatus("A análise ainda está sendo gerada. Atualizando em instantes…"); setTimeout(fetchSaved, 10000); }
+        else setStatus("A análise está demorando. Toque em Gerar de novo.", true);
+      }).catch(function () { setStatus("Não foi possível abrir este pré-diagnóstico. Verifique a conexão.", true); });
+    })();
+  }
+
+  /* ===== Geração ===== */
+  var tick;
+  var etapas = ["Lendo a anamnese", "Cruzando os números", "Priorizando os gargalos", "Montando as fases", "Desenhando o fluxo"];
+  goBtn.addEventListener("click", function () {
+    var ficha = fichaEl.value.trim();
+    if (ficha.length < 40) { setStatus("Cole as respostas da anamnese antes de gerar.", true); fichaEl.focus(); return; }
+    goBtn.disabled = true;
+    var i = 0, t0 = Date.now();
+    setStatus(etapas[0] + "…");
+    tick = setInterval(function () {
+      i = Math.min(etapas.length - 1, Math.floor((Date.now() - t0) / 9000));
+      setStatus(etapas[i] + "… (" + Math.round((Date.now() - t0) / 1000) + "s)");
+    }, 1000);
+
+    fetch("/api/analise", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ficha: ficha, extras: extrasEl.value, id: savedId || undefined })
+    }).then(function (r) {
+      return r.json().catch(function () { return { error: "Resposta inválida do servidor (código " + r.status + ")." }; });
+    }).then(function (d) {
+      if (d.error) throw new Error(d.error);
+      if (d.analise) {
+        var pack = { analise: d.analise, em: new Date().toISOString() };
+        if (!savedId) save(LAST_KEY, JSON.stringify(pack));
+        render(pack);
+        setStatus("Análise pronta.");
+        resultEl.scrollIntoView({ behavior: "smooth" });
+      } else {
+        renderRaw(d.raw || "", d.truncada);
+        setStatus("A análise veio fora do formato. O texto completo está abaixo.", true);
+      }
+    }).catch(function (err) {
+      setStatus(err.message || "Não foi possível gerar a análise. Verifique a conexão e tente de novo.", true);
+    }).finally(function () { clearInterval(tick); goBtn.disabled = false; });
+  });
+  function setStatus(msg, isErr) { statusEl.textContent = msg; statusEl.classList.toggle("error", !!isErr); }
+
+  /* ===== Renderização ===== */
+  function baseClass(b) { b = (b || "").toLowerCase(); return b.indexOf("dado") === 0 ? "dado" : b.indexOf("hip") === 0 ? "hipotese" : ""; }
+  function fmtDate(iso) { var d = new Date(iso); return d.toLocaleDateString("pt-BR") + " às " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }); }
+  function listBox(title, items, cls) {
+    var it = arr(items);
+    return '<div class="box ' + (cls || "") + '"><h4>' + esc(title) + '</h4>' +
+      (it.length ? "<ul>" + it.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : '<span class="empty">Nada apontado.</span>') + '</div>';
+  }
+
+  function render(pack) {
+    var a = pack.analise || {};
+    var h = '<div class="report">';
+    h += '<div class="r-head"><div><p class="r-kind">Diagnóstico interno</p><h2>' + esc(a.empresa || "Empresa") + '</h2></div>' +
+      '<div><div class="r-date">Gerado em ' + esc(fmtDate(pack.em)) + '</div><div class="r-actions" style="margin-top:10px">' +
+      '<button class="btn" type="button" id="btnCopy">Copiar texto</button><button class="btn" type="button" id="btnPrint">Gerar PDF</button></div></div></div>';
+    if (a.sintese) h += '<p class="synth">' + esc(a.sintese) + '</p>';
+
+    // Gargalos
+    var gs = arr(a.gargalos).slice().sort(function (x, y) { return (x.prioridade || 9) - (y.prioridade || 9); });
+    if (gs.length) {
+      h += '<section class="s"><h3>Gargalos</h3><p class="sub">Em ordem de prioridade. A marcação indica se o ponto vem de dado, estimativa do cliente ou dedução.</p>';
+      gs.forEach(function (g, i) {
+        h += '<div class="gargalo"><div class="g-num">' + (i + 1) + '</div><div class="g-title">' + esc(g.titulo) + '</div>' +
+          '<span class="base ' + baseClass(g.base) + '">' + esc(g.base || "hipótese") + '</span>' +
+          '<div class="g-body"><b>Evidência:</b> ' + esc(g.evidencia) + '<br><b>Impacto:</b> ' + esc(g.impacto) + '</div></div>';
+      });
+      h += '</section>';
+    }
+
+    // Inconsistências e lacunas
+    h += '<section class="s"><h3>O que não fecha e o que falta medir</h3><p class="sub">Resolva antes de apresentar números ao cliente.</p><div class="twocol">' +
+      listBox("Inconsistências", a.inconsistencias) + listBox("Lacunas", a.lacunas, "neutral") + '</div></section>';
+
+    // Desenho
+    var fa = arr(a.fluxo_atual), fp = arr(a.fluxo_proposto);
+    if (fa.length || fp.length) {
+      h += '<section class="s"><h3>Como funciona hoje e como pode funcionar</h3><p class="sub">O caminho principal do problema prioritário, passo a passo.</p>';
+      h += '<div class="flowtabs" role="group" aria-label="Escolher fluxo">' +
+        '<button type="button" data-flow="atual" aria-pressed="false">Hoje</button>' +
+        '<button type="button" data-flow="proposto" aria-pressed="true">Proposto</button></div>';
+      h += '<div class="flowpane" data-pane="atual" style="display:none"><div class="flowpane-title">Hoje</div><div class="flow-scroll"><div class="flow" id="flowAtual"></div></div></div>';
+      h += '<div class="flowpane" data-pane="proposto"><div class="flowpane-title">Proposto</div><div class="flow-scroll"><div class="flow" id="flowProposto"></div></div></div>';
+      h += '<div class="flow-legend"><span><i style="background:var(--warn)"></i>Problema no passo</span><span><i style="background:var(--gain)"></i>Ganho no passo</span><span><i style="background:var(--accent)"></i>Executado pelo agente ORBI</span></div>';
+      h += '</section>';
+    }
+
+    // Fases
+    var fs = arr(a.fases);
+    if (fs.length) {
+      h += '<section class="s"><h3>Solução em fases</h3><p class="sub">Cada entrega cita o item do catálogo da ORBI.</p><div class="fases">';
+      fs.forEach(function (f) {
+        h += '<div class="fase"><div><div class="fase-name">' + esc(f.nome) + '</div>' + (f.prazo_estimado ? '<div class="fase-prazo">' + esc(f.prazo_estimado) + '</div>' : "") + '</div><div>' +
+          (f.objetivo ? '<p class="fase-obj">' + esc(f.objetivo) + '</p>' : "") +
+          (arr(f.entregas).length ? "<ul>" + arr(f.entregas).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
+          (arr(f.depende_de).length ? '<p class="kv"><span>Depende de:</span> ' + esc(arr(f.depende_de).join("; ")) + '</p>' : "") +
+          (f.metrica ? '<p class="kv"><span>Métrica:</span> ' + esc(f.metrica) + '</p>' : "") + '</div></div>';
+      });
+      h += '</div></section>';
+    }
+
+    // Riscos
+    var rs = arr(a.riscos);
+    if (rs.length) {
+      h += '<section class="s"><h3>Riscos</h3><table class="riscos"><thead><tr><th>Risco</th><th>Como reduzir</th></tr></thead><tbody>' +
+        rs.map(function (r) { return "<tr><td>" + esc(r.risco) + "</td><td>" + esc(r.mitigacao) + "</td></tr>"; }).join("") + '</tbody></table></section>';
+    }
+
+    // Perguntas e fora do escopo
+    h += '<section class="s"><div class="twocol"><div><h3 style="font-family:var(--serif);font-size:24px;margin:0 0 12px">Perguntar ao cliente</h3>' +
+      (arr(a.perguntas).length ? '<ol class="perg">' + arr(a.perguntas).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ol>' : '<p class="sub">Nenhuma pendência.</p>') +
+      '</div><div>' + listBox("Fora do escopo da ORBI", a.fora_do_escopo, "neutral") + '</div></div></section>';
+
+    h += '<footer class="sig"><span>ORBI IA, J MARCELIO LIMA LTDA, CNPJ 68.308.327/0001-69</span><span>Documento interno. Revise antes de usar com o cliente.</span></footer>';
+    h += '</div>';
+
+    resultEl.innerHTML = h;
+    resultEl.classList.add("show");
+
+    drawFlow(document.getElementById("flowAtual"), fa, ["Cliente", "Equipe", "Sistema"], "problema");
+    drawFlow(document.getElementById("flowProposto"), fp, ["Cliente", "Agente ORBI", "Equipe", "Sistema"], "ganho");
+
+    resultEl.querySelectorAll(".flowtabs button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        resultEl.querySelectorAll(".flowtabs button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        resultEl.querySelectorAll(".flowpane").forEach(function (p) { p.style.display = p.dataset.pane === b.dataset.flow ? "" : "none"; });
+        redrawLinks();
+      });
+    });
+    document.getElementById("btnPrint").addEventListener("click", function () { window.print(); });
+    document.getElementById("btnCopy").addEventListener("click", function () { copy(asText(pack)); });
+  }
+
+  function renderRaw(raw, truncada) {
+    resultEl.innerHTML = '<div class="report"><p class="r-kind">Resposta sem formatação</p>' +
+      (truncada ? '<p class="sub" style="color:var(--warn)">A resposta foi cortada por tamanho. Encurte as informações complementares e gere de novo.</p>' : "") +
+      '<div class="raw">' + esc(raw) + '</div></div>';
+    resultEl.classList.add("show");
+  }
+
+  /* ===== Fluxo em raias ===== */
+  function laneOf(name, lanes) {
+    var n = (name || "").toLowerCase();
+    if (n.indexOf("orbi") > -1 || n.indexOf("agente") > -1 || n === "ia") return lanes.indexOf("Agente ORBI");
+    for (var i = 0; i < lanes.length; i++) if (n.indexOf(lanes[i].toLowerCase()) > -1) return i;
+    if (n.indexOf("corretor") > -1 || n.indexOf("atend") > -1 || n.indexOf("document") > -1 || n.indexOf("humano") > -1) return lanes.indexOf("Equipe");
+    if (n.indexOf("lead") > -1 || n.indexOf("inquil") > -1 || n.indexOf("propriet") > -1) return 0;
+    return lanes.indexOf("Sistema");
+  }
+  function drawFlow(host, steps, lanes, noteKey) {
+    if (!host || !steps.length) return;
+    var used = lanes.filter(function (l, i) { return steps.some(function (s) { return laneOf(s.raia, lanes) === i; }) || l === "Agente ORBI"; });
+    if (noteKey === "problema") used = used.filter(function (l) { return l !== "Agente ORBI"; });
+    var cols = used.length;
+    var html = '<div class="lanes" style="grid-template-columns:repeat(' + cols + ',1fr)">';
+    used.forEach(function (l) { html += '<div class="lane-head' + (l === "Agente ORBI" ? " orbi" : "") + '">' + esc(l) + '</div>'; });
+    steps.forEach(function (s, i) {
+      var li = used.indexOf(lanes[laneOf(s.raia, lanes)]);
+      if (li < 0) li = used.length - 1;
+      for (var c = 0; c < cols; c++) {
+        html += '<div class="cell">';
+        if (c === li) {
+          var isOrbi = used[c] === "Agente ORBI";
+          var note = s[noteKey];
+          html += '<div class="card' + (isOrbi ? " orbi" : "") + '" data-i="' + i + '"><span class="n">' + (i + 1) + '</span>' + esc(s.acao) +
+            (note ? '<span class="note ' + (noteKey === "problema" ? "prob" : "gain") + '">' + esc(note) + '</span>' : "") + '</div>';
+        }
+        html += '</div>';
+      }
+    });
+    html += '</div>';
+    var orbiIdx = used.indexOf("Agente ORBI");
+    host.innerHTML = (orbiIdx > -1 ? '<div class="lanecol-bg orbi" style="left:' + (orbiIdx / cols * 100) + '%;width:' + (100 / cols) + '%"></div>' : "") +
+      html + '<svg class="links" aria-hidden="true"></svg>';
+    drawn.push(host);
+    linkCards(host);
+  }
+  function linkCards(host) {
+    if (!host.offsetParent) return;
+    var svg = host.querySelector("svg.links");
+    var box = host.getBoundingClientRect();
+    var cards = Array.prototype.slice.call(host.querySelectorAll(".card")).sort(function (a, b) { return a.dataset.i - b.dataset.i; });
+    svg.setAttribute("width", box.width); svg.setAttribute("height", box.height);
+    var p = '<defs><marker id="ah' + host.id + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#677685"/></marker></defs>';
+    for (var i = 0; i < cards.length - 1; i++) {
+      var a = cards[i].getBoundingClientRect(), b = cards[i + 1].getBoundingClientRect();
+      var x1 = a.left + a.width / 2 - box.left, y1 = a.bottom - box.top;
+      var x2 = b.left + b.width / 2 - box.left, y2 = b.top - box.top;
+      var my = (y1 + y2) / 2;
+      var d = Math.abs(x1 - x2) < 2 ? "M" + x1 + "," + y1 + " L" + x2 + "," + (y2 - 1)
+        : "M" + x1 + "," + y1 + " L" + x1 + "," + my + " L" + x2 + "," + my + " L" + x2 + "," + (y2 - 1);
+      p += '<path d="' + d + '" fill="none" stroke="#677685" stroke-width="1.5" marker-end="url(#ah' + host.id + ')"/>';
+    }
+    svg.innerHTML = p;
+  }
+  function redrawLinks() { drawn.forEach(function (h) { if (document.body.contains(h)) linkCards(h); }); }
+  window.addEventListener("resize", redrawLinks);
+  window.addEventListener("beforeprint", function () {
+    document.querySelectorAll(".flowpane").forEach(function (p) { p.dataset.prev = p.style.display; p.style.display = "block"; });
+    redrawLinks();
+  });
+  window.addEventListener("afterprint", function () {
+    document.querySelectorAll(".flowpane").forEach(function (p) { p.style.display = p.dataset.prev || ""; });
+    redrawLinks();
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawLinks);
+
+  /* ===== Texto ===== */
+  function asText(pack) {
+    var a = pack.analise || {}, o = [];
+    o.push("DIAGNÓSTICO INTERNO: " + (a.empresa || "")); o.push("");
+    if (a.sintese) { o.push(a.sintese); o.push(""); }
+    o.push("GARGALOS");
+    arr(a.gargalos).forEach(function (g, i) { o.push((i + 1) + ". " + g.titulo + " [" + (g.base || "") + "]"); o.push("   Evidência: " + g.evidencia); o.push("   Impacto: " + g.impacto); });
+    o.push(""); o.push("INCONSISTÊNCIAS"); arr(a.inconsistencias).forEach(function (x) { o.push("- " + x); });
+    o.push(""); o.push("LACUNAS"); arr(a.lacunas).forEach(function (x) { o.push("- " + x); });
+    o.push(""); o.push("FLUXO HOJE"); arr(a.fluxo_atual).forEach(function (s, i) { o.push((i + 1) + ". [" + s.raia + "] " + s.acao + (s.problema ? " (problema: " + s.problema + ")" : "")); });
+    o.push(""); o.push("FLUXO PROPOSTO"); arr(a.fluxo_proposto).forEach(function (s, i) { o.push((i + 1) + ". [" + s.raia + "] " + s.acao + (s.ganho ? " (ganho: " + s.ganho + ")" : "")); });
+    o.push(""); o.push("FASES");
+    arr(a.fases).forEach(function (f) {
+      o.push(f.nome + (f.prazo_estimado ? " (" + f.prazo_estimado + ")" : "")); if (f.objetivo) o.push("   " + f.objetivo);
+      arr(f.entregas).forEach(function (x) { o.push("   - " + x); });
+      if (arr(f.depende_de).length) o.push("   Depende de: " + arr(f.depende_de).join("; "));
+      if (f.metrica) o.push("   Métrica: " + f.metrica);
+    });
+    o.push(""); o.push("RISCOS"); arr(a.riscos).forEach(function (r) { o.push("- " + r.risco + " | " + r.mitigacao); });
+    o.push(""); o.push("PERGUNTAR AO CLIENTE"); arr(a.perguntas).forEach(function (x, i) { o.push((i + 1) + ". " + x); });
+    o.push(""); o.push("FORA DO ESCOPO"); arr(a.fora_do_escopo).forEach(function (x) { o.push("- " + x); });
+    return o.join("\n");
+  }
+  function copy(text) {
+    function done() { setStatus("Análise copiada."); }
+    function fallback() {
+      var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) { setStatus("Não foi possível copiar.", true); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+  }
+})();
+</script>
+</body>
+</html>

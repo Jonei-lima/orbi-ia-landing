@@ -150,6 +150,9 @@
 
 <main>
   <form id="form" novalidate>
+    <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+      <label for="hp_site">Site</label><input type="text" id="hp_site" name="site" tabindex="-1" autocomplete="off">
+    </div>
 
     <!-- Etapa 0: apresentação -->
     <section class="step active" data-step="0">
@@ -233,7 +236,7 @@
   /* ===== Configuração ===== */
   var CONFIG = {
     // URL do webhook do n8n (método POST). Deixe vazio para enviar pelo WhatsApp.
-    webhookUrl: "",
+    webhookUrl: "/api/pre-diagnostico",
     // Número que recebe o resumo quando não há webhook ou quando o envio falha.
     whatsapp: "5566981320667"
   };
@@ -247,7 +250,7 @@
     { k: "cidade", label: "Cidade", type: "text", auto: "address-level2" },
     { k: "whatsapp", label: "WhatsApp", type: "tel", req: true, hint: "É por aqui que você recebe o retorno", auto: "tel" },
     { k: "ramo", label: "Ramo da empresa", type: "radio", req: true, wide: true,
-      options: ["Imobiliária", "Clínica ou saúde", "Advocacia", "Contabilidade", "Comércio e varejo", "Restaurante e alimentação", "Construção e indústria", "Serviços e outros"] },
+      options: ["Imobiliária", "Clínica ou saúde", "Advocacia", "Contabilidade", "Comércio e varejo", "Restaurante e alimentação", "Construção e indústria", "Prestação de serviços", "Minha atividade não está na lista"] },
     { k: "porte", label: "Quantas pessoas trabalham na empresa", type: "radio", cols: true,
       options: ["Até 5", "6 a 15", "16 a 50", "Mais de 50"] }
   ];
@@ -330,7 +333,7 @@
         { k: "followup", label: "Orçamento enviado e sem resposta", type: "radio", options: ["Alguém cobra com rotina", "Às vezes alguém lembra", "Fica parado"] },
         { k: "acompanhamento", label: "O cliente pergunta sobre prazo de obra ou pedido", type: "radio", options: ["Raramente", "Toda semana", "Todo dia"] }
       ] },
-    "Serviços e outros": {
+    "Prestação de serviços": {
       sub: "Como o serviço é vendido e entregue.",
       q: [
         { k: "servico", label: "Qual serviço a empresa oferece", type: "text" },
@@ -338,6 +341,17 @@
         { k: "agenda", label: "Como os atendimentos são agendados", type: "radio", options: ["Por mensagem, manualmente", "Por um sistema", "Não há agendamento"] },
         { k: "followup", label: "Quem não fechou recebe novo contato", type: "radio", options: ["Sim, com rotina", "Às vezes", "Não"] },
         { k: "repetitivo", label: "Perguntas que mais se repetem", type: "text", hint: "As três que a equipe mais responde" }
+      ] },
+    "Minha atividade não está na lista": {
+      title: "Sua atividade",
+      sub: "Conte o que a empresa faz. As perguntas abaixo valem para qualquer ramo.",
+      q: [
+        { k: "atividade", label: "Qual é a atividade da empresa?", type: "text", req: true, hint: "Ex.: escola de idiomas, transportadora, assistência técnica" },
+        { k: "venda", label: "Como a empresa vende", hint: "Marque todos que se aplicam", type: "check", options: ["Por mensagem (WhatsApp, Instagram)", "Loja ou escritório", "Visita ao cliente", "Site ou loja online", "Representantes ou parceiros"] },
+        { k: "contatos", label: "Contatos de clientes ou pedidos por mês", type: "radio", cols: true, options: ["Até 30", "30 a 100", "100 a 300", "Mais de 300"] },
+        { k: "etapa", label: "Em que etapa a empresa mais perde tempo ou clientes", type: "radio", options: ["Responder quem chega", "Transformar o contato em venda", "Entregar o produto ou serviço", "Pós-venda e recompra", "Rotinas internas (documentos, cobrança, agenda)"] },
+        { k: "repetitivo", label: "O que a equipe mais repete no dia a dia", type: "area", hint: "Perguntas, tarefas, conferências" },
+        { k: "sistemas", label: "Sistemas e ferramentas usados hoje", type: "text", hint: "Ex.: planilha, ERP, sistema de agenda, CRM" }
       ] }
   };
 
@@ -426,7 +440,7 @@
     var r = state["perfil.ramo"];
     if (!r || !RAMOS[r] || r === currentRamo) return;
     currentRamo = r;
-    document.getElementById("ramoTitle").textContent = r;
+    document.getElementById("ramoTitle").textContent = RAMOS[r].title || r;
     document.getElementById("ramoSub").textContent = RAMOS[r].sub;
     renderBlock(document.getElementById("ramo"), "ramo." + slug(r), RAMOS[r].q);
   }
@@ -476,6 +490,7 @@
   backBtn.addEventListener("click", function () { if (step > 0) show(step - 1); });
 
   /* ===== Envio ===== */
+  var pageStart = Date.now();
   function collect() {
     var ramo = state["perfil.ramo"];
     function pack(prefix, list) {
@@ -485,6 +500,7 @@
       }).filter(function (x) { return x.resposta; });
     }
     var ramoPrefix = "ramo." + slug(ramo);
+    var outro = ramo === "Minha atividade não está na lista";
     return {
       enviadoEm: new Date().toISOString(),
       origem: origem,
@@ -492,19 +508,22 @@
         nome: state["perfil.nome"] || "", cargo: state["perfil.cargo"] || "",
         empresa: state["perfil.empresa"] || "", cidade: state["perfil.cidade"] || "",
         whatsapp: (state["perfil.whatsapp"] || "").replace(/\D/g, ""),
-        ramo: ramo || "", porte: state["perfil.porte"] || ""
+        ramo: outro ? "Outra atividade" : (ramo || ""), porte: state["perfil.porte"] || "",
+        atividade: outro ? (state[ramoPrefix + ".atividade"] || "").trim() : ""
       },
       atendimento: pack("operacao", OPERACAO),
       ramo: pack(ramoPrefix, RAMOS[ramo].q),
       prioridade: pack("prioridade", PRIORIDADE),
-      consentimentoLGPD: true
+      consentimentoLGPD: true,
+      site: (document.getElementById("hp_site") || {}).value || "",
+      segundos: Math.round((Date.now() - pageStart) / 1000)
     };
   }
   function asText(d) {
     var c = d.contato, out = [];
     out.push("*Pré-diagnóstico ORBI IA*");
     out.push(c.nome + (c.cargo ? ", " + c.cargo : "") + " | " + c.empresa + (c.cidade ? " | " + c.cidade : ""));
-    out.push("Ramo: " + c.ramo + (c.porte ? " | " + c.porte + " pessoas" : ""));
+    out.push("Ramo: " + c.ramo + (c.atividade ? " (" + c.atividade + ")" : "") + (c.porte ? " | " + c.porte + " pessoas" : ""));
     out.push("WhatsApp: " + c.whatsapp + " | Origem: " + d.origem);
     [["Atendimento", d.atendimento], ["Ramo", d.ramo], ["Prioridade", d.prioridade]].forEach(function (b) {
       out.push(""); out.push("*" + b[0] + "*");

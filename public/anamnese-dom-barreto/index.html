@@ -171,7 +171,7 @@
     nav .mark { margin-left: 2px; }
     .actions {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
-      grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+      grid-template-columns: 1fr 1fr; gap: 8px;
       padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
       background: rgba(255,255,255,.96); border-top: 1px solid var(--rule);
     }
@@ -220,6 +220,7 @@
       <button class="btn primary" type="button" id="btnPdf">Gerar PDF</button>
       <button class="btn" type="button" id="btnCopy">Copiar texto</button>
       <button class="btn" type="button" id="btnDownload">Baixar arquivo</button>
+      <button class="btn" type="button" id="btnAnalyze">Analisar respostas</button>
       <button class="btn quiet" type="button" id="btnClear">Limpar ficha</button>
     </div>
   </aside>
@@ -492,6 +493,13 @@
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
     toast("Arquivo baixado.");
+  });
+  document.getElementById("btnAnalyze").addEventListener("click", function () {
+    try {
+      localStorage.setItem("orbi-analise-entrada", JSON.stringify({ ficha: asText(), extras: "" }));
+      localStorage.removeItem("orbi-analise-ultima");
+    } catch (e) { toast("Este navegador não permite levar as respostas. Use Copiar texto."); return; }
+    window.location.href = "/analise/index.html";
   });
   document.getElementById("btnClear").addEventListener("click", function () {
     if (!confirm("Apagar todas as anotações desta ficha neste aparelho? Exporte antes se precisar delas.")) return;
