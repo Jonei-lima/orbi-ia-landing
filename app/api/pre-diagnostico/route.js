@@ -53,7 +53,7 @@ async function enviarEmail({ c, link, analise, erro }) {
     ? `<p style="font-size:16px;line-height:1.5">${esc(analise.sintese)}</p>
        ${gargalos ? `<p><strong>Principais gargalos</strong></p><ol>${gargalos}</ol>` : ""}`
     : `<p>A análise automática falhou (${esc(erro || "sem detalhe")}). As respostas estão salvas; abra o link e gere de novo.</p>`;
-  await fetch("https://api.resend.com/emails", {
+  const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.RESEND_API_KEY}` },
     body: JSON.stringify({
@@ -71,11 +71,12 @@ async function enviarEmail({ c, link, analise, erro }) {
       </div>`,
     }),
   });
+  if (!r.ok) console.error("E-mail falhou:", r.status, (await r.text()).slice(0, 500));
 }
 
 async function avisarWhatsApp({ c, link, ok }) {
   if (!process.env.EVOLUTION_URL || !process.env.EVOLUTION_API_KEY) return;
-  await fetch(`${process.env.EVOLUTION_URL}/message/sendText/orbi_ia_landing`, {
+  const r = await fetch(`${process.env.EVOLUTION_URL}/message/sendText/orbi_ia_landing`, {
     method: "POST",
     headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY },
     body: JSON.stringify({
@@ -83,6 +84,8 @@ async function avisarWhatsApp({ c, link, ok }) {
       text: `Novo pré-diagnóstico\n\n${c.empresa} (${c.atividade || c.ramo})\n${c.nome} · ${c.whatsapp}\n\n${ok ? "Análise pronta" : "Análise falhou, gere de novo"}: ${link}`,
     }),
   });
+  if (!r.ok) console.error("Aviso WhatsApp falhou:", r.status, (await r.text()).slice(0, 500));
+  else console.log("Aviso WhatsApp enviado");
 }
 
 export async function POST(request) {

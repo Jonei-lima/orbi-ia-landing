@@ -118,6 +118,50 @@
   .flow-legend { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13px; color: var(--steel); margin-top: 14px; }
   .flow-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
 
+  /* Projeção */
+  .proj { --hoje: #eb6834; --orbi: #2a78d6; --hoje-soft: #FCEDE6; --orbi-soft: #E7F0FB; }
+  .proj-note { font-size: 13.5px; color: var(--warn); background: var(--warn-soft); border-radius: 4px; padding: 10px 14px; margin: 0 0 22px; }
+  .tiles { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .tile { border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; background: var(--sheet); }
+  .tile.hero { background: var(--orbi-soft); border-color: transparent; }
+  .tile .t-label { font-size: 13px; color: var(--ink-2); margin-bottom: 6px; }
+  .tile .t-value { font-family: var(--serif); font-weight: 600; font-size: 30px; line-height: 1.1; color: var(--ink); }
+  .tile.hero .t-value { font-size: 40px; }
+  .tile .t-sub { font-size: 13px; color: var(--steel); margin-top: 6px; }
+  .tile .t-cmp { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; font-size: 14px; align-items: baseline; }
+  .tile .t-cmp span:nth-child(odd) { font-size: 12.5px; color: var(--steel); }
+  .tile .t-cmp b { font-weight: 600; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
+  .chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .chart-title { font-weight: 600; font-size: 16px; }
+  .legend { display: flex; gap: 18px; font-size: 13.5px; color: var(--ink-2); }
+  .chart-wrap { position: relative; }
+  .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart-wrap .bar { cursor: default; }
+  .chart-wrap .hit:hover + .bar, .chart-wrap .bar:hover { opacity: .85; }
+  .tip { position: absolute; pointer-events: none; background: var(--ink); color: #fff; font-size: 13px; line-height: 1.4; padding: 8px 10px; border-radius: 6px; white-space: nowrap; transform: translate(-50%, calc(-100% - 8px)); opacity: 0; transition: opacity .1s; z-index: 5; }
+  .tip.show { opacity: 1; }
+  .prem { margin-top: 28px; }
+  .prem summary { cursor: pointer; font-weight: 500; color: var(--accent); }
+  .prem table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
+  .prem th { text-align: left; font-weight: 500; color: var(--steel); font-size: 13px; padding: 0 10px 8px 0; border-bottom: 1px solid var(--rule-strong); }
+  .prem td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .prem td.j { color: var(--ink-2); font-size: 13.5px; }
+  .prem input { width: 84px; padding: 6px 8px; border: 1px solid var(--rule-strong); border-radius: 4px; font: inherit; font-size: 14px; background: #fff; }
+  .prem input:focus { outline: none; border-color: var(--accent); }
+  .prem .row-actions { margin-top: 12px; display: flex; gap: 12px; align-items: center; font-size: 13px; color: var(--steel); }
+  .prem .row-actions button { border: 0; background: none; color: var(--accent); cursor: pointer; padding: 0; font: inherit; text-decoration: underline; }
+  @media (max-width: 860px) {
+    .tiles { grid-template-columns: 1fr 1fr; }
+    .tile.hero { grid-column: 1 / -1; }
+    .prem table, .prem thead, .prem tbody, .prem tr, .prem td { display: block; }
+    .prem thead { display: none; }
+    .prem tr { padding: 10px 0; border-bottom: 1px solid var(--rule); }
+    .prem td { border: 0; padding: 3px 0; }
+  }
+  .proj-print { display: none; font-size: 12px; color: var(--steel); margin-top: 10px; }
+  @media print { section.proj { break-before: page; } .prem, .proj-note { display: none !important; } .proj-print { display: block; } .tiles { break-inside: avoid; grid-template-columns: 1.3fr 1fr 1fr 1fr; } .tile.hero { grid-column: auto; } }
+
   .riscos { width: 100%; border-collapse: collapse; font-size: 15px; }
   .riscos th { text-align: left; font-weight: 500; color: var(--steel); font-size: 13.5px; padding: 0 12px 8px 0; border-bottom: 1px solid var(--rule-strong); }
   .riscos td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
@@ -192,6 +236,8 @@
 <script>
 (function () {
   var drawn = [];
+  var NF = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 });
+  var projState = null, projKey = null, projOrig = null;
   var INPUT_KEY = "orbi-analise-entrada";
   var LAST_KEY = "orbi-analise-ultima";
   var fichaEl = document.getElementById("ficha");
@@ -287,6 +333,7 @@
 
   function render(pack) {
     var a = pack.analise || {};
+    projState = null;
     var h = '<div class="report">';
     h += '<div class="r-head"><div><p class="r-kind">Diagnóstico interno</p><h2>' + esc(a.empresa || "Empresa") + '</h2></div>' +
       '<div><div class="r-date">Gerado em ' + esc(fmtDate(pack.em)) + '</div><div class="r-actions" style="margin-top:10px">' +
@@ -320,6 +367,13 @@
       h += '<div class="flowpane" data-pane="proposto"><div class="flowpane-title">Proposto</div><div class="flow-scroll"><div class="flow" id="flowProposto"></div></div></div>';
       h += '<div class="flow-legend"><span><i style="background:var(--warn)"></i>Problema no passo</span><span><i style="background:var(--gain)"></i>Ganho no passo</span><span><i style="background:var(--accent)"></i>Executado pelo agente ORBI</span></div>';
       h += '</section>';
+    }
+
+    // Projeção
+    if (a.projecao && arr(a.projecao.etapas).length) {
+      h += '<section class="s proj"><h3>Projeção</h3><p class="sub">O que muda no funil com as entregas propostas, em um mês.</p>' +
+        '<p class="proj-note">Projeção ilustrativa, calculada a partir das premissas abaixo. Revise os números antes de mostrar ao cliente.</p>' +
+        '<div id="projBody"></div></section>';
     }
 
     // Fases
@@ -356,6 +410,7 @@
 
     drawFlow(document.getElementById("flowAtual"), fa, ["Cliente", "Equipe", "Sistema"], "problema");
     drawFlow(document.getElementById("flowProposto"), fp, ["Cliente", "Agente ORBI", "Equipe", "Sistema"], "ganho");
+    if (a.projecao && arr(a.projecao.etapas).length) renderProjecao(a.projecao, pack.em);
 
     resultEl.querySelectorAll(".flowtabs button").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -367,6 +422,129 @@
     document.getElementById("btnPrint").addEventListener("click", function () { window.print(); });
     document.getElementById("btnCopy").addEventListener("click", function () { copy(asText(pack)); });
   }
+
+  /* ===== Projeção ===== */
+  function num(v, min, max, def) { var n = parseFloat(String(v).replace(",", ".")); if (!isFinite(n)) n = def; return Math.max(min, Math.min(max, n)); }
+
+  function renderProjecao(p, em) {
+    projKey = "orbi-proj-" + (savedId || "local") + "-" + (em || "");
+    projOrig = {
+      unidade: p.unidade || "contatos",
+      entrada: num(p.entrada_mensal, 0, 1e7, 0), base: p.entrada_base || "",
+      etapas: arr(p.etapas).slice(0, 5).map(function (e) { return { nome: e.nome || "Etapa", h: num(e.taxa_hoje, 0, 100, 0), o: num(e.taxa_orbi, 0, 100, 0), j: e.justificativa || "" }; }),
+      ind: arr(p.indicadores).slice(0, 3),
+      horas: p.horas ? { tarefa: p.horas.tarefa || "", vezes: num(p.horas.vezes_mes, 0, 1e6, 0), min: num(p.horas.minutos, 0, 600, 0), pct: num(p.horas.automacao_pct, 0, 100, 0) } : null
+    };
+    projState = JSON.parse(JSON.stringify(projOrig));
+    var saved = load(projKey);
+    if (saved) { try { var sv = JSON.parse(saved); if (sv.etapas && sv.etapas.length === projState.etapas.length) projState = sv; } catch (e) {} }
+    drawProj(true);
+  }
+
+  function funil(st) {
+    var rows = [{ nome: "Entrada (" + st.unidade + ")", h: st.entrada, o: st.entrada }];
+    var ch = st.entrada, co = st.entrada;
+    st.etapas.forEach(function (e) { ch = ch * e.h / 100; co = co * e.o / 100; rows.push({ nome: e.nome, h: ch, o: co, th: e.h, to: e.o }); });
+    return rows;
+  }
+
+  function drawProj(full) {
+    var host = document.getElementById("projBody"); if (!host) return;
+    var st = projState, rows = funil(st), last = rows[rows.length - 1];
+    var ganho = last.o - last.h;
+    var horas = st.horas ? st.horas.vezes * st.horas.min * st.horas.pct / 100 / 60 : 0;
+
+    var tiles = '<div class="tiles">' +
+      '<div class="tile hero"><div class="t-label">' + esc(last.nome) + ' por mês</div><div class="t-value">' + (ganho >= 0 ? "+" : "") + NF.format(ganho) + '</div>' +
+      '<div class="t-sub"><span class="dot" style="background:var(--hoje)"></span>' + NF.format(last.h) + ' hoje &nbsp; <span class="dot" style="background:var(--orbi)"></span>' + NF.format(last.o) + ' com a ORBI</div></div>';
+    if (st.horas && horas > 0) {
+      tiles += '<div class="tile"><div class="t-label">Horas da equipe liberadas por mês</div><div class="t-value">' + NF.format(horas) + 'h</div><div class="t-sub">' + esc(st.horas.tarefa) + '</div></div>';
+    }
+    st.ind.forEach(function (x) {
+      tiles += '<div class="tile"><div class="t-label">' + esc(x.nome) + '</div><div class="t-cmp"><span>Hoje</span><b>' + esc(x.hoje) + '</b><span>ORBI</span><b>' + esc(x.orbi) + '</b></div></div>';
+    });
+    tiles += '</div>';
+
+    var chart = '<div class="chart-head"><div class="chart-title">Funil mensal</div><div class="legend">' +
+      '<span><span class="dot" style="background:var(--hoje)"></span>Hoje</span><span><span class="dot" style="background:var(--orbi)"></span>Com a ORBI</span></div></div>' +
+      '<div class="chart-wrap" id="projChart"></div><p class="proj-print">Projeção ilustrativa, calculada a partir das informações da anamnese e de premissas conservadoras. Não é garantia de resultado.</p>';
+
+    if (full) {
+      var prem = '<details class="prem"><summary>Premissas da projeção (editáveis)</summary><table><thead><tr><th>Item</th><th>Hoje</th><th>Com a ORBI</th><th>Por quê</th></tr></thead><tbody>' +
+        '<tr><td>Entrada por mês (' + esc(st.unidade) + ')</td><td colspan="2"><input type="number" min="0" data-f="entrada" value="' + st.entrada + '"></td><td class="j">' + esc(st.base ? "Base: " + st.base : "") + '</td></tr>';
+      st.etapas.forEach(function (e, i) {
+        prem += '<tr><td>' + esc(e.nome) + ' (% da etapa anterior)</td><td><input type="number" min="0" max="100" data-f="h" data-i="' + i + '" value="' + e.h + '"></td>' +
+          '<td><input type="number" min="0" max="100" data-f="o" data-i="' + i + '" value="' + e.o + '"></td><td class="j">' + esc(e.j) + '</td></tr>';
+      });
+      if (st.horas) {
+        prem += '<tr><td>' + esc(st.horas.tarefa || "Tarefa repetitiva") + ': vezes por mês</td><td colspan="2"><input type="number" min="0" data-f="vezes" value="' + st.horas.vezes + '"></td><td class="j">Minutos por vez: <input type="number" min="0" data-f="min" value="' + st.horas.min + '" style="width:64px"> &nbsp; Automatizado: <input type="number" min="0" max="100" data-f="pct" value="' + st.horas.pct + '" style="width:64px">%</td></tr>';
+      }
+      prem += '</tbody></table><div class="row-actions"><span>As alterações ficam salvas neste navegador.</span><button type="button" id="projReset">Voltar aos valores da análise</button></div></details>';
+      host.innerHTML = tiles + chart + prem;
+      host.querySelectorAll(".prem input").forEach(function (inp) {
+        inp.addEventListener("input", function () {
+          var f = inp.dataset.f, i = +inp.dataset.i;
+          if (f === "entrada") st.entrada = num(inp.value, 0, 1e7, 0);
+          else if (f === "h" || f === "o") st.etapas[i][f] = num(inp.value, 0, 100, 0);
+          else if (st.horas) st.horas[f] = num(inp.value, 0, f === "pct" ? 100 : 1e6, 0);
+          save(projKey, JSON.stringify(st));
+          drawProj(false);
+        });
+      });
+      document.getElementById("projReset").addEventListener("click", function () {
+        projState = JSON.parse(JSON.stringify(projOrig));
+        try { localStorage.removeItem(projKey); } catch (e) {}
+        drawProj(true);
+      });
+    } else {
+      var old = host.querySelector(".tiles"); if (old) old.outerHTML = tiles;
+    }
+    drawBars(document.getElementById("projChart"), rows);
+  }
+
+  function drawBars(host, rows) {
+    if (!host) return;
+    var W = Math.max(320, host.clientWidth || 700);
+    var narrow = W < 560;
+    var labelW = narrow ? 0 : 190, padR = 56, barH = 16, gap = 3, rowGap = narrow ? 34 : 20, top = 4;
+    var rowH = barH * 2 + gap + rowGap + (narrow ? 18 : 0);
+    var H = top + rows.length * rowH;
+    var max = 0; rows.forEach(function (r) { max = Math.max(max, r.h, r.o); });
+    if (!max) max = 1;
+    var plotW = W - labelW - padR;
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Funil mensal: hoje e com a ORBI">';
+    // eixo base
+    svg += '<line x1="' + labelW + '" y1="0" x2="' + labelW + '" y2="' + (H - rowGap / 2) + '" stroke="#C3CBD2" stroke-width="1"/>';
+    rows.forEach(function (r, i) {
+      var y0 = top + i * rowH + (narrow ? 18 : 0);
+      if (narrow) svg += '<text x="0" y="' + (y0 - 6) + '" font-size="13" fill="#3A4855">' + esc(r.nome) + '</text>';
+      else svg += '<text x="' + (labelW - 12) + '" y="' + (y0 + barH + gap / 2 + 4) + '" font-size="13.5" fill="#3A4855" text-anchor="end">' + esc(r.nome) + '</text>';
+      [["h", "#eb6834", "Hoje", r.th], ["o", "#2a78d6", "Com a ORBI", r.to]].forEach(function (s, k) {
+        var v = r[s[0]], w = Math.max(v > 0 ? 4 : 0, v / max * plotW), y = y0 + k * (barH + gap), x = labelW;
+        var path = w <= 4 ? '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + barH + '" fill="' + s[1] + '"/>'
+          : '<path d="M' + x + ',' + y + ' h' + (w - 4) + ' a4,4 0 0 1 4,4 v' + (barH - 8) + ' a4,4 0 0 1 -4,4 h-' + (w - 4) + ' z" fill="' + s[1] + '"/>';
+        var tip = esc(r.nome) + "<br>" + s[2] + ": <b>" + NF.format(v) + "</b>" + (s[3] != null ? " (" + NF.format(s[3]) + "% da etapa anterior)" : "");
+        svg += '<g class="bar" data-tip="' + esc(tip) + '" data-x="' + (x + w / 2) + '" data-y="' + y + '">' +
+          '<rect class="hit" x="' + x + '" y="' + (y - 1) + '" width="' + Math.max(w, 40) + '" height="' + (barH + 2) + '" fill="transparent"/>' + path + '</g>';
+        svg += '<text x="' + (x + w + 6) + '" y="' + (y + barH - 4) + '" font-size="12.5" fill="#16212C">' + NF.format(v) + '</text>';
+      });
+    });
+    svg += '</svg><div class="tip" id="projTip"></div>';
+    host.innerHTML = svg;
+    var tipEl = host.querySelector(".tip");
+    host.querySelectorAll(".bar").forEach(function (g) {
+      g.addEventListener("mouseenter", function () {
+        var scale = host.clientWidth / W;
+        tipEl.innerHTML = g.dataset.tip;
+        var cw = host.clientWidth, tw = tipEl.offsetWidth, cx = +g.dataset.x * scale;
+        cx = Math.max(tw / 2, Math.min(cw - tw / 2, cx));
+        tipEl.style.left = cx + "px"; tipEl.style.top = (+g.dataset.y * scale) + "px";
+        tipEl.classList.add("show");
+      });
+      g.addEventListener("mouseleave", function () { tipEl.classList.remove("show"); });
+    });
+  }
+  window.addEventListener("resize", function () { if (projState && document.getElementById("projChart")) drawBars(document.getElementById("projChart"), funil(projState)); });
 
   function renderRaw(raw, truncada) {
     resultEl.innerHTML = '<div class="report"><p class="r-kind">Resposta sem formatação</p>' +
@@ -460,6 +638,11 @@
       if (arr(f.depende_de).length) o.push("   Depende de: " + arr(f.depende_de).join("; "));
       if (f.metrica) o.push("   Métrica: " + f.metrica);
     });
+    if (projState) {
+      var fr = funil(projState);
+      o.push(""); o.push("PROJEÇÃO MENSAL (ilustrativa)");
+      fr.forEach(function (r) { o.push("- " + r.nome + ": hoje " + NF.format(r.h) + " | com a ORBI " + NF.format(r.o)); });
+    }
     o.push(""); o.push("RISCOS"); arr(a.riscos).forEach(function (r) { o.push("- " + r.risco + " | " + r.mitigacao); });
     o.push(""); o.push("PERGUNTAR AO CLIENTE"); arr(a.perguntas).forEach(function (x, i) { o.push((i + 1) + ". " + x); });
     o.push(""); o.push("FORA DO ESCOPO"); arr(a.fora_do_escopo).forEach(function (x) { o.push("- " + x); });
