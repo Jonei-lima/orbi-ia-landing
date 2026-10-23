@@ -162,6 +162,24 @@
   .proj-print { display: none; font-size: 12px; color: var(--steel); margin-top: 10px; }
   @media print { section.proj { break-before: page; } .prem, .proj-note { display: none !important; } .proj-print { display: block; } .tiles { break-inside: avoid; grid-template-columns: 1.3fr 1fr 1fr 1fr; } .tile.hero { grid-column: auto; } }
 
+  /* Perguntas com resposta */
+  .ask { display: grid; gap: 0; }
+  .ask-item { padding: 16px 0; border-top: 1px solid var(--rule); }
+  .ask-item:last-child { border-bottom: 1px solid var(--rule); }
+  .ask-q { display: grid; grid-template-columns: 28px 1fr; font-size: 15.5px; margin-bottom: 8px; }
+  .ask-q span { color: var(--steel); font-family: var(--serif); }
+  .ask textarea { min-height: 44px; height: 44px; margin-left: 28px; width: calc(100% - 28px); font-size: 14.5px; resize: vertical; }
+  .ask-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+  .changed { margin: 18px 0 0; border-left: 3px solid var(--gain); background: var(--gain-soft); padding: 14px 18px; border-radius: 0 4px 4px 0; }
+  .changed h4 { margin: 0 0 6px; font-size: 14.5px; font-weight: 600; color: var(--gain); }
+  .changed ul { margin: 0; padding-left: 18px; font-size: 14.5px; color: var(--ink-2); }
+  .changed li { margin: 4px 0; }
+  .answered { margin-top: 22px; }
+  .answered summary { cursor: pointer; font-weight: 500; color: var(--accent); }
+  .answered dl { margin: 10px 0 0; font-size: 14.5px; }
+  .answered dt { color: var(--steel); margin-top: 10px; }
+  .answered dd { margin: 2px 0 0; }
+  @media print { .ask textarea, .ask-actions, .ask-hint { display: none !important; } .answered { display: block; } .answered dl { display: block !important; } }
   .riscos { width: 100%; border-collapse: collapse; font-size: 15px; }
   .riscos th { text-align: left; font-weight: 500; color: var(--steel); font-size: 13.5px; padding: 0 12px 8px 0; border-bottom: 1px solid var(--rule-strong); }
   .riscos td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
@@ -237,7 +255,7 @@
 (function () {
   var drawn = [];
   var NF = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 });
-  var projState = null, projKey = null, projOrig = null;
+  var projState = null, projKey = null, projOrig = null, currentPack = null;
   var INPUT_KEY = "orbi-analise-entrada";
   var LAST_KEY = "orbi-analise-ultima";
   var fichaEl = document.getElementById("ficha");
@@ -301,7 +319,7 @@
     fetch("/api/analise", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ficha: ficha, extras: extrasEl.value, id: savedId || undefined })
+      body: JSON.stringify({ ficha: ficha, extras: extrasEl.value, id: savedId || undefined, historico: currentPack && currentPack.analise ? currentPack.analise.respostas_cliente : undefined })
     }).then(function (r) {
       return r.json().catch(function () { return { error: "Resposta inválida do servidor (código " + r.status + ")." }; });
     }).then(function (d) {
@@ -339,6 +357,7 @@
       '<div><div class="r-date">Gerado em ' + esc(fmtDate(pack.em)) + '</div><div class="r-actions" style="margin-top:10px">' +
       '<button class="btn" type="button" id="btnCopy">Copiar texto</button><button class="btn" type="button" id="btnPrint">Gerar PDF</button></div></div></div>';
     if (a.sintese) h += '<p class="synth">' + esc(a.sintese) + '</p>';
+    if (arr(a.o_que_mudou).length) h += '<div class="changed"><h4>O que mudou nesta versão</h4><ul>' + arr(a.o_que_mudou).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul></div>';
 
     // Gargalos
     var gs = arr(a.gargalos).slice().sort(function (x, y) { return (x.prioridade || 9) - (y.prioridade || 9); });
@@ -397,10 +416,24 @@
         rs.map(function (r) { return "<tr><td>" + esc(r.risco) + "</td><td>" + esc(r.mitigacao) + "</td></tr>"; }).join("") + '</tbody></table></section>';
     }
 
-    // Perguntas e fora do escopo
-    h += '<section class="s"><div class="twocol"><div><h3 style="font-family:var(--serif);font-size:24px;margin:0 0 12px">Perguntar ao cliente</h3>' +
-      (arr(a.perguntas).length ? '<ol class="perg">' + arr(a.perguntas).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ol>' : '<p class="sub">Nenhuma pendência.</p>') +
-      '</div><div>' + listBox("Fora do escopo da ORBI", a.fora_do_escopo, "neutral") + '</div></div></section>';
+    // Perguntas com campo de resposta
+    var pergs = arr(a.perguntas), hist = arr(a.respostas_cliente);
+    h += '<section class="s"><h3>Perguntar ao cliente</h3><p class="sub ask-hint">Anote as respostas que o cliente der. Ao atualizar, o diagnóstico é revisado só onde as respostas mudam alguma coisa.</p>';
+    if (pergs.length) {
+      h += '<div class="ask">' + pergs.map(function (x, i) {
+        return '<div class="ask-item"><div class="ask-q"><span>' + (i + 1) + '</span>' + esc(x) + '</div><textarea data-q="' + i + '" aria-label="Resposta da pergunta ' + (i + 1) + '" placeholder="Resposta do cliente"></textarea></div>';
+      }).join("") + '</div>' +
+        '<div class="ask-actions"><button class="btn primary" type="button" id="btnRevise">Atualizar diagnóstico com as respostas</button><span class="status" id="reviseStatus" role="status" aria-live="polite"></span></div>';
+    } else {
+      h += '<p class="sub">Nenhuma pendência.</p>';
+    }
+    if (hist.length) {
+      h += '<details class="answered"><summary>Respostas já recebidas (' + hist.length + ')</summary><dl>' + hist.map(function (r) {
+        return '<dt>' + esc(r.pergunta) + '</dt><dd>' + esc(r.resposta) + '</dd>';
+      }).join("") + '</dl></details>';
+    }
+    h += '</section>';
+    h += '<section class="s">' + listBox("Fora do escopo da ORBI", a.fora_do_escopo, "neutral") + '</section>';
 
     h += '<footer class="sig"><span>ORBI IA, J MARCELIO LIMA LTDA, CNPJ 68.308.327/0001-69</span><span>Documento interno. Revise antes de usar com o cliente.</span></footer>';
     h += '</div>';
@@ -419,6 +452,9 @@
         redrawLinks();
       });
     });
+    currentPack = pack;
+    var rb = document.getElementById("btnRevise");
+    if (rb) rb.addEventListener("click", revise);
     document.getElementById("btnPrint").addEventListener("click", function () { window.print(); });
     document.getElementById("btnCopy").addEventListener("click", function () { copy(asText(pack)); });
   }
@@ -546,6 +582,39 @@
   }
   window.addEventListener("resize", function () { if (projState && document.getElementById("projChart")) drawBars(document.getElementById("projChart"), funil(projState)); });
 
+  function revise() {
+    var a = (currentPack && currentPack.analise) || {};
+    var pergs = arr(a.perguntas), respostas = [];
+    resultEl.querySelectorAll(".ask textarea").forEach(function (t) {
+      var v = t.value.trim();
+      if (v) respostas.push({ pergunta: pergs[+t.dataset.q], resposta: v });
+    });
+    var st = document.getElementById("reviseStatus"), btn = document.getElementById("btnRevise");
+    function msg(m, err) { st.textContent = m; st.classList.toggle("error", !!err); }
+    if (!respostas.length) { msg("Escreva pelo menos uma resposta.", true); return; }
+    if (fichaEl.value.trim().length < 40) { msg("As respostas da anamnese sumiram do campo lá em cima. Recarregue a página.", true); return; }
+    btn.disabled = true;
+    var t0 = Date.now(), tk = setInterval(function () { msg("Revisando o diagnóstico… (" + Math.round((Date.now() - t0) / 1000) + "s)"); }, 1000);
+    msg("Revisando o diagnóstico…");
+    fetch("/api/analise", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ficha: fichaEl.value, extras: extrasEl.value, id: savedId || undefined, anterior: a, respostas: respostas })
+    }).then(function (r) {
+      return r.json().catch(function () { return { error: "Resposta inválida do servidor (código " + r.status + ")." }; });
+    }).then(function (d) {
+      if (d.error) throw new Error(d.error);
+      if (!d.analise) throw new Error(d.truncada ? "A revisão veio cortada. Tente de novo." : "A revisão veio fora do formato. Tente de novo.");
+      var pack = { analise: d.analise, em: new Date().toISOString() };
+      if (!savedId) save(LAST_KEY, JSON.stringify(pack));
+      render(pack);
+      setStatus("Diagnóstico atualizado com " + respostas.length + (respostas.length === 1 ? " resposta." : " respostas."));
+      resultEl.scrollIntoView({ behavior: "smooth" });
+    }).catch(function (err) {
+      msg(err.message || "Não foi possível atualizar. Tente de novo.", true);
+      btn.disabled = false;
+    }).finally(function () { clearInterval(tk); });
+  }
+
   function renderRaw(raw, truncada) {
     resultEl.innerHTML = '<div class="report"><p class="r-kind">Resposta sem formatação</p>' +
       (truncada ? '<p class="sub" style="color:var(--warn)">A resposta foi cortada por tamanho. Encurte as informações complementares e gere de novo.</p>' : "") +
@@ -611,10 +680,12 @@
   function redrawLinks() { drawn.forEach(function (h) { if (document.body.contains(h)) linkCards(h); }); }
   window.addEventListener("resize", redrawLinks);
   window.addEventListener("beforeprint", function () {
+    document.querySelectorAll("details.answered").forEach(function (d) { d.dataset.wasOpen = d.open ? "1" : ""; d.open = true; });
     document.querySelectorAll(".flowpane").forEach(function (p) { p.dataset.prev = p.style.display; p.style.display = "block"; });
     redrawLinks();
   });
   window.addEventListener("afterprint", function () {
+    document.querySelectorAll("details.answered").forEach(function (d) { d.open = !!d.dataset.wasOpen; });
     document.querySelectorAll(".flowpane").forEach(function (p) { p.style.display = p.dataset.prev || ""; });
     redrawLinks();
   });
@@ -644,7 +715,9 @@
       fr.forEach(function (r) { o.push("- " + r.nome + ": hoje " + NF.format(r.h) + " | com a ORBI " + NF.format(r.o)); });
     }
     o.push(""); o.push("RISCOS"); arr(a.riscos).forEach(function (r) { o.push("- " + r.risco + " | " + r.mitigacao); });
+    if (arr(a.o_que_mudou).length) { o.push(""); o.push("O QUE MUDOU NESTA VERSÃO"); arr(a.o_que_mudou).forEach(function (x) { o.push("- " + x); }); }
     o.push(""); o.push("PERGUNTAR AO CLIENTE"); arr(a.perguntas).forEach(function (x, i) { o.push((i + 1) + ". " + x); });
+    if (arr(a.respostas_cliente).length) { o.push(""); o.push("RESPOSTAS DO CLIENTE"); arr(a.respostas_cliente).forEach(function (r) { o.push("- " + r.pergunta); o.push("  " + r.resposta); }); }
     o.push(""); o.push("FORA DO ESCOPO"); arr(a.fora_do_escopo).forEach(function (x) { o.push("- " + x); });
     return o.join("\n");
   }
