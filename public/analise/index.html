@@ -134,7 +134,8 @@
   .dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: 0; }
   .chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
   .chart-title { font-weight: 600; font-size: 16px; }
-  .legend { display: flex; gap: 18px; font-size: 13.5px; color: var(--ink-2); }
+  .legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; font-size: 13.5px; color: var(--ink-2); }
+  .legend > span { white-space: nowrap; }
   .chart-wrap { position: relative; }
   .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
   .chart-wrap .bar { cursor: default; }
@@ -160,6 +161,11 @@
     .prem td { border: 0; padding: 3px 0; }
   }
   .ponte { margin: 4px 0 30px; }
+  .dimtog { display: inline-flex; border: 1px solid var(--rule-strong); border-radius: 5px; overflow: hidden; margin-left: 6px; }
+  .dimtog button { border: 0; background: var(--sheet); font: inherit; font-size: 12.5px; padding: 2px 9px; cursor: pointer; color: var(--ink-2); }
+  .dimtog button + button { border-left: 1px solid var(--rule-strong); }
+  .dimtog button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  @media print { .dimtog { display: none; } }
   .ponte-note { font-size: 12.5px; color: var(--steel); margin: 6px 0 0; }
   @media print { .ponte-note { display: none; } .ponte { break-inside: avoid; } }
   .proj-print { display: none; font-size: 12px; color: var(--steel); margin-top: 10px; }
@@ -404,7 +410,8 @@
       var temPonte = a.projecao && arr(a.projecao.etapas).length && fs.some(function (f) { return num(f.contribuicao_pct, 0, 100, 0) > 0; });
       h += '<section class="s fases-sec"><h3>Solução em fases</h3><p class="sub">Cada entrega cita o item do catálogo da ORBI.</p>' +
         (temPonte ? '<div class="ponte"><div class="chart-head"><div class="chart-title" id="ponteTitle">Ganho acumulado por fase</div><div class="legend">' +
-          '<span><span class="dot" style="background:var(--hoje)"></span>Hoje</span><span><span class="dot" style="background:#A6DBAE"></span>Ganho da fase</span><span><span class="dot" style="background:var(--orbi)"></span>Com a ORBI</span></div></div>' +
+          '<span><span class="dot" style="background:var(--hoje)"></span>Hoje</span><span><span class="dot" style="background:#A6DBAE"></span>Ganho da fase</span><span><span class="dot" style="background:var(--orbi)"></span>Com a ORBI</span>' +
+          '<span class="dimtog" role="group" aria-label="Estilo do gráfico"><button type="button" data-dim="2d">2D</button><button type="button" data-dim="3d">3D</button></span></div></div>' +
           '<div class="chart-wrap" id="ponte"></div><p class="ponte-note">Calculado a partir da projeção acima. Ajuste a contribuição de cada fase nas premissas.</p></div>' : "") +
         '<div class="fases">';
       fs.forEach(function (f) {
@@ -470,12 +477,15 @@
   /* ===== Projeção ===== */
   function num(v, min, max, def) { var n = parseFloat(String(v).replace(",", ".")); if (!isFinite(n)) n = def; return Math.max(min, Math.min(max, n)); }
 
+  // Etapas que dependem do comercial do cliente nunca entram na projeção
+  var PROMESSA = /fech|venda|vendid|contrat|fatur|receita|convers[aã]o em cliente|virou cliente|cliente fechado|assinad/i;
+
   function renderProjecao(p, em, fases) {
     projKey = "orbi-proj-" + (savedId || "local") + "-" + (em || "");
     projOrig = {
       unidade: p.unidade || "contatos",
       entrada: num(p.entrada_mensal, 0, 1e7, 0), base: p.entrada_base || "",
-      etapas: arr(p.etapas).slice(0, 5).map(function (e) { return { nome: e.nome || "Etapa", h: num(e.taxa_hoje, 0, 100, 0), o: num(e.taxa_orbi, 0, 100, 0), j: e.justificativa || "" }; }),
+      etapas: arr(p.etapas).filter(function (e) { return !PROMESSA.test(e.nome || ""); }).slice(0, 5).map(function (e) { return { nome: e.nome || "Etapa", h: num(e.taxa_hoje, 0, 100, 0), o: num(e.taxa_orbi, 0, 100, 0), j: e.justificativa || "" }; }),
       ind: arr(p.indicadores).slice(0, 3),
       horas: p.horas ? { tarefa: p.horas.tarefa || "", vezes: num(p.horas.vezes_mes, 0, 1e6, 0), min: num(p.horas.minutos, 0, 600, 0), pct: num(p.horas.automacao_pct, 0, 100, 0) } : null,
       fases: arr(fases).map(function (f) { return { nome: f.nome || "Fase", pct: num(f.contribuicao_pct, 0, 100, 0) }; })
@@ -553,6 +563,12 @@
     drawPonte(document.getElementById("ponte"), st, last);
   }
 
+  var DIM_KEY = "orbi-grafico-dim";
+  function tom(hex, f) {
+    var n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255];
+    c = c.map(function (v) { return Math.round(f > 0 ? v + (255 - v) * f : v * (1 + f)); });
+    return "#" + c.map(function (v) { return ("0" + v.toString(16)).slice(-2); }).join("");
+  }
   function nomeCurto(n) {
     var m = String(n).match(/^(Fase\s*\d+)\s*[:\-–—]?\s*(.*)$/i);
     return m ? [m[1], m[2]] : [String(n), ""];
@@ -573,9 +589,15 @@
     });
     cols.push({ nome: ["Com a ORBI", ""], ini: 0, fim: last.o, tipo: "fim" });
 
+    var d3 = load(DIM_KEY) !== "2d";
+    document.querySelectorAll(".dimtog button").forEach(function (bt) {
+      bt.setAttribute("aria-pressed", (bt.dataset.dim === "3d") === d3 ? "true" : "false");
+      bt.onclick = function () { save(DIM_KEY, bt.dataset.dim); drawPonte(host, st, last); };
+    });
     var W = Math.max(320, host.clientWidth || 700), narrow = W < 560;
-    var H = narrow ? 240 : 280, top = 26, bottom = narrow ? 40 : 46, left = 8, right = 8;
+    var H = narrow ? 240 : 280, top = d3 ? 34 : 26, bottom = narrow ? 40 : 46, left = 8, right = d3 ? 18 : 8;
     var plotH = H - top - bottom, colW = (W - left - right) / cols.length, bw = Math.min(colW * 0.56, 96);
+    var dx = d3 ? Math.min(14, bw * 0.16) : 0, dy = d3 ? dx * 0.7 : 0;
     var max = 0; cols.forEach(function (c) { max = Math.max(max, c.fim, c.ini); }); if (!max) max = 1;
     var y = function (v) { return top + plotH - v / max * plotH; };
     var cor = { hoje: "#5473B8", inc: "#A6DBAE", fim: "#64BE71" };
@@ -585,14 +607,24 @@
       var cx = left + colW * i + colW / 2, x = cx - bw / 2;
       var y1 = y(Math.max(c.ini, c.fim)), y2 = y(Math.min(c.ini, c.fim)), h = Math.max(2, y2 - y1);
       var r = Math.min(4, h / 2);
-      var path = '<path d="M' + x + ',' + (y1 + h) + ' v-' + (h - r) + ' a' + r + ',' + r + ' 0 0 1 ' + r + ',-' + r + ' h' + (bw - 2 * r) + ' a' + r + ',' + r + ' 0 0 1 ' + r + ',' + r + ' v' + (h - r) + ' z" fill="' + cor[c.tipo] + '"/>';
-      var valor = c.tipo === "inc" ? "+" + NF.format(c.fim - c.ini) : NF.format(c.fim);
-      var tip = esc(c.nome.join(" ").trim()) + "<br>" + (c.tipo === "inc" ? "Acrescenta <b>" + NF.format(c.fim - c.ini) + "</b> (" + NF.format(c.pct) + "% do ganho)<br>Acumulado: " + NF.format(c.fim) : "<b>" + NF.format(c.fim) + "</b> " + esc(last.nome.toLowerCase()) + " por mês");
+      var path;
+      if (d3) {
+        var base = cor[c.tipo];
+        path = '<path d="M' + x + ',' + y1 + ' l' + dx + ',-' + dy + ' h' + bw + ' l-' + dx + ',' + dy + ' z" fill="' + tom(base, 0.28) + '"/>' +
+          '<path d="M' + (x + bw) + ',' + y1 + ' l' + dx + ',-' + dy + ' v' + h + ' l-' + dx + ',' + dy + ' z" fill="' + tom(base, -0.22) + '"/>' +
+          '<rect x="' + x + '" y="' + y1 + '" width="' + bw + '" height="' + h + '" fill="' + base + '"/>';
+      } else {
+        path = '<path d="M' + x + ',' + (y1 + h) + ' v-' + (h - r) + ' a' + r + ',' + r + ' 0 0 1 ' + r + ',-' + r + ' h' + (bw - 2 * r) + ' a' + r + ',' + r + ' 0 0 1 ' + r + ',' + r + ' v' + (h - r) + ' z" fill="' + cor[c.tipo] + '"/>';
+      }
+      var zero = c.tipo === "inc" && Math.round(c.fim - c.ini) === 0;
+      var valor = zero ? "—" : c.tipo === "inc" ? "+" + NF.format(c.fim - c.ini) : NF.format(c.fim);
+      var tip = esc(c.nome.join(" ").trim()) + "<br>" + (zero ? "Não muda este indicador; o ganho da fase é em rotina interna" : c.tipo === "inc" ? "Acrescenta <b>" + NF.format(c.fim - c.ini) + "</b> (" + NF.format(c.pct) + "% do ganho)<br>Acumulado: " + NF.format(c.fim) : "<b>" + NF.format(c.fim) + "</b> " + esc(last.nome.toLowerCase()) + " por mês");
+      if (zero) path = "";
       svg += '<g class="bar" data-tip="' + esc(tip) + '" data-x="' + cx + '" data-y="' + y1 + '"><rect x="' + (cx - colW / 2 + 2) + '" y="' + top + '" width="' + (colW - 4) + '" height="' + plotH + '" fill="transparent"/>' + path + '</g>';
-      svg += '<text x="' + cx + '" y="' + (y1 - 8) + '" font-size="' + (c.tipo === "inc" ? 13 : 14) + '" font-weight="600" fill="#16212C" text-anchor="middle">' + valor + '</text>';
+      svg += '<text x="' + (cx + dx / 2) + '" y="' + (y1 - 8 - dy) + '" font-size="' + (c.tipo === "inc" ? 13 : 14) + '" font-weight="600" fill="#16212C" text-anchor="middle">' + valor + '</text>';
       if (i < cols.length - 1) {
         var nx = left + colW * (i + 1) + colW / 2 - bw / 2;
-        svg += '<line x1="' + (x + bw) + '" y1="' + y(c.fim) + '" x2="' + nx + '" y2="' + y(c.fim) + '" stroke="#9AA5AF" stroke-width="1" stroke-dasharray="3 3"/>';
+        svg += '<line x1="' + (x + bw + dx) + '" y1="' + y(c.fim) + '" x2="' + nx + '" y2="' + y(c.fim) + '" stroke="#9AA5AF" stroke-width="1" stroke-dasharray="3 3"/>';
       }
       var l1 = c.nome[0], l2 = narrow ? "" : corta(c.nome[1], 20);
       svg += '<text x="' + cx + '" y="' + (y(0) + 18) + '" font-size="' + (narrow ? 12 : 13) + '" font-weight="500" fill="#3A4855" text-anchor="middle">' + esc(l1) + '</text>';
