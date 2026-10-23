@@ -464,7 +464,7 @@
     step = n;
     document.querySelectorAll(".step").forEach(function (s) { s.classList.toggle("active", +s.dataset.step === n); });
     document.getElementById("bar").style.width = Math.round(n / 5 * 100) + "%";
-    document.getElementById("stepLabel").textContent = n === 0 ? "Cerca de 4 minutos" : n === 5 ? "Concluído" : "Etapa " + n + " de 4";
+    document.getElementById("stepLabel").textContent = n === 0 ? "Cerca de 2 minutos" : n === 5 ? "Concluído" : "Etapa " + n + " de 4";
     backBtn.classList.toggle("hidden", n === 0 || n === 5);
     nextBtn.classList.toggle("hidden", n === 5);
     nextBtn.textContent = n === 0 ? "Começar" : n === LAST_INPUT ? "Enviar respostas" : "Continuar";
