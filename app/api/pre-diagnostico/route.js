@@ -6,7 +6,7 @@ import { after } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { gerarAnalise } from "@/lib/analise";
 
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 const SITE = "https://agenteorbiia.com";
 const AVISO_WHATSAPP = "5566981320667";
@@ -99,7 +99,7 @@ export async function POST(request) {
 
   const c = body?.contato || {};
   const dados = {
-    origem: txt(body?.origem, 80) || "direto",
+    origem: txt(body?.origem, 200) || "direto",
     contato: {
       nome: txt(c.nome, 120), cargo: txt(c.cargo, 120), empresa: txt(c.empresa, 160),
       cidade: txt(c.cidade, 120), whatsapp: txt(c.whatsapp, 20).replace(/\D/g, ""),

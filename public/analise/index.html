@@ -278,7 +278,7 @@
         fichaEl.value = d.ficha || "";
         if (d.analise) { render({ analise: d.analise, em: d.analise_em || d.created_at }); setStatus(""); }
         else if (d.analise_erro) setStatus("A análise automática falhou (" + d.analise_erro + "). Toque em Gerar de novo.", true);
-        else if (tries++ < 18) { setStatus("A análise ainda está sendo gerada. Atualizando em instantes…"); setTimeout(fetchSaved, 10000); }
+        else if (tries++ < 33) { setStatus("A análise ainda está sendo gerada. Atualizando em instantes…"); setTimeout(fetchSaved, 10000); }
         else setStatus("A análise está demorando. Toque em Gerar de novo.", true);
       }).catch(function () { setStatus("Não foi possível abrir este pré-diagnóstico. Verifique a conexão.", true); });
     })();

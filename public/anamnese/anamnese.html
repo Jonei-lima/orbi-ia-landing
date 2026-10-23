@@ -252,14 +252,15 @@
     { k: "ramo", label: "Ramo da empresa", type: "radio", req: true, wide: true,
       options: ["Imobiliária", "Clínica ou saúde", "Advocacia", "Contabilidade", "Comércio e varejo", "Restaurante e alimentação", "Construção e indústria", "Prestação de serviços", "Minha atividade não está na lista"] },
     { k: "porte", label: "Quantas pessoas trabalham na empresa", type: "radio", cols: true,
-      options: ["Até 5", "6 a 15", "16 a 50", "Mais de 50"] }
+      options: ["Até 5", "6 a 15", "16 a 50", "Mais de 50"] },
+    { k: "conheceu", label: "Onde nos conhecemos?", type: "text", hint: "Ex.: mesa de negócios da ACIC, indicação de alguém, Instagram" }
   ];
 
   var OPERACAO = [
     { k: "canais", label: "Por onde os clientes chegam", hint: "Marque todos que se aplicam", type: "check", cols: true,
       options: ["WhatsApp", "Instagram", "Telefone", "Site", "Presencial", "Indicação"] },
     { k: "volume", label: "Mensagens de clientes por dia, somando todos os canais", type: "radio", cols: true,
-      options: ["Até 20", "20 a 50", "50 a 150", "Mais de 150"] },
+      options: ["Até 5", "6 a 10", "11 a 15", "16 a 20", "21 a 50", "Mais de 50"] },
     { k: "resposta", label: "Tempo médio até a primeira resposta", type: "radio", cols: true,
       options: ["Minutos", "Até 1 hora", "Algumas horas", "No dia seguinte"] },
     { k: "foraHorario", label: "Quando a mensagem chega à noite ou no fim de semana", type: "radio",
@@ -337,7 +338,7 @@
       sub: "Como o serviço é vendido e entregue.",
       q: [
         { k: "servico", label: "Qual serviço a empresa oferece", type: "text" },
-        { k: "orcamentos", label: "Pedidos de orçamento ou contato por mês", type: "radio", cols: true, options: ["Até 20", "20 a 60", "60 a 150", "Mais de 150"] },
+        { k: "orcamentos", label: "Pedidos de orçamento ou contato por mês", type: "radio", cols: true, options: ["Até 5", "6 a 10", "11 a 15", "16 a 20", "21 a 50", "Mais de 50"] },
         { k: "agenda", label: "Como os atendimentos são agendados", type: "radio", options: ["Por mensagem, manualmente", "Por um sistema", "Não há agendamento"] },
         { k: "followup", label: "Quem não fechou recebe novo contato", type: "radio", options: ["Sim, com rotina", "Às vezes", "Não"] },
         { k: "repetitivo", label: "Perguntas que mais se repetem", type: "text", hint: "As três que a equipe mais responde" }
@@ -446,6 +447,10 @@
   }
   function slug(s) { return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-"); }
 
+  if (!state["perfil.conheceu"] && origem !== "direto" && origem !== "teste") {
+    var o = origem.replace(/[-_]+/g, " ").trim();
+    state["perfil.conheceu"] = o.charAt(0).toUpperCase() + o.slice(1);
+  }
   renderBlock(document.getElementById("perfil"), "perfil", PERFIL);
   renderBlock(document.getElementById("operacao"), "operacao", OPERACAO);
   renderBlock(document.getElementById("prioridade"), "prioridade", PRIORIDADE);
@@ -503,7 +508,9 @@
     var outro = ramo === "Minha atividade não está na lista";
     return {
       enviadoEm: new Date().toISOString(),
-      origem: origem,
+      origem: (state["perfil.conheceu"] || "").trim()
+        ? state["perfil.conheceu"].trim() + (origem !== "direto" ? " (link: " + origem + ")" : "")
+        : origem,
       contato: {
         nome: state["perfil.nome"] || "", cargo: state["perfil.cargo"] || "",
         empresa: state["perfil.empresa"] || "", cidade: state["perfil.cidade"] || "",
