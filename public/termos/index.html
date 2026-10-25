@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termos de Uso — ORBI IA</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#4CAF78;--green2:#3d9e68;--blue:#5B76B8;
+  --dark:#1E252E;--dark2:#2d3748;
+  --light:#f6f7f9;--light2:#edf0f4;
+  --white:#ffffff;--text:#2d3748;--muted:#6b7a99;
+  --font-head:'Raleway',sans-serif;--font-body:'Nunito',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--white);color:var(--text);font-family:var(--font-body);font-weight:400;overflow-x:hidden;line-height:1.75;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.07);box-shadow:0 2px 20px rgba(0,0,0,0.06);}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;height:66px;}
+.nav-logo{height:30px;width:auto;}
+.nav-back{color:var(--muted);text-decoration:none;font-size:0.83rem;font-weight:500;padding:7px 13px;border-radius:6px;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+.nav-back:hover{color:var(--green);background:rgba(76,175,120,0.07);}
+
+.hero-pp{background:#07100d;padding:120px 48px 80px;text-align:center;position:relative;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;}
+.orb-1{width:400px;height:400px;background:radial-gradient(circle,rgba(76,175,120,0.12),transparent 70%);top:-100px;left:-80px;}
+.orb-2{width:350px;height:350px;background:radial-gradient(circle,rgba(91,118,184,0.1),transparent 70%);bottom:-60px;right:-60px;}
+.hero-eyebrow{font-size:0.72rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(76,175,120,0.8);margin-bottom:14px;}
+.hero-title{font-family:var(--font-head);font-size:clamp(2rem,4vw,3rem);font-weight:900;color:#fff;margin-bottom:14px;letter-spacing:-0.025em;position:relative;z-index:1;}
+.hero-sub{color:rgba(255,255,255,0.45);font-size:0.9rem;position:relative;z-index:1;}
+
+.wrap{max-width:780px;margin:0 auto;padding:64px 48px 96px;}
+
+.section{margin-bottom:48px;}
+.section-num{font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.section-num::after{content:'';flex:0 0 28px;height:1px;background:var(--green);}
+.section-title{font-family:var(--font-head);font-size:1.25rem;font-weight:800;color:var(--dark);margin-bottom:16px;letter-spacing:-0.01em;}
+.section p{font-size:0.92rem;color:var(--muted);margin-bottom:12px;line-height:1.8;}
+.section p:last-child{margin-bottom:0;}
+
+.item-list{list-style:none;margin:12px 0;display:flex;flex-direction:column;gap:8px;}
+.item-list li{font-size:0.92rem;color:var(--muted);padding-left:20px;position:relative;line-height:1.7;}
+.item-list li::before{content:'→';position:absolute;left:0;color:var(--green);font-size:0.8rem;font-weight:700;top:2px;}
+
+.highlight-box{background:var(--light);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:18px 22px;margin:18px 0;}
+.highlight-box p{font-size:0.88rem;color:var(--dark2);margin:0;line-height:1.75;}
+
+.divider{height:1px;background:var(--light2);margin:48px 0;}
+
+.contact-box{background:var(--light);border-radius:14px;padding:28px 32px;margin-top:48px;display:flex;align-items:flex-start;gap:20px;}
+.contact-icon{width:44px;height:44px;background:rgba(76,175,120,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;}
+.contact-text strong{display:block;font-family:var(--font-head);font-size:1rem;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.contact-text p{font-size:0.88rem;color:var(--muted);line-height:1.7;margin:0;}
+.contact-text a{color:var(--green);text-decoration:none;font-weight:600;}
+
+.update-info{text-align:center;margin-top:48px;font-size:0.8rem;color:var(--muted);}
+
+footer{background:var(--dark);padding:32px 48px;text-align:center;}
+footer p{font-size:0.8rem;color:rgba(255,255,255,0.3);}
+footer a{color:rgba(76,175,120,0.7);text-decoration:none;}
+
+@media(max-width:768px){
+  .wrap{padding:48px 24px 80px;}
+  .hero-pp{padding:100px 24px 60px;}
+  .nav-inner{padding:0 24px;}
+  .contact-box{flex-direction:column;gap:12px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <img src="/logo-orbi.png" alt="ORBI IA" class="nav-logo">
+    <a href="/" class="nav-back">← Voltar ao site</a>
+  </div>
+</nav>
+
+<div class="hero-pp">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="hero-eyebrow">ORBI IA · Legal</div>
+  <h1 class="hero-title">Termos de Uso</h1>
+  <p class="hero-sub">Última atualização: outubro de 2026</p>
+</div>
+
+<div class="wrap">
+
+  <div class="highlight-box">
+    <p>Estes Termos de Uso regem o acesso ao site <strong>agenteorbiia.com</strong> e o uso dos agentes de inteligência artificial desenvolvidos e operados pela <strong>ORBI IA</strong> (J MARCELIO LIMA LTDA · CNPJ&nbsp;68.308.327/0001-69). Ao usar o site ou os nossos agentes, você concorda com estes termos.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-num">01</div>
+    <h2 class="section-title">Os serviços</h2>
+    <p>A ORBI IA desenvolve agentes de inteligência artificial que automatizam atendimento e processos de empresas, operando principalmente pelo WhatsApp e integrados a ferramentas do próprio cliente. As condições específicas de cada projeto (escopo, prazos, valores e níveis de serviço) são definidas em proposta ou contrato próprio, que prevalece sobre estes termos em caso de divergência.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-num">02</div>
+    <h2 class="section-title">Uso adequado</h2>
+    <p>O usuário se compromete a usar o site e os agentes de forma lícita, e a não:</p>
+    <ul class="item-list">
+      <li>enviar conteúdo ilegal, ofensivo ou que viole direitos de terceiros;</li>
+      <li>tentar acessar dados de outros clientes ou burlar mecanismos de segurança e de autorização;</li>
+      <li>usar os agentes para enviar mensagens em massa não solicitadas;</li>
+      <li>enviar dados de terceiros sem base legal para o tratamento.</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-num">03</div>
+    <h2 class="section-title">Natureza das respostas da inteligência artificial</h2>
+    <p>Os agentes usam modelos de inteligência artificial e regras automatizadas. As respostas e relatórios gerados são ferramentas de apoio e devem ser conferidos por um profissional responsável antes de decisões relevantes. Os agentes não substituem orientação jurídica, contábil, médica ou financeira profissional.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-num">04</div>
+    <h2 class="section-title">Dados e confidencialidade</h2>
+    <p>Os dados enviados aos agentes são tratados conforme a nossa <a href="/politica">Política de Privacidade</a> e a LGPD. Nos serviços prestados a empresas, a ORBI IA atua como operadora, tratando os dados em nome do cliente e apenas para a finalidade contratada, sob dever de confidencialidade.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-num">05</div>
+    <h2 class="section-title">Integrações com serviços de terceiros</h2>
+    <p>Alguns agentes se conectam a serviços de terceiros, como Google Drive, WhatsApp e provedores de inteligência artificial. O uso desses serviços também está sujeito aos termos dos respectivos fornecedores. A autorização de acesso a contas de terceiros, como o Google, pode ser revogada pelo titular a qualquer momento.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-num">06</div>
+    <h2 class="section-title">Disponibilidade</h2>
+    <p>Empregamos esforços razoáveis para manter os agentes disponíveis, mas podem ocorrer interrupções por manutenção, falhas de provedores (como WhatsApp, servidores ou APIs de IA) ou motivos de força maior. Interrupções não geram, por si só, direito a indenização, salvo o que estiver previsto em contrato.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-num">07</div>
+    <h2 class="section-title">Propriedade intelectual</h2>
+    <p>Os agentes, fluxos de automação, códigos, marcas e materiais da ORBI IA são protegidos por direitos autorais e de propriedade intelectual. Os dados e documentos do cliente permanecem de propriedade do cliente.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-num">08</div>
+    <h2 class="section-title">Alterações e foro</h2>
+    <p>Estes termos podem ser atualizados periodicamente; a data no topo da página indica a versão vigente. Fica eleito o foro do domicílio do contratante para dirimir questões decorrentes destes termos, nos termos da legislação brasileira.</p>
+  </div>
+
+  <div class="divider"></div>
+
+<div class="contact-box">
+    <div class="contact-icon">✉️</div>
+    <div class="contact-text">
+      <strong>Dúvidas sobre estes termos?</strong>
+      <p>Fale com a ORBI IA:<br>
+      <a href="mailto:contato@agenteorbiia.com">contato@agenteorbiia.com</a><br>
+      ORBI IA · Rua Felizardo Leite, 288 · Centro · CEP 58700-030 · Patos/PB<br>
+      Respondemos em até 15 dias úteis.</p>
+    </div>
+  </div>
+
+  <div class="update-info">
+    Estes termos devem ser lidos em conjunto com a Política de Privacidade da ORBI IA<br>
+    © 2026 ORBI IA · Todos os direitos reservados
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 ORBI IA · <a href="/">agenteorbiia.com</a> · <a href="/politica">Política de Privacidade</a> · <a href="/termos">Termos de Uso</a></p>
+</footer>
+
+</body>
+</html>
