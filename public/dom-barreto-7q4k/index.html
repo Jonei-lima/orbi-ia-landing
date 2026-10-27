@@ -424,6 +424,7 @@
         <button class="btn pri" id="gerarOrc" type="button">Investimento</button>
         <button class="btn sec" id="ocultarOrc" type="button">Ocultar</button>
       </div>
+      <button class="btn sec" id="gerarProposta" type="button" style="width:100%;margin-bottom:10px">Proposta comercial (PDF)</button>
       <div class="info" id="orcInfo"></div>
     </div>
   </div>
@@ -910,6 +911,200 @@ $("gerarOrc").onclick = () => {
   setTimeout(() => $("secInvest").scrollIntoView({ behavior: "smooth" }), 250);
 };
 $("ocultarOrc").onclick = () => { orc.visivel = false; salvarOrc(); renderOrc(); };
+
+// ===== Proposta comercial (documento separado, no padrão ORBI, com os valores ajustados na reunião) =====
+function gerarProposta() {
+  const f = 1 + orc.ajustes * PASSO_ESCOPO;
+  const base = location.origin;
+  const hoje = new Date();
+  const dataTxt = hoje.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+  const validade = new Date(hoje.getTime() + 15 * 864e5).toLocaleDateString("pt-BR");
+  let mensalAnt = 0, implTotal = 0;
+  const fases = PRECOS.fases.map((fa, i) => {
+    const cheio = arred(fa.implantacao * f), vista = arred(cheio * (1 - DESCONTO_VISTA)), mensal = arred(fa.mensal * f);
+    implTotal += orc.avista ? vista : cheio;
+    const r = { n: i + 1, nome: fa.nome, cheio, vista, mensal, ant: mensalAnt, impl: fa.implInclui, mens: fa.mensalInclui,
+      resolve: MAPA.filter((x) => x.f === i + 1) };
+    mensalAnt = mensal; return r;
+  });
+  const anual = arred(PRECOS.anual * f);
+  const d = atual();
+  const temEst = Object.keys(orc.casa || {}).some((k) => orc.casa[k]);
+  const L = val("leads"), P = val("perdidos") / 100, C = val("conversao") / 100, CM = val("comissao"), PI = val("perdaInformada"), MIN = val("minutos");
+  const perda = PI > 0 ? PI : L * P * C * CM, ganho = perda * RECUPERA, horas = (L * MIN / 60) * AUTOMATIZA;
+
+  const implTxt = (x) => !x.cheio ? `<div class="price">Sem custo</div><div class="sub">de implantação: aproveita a estrutura das fases anteriores</div>`
+    : `<div class="price">${brl(x.cheio)}</div><div class="sub">em até ${PRECOS.parcelas}x de ${brl(arred(x.cheio / PRECOS.parcelas))} (entrada + 2)</div>` +
+      (orc.avista ? `<div class="sub strong">Condição à vista: ${brl(x.vista)}</div>` : "");
+
+  const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>Proposta comercial · Imobiliária Dom Barreto · ORBI IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--green:#64BE71;--blue:#5473B8;--black:#07090B;--white:#F5F7F8;--muted:#9AA4AE;--line:rgba(255,255,255,.10);--card:rgba(255,255,255,.045)}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+@page{size:A4 landscape;margin:0}
+html,body{margin:0;background:#1a1d21;font-family:Inter,system-ui,sans-serif;color:var(--white)}
+.page{width:297mm;height:210mm;margin:0 auto 18px;background:var(--black);position:relative;overflow:hidden;padding:15mm 17mm 13mm;display:flex;flex-direction:column;page-break-after:always;break-after:page}
+.page:last-child{page-break-after:auto;break-after:auto}
+.page:after{content:"";position:absolute;width:150mm;height:150mm;right:-70mm;top:-60mm;background:radial-gradient(circle,rgba(84,115,184,.18),transparent 68%);pointer-events:none}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:9pt;color:#7F8992;position:relative;z-index:2}
+.top img{height:8mm}
+.kicker{display:inline-flex;align-items:center;gap:9px;text-transform:uppercase;letter-spacing:.16em;font-size:8pt;font-weight:800;color:var(--green);margin:9mm 0 4mm}
+.kicker:before{content:"";width:22px;height:2px;background:var(--green)}
+h1{font-size:40pt;line-height:1;letter-spacing:-.045em;margin:0 0 7mm;max-width:210mm}
+h2{font-size:24pt;line-height:1.08;letter-spacing:-.035em;margin:0 0 6mm;max-width:240mm}
+.lead{font-size:12.5pt;line-height:1.5;color:#D2D7DC;max-width:215mm;margin:0}
+.accent{color:var(--green)}
+.body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column}
+.foot{position:relative;z-index:2;display:flex;justify-content:space-between;font-size:7.5pt;color:#56616B;margin-top:auto;padding-top:5mm}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6mm}
+.card.primary{border-color:rgba(100,190,113,.46)}
+.fase-n{font-size:8pt;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.card h3{font-size:14pt;margin:2mm 0 4mm;letter-spacing:-.02em}
+.res{list-style:none;margin:0;padding:0}
+.res li{padding:2.2mm 0;border-top:1px solid var(--line);font-size:9.5pt;color:#C9D0D6;line-height:1.35}
+.res li b{display:block;color:#F2F5F6;font-weight:700;margin-bottom:.6mm}
+.label{color:#AEB7BF;font-size:7.5pt;text-transform:uppercase;letter-spacing:.14em;font-weight:800;margin:0 0 2mm}
+.price{font-size:24pt;font-weight:900;letter-spacing:-.05em;line-height:1}
+.price small{font-size:10pt;font-weight:600;color:#AAB3BB;letter-spacing:0}
+.sub{font-size:8.5pt;color:#8F9AA4;margin-top:1.6mm;line-height:1.4}
+.sub.strong{color:var(--green);font-weight:700}
+.blk{border-top:1px solid var(--line);padding-top:3.5mm;margin-top:3.5mm}
+.inc{margin:2.5mm 0 0;padding-left:4mm;font-size:8.3pt;color:#AEB7BF;line-height:1.5}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;margin-top:5mm}
+.sum .card{padding:5mm 6mm}
+.sum .price{font-size:20pt}
+.conds{display:grid;grid-template-columns:1.3fr 1fr;gap:6mm;margin-top:5mm}
+.conds ul{margin:0;padding-left:4mm;font-size:8.6pt;color:#C9D0D6;line-height:1.6}
+.meta{font-size:8.2pt;color:rgba(245,247,248,.82);line-height:1.55;background:rgba(255,255,255,.045);border:1px solid rgba(100,190,113,.22);border-radius:12px;padding:4.5mm 5mm}
+.meta .t{display:block;color:var(--green);font-weight:900;text-transform:uppercase;letter-spacing:.1em;font-size:8pt;margin-bottom:1.5mm}
+.meta .d{display:block;margin-top:2mm;color:rgba(245,247,248,.55);font-size:7.5pt}
+.est{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;margin-top:4mm}
+.est .price{color:var(--green)}
+.selo{display:inline-block;font-size:7pt;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#E8A271;border:1px solid rgba(232,162,113,.4);border-radius:5px;padding:1mm 2.5mm;margin-left:3mm;vertical-align:middle}
+.contato{font-size:8.6pt;color:rgba(245,247,248,.6);line-height:1.75}
+.contato strong{color:#F2F5F6}
+.passos{counter-reset:p;list-style:none;margin:0;padding:0}
+.passos li{counter-increment:p;display:flex;gap:4mm;align-items:flex-start;margin:0 0 4.5mm;font-size:10.5pt;color:#D2D7DC;line-height:1.4}
+.passos li:before{content:counter(p);width:9mm;height:9mm;flex:0 0 9mm;border-radius:50%;display:grid;place-items:center;background:rgba(100,190,113,.13);border:1px solid rgba(100,190,113,.35);color:var(--green);font-weight:900;font-size:10pt}
+.barra{position:fixed;top:0;left:0;right:0;background:#0d1013;border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:10px;justify-content:flex-end;z-index:9}
+.barra button{background:var(--green);color:#07090B;border:0;border-radius:8px;padding:9px 16px;font-weight:800;cursor:pointer;font-family:inherit}
+.spacer{height:56px}
+.compact h2{font-size:20pt;margin-bottom:4mm}.compact .kicker{margin:6mm 0 3mm}.compact .card{padding:4.5mm 5mm}.compact .price{font-size:19pt}.compact .inc{font-size:7.6pt;line-height:1.38;margin-top:1.8mm}.compact .blk{margin-top:2.6mm;padding-top:2.6mm}.compact .sub{margin-top:1mm}
+@media print{.barra,.spacer{display:none}html,body{background:var(--black)}.page{margin:0}}
+</style></head><body>
+<div class="barra"><button onclick="window.print()">Salvar PDF</button></div><div class="spacer"></div>
+
+<section class="page">
+  <div class="top"><img src="${base}/logo-orbi-white.png" alt="ORBI IA"><span>${dataTxt}</span></div>
+  <div class="body" style="justify-content:center">
+    <div class="kicker">Proposta comercial · Imobiliária Dom Barreto</div>
+    <h1>Nenhum lead esperando: do primeiro contato à visita agendada.</h1>
+    <p class="lead">Implantação do agente ORBI em três fases, conforme o desenho apresentado em reunião. Cada fase entrega algo que já funciona e tem uma medida combinada antes de começar.</p>
+  </div>
+  <div class="foot"><span>ORBI IA · J MARCELIO LIMA LTDA · CNPJ 68.308.327/0001-69</span><span>Documento confidencial</span></div>
+</section>
+
+<section class="page">
+  <div class="top"><img src="${base}/logo-orbi-white.png" alt="ORBI IA"><span>Imobiliária Dom Barreto</span></div>
+  <div class="body">
+    <div class="kicker">01 · O que cada fase resolve</div>
+    <h2>Três fases, um caminho completo do anúncio ao contrato.</h2>
+    <div class="grid3">${fases.map((x) => `<div class="card ${x.n === 1 ? "primary" : ""}"><div class="fase-n">Fase ${x.n}</div><h3>${esc(x.nome)}</h3>
+      <ul class="res">${x.resolve.map((r) => `<li><b>${esc(r.t)}</b>${esc(r.c)}</li>`).join("")}</ul></div>`).join("")}</div>
+  </div>
+  <div class="foot"><span>ORBI IA · Proposta comercial</span><span>02</span></div>
+</section>
+
+<section class="page compact">
+  <div class="top"><img src="${base}/logo-orbi-white.png" alt="ORBI IA"><span>Imobiliária Dom Barreto</span></div>
+  <div class="body">
+    <div class="kicker">02 · Investimento por fase</div>
+    <h2>Implantação paga uma vez. A mensalidade cresce junto com o que o agente faz.</h2>
+    <div class="grid3">${fases.map((x) => `<div class="card ${x.n === 1 ? "primary" : ""}"><div class="fase-n">Fase ${x.n} · ${esc(x.nome)}</div>
+      <div class="blk" style="border:0;margin-top:2mm;padding-top:0"><p class="label">Implantação</p>${implTxt(x)}
+        <ul class="inc">${x.impl.map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div>
+      <div class="blk"><p class="label">Mensalidade</p><div class="price">${brl(x.mensal)}<small> /mês</small></div>
+        <div class="sub">${x.n === 1 ? "a partir da entrada em operação" : `passa de ${brl(x.ant)} para ${brl(x.mensal)}`}</div>
+        <ul class="inc">${x.mens.map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div></div>`).join("")}</div>
+  </div>
+  <div class="foot"><span>ORBI IA · Proposta comercial</span><span>03</span></div>
+</section>
+
+<section class="page">
+  <div class="top"><img src="${base}/logo-orbi-white.png" alt="ORBI IA"><span>Imobiliária Dom Barreto</span></div>
+  <div class="body">
+    <div class="kicker">03 · Resumo e condições</div>
+    <h2>Uma estrutura de atendimento com custo claro.</h2>
+    <div class="sum">
+      <div class="card primary"><p class="label">Implantação completa</p><div class="price">${brl(arred(implTotal))}</div><div class="sub">${orc.avista ? "fases 1, 2 e 3, na condição à vista" : "fases 1, 2 e 3, cada uma em até 3x"}</div></div>
+      <div class="card"><p class="label">Mensalidade com tudo em operação</p><div class="price">${brl(mensalAnt)}</div><div class="sub">a partir da Fase 3 · Fase 1 a partir de ${brl(fases[0].mensal)}</div></div>
+      <div class="card"><p class="label">Renovação anual</p><div class="price">${brl(anual)}</div><div class="sub">cobrada uma vez a cada 12 meses</div></div>
+    </div>
+    <div class="conds">
+      <div class="card"><p class="label">Condições</p><ul>
+        <li>Implantação de cada fase em até 3 vezes: entrada na contratação e mais 2 parcelas mensais.${orc.avista ? " Condição à vista conforme indicado em cada fase." : ""}</li>
+        <li>A mensalidade de cada fase começa quando ela entra em operação.</li>
+        <li>Renovação anual: revisão completa do agente, atualização dos modelos de inteligência artificial e da infraestrutura.</li>
+        <li>As fases são contratadas em sequência; a Fase 1 pode ser contratada isoladamente.</li>
+        <li>Proposta válida até ${validade}.</li></ul></div>
+      <div class="meta"><span class="t">Custos externos · Meta / WhatsApp oficial</span>
+        <strong>Pagos diretamente à Meta</strong>, não fazem parte dos valores da ORBI.<br>
+        Mensagem de marketing (follow-up, reativação) ≈ R$ 0,35 · mensagem de atendimento ≈ R$ 0,04, com 1.000 gratuitas por mês.<br>
+        Estimativa: ≈ ${brl(PRECOS.meta.porLead)} por lead atendido · reativação dos cerca de 500 leads parados ≈ ${brl(PRECOS.meta.reativacao)}, uma vez.
+        <span class="d">Estimativas sujeitas à tabela vigente da Meta, categoria, volume e câmbio. A ORBI IA não controla essas tarifas.</span></div>
+    </div>
+  </div>
+  <div class="foot"><span>ORBI IA · Proposta comercial</span><span>04</span></div>
+</section>
+${temEst ? `
+<section class="page">
+  <div class="top"><img src="${base}/logo-orbi-white.png" alt="ORBI IA"><span>Imobiliária Dom Barreto</span></div>
+  <div class="body">
+    <div class="kicker">04 · Estimativa de impacto</div>
+    <h2>Com os números informados pela Dom Barreto <span class="selo">Estimativa</span></h2>
+    <div class="est">
+      <div class="card primary"><p class="label">Deixam de ser perdidos por mês</p><div class="price">${brl0(ganho)}</div><div class="sub">${brl0(ganho * 12)} em 12 meses</div></div>
+      <div class="card"><p class="label">Horas da equipe liberadas por mês</p><div class="price">${num(horas)} h</div><div class="sub">para visita, negociação e relacionamento</div></div>
+      <div class="card"><p class="label">Primeira resposta</p><div class="price">Segundos</div><div class="sub">hoje: de 1 a 30 minutos, ou nenhuma</div></div>
+    </div>
+    <p class="lead" style="font-size:10pt;margin-top:6mm;color:#AEB7BF">Base: ${PI > 0 ? `perda de ${brl0(PI)} por mês informada pela equipe` : `${num(L)} leads por mês, ${num(P * 100)}% sem resposta ou sem follow-up, ${num(C * 100, 1)} negócios a cada 100 leads e comissão média de ${brl0(CM)}`}. Premissas: o agente recupera metade do que hoje se perde e assume 70% do tempo de triagem e follow-up. Estimativa, não garantia de resultado; será medida a partir da Fase 1.</p>
+  </div>
+  <div class="foot"><span>ORBI IA · Proposta comercial</span><span>05</span></div>
+</section>` : ""}
+
+<section class="page">
+  <div class="top"><img src="${base}/logo-orbi-white.png" alt="ORBI IA"><span>Imobiliária Dom Barreto</span></div>
+  <div class="body">
+    <div class="kicker">Próximos passos</div>
+    <h2>Para começar a Fase 1.</h2>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:10mm;align-items:end">
+      <ol class="passos">
+        <li>Aprovação da proposta e pagamento da entrada.</li>
+        <li>Reunião de mapeamento com a equipe: critérios de qualificação, regras de repasse e cadência de follow-up.</li>
+        <li>Configuração do WhatsApp oficial e da entrada de leads de Google, Meta e site.</li>
+        <li>Testes com a equipe e entrada em operação, com acompanhamento intensivo nas primeiras semanas.</li>
+      </ol>
+      <div class="contato"><strong>agenteorbiia.com · @agenteorbi.ia</strong><br>Jonei Lima — CEO ORBI IA<br>Publicitário | Bacharel em Direito | Pós-Graduado em IA<br>(66) 98132-0667 · (19) 98141-0667 · (19) 99750-5888<br>J MARCELIO LIMA LTDA — CNPJ 68.308.327/0001-69<br>GO · MT · PB · SP<br>Protegido por direitos autorais e conforme a LGPD</div>
+    </div>
+  </div>
+  <div class="foot"><span>ORBI IA · Proposta comercial</span><span>Documento confidencial</span></div>
+</section>
+<script>document.fonts.ready.then(()=>setTimeout(()=>window.print(),400));<\/script>
+</body></html>`;
+  const w = window.open("", "_blank");
+  if (!w) { status("O navegador bloqueou a nova aba. Permita pop-ups para este site.", true); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+}
+$("gerarProposta").onclick = gerarProposta;
+document.addEventListener("keydown", (e) => {
+  if (e.target.closest && e.target.closest("input, textarea")) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === "p" || e.key === "P") gerarProposta();
+});
+
 montarCampos();
 renderOrc();
 </script>
