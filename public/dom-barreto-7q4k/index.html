@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Desenho da solução | Imobiliária Dom Barreto | ORBI IA</title>
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #16212C;
+    --ink-2: #3A4855;
+    --steel: #677685;
+    --rule: #DCE1E5;
+    --rule-strong: #C3CBD2;
+    --paper: #F4F6F5;
+    --sheet: #FFFFFF;
+    --hoje: #5473B8;
+    --hoje-soft: #E8EDF7;
+    --orbi: #3F9A4E;
+    --orbi-bright: #64BE71;
+    --orbi-soft: #E9F6EB;
+    --warn: #9A4A1F;
+    --warn-soft: #F7EBE3;
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+  button, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--hoje); outline-offset: 2px; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+  header.top { background: var(--ink); color: #fff; }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 18px; padding-bottom: 18px; }
+  header.top img { height: 30px; display: block; }
+  header.top .meta { font-size: 14px; color: #B9C3CC; text-align: right; }
+
+  .hero { background: var(--ink); color: #fff; padding: 40px 0 56px; }
+  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--orbi-bright); font-weight: 600; margin: 0 0 14px; }
+  .hero h1 { font: 600 44px/1.12 var(--serif); margin: 0 0 18px; max-width: 820px; letter-spacing: -.01em; }
+  .hero p { font-size: 19px; color: #D3DAE0; max-width: 760px; margin: 0; }
+
+  main section { padding: 56px 0; border-bottom: 1px solid var(--rule); }
+  main section:last-child { border-bottom: 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 26px; flex-wrap: wrap; }
+  .sec-head .n { font: 600 15px var(--sans); color: var(--steel); min-width: 28px; }
+  .sec-head h2 { font: 600 30px/1.2 var(--serif); margin: 0; }
+  .sec-head .sub { flex-basis: 100%; margin: 6px 0 0 42px; color: var(--ink-2); max-width: 760px; }
+  .tag-new { display: none; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--orbi); background: var(--orbi-soft); border-radius: 999px; padding: 3px 10px; }
+  section.changed .tag-new { display: inline-block; }
+  section.changed { animation: pulse 1.6s ease-out 1; }
+  @keyframes pulse { from { background: var(--orbi-soft); } to { background: transparent; } }
+
+  .mudou { display: none; background: var(--orbi-soft); border-bottom: 1px solid #CFE8D3; }
+  .mudou.on { display: block; }
+  .mudou .wrap { padding-top: 18px; padding-bottom: 18px; }
+  .mudou strong { display: block; font-size: 14px; color: var(--orbi); margin-bottom: 6px; letter-spacing: .02em; }
+  .mudou ul { margin: 0; padding-left: 20px; }
+
+  .nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .num { background: var(--sheet); padding: 22px 20px; }
+  .num .v { font: 600 32px/1.1 var(--serif); }
+  .num .r { margin-top: 6px; color: var(--ink-2); font-size: 15px; }
+  .num .b { margin-top: 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--steel); }
+  .num .b.confirmar { color: var(--warn); }
+
+  .probs { list-style: none; margin: 0; padding: 0; counter-reset: p; }
+  .probs li { counter-increment: p; display: grid; grid-template-columns: 42px 1fr 1fr; gap: 20px; padding: 18px 0; border-top: 1px solid var(--rule); }
+  .probs li::before { content: counter(p, decimal-leading-zero); font: 600 15px var(--sans); color: var(--steel); padding-top: 2px; }
+  .probs h3 { margin: 0 0 4px; font-size: 18px; }
+  .probs .hoje { color: var(--ink-2); margin: 0; }
+  .probs .custo { color: var(--warn); margin: 0; font-size: 15px; border-left: 2px solid var(--warn-soft); padding-left: 14px; }
+
+  .agente { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 22px; }
+  .card h3 { margin: 0 0 8px; font-size: 18px; }
+  .card p { margin: 0; color: var(--ink-2); font-size: 16px; }
+  .agente .card { border-top: 3px solid var(--orbi-bright); }
+
+  .fluxos { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .fluxo h3 { margin: 0 0 14px; font-size: 15px; text-transform: uppercase; letter-spacing: .06em; }
+  .fluxo.hoje h3 { color: var(--hoje); }
+  .fluxo.orbi h3 { color: var(--orbi); }
+  .fluxo ol { list-style: none; margin: 0; padding: 0; }
+  .fluxo li { position: relative; padding: 0 0 16px 26px; }
+  .fluxo li::before { content: ""; position: absolute; left: 5px; top: 8px; width: 9px; height: 9px; border-radius: 50%; background: var(--hoje); }
+  .fluxo.orbi li::before { background: var(--orbi-bright); }
+  .fluxo li::after { content: ""; position: absolute; left: 9px; top: 20px; bottom: 0; width: 1px; background: var(--rule-strong); }
+  .fluxo li:last-child::after { display: none; }
+  .fluxo .raia { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--steel); }
+  .fluxo .acao { font-weight: 500; }
+  .fluxo .nota { font-size: 14px; margin-top: 2px; }
+  .fluxo.hoje .nota { color: var(--warn); }
+  .fluxo.orbi .nota { color: var(--orbi); }
+
+  .acoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 36px; }
+  .acoes div { padding: 16px 0; border-top: 1px solid var(--rule); }
+  .acoes h3 { margin: 0 0 4px; font-size: 17px; }
+  .acoes p { margin: 0; color: var(--ink-2); font-size: 16px; }
+
+  .fases { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .fase { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 22px; display: flex; flex-direction: column; }
+  .fase .prazo { font-size: 13px; color: var(--steel); text-transform: uppercase; letter-spacing: .06em; }
+  .fase h3 { margin: 6px 0 6px; font: 600 21px/1.25 var(--serif); }
+  .fase .obj { margin: 0 0 12px; color: var(--ink-2); }
+  .fase ul { margin: 0 0 14px; padding-left: 18px; }
+  .fase li { margin-bottom: 4px; font-size: 16px; }
+  .fase .met { margin-top: auto; font-size: 14px; border-top: 1px solid var(--rule); padding-top: 12px; color: var(--ink-2); }
+  .fase .met b { color: var(--ink); font-weight: 600; }
+
+  table.ind { width: 100%; border-collapse: collapse; background: var(--sheet); border: 1px solid var(--rule); }
+  table.ind th, table.ind td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  table.ind th { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--steel); font-weight: 600; }
+  table.ind td.h { color: var(--hoje); }
+  table.ind td.o { color: var(--orbi); font-weight: 500; }
+
+  .atencao { list-style: none; margin: 0; padding: 0; }
+  .atencao li { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 16px 0; border-top: 1px solid var(--rule); }
+  .atencao b { font-weight: 600; }
+  .atencao span { color: var(--ink-2); }
+
+  .pend { list-style: none; margin: 0; padding: 0; }
+  .pend li { padding: 14px 0 14px 30px; border-top: 1px solid var(--rule); position: relative; }
+  .pend li::before { content: "?"; position: absolute; left: 0; top: 14px; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--warn); color: var(--warn); font: 600 13px/17px var(--sans); text-align: center; }
+  .pend .pq { font-weight: 500; }
+  .pend .pp { color: var(--steel); font-size: 15px; }
+  .resp { list-style: none; margin: 18px 0 0; padding: 0; }
+  .resp li { padding: 14px 0 14px 30px; border-top: 1px solid var(--rule); position: relative; }
+  .resp li::before { content: "✓"; position: absolute; left: 2px; top: 13px; color: var(--orbi); font-weight: 600; }
+  .resp .pq { color: var(--steel); font-size: 15px; }
+  .vazio { color: var(--steel); font-style: italic; }
+
+  footer { background: var(--ink); color: #B9C3CC; font-size: 14px; padding: 28px 0; margin-top: 0; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+
+  /* Modo reunião */
+  .fab { position: fixed; right: 20px; bottom: 20px; z-index: 30; background: var(--ink); color: #fff; border: 0; border-radius: 999px; padding: 12px 20px; font-weight: 600; font-size: 15px; cursor: pointer; box-shadow: 0 6px 20px rgba(22,33,44,.25); }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(480px, 100%); z-index: 40; background: var(--sheet); border-left: 1px solid var(--rule); box-shadow: -10px 0 30px rgba(22,33,44,.12); transform: translateX(105%); transition: transform .25s ease; display: flex; flex-direction: column; }
+  .drawer.on { transform: none; }
+  .drawer header { padding: 18px 22px; border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  .drawer header b { font-size: 17px; }
+  .drawer .x { background: none; border: 0; font-size: 26px; line-height: 1; cursor: pointer; color: var(--steel); }
+  .drawer .body { padding: 18px 22px; overflow-y: auto; flex: 1; }
+  .drawer label { display: block; font-weight: 500; font-size: 15px; margin: 16px 0 6px; }
+  .drawer label:first-child { margin-top: 0; }
+  .drawer textarea { width: 100%; min-height: 64px; resize: vertical; border: 1px solid var(--rule-strong); border-radius: 6px; padding: 10px 12px; font-size: 15px; background: #FBFCFC; }
+  .drawer .foot { padding: 16px 22px; border-top: 1px solid var(--rule); display: grid; gap: 10px; }
+  .btn { border: 0; border-radius: 6px; padding: 12px 16px; font-weight: 600; cursor: pointer; }
+  .btn.pri { background: var(--orbi); color: #fff; }
+  .btn.pri[disabled] { opacity: .6; cursor: progress; }
+  .btn.sec { background: var(--paper); color: var(--ink); border: 1px solid var(--rule-strong); }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .status { font-size: 14px; color: var(--ink-2); min-height: 20px; }
+  .status.erro { color: var(--warn); }
+
+  @media (max-width: 820px) {
+    .wrap { padding: 0 16px; }
+    .hero h1 { font-size: 32px; }
+    .probs li { grid-template-columns: 34px 1fr; }
+    .probs .custo { grid-column: 2; }
+    .fluxos, .atencao li { grid-template-columns: 1fr; }
+    .sec-head .sub { margin-left: 0; }
+    table.ind th, table.ind td { padding: 10px; font-size: 15px; }
+  }
+  @media print {
+    .fab, .drawer, .mudou { display: none !important; }
+    body { background: #fff; font-size: 13px; }
+    main section { padding: 28px 0; break-inside: avoid; }
+    .hero { padding: 24px 0 30px; }
+    .hero h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <img src="/logo-orbi-white.png" alt="ORBI IA">
+    <div class="meta">Imobiliária Dom Barreto<br><span id="dataDoc"></span></div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Desenho da solução · Agente ORBI</p>
+    <h1>Nenhum lead esperando: do primeiro contato à visita agendada.</h1>
+    <p id="sintese"></p>
+  </div>
+</div>
+
+<div class="mudou" id="mudou"><div class="wrap"><strong>Atualizado com as respostas da reunião</strong><ul id="mudouLista"></ul></div></div>
+
+<main>
+  <section data-sec="numeros"><div class="wrap">
+    <div class="sec-head"><span class="n">01</span><h2>A operação hoje, em números</h2><span class="tag-new">Atualizado</span></div>
+    <div class="nums" id="numeros"></div>
+  </div></section>
+
+  <section data-sec="problemas"><div class="wrap">
+    <div class="sec-head"><span class="n">02</span><h2>O que trava o atendimento</h2><span class="tag-new">Atualizado</span>
+      <p class="sub">O que ouvimos na reunião de 22/10, organizado pelo impacto em vendas e locações.</p></div>
+    <ol class="probs" id="problemas"></ol>
+  </div></section>
+
+  <section data-sec="agente"><div class="wrap">
+    <div class="sec-head"><span class="n">03</span><h2>O que o agente faz</h2><span class="tag-new">Atualizado</span>
+      <p class="sub">Um atendente digital no WhatsApp da Dom Barreto, que trabalha 24 horas e entrega à equipe só o que precisa de gente.</p></div>
+    <div class="agente" id="agente"></div>
+  </div></section>
+
+  <section data-sec="fluxo"><div class="wrap">
+    <div class="sec-head"><span class="n">04</span><h2>O caminho do cliente: hoje e com o agente</h2><span class="tag-new">Atualizado</span></div>
+    <div class="fluxos">
+      <div class="fluxo hoje"><h3>Hoje</h3><ol id="fluxo_atual"></ol></div>
+      <div class="fluxo orbi"><h3>Com o agente ORBI</h3><ol id="fluxo_proposto"></ol></div>
+    </div>
+  </div></section>
+
+  <section data-sec="acoes"><div class="wrap">
+    <div class="sec-head"><span class="n">05</span><h2>O que muda na estrutura</h2><span class="tag-new">Atualizado</span>
+      <p class="sub">O agente funciona melhor com regras claras. Estas ações organizam o processo junto com a implantação.</p></div>
+    <div class="acoes" id="acoes"></div>
+  </div></section>
+
+  <section data-sec="fases"><div class="wrap">
+    <div class="sec-head"><span class="n">06</span><h2>Implantação por fases</h2><span class="tag-new">Atualizado</span>
+      <p class="sub">Cada fase entrega algo que já funciona e tem uma medida combinada antes de começar.</p></div>
+    <div class="fases" id="fases"></div>
+  </div></section>
+
+  <section data-sec="indicadores"><div class="wrap">
+    <div class="sec-head"><span class="n">07</span><h2>Como vamos medir</h2><span class="tag-new">Atualizado</span></div>
+    <table class="ind"><thead><tr><th>Indicador</th><th>Hoje</th><th>Com o agente</th></tr></thead><tbody id="indicadores"></tbody></table>
+  </div></section>
+
+  <section data-sec="atencao"><div class="wrap">
+    <div class="sec-head"><span class="n">08</span><h2>Pontos de atenção</h2><span class="tag-new">Atualizado</span></div>
+    <ul class="atencao" id="atencao"></ul>
+  </div></section>
+
+  <section data-sec="perguntas"><div class="wrap">
+    <div class="sec-head"><span class="n">09</span><h2>O que ainda vamos confirmar</h2><span class="tag-new">Atualizado</span>
+      <p class="sub">As respostas ajustam o desenho acima: prioridade, prazos e o que entra primeiro.</p></div>
+    <ul class="pend" id="perguntas"></ul>
+    <ul class="resp" id="respostas"></ul>
+  </div></section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>ORBI IA · J MARCELIO LIMA LTDA · CNPJ 68.308.327/0001-69</span>
+    <span>Documento confidencial, preparado para a Imobiliária Dom Barreto.</span>
+  </div>
+</footer>
+
+<button class="fab" id="fab" type="button">Modo reunião</button>
+
+<aside class="drawer" id="drawer" aria-label="Modo reunião">
+  <header><b>Respostas da reunião</b><button class="x" id="fechar" type="button" aria-label="Fechar">×</button></header>
+  <div class="body" id="form"></div>
+  <div class="foot">
+    <div class="status" id="status"></div>
+    <button class="btn pri" id="atualizar" type="button">Atualizar o desenho</button>
+    <div class="row2">
+      <button class="btn sec" id="desfazer" type="button">Desfazer última</button>
+      <button class="btn sec" id="imprimir" type="button">Salvar PDF</button>
+    </div>
+    <button class="btn sec" id="original" type="button">Voltar ao original</button>
+  </div>
+</aside>
+
+<script>
+const ORIGINAL = {
+  empresa: "Imobiliária Dom Barreto",
+  sintese: "A Dom Barreto já investe para atrair clientes em Google e Meta. O ponto de perda está depois do clique: resposta que depende de quem está livre, qualificação que não acontece e follow-up que ninguém consegue manter. O agente ORBI assume essa rotina e entrega ao corretor o cliente pronto para a visita.",
+  numeros: [
+    { valor: "≈ 1.200", rotulo: "leads parados sem resposta", base: "informado" },
+    { valor: "1 a 30 min", rotulo: "até o primeiro contato, ou nenhum, conforme a disponibilidade", base: "informado" },
+    { valor: "≈ 80", rotulo: "visitas em setembro", base: "estimado" },
+    { valor: "12", rotulo: "pessoas no atendimento: 8 vendas, 3 locação, 1 documentação", base: "informado" },
+    { valor: "30 a 40", rotulo: "leads novos (por dia ou por mês?)", base: "a confirmar" }
+  ],
+  problemas: [
+    { titulo: "Leads que nunca recebem resposta", hoje: "Cerca de 1.200 contatos estão parados, sem retorno.", custo: "Cada lead parado é anúncio pago que não virou conversa." },
+    { titulo: "Resposta depende de quem está livre", hoje: "O primeiro contato leva de 1 a 30 minutos, ou não acontece.", custo: "Quem procura imóvel fala com várias imobiliárias ao mesmo tempo. Responde primeiro quem leva." },
+    { titulo: "Fora do horário, a triagem não resolve", hoje: "O bot e a triagem atuais foram avaliados pela própria diretoria como pouco eficientes.", custo: "O lead da noite e do fim de semana esfria até segunda-feira." },
+    { titulo: "Ninguém qualifica antes do corretor", hoje: "Renda, FGTS, entrada e prazo não são levantados. O filtro é só o valor do anúncio.", custo: "O corretor gasta tempo com quem ainda não pode comprar." },
+    { titulo: "Follow-up previsto, mas não executado", hoje: "A regra existe: 24 horas, até 3 tentativas na locação e 6 na venda. Depende de alguém lembrar.", custo: "A maior parte das vendas acontece depois do segundo contato." },
+    { titulo: "Corretor sem o histórico do cliente", hoje: "Para saber o que o cliente já conversou, é preciso pesquisar no sistema.", custo: "Retrabalho e cliente repetindo a mesma informação." },
+    { titulo: "Contrato montado à mão, em etapas", hoje: "A documentação aprova, outra pessoa monta o contrato, sem acompanhamento do andamento.", custo: "Fechamento depende de pessoas específicas e ninguém vê o que está parado." }
+  ],
+  agente: [
+    { titulo: "Responde todo lead em segundos", como: "No WhatsApp, em texto e áudio, 24 horas, inclusive à noite e no fim de semana. Leads do Google, Meta e do site entram direto.", item: "1, 12" },
+    { titulo: "Qualifica antes de passar adiante", como: "Pergunta finalidade, região, faixa de valor, renda, FGTS, entrada e prazo, com os critérios definidos pela Dom Barreto.", item: "2" },
+    { titulo: "Sugere imóveis e agenda a visita", como: "Apresenta opções compatíveis da carteira e marca a visita com confirmação e lembrete para cliente e corretor.", item: "3" },
+    { titulo: "Entrega o cliente pronto ao corretor", como: "No repasse, o corretor recebe um resumo da conversa: o que o cliente busca, quanto pode pagar e o que já foi dito.", item: "6" },
+    { titulo: "Faz o follow-up que hoje se perde", como: "Segue a cadência da Dom Barreto (24 horas, 3 tentativas na locação, até 6 na venda) e para quando o cliente responde.", item: "4" },
+    { titulo: "Reativa os leads parados", como: "Retoma os cerca de 1.200 contatos em lotes, pela API oficial do WhatsApp, com mensagens aprovadas.", item: "5" },
+    { titulo: "Avisa a equipe na hora certa", como: "Alerta quando aparece um lead quente, uma visita sem confirmação ou um documento parado.", item: "7" },
+    { titulo: "Atende a locação no dia a dia", como: "Segunda via, pedido de manutenção e dúvida do proprietário, encaminhados ao responsável com o caso já descrito.", item: "1, 8" }
+  ],
+  fluxo_atual: [
+    { raia: "Cliente", acao: "Clica no anúncio do Google ou da Meta", nota: "" },
+    { raia: "Sistema", acao: "Triagem automática recebe o contato", nota: "Falhas na triagem" },
+    { raia: "Equipe", acao: "Atendente livre responde", nota: "Espera de 1 a 30 min, ou nenhuma" },
+    { raia: "Equipe", acao: "Tenta entender o que o cliente quer", nota: "Sem dados de renda ou entrada" },
+    { raia: "Equipe", acao: "Agenda a visita por mensagem", nota: "" },
+    { raia: "Corretor", acao: "Atende sem o histórico da conversa", nota: "Precisa pesquisar no sistema" },
+    { raia: "Equipe", acao: "Follow-up quando dá tempo", nota: "Regra de 24h não cumprida" }
+  ],
+  fluxo_proposto: [
+    { raia: "Cliente", acao: "Clica no anúncio do Google ou da Meta", nota: "" },
+    { raia: "Agente ORBI", acao: "Responde em segundos, 24 horas", nota: "Nenhum lead esperando" },
+    { raia: "Agente ORBI", acao: "Qualifica renda, FGTS, entrada e prazo", nota: "Corretor recebe quem pode comprar" },
+    { raia: "Agente ORBI", acao: "Sugere imóveis e agenda a visita", nota: "Confirmação e lembrete automáticos" },
+    { raia: "Corretor", acao: "Recebe o resumo e faz a visita", nota: "Sem retrabalho" },
+    { raia: "Agente ORBI", acao: "Faz o follow-up de quem não respondeu", nota: "Cadência cumprida sempre" },
+    { raia: "Gestão", acao: "Acompanha tudo em um painel", nota: "Tempo de resposta e visitas à vista" }
+  ],
+  acoes: [
+    { titulo: "Regra de repasse por escrito", descricao: "Quem recebe cada tipo de lead, em quanto tempo e o que acontece se não atender." },
+    { titulo: "Critérios de qualificação únicos", descricao: "Definidos com a Luciana e os corretores: o que torna um lead pronto para visita." },
+    { titulo: "Cadência de follow-up padrão", descricao: "Uma para venda e outra para locação, executada pelo agente sem exceção." },
+    { titulo: "Painel semanal de atendimento", descricao: "Leads recebidos, tempo de resposta, follow-up executado e visitas agendadas." },
+    { titulo: "Checklist de documentos", descricao: "O agente cobra o que falta e avisa quando a aprovação ou o contrato ficam parados." },
+    { titulo: "Minuta a partir do modelo da casa", descricao: "O contrato sai pré-preenchido do modelo da Dom Barreto, sempre revisado por uma pessoa antes de assinar." }
+  ],
+  fases: [
+    { nome: "Fase 1 · Atendimento e qualificação", prazo: "3 a 4 semanas", objetivo: "Nenhum lead novo sem resposta, de dia ou de noite.", entregas: ["Agente no WhatsApp, 24 horas", "Qualificação com os critérios da casa", "Repasse ao corretor com resumo", "Follow-up na cadência definida"], metrica: "Tempo até a primeira resposta e % de leads respondidos" },
+    { nome: "Fase 2 · Visitas e reativação", prazo: "3 a 4 semanas", objetivo: "Transformar conversa em visita e recuperar a base parada.", entregas: ["Agendamento com confirmação e lembrete", "Reativação dos leads parados, em lotes", "Painel de indicadores"], metrica: "Visitas agendadas por mês e leads reativados que responderam" },
+    { nome: "Fase 3 · Documentação, contrato e locação", prazo: "4 semanas", objetivo: "Tirar o fechamento e a rotina da locação da dependência de pessoas.", entregas: ["Checklist e cobrança de documentos", "Minuta com revisão humana", "Atendimento de locação (2ª via, manutenção, proprietário)"], metrica: "Dias entre aprovação e contrato assinado" }
+  ],
+  indicadores: [
+    { nome: "Tempo até a primeira resposta", hoje: "1 a 30 min, ou nenhuma", orbi: "Segundos, 24 horas" },
+    { nome: "Atendimento fora do horário", hoje: "Bot com falhas", orbi: "Atendimento completo, com qualificação" },
+    { nome: "Follow-up executado", hoje: "Quando dá tempo", orbi: "100% na cadência definida" },
+    { nome: "Leads parados", hoje: "≈ 1.200", orbi: "Retomados em lotes, com resultado medido" },
+    { nome: "Histórico para o corretor", hoje: "Pesquisa no sistema", orbi: "Resumo entregue no repasse" }
+  ],
+  atencao: [
+    { ponto: "Integração com o sistema de triagem atual", como: "Se ele tiver integração ou exportação, o agente trabalha conectado. Se não, a fase 1 funciona em paralelo, sem travar o projeto." },
+    { ponto: "Reativação dos leads parados", como: "Só pela API oficial do WhatsApp, com mensagens aprovadas e envio em lotes, para não arriscar o número da empresa." },
+    { ponto: "O agente não substitui a equipe", como: "Ele garante a rotina e entrega o cliente pronto. Atendimento humano, visita e negociação continuam com os corretores." },
+    { ponto: "Crédito e financiamento", como: "O agente levanta os dados e encaminha. A aprovação continua sendo do banco e da equipe." }
+  ],
+  perguntas: [
+    { pergunta: "Quantos leads novos entram: 30 a 40 por dia ou por mês?", por_que: "Define o tamanho do atendimento e o ganho de cada fase." },
+    { pergunta: "Das cerca de 80 visitas de setembro, quantas viraram proposta e quantas viraram venda?", por_que: "É o ponto de partida para medir o resultado." },
+    { pergunta: "Do que conversamos, o que mais incomoda vocês hoje?", por_que: "Define o que entra primeiro." },
+    { pergunta: "Qual o nome exato do sistema de triagem e ele permite integração ou exportação dos leads?", por_que: "Define se o agente trabalha conectado ou em paralelo." },
+    { pergunta: "Onde estão os 1.200 leads parados e dá para exportar a lista?", por_que: "Condição para a reativação." },
+    { pergunta: "Qual número de WhatsApp atende hoje, e ele usa a API oficial?", por_que: "A reativação só pode ser feita pela API oficial." },
+    { pergunta: "A carteira de imóveis está em algum sistema ou site com exportação?", por_que: "Permite ao agente sugerir imóveis compatíveis." }
+  ],
+  respostas: []
+};
+
+const CHAVE = "orbi-dombarreto-desenho-v1";
+const SECOES = ["sintese", "numeros", "problemas", "agente", "fluxo_atual", "fluxo_proposto", "acoes", "fases", "indicadores", "atencao", "perguntas"];
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const arr = (x) => (Array.isArray(x) ? x : []);
+const txt = (o, ...ks) => { if (typeof o === "string") return o; for (const k of ks) if (o && o[k]) return o[k]; return ""; };
+
+let estado = { versoes: [clone(ORIGINAL)], mudou: [], alteradas: [] };
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function atual() { return estado.versoes[estado.versoes.length - 1]; }
+function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch (e) {} }
+function carregar() {
+  try {
+    const s = JSON.parse(localStorage.getItem(CHAVE) || "null");
+    if (s && Array.isArray(s.versoes) && s.versoes.length) estado = s;
+  } catch (e) {}
+}
+
+function montar(d) {
+  return {
+    sintese: esc(d.sintese),
+    numeros: arr(d.numeros).map((n) => {
+      const b = txt(n, "base") || "informado";
+      return `<div class="num"><div class="v">${esc(txt(n, "valor"))}</div><div class="r">${esc(txt(n, "rotulo"))}</div><div class="b ${b.includes("confirmar") ? "confirmar" : ""}">${esc(b)}</div></div>`;
+    }).join(""),
+    problemas: arr(d.problemas).map((p) => `<li><div><h3>${esc(txt(p, "titulo"))}</h3><p class="hoje">${esc(txt(p, "hoje", "como_e_hoje"))}</p></div><p class="custo">${esc(txt(p, "custo", "impacto"))}</p></li>`).join(""),
+    agente: arr(d.agente).map((a) => `<div class="card"><h3>${esc(txt(a, "titulo"))}</h3><p>${esc(txt(a, "como", "descricao"))}</p></div>`).join(""),
+    fluxo_atual: arr(d.fluxo_atual).map((f) => passo(f, "problema")).join(""),
+    fluxo_proposto: arr(d.fluxo_proposto).map((f) => passo(f, "ganho")).join(""),
+    acoes: arr(d.acoes).map((a) => `<div><h3>${esc(txt(a, "titulo"))}</h3><p>${esc(txt(a, "descricao", "como"))}</p></div>`).join(""),
+    fases: arr(d.fases).map((f) => `<div class="fase"><span class="prazo">${esc(txt(f, "prazo", "prazo_estimado"))}</span><h3>${esc(txt(f, "nome"))}</h3><p class="obj">${esc(txt(f, "objetivo"))}</p><ul>${arr(f.entregas).map((e) => `<li>${esc(txt(e, "titulo", "descricao"))}</li>`).join("")}</ul><div class="met"><b>Como medir:</b> ${esc(txt(f, "metrica"))}</div></div>`).join(""),
+    indicadores: arr(d.indicadores).map((i) => `<tr><td>${esc(txt(i, "nome"))}</td><td class="h">${esc(txt(i, "hoje"))}</td><td class="o">${esc(txt(i, "orbi", "com_agente"))}</td></tr>`).join(""),
+    atencao: arr(d.atencao).map((a) => `<li><b>${esc(txt(a, "ponto", "risco", "titulo"))}</b><span>${esc(txt(a, "como", "mitigacao", "descricao"))}</span></li>`).join(""),
+    perguntas: arr(d.perguntas).length
+      ? arr(d.perguntas).map((p) => `<li><div class="pq">${esc(txt(p, "pergunta"))}</div>${txt(p, "por_que") ? `<div class="pp">${esc(p.por_que)}</div>` : ""}</li>`).join("")
+      : `<li class="vazio" style="padding-left:0">Nenhuma pendência no momento.</li>`,
+    respostas: arr(d.respostas).map((r) => `<li><div class="pq">${esc(r.pergunta)}</div><div>${esc(r.resposta)}</div></li>`).join("")
+  };
+}
+function passo(f, chaveNota) {
+  const nota = txt(f, "nota", chaveNota);
+  return `<li><div class="raia">${esc(txt(f, "raia"))}</div><div class="acao">${esc(txt(f, "acao"))}</div>${nota ? `<div class="nota">${esc(nota)}</div>` : ""}</li>`;
+}
+
+function render() {
+  const html = montar(atual());
+  for (const k of Object.keys(html)) { const el = $(k); if (el) el.innerHTML = html[k]; }
+  const alt = new Set(estado.alteradas || []);
+  document.querySelectorAll("main section").forEach((s) => {
+    const sec = s.dataset.sec;
+    const hit = sec === "fluxo" ? (alt.has("fluxo_atual") || alt.has("fluxo_proposto")) : alt.has(sec);
+    s.classList.toggle("changed", hit);
+  });
+  $("mudouLista").innerHTML = arr(estado.mudou).map((m) => `<li>${esc(m)}</li>`).join("");
+  $("mudou").classList.toggle("on", arr(estado.mudou).length > 0);
+  $("desfazer").disabled = estado.versoes.length < 2;
+  montarForm();
+}
+
+function montarForm() {
+  const ps = arr(atual().perguntas);
+  const ant = {};
+  document.querySelectorAll("#form textarea[data-q]").forEach((t) => { if (t.value.trim()) ant[t.dataset.q] = t.value; });
+  const obs = $("obs") ? $("obs").value : "";
+  $("form").innerHTML = ps.map((p, i) => {
+    const q = txt(p, "pergunta");
+    return `<label for="q${i}">${esc(q)}</label><textarea id="q${i}" data-q="${esc(q)}" placeholder="Resposta do cliente">${esc(ant[q] || "")}</textarea>`;
+  }).join("") + `<label for="obs">Outras informações ditas na reunião</label><textarea id="obs" style="min-height:96px" placeholder="Ex.: querem começar pela locação; o pai prefere atendimento em áudio...">${esc(obs)}</textarea>`;
+}
+
+function status(msg, erro) { $("status").textContent = msg; $("status").classList.toggle("erro", !!erro); }
+
+async function atualizar() {
+  const respostas = [...document.querySelectorAll("#form textarea[data-q]")]
+    .map((t) => ({ pergunta: t.dataset.q, resposta: t.value.trim() })).filter((r) => r.resposta);
+  const observacoes = ($("obs")?.value || "").trim();
+  if (!respostas.length && !observacoes) { status("Escreva ao menos uma resposta.", true); return; }
+  const botao = $("atualizar");
+  botao.disabled = true;
+  const ini = Date.now();
+  const tick = setInterval(() => status(`Atualizando o desenho… ${Math.round((Date.now() - ini) / 1000)} s`), 1000);
+  status("Atualizando o desenho…");
+  try {
+    const res = await fetch("/api/projeto", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ desenho: atual(), respostas, observacoes })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.secoes) throw new Error(data.error || "Não foi possível atualizar.");
+    const novo = clone(atual());
+    const alteradas = [];
+    for (const k of SECOES) if (data.secoes[k] !== undefined) {
+      if (k === "sintese" ? typeof data.secoes[k] !== "string" : !Array.isArray(data.secoes[k])) continue;
+      novo[k] = data.secoes[k]; alteradas.push(k);
+    }
+    const agora = new Date().toISOString();
+    novo.respostas = arr(novo.respostas).concat(respostas.map((r) => ({ ...r, em: agora })));
+    if (observacoes) novo.respostas.push({ pergunta: "Outras informações", resposta: observacoes, em: agora });
+    montar(novo); // valida antes de trocar o que está na tela
+    estado.versoes.push(novo);
+    estado.mudou = arr(data.o_que_mudou);
+    estado.alteradas = alteradas;
+    salvar();
+    document.querySelectorAll("#form textarea").forEach((t) => (t.value = ""));
+    render();
+    status(alteradas.length ? `Pronto. ${alteradas.length} seção(ões) atualizada(s).` : "Pronto. As respostas foram registradas; o desenho não precisou mudar.");
+    window.scrollTo({ top: 0 });
+  } catch (e) {
+    status(e.message + " As respostas continuam no formulário.", true);
+  } finally {
+    clearInterval(tick);
+    botao.disabled = false;
+  }
+}
+
+$("fab").onclick = () => $("drawer").classList.add("on");
+$("fechar").onclick = () => $("drawer").classList.remove("on");
+$("atualizar").onclick = atualizar;
+$("desfazer").onclick = () => {
+  if (estado.versoes.length < 2) return;
+  estado.versoes.pop(); estado.mudou = []; estado.alteradas = []; salvar(); render(); status("Última atualização desfeita.");
+};
+$("original").onclick = () => {
+  if (!confirm("Voltar ao desenho original? As atualizações desta reunião serão descartadas.")) return;
+  estado = { versoes: [clone(ORIGINAL)], mudou: [], alteradas: [] }; salvar(); render(); status("Desenho original restaurado.");
+};
+$("imprimir").onclick = () => { $("drawer").classList.remove("on"); setTimeout(() => window.print(), 300); };
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("drawer").classList.remove("on"); });
+
+$("dataDoc").textContent = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+carregar();
+render();
+</script>
+</body>
+</html>

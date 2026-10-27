@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
       { source: "/isaacnewton", destination: "/isaacnewton/index.html" },
       { source: "/politica", destination: "/politica/index.html" },
       { source: "/termos", destination: "/termos/index.html" },
+      { source: "/dom-barreto-7q4k", destination: "/dom-barreto-7q4k/index.html" },
     ];
   },
 };
