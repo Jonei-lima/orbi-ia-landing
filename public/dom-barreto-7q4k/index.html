@@ -163,25 +163,48 @@
   /* Investimento */
   section[data-sec="investimento"] { display: none; }
   section[data-sec="investimento"].on { display: block; }
-  .planos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
-  .plano { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 24px; display: flex; flex-direction: column; }
-  .plano.dest { border-top: 3px solid var(--orbi-bright); }
-  .plano h3 { margin: 0 0 6px; font: 600 21px/1.25 var(--serif); }
-  .plano .desc { margin: 0 0 18px; color: var(--ink-2); font-size: 16px; }
-  .plano .linha { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 0; border-top: 1px solid var(--rule); }
-  .plano .linha span { color: var(--ink-2); font-size: 15px; }
-  .plano .linha b { font: 600 22px/1.2 var(--serif); white-space: nowrap; }
-  .plano .de { display: block; text-align: right; font-size: 14px; color: var(--steel); text-decoration: line-through; font-weight: 400; font-family: var(--sans); }
-  .plano .parc { font-size: 14px; color: var(--steel); text-align: right; margin-top: 2px; }
-  .cond { margin: 22px 0 0; padding: 0; list-style: none; }
-  .cond li { padding: 8px 0 8px 22px; position: relative; color: var(--ink-2); font-size: 15px; }
+  .inv-fases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .inv { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 24px; display: flex; flex-direction: column; }
+  .inv.f1 { border-top: 3px solid var(--orbi-bright); }
+  .inv .et { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--steel); }
+  .inv h3 { margin: 6px 0 16px; font: 600 21px/1.25 var(--serif); }
+  .inv .bloco { border-top: 1px solid var(--rule); padding-top: 14px; margin-top: 4px; }
+  .inv .bloco + .bloco { margin-top: 18px; }
+  .inv .rot { font-size: 14px; color: var(--ink-2); }
+  .inv .val { font: 600 30px/1.15 var(--serif); margin: 2px 0 2px; }
+  .inv .val.zero { font-size: 22px; color: var(--orbi); }
+  .inv .de { font-size: 15px; color: var(--steel); text-decoration: line-through; }
+  .inv .obs { font-size: 14px; color: var(--steel); }
+  .inv ul { margin: 12px 0 0; padding-left: 18px; }
+  .inv li { font-size: 15px; color: var(--ink-2); margin-bottom: 5px; }
+  .inv .mais { font-size: 14px; color: var(--orbi); font-weight: 500; margin-top: 10px; }
+  .resumo-inv { margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .resumo-inv div { background: var(--ink); color: #fff; padding: 20px; }
+  .resumo-inv span { display: block; font-size: 13px; color: #B9C3CC; text-transform: uppercase; letter-spacing: .06em; }
+  .resumo-inv b { display: block; font: 600 26px/1.2 var(--serif); margin-top: 4px; }
+  .resumo-inv small { display: block; color: #B9C3CC; font-size: 13px; margin-top: 4px; }
+  .inv-dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 36px; }
+  .inv-dupla h3 { margin: 0 0 10px; font: 600 20px/1.25 var(--serif); }
+  .inv-dupla p { margin: 0 0 10px; color: var(--ink-2); font-size: 16px; }
+  .inv-dupla ul { margin: 0; padding-left: 18px; }
+  .inv-dupla li { color: var(--ink-2); font-size: 15px; margin-bottom: 6px; }
+  .meta-box { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 22px; }
+  .meta-box table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 15px; }
+  .meta-box td { padding: 7px 0; border-bottom: 1px solid var(--rule); }
+  .meta-box td:last-child { text-align: right; font-weight: 600; white-space: nowrap; }
+  .meta-box .nota { font-size: 13px; color: var(--steel); }
+  .cond { margin: 28px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+  .cond li { padding: 10px 0 10px 22px; position: relative; color: var(--ink-2); font-size: 15px; border-bottom: 1px solid var(--rule); }
   .cond li::before { content: "·"; position: absolute; left: 6px; font-weight: 600; }
-  .ajuste { margin-top: 16px; font-size: 14px; color: var(--steel); }
+  .ajuste { margin-top: 14px; font-size: 14px; color: var(--steel); }
   .drawer .orc { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--rule); }
   .drawer .orc b { display: block; font-size: 15px; margin-bottom: 10px; }
   .drawer .orc .row2 { margin-bottom: 10px; }
   .drawer .orc .info { font-size: 13px; color: var(--steel); }
   .btn.on { background: var(--orbi-soft); border-color: var(--orbi); color: var(--orbi); }
+  @media (max-width: 900px) {
+    .inv-fases, .resumo-inv, .inv-dupla { grid-template-columns: 1fr; }
+  }
 
   @media (max-width: 820px) {
     .wrap { padding: 0 16px; }
@@ -275,9 +298,23 @@
     <ul class="resp" id="respostas"></ul>
   </div></section>
   <section data-sec="investimento" id="secInvest"><div class="wrap">
-    <div class="sec-head"><span class="n">10</span><h2>Investimento</h2><span class="tag-new">Atualizado</span>
-      <p class="sub" id="investSub">Valores para a solução descrita acima.</p></div>
-    <div class="planos" id="planos"></div>
+    <div class="sec-head"><span class="n">10</span><h2>Investimento</h2>
+      <p class="sub">Cada fase tem um valor de implantação, pago uma vez, e a mensalidade passa a valer quando a fase entra em operação. A mensalidade cresce junto com o que o agente faz.</p></div>
+    <div class="inv-fases" id="invFases"></div>
+    <div class="resumo-inv" id="invResumo"></div>
+    <div class="inv-dupla">
+      <div>
+        <h3>Por que esse investimento</h3>
+        <p>Hoje, cobrir o atendimento 24 horas, sete dias por semana, exigiria pelo menos três turnos de equipe, com a mesma dificuldade de manter qualificação e follow-up em dia.</p>
+        <p>O agente faz essa rotina sem pausa e libera os 12 profissionais da casa para o que precisa de gente: visita, negociação e relacionamento.</p>
+        <ul>
+          <li>Cada lead que chega já foi pago em anúncio. O agente garante que todos recebam resposta.</li>
+          <li>A implantação é feita sob medida: critérios, linguagem e regras da Dom Barreto, não um robô genérico.</li>
+          <li>A mensalidade inclui operação, inteligência artificial, monitoramento e ajustes contínuos. Não há cobrança por conversa da ORBI.</li>
+        </ul>
+      </div>
+      <div class="meta-box" id="invMeta"></div>
+    </div>
     <ul class="cond" id="condicoes"></ul>
     <p class="ajuste" id="ajusteInfo"></p>
   </div></section>
@@ -540,18 +577,79 @@ render();
 
 // ===== Orçamento =====
 // Valores definidos pelo Jonei. A IA nunca mexe aqui.
-// opcoes: cada pacote/plano. implantacao: pagamento único. mensal: por mês. anual: cobrança extra a cada 12 meses.
-const PRECOS = null; /* preencher: {
-  opcoes: [
-    { nome: "", descricao: "", implantacao: 0, mensal: 0, anual: 0, parcelas: 0, destaque: false }
+// "mensal" é a mensalidade TOTAL a partir da fase (não o acréscimo).
+const PRECOS = {
+  parcelas: 3,
+  anual: 980,
+  fases: [
+    {
+      nome: "Atendimento e qualificação", implantacao: 3275, mensal: 760,
+      implInclui: [
+        "Mapeamento do atendimento com a equipe e definição dos critérios de qualificação",
+        "Configuração do agente no WhatsApp oficial, com a linguagem da Dom Barreto",
+        "Entrada automática dos leads de Google, Meta e do site",
+        "Regras de repasse ao corretor, com resumo da conversa",
+        "Cadência de follow-up de venda e de locação",
+        "Testes com a equipe e acompanhamento intensivo nas primeiras semanas"
+      ],
+      mensalInclui: [
+        "Operação do agente 24 horas, todos os dias",
+        "Inteligência artificial das conversas, sem cobrança por mensagem da ORBI",
+        "Monitoramento diário e correção de falhas",
+        "Ajustes de mensagens e critérios sempre que a casa precisar",
+        "Suporte direto e relatório mensal de atendimento"
+      ]
+    },
+    {
+      nome: "Visitas e reativação", implantacao: 1450, mensal: 820,
+      implInclui: [
+        "Agenda de visitas com confirmação e lembrete para cliente e corretor",
+        "Base de imóveis para o agente sugerir opções compatíveis",
+        "Preparação e segmentação dos leads parados e aprovação dos modelos na Meta",
+        "Painel de indicadores de atendimento"
+      ],
+      mensalInclui: [
+        "Agendamentos e lembretes automáticos",
+        "Reativação dos leads parados em lotes, acompanhada",
+        "Painel atualizado continuamente"
+      ]
+    },
+    {
+      nome: "Documentação, contrato e locação", implantacao: 0, mensal: 980,
+      implInclui: [
+        "Checklist e cobrança automática de documentos",
+        "Minuta a partir do modelo de contrato da casa, com revisão humana",
+        "Atendimento de locação: segunda via, manutenção e proprietário",
+        "Sem custo de implantação: aproveita toda a estrutura das fases 1 e 2"
+      ],
+      mensalInclui: [
+        "Rotina da locação atendida pelo agente",
+        "Controle de prazos e alertas de pendências de documentos"
+      ]
+    }
   ],
-  condicoes: ["..."],
-  validade_dias: 15
-} */
+  meta: {
+    porLead: 0.80,
+    reativacao: 170,
+    linhas: [
+      ["Conversa iniciada pelo cliente (resposta ao lead)", "≈ R$ 0,04 por mensagem"],
+      ["Mensagem de follow-up ou reativação (modelo de marketing)", "≈ R$ 0,35 por mensagem"],
+      ["Mensagens de atendimento gratuitas por mês", "1.000"]
+    ]
+  },
+  condicoes: [
+    "Implantação de cada fase em até 3 vezes: entrada na contratação e mais 2 parcelas mensais.",
+    "A mensalidade começa quando a fase entra em operação.",
+    "Renovação anual, cobrada uma vez a cada 12 meses: revisão completa do agente, atualização dos modelos de inteligência artificial e da infraestrutura.",
+    "O custo da API oficial do WhatsApp é pago diretamente à Meta, no cartão da empresa, e não faz parte dos valores da ORBI.",
+    "As fases são contratadas em sequência; a Fase 1 pode ser contratada isoladamente.",
+    "Proposta válida por 15 dias."
+  ]
+};
 const PASSO_ESCOPO = 0.15;   // cada clique em "Ajuste de escopo" soma 15% do valor original
 const DESCONTO_VISTA = 0.15; // à vista: 15% a menos só na implantação
 
-const CHAVE_ORC = "orbi-dombarreto-orcamento-v1";
+const CHAVE_ORC = "orbi-dombarreto-orcamento-v2";
 let orc = { visivel: false, ajustes: 0, avista: false };
 try { orc = Object.assign(orc, JSON.parse(localStorage.getItem(CHAVE_ORC) || "{}")); } catch (e) {}
 function salvarOrc() { try { localStorage.setItem(CHAVE_ORC, JSON.stringify(orc)); } catch (e) {} }
@@ -560,32 +658,49 @@ const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL
 const arred = (v) => Math.round(v * 100) / 100;
 
 function renderOrc() {
-  const sec = $("secInvest");
-  sec.classList.toggle("on", !!(orc.visivel && PRECOS));
+  $("secInvest").classList.toggle("on", !!orc.visivel);
   $("aVista").classList.toggle("on", orc.avista);
-  $("orcInfo").textContent = !PRECOS ? "Valores ainda não cadastrados." :
-    `Ajustes de escopo: ${orc.ajustes} (+${Math.round(orc.ajustes * PASSO_ESCOPO * 100)}%) · ${orc.avista ? "à vista" : "parcelado"}`;
+  $("orcInfo").textContent = `Ajustes de escopo: ${orc.ajustes} (+${Math.round(orc.ajustes * PASSO_ESCOPO * 100)}%) · ${orc.avista ? "à vista" : "parcelado em 3x"}`;
   $("menosEscopo").disabled = orc.ajustes === 0;
-  if (!PRECOS || !orc.visivel) return;
-  const fator = 1 + orc.ajustes * PASSO_ESCOPO;
-  $("planos").innerHTML = arr(PRECOS.opcoes).map((o) => {
-    const impl = arred(o.implantacao * fator);
-    const implFinal = orc.avista ? arred(impl * (1 - DESCONTO_VISTA)) : impl;
-    const mensal = arred(o.mensal * fator);
-    const anual = arred((o.anual || 0) * fator);
-    const parc = !orc.avista && o.parcelas > 1 ? `<div class="parc">ou ${o.parcelas}x de ${brl(arred(impl / o.parcelas))}</div>` : "";
-    return `<div class="plano ${o.destaque ? "dest" : ""}"><h3>${esc(o.nome)}</h3><p class="desc">${esc(o.descricao)}</p>
-      <div class="linha"><span>Implantação${orc.avista ? " à vista" : ""}</span><div><b>${orc.avista ? `<span class="de">${brl(impl)}</span>` : ""}${brl(implFinal)}</b>${parc}</div></div>
-      <div class="linha"><span>Mensalidade</span><b>${brl(mensal)}</b></div>
-      ${anual ? `<div class="linha"><span>Anual (a cada 12 meses)</span><b>${brl(anual)}</b></div>` : ""}
+  if (!orc.visivel) return;
+  const f = 1 + orc.ajustes * PASSO_ESCOPO;
+  let implTotal = 0, implTotalCheio = 0, mensalAnt = 0;
+  $("invFases").innerHTML = PRECOS.fases.map((fa, i) => {
+    const cheio = arred(fa.implantacao * f);
+    const impl = orc.avista ? arred(cheio * (1 - DESCONTO_VISTA)) : cheio;
+    implTotal += impl; implTotalCheio += cheio;
+    const mensal = arred(fa.mensal * f);
+    let implHtml;
+    if (!cheio) implHtml = `<div class="val zero">Sem custo</div><div class="obs">de implantação</div>`;
+    else if (orc.avista) implHtml = `<div class="de">${brl(cheio)}</div><div class="val">${brl(impl)}</div><div class="obs">à vista, com 15% de desconto</div>`;
+    else implHtml = `<div class="val">${brl(impl)}</div><div class="obs">ou ${PRECOS.parcelas}x de ${brl(arred(impl / PRECOS.parcelas))} (entrada + 2)</div>`;
+    const mensHtml = `<div class="val">${brl(mensal)}<span class="obs"> /mês</span></div>` +
+      (i === 0 ? `<div class="obs">a partir da entrada em operação</div>` : `<div class="obs">passa de ${brl(mensalAnt)} para ${brl(mensal)}</div>`);
+    mensalAnt = mensal;
+    return `<div class="inv ${i === 0 ? "f1" : ""}"><span class="et">Fase ${i + 1}</span><h3>${esc(fa.nome)}</h3>
+      <div class="bloco"><div class="rot">Implantação</div>${implHtml}<ul>${fa.implInclui.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div class="bloco"><div class="rot">Mensalidade</div>${mensHtml}
+        ${i ? `<div class="mais">Acrescenta à mensalidade:</div>` : ""}<ul>${fa.mensalInclui.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
     </div>`;
   }).join("");
-  $("condicoes").innerHTML = arr(PRECOS.condicoes).map((c) => `<li>${esc(c)}</li>`).join("") +
-    (PRECOS.validade_dias ? `<li>Proposta válida por ${PRECOS.validade_dias} dias.</li>` : "");
+  const anual = arred(PRECOS.anual * f);
+  $("invResumo").innerHTML =
+    `<div><span>Implantação completa</span><b>${brl(arred(implTotal))}</b><small>${orc.avista ? `à vista · antes ${brl(arred(implTotalCheio))}` : "fases 1, 2 e 3, cada uma em até 3x"}</small></div>` +
+    `<div><span>Mensalidade com tudo em operação</span><b>${brl(mensalAnt)}</b><small>a partir da fase 3</small></div>` +
+    `<div><span>Renovação anual</span><b>${brl(anual)}</b><small>uma vez a cada 12 meses</small></div>`;
+  const m = PRECOS.meta;
+  $("invMeta").innerHTML = `<h3 style="margin:0 0 6px;font:600 20px/1.25 var(--serif)">API oficial do WhatsApp</h3>
+    <p class="nota" style="margin:0 0 6px">Pago diretamente à Meta, não à ORBI. Valores de referência da Meta em dólar, convertidos de forma aproximada.</p>
+    <table>${m.linhas.map(([a, b]) => `<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join("")}
+      <tr><td>Estimativa por lead atendido, com follow-up</td><td>≈ ${brl(m.porLead)}</td></tr>
+      <tr><td>Com 35 leads por mês</td><td>≈ ${brl(35 * m.porLead)} /mês</td></tr>
+      <tr><td>Com 1.000 leads por mês</td><td>≈ ${brl(1000 * m.porLead)} /mês</td></tr>
+      <tr><td>Reativação dos cerca de 500 leads parados</td><td>≈ ${brl(m.reativacao)} uma vez</td></tr></table>
+    <p class="nota" style="margin:0">Se a Dom Barreto já usa a API oficial, esse custo já existe hoje. O valor real depende do volume confirmado e do câmbio.</p>`;
+  $("condicoes").innerHTML = PRECOS.condicoes.map((c) => `<li>${esc(c)}</li>`).join("");
   $("ajusteInfo").textContent = orc.ajustes ? "Valores ajustados ao escopo combinado nesta reunião." : "";
 }
 $("gerarOrc").onclick = () => {
-  if (!PRECOS) { status("Os valores ainda não foram cadastrados nesta página.", true); return; }
   orc.visivel = true; salvarOrc(); renderOrc();
   $("drawer").classList.remove("on");
   setTimeout(() => $("secInvest").scrollIntoView({ behavior: "smooth" }), 250);
