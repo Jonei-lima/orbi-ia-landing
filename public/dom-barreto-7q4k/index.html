@@ -159,6 +159,30 @@
   .status { font-size: 14px; color: var(--ink-2); min-height: 20px; }
   .status.erro { color: var(--warn); }
 
+
+  /* Investimento */
+  section[data-sec="investimento"] { display: none; }
+  section[data-sec="investimento"].on { display: block; }
+  .planos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .plano { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 24px; display: flex; flex-direction: column; }
+  .plano.dest { border-top: 3px solid var(--orbi-bright); }
+  .plano h3 { margin: 0 0 6px; font: 600 21px/1.25 var(--serif); }
+  .plano .desc { margin: 0 0 18px; color: var(--ink-2); font-size: 16px; }
+  .plano .linha { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 0; border-top: 1px solid var(--rule); }
+  .plano .linha span { color: var(--ink-2); font-size: 15px; }
+  .plano .linha b { font: 600 22px/1.2 var(--serif); white-space: nowrap; }
+  .plano .de { display: block; text-align: right; font-size: 14px; color: var(--steel); text-decoration: line-through; font-weight: 400; font-family: var(--sans); }
+  .plano .parc { font-size: 14px; color: var(--steel); text-align: right; margin-top: 2px; }
+  .cond { margin: 22px 0 0; padding: 0; list-style: none; }
+  .cond li { padding: 8px 0 8px 22px; position: relative; color: var(--ink-2); font-size: 15px; }
+  .cond li::before { content: "·"; position: absolute; left: 6px; font-weight: 600; }
+  .ajuste { margin-top: 16px; font-size: 14px; color: var(--steel); }
+  .drawer .orc { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--rule); }
+  .drawer .orc b { display: block; font-size: 15px; margin-bottom: 10px; }
+  .drawer .orc .row2 { margin-bottom: 10px; }
+  .drawer .orc .info { font-size: 13px; color: var(--steel); }
+  .btn.on { background: var(--orbi-soft); border-color: var(--orbi); color: var(--orbi); }
+
   @media (max-width: 820px) {
     .wrap { padding: 0 16px; }
     .hero h1 { font-size: 32px; }
@@ -250,6 +274,13 @@
     <ul class="pend" id="perguntas"></ul>
     <ul class="resp" id="respostas"></ul>
   </div></section>
+  <section data-sec="investimento" id="secInvest"><div class="wrap">
+    <div class="sec-head"><span class="n">10</span><h2>Investimento</h2><span class="tag-new">Atualizado</span>
+      <p class="sub" id="investSub">Valores para a solução descrita acima.</p></div>
+    <div class="planos" id="planos"></div>
+    <ul class="cond" id="condicoes"></ul>
+    <p class="ajuste" id="ajusteInfo"></p>
+  </div></section>
 </main>
 
 <footer>
@@ -272,6 +303,19 @@
       <button class="btn sec" id="imprimir" type="button">Salvar PDF</button>
     </div>
     <button class="btn sec" id="original" type="button">Voltar ao original</button>
+    <div class="orc">
+      <b>Orçamento</b>
+      <button class="btn pri" id="gerarOrc" type="button" style="width:100%;margin-bottom:10px">Gerar orçamento</button>
+      <div class="row2">
+        <button class="btn sec" id="maisEscopo" type="button">Ajuste de escopo +15%</button>
+        <button class="btn sec" id="menosEscopo" type="button">Desfazer ajuste</button>
+      </div>
+      <div class="row2">
+        <button class="btn sec" id="aVista" type="button">À vista −15% na implantação</button>
+        <button class="btn sec" id="ocultarOrc" type="button">Ocultar orçamento</button>
+      </div>
+      <div class="info" id="orcInfo"></div>
+    </div>
   </div>
 </aside>
 
@@ -280,14 +324,14 @@ const ORIGINAL = {
   empresa: "Imobiliária Dom Barreto",
   sintese: "A Dom Barreto já investe para atrair clientes em Google e Meta. O ponto de perda está depois do clique: resposta que depende de quem está livre, qualificação que não acontece e follow-up que ninguém consegue manter. O agente ORBI assume essa rotina e entrega ao corretor o cliente pronto para a visita.",
   numeros: [
-    { valor: "≈ 1.200", rotulo: "leads parados sem resposta", base: "informado" },
+    { valor: "≈ 500", rotulo: "leads parados sem resposta", base: "estimado" },
     { valor: "1 a 30 min", rotulo: "até o primeiro contato, ou nenhum, conforme a disponibilidade", base: "informado" },
     { valor: "≈ 80", rotulo: "visitas em setembro", base: "estimado" },
     { valor: "12", rotulo: "pessoas no atendimento: 8 vendas, 3 locação, 1 documentação", base: "informado" },
     { valor: "30 a 40", rotulo: "leads novos (por dia ou por mês?)", base: "a confirmar" }
   ],
   problemas: [
-    { titulo: "Leads que nunca recebem resposta", hoje: "Cerca de 1.200 contatos estão parados, sem retorno.", custo: "Cada lead parado é anúncio pago que não virou conversa." },
+    { titulo: "Leads que nunca recebem resposta", hoje: "Cerca de 500 contatos estão parados, sem retorno.", custo: "Cada lead parado é anúncio pago que não virou conversa." },
     { titulo: "Resposta depende de quem está livre", hoje: "O primeiro contato leva de 1 a 30 minutos, ou não acontece.", custo: "Quem procura imóvel fala com várias imobiliárias ao mesmo tempo. Responde primeiro quem leva." },
     { titulo: "Fora do horário, a triagem não resolve", hoje: "O bot e a triagem atuais foram avaliados pela própria diretoria como pouco eficientes.", custo: "O lead da noite e do fim de semana esfria até segunda-feira." },
     { titulo: "Ninguém qualifica antes do corretor", hoje: "Renda, FGTS, entrada e prazo não são levantados. O filtro é só o valor do anúncio.", custo: "O corretor gasta tempo com quem ainda não pode comprar." },
@@ -301,7 +345,7 @@ const ORIGINAL = {
     { titulo: "Sugere imóveis e agenda a visita", como: "Apresenta opções compatíveis da carteira e marca a visita com confirmação e lembrete para cliente e corretor.", item: "3" },
     { titulo: "Entrega o cliente pronto ao corretor", como: "No repasse, o corretor recebe um resumo da conversa: o que o cliente busca, quanto pode pagar e o que já foi dito.", item: "6" },
     { titulo: "Faz o follow-up que hoje se perde", como: "Segue a cadência da Dom Barreto (24 horas, 3 tentativas na locação, até 6 na venda) e para quando o cliente responde.", item: "4" },
-    { titulo: "Reativa os leads parados", como: "Retoma os cerca de 1.200 contatos em lotes, pela API oficial do WhatsApp, com mensagens aprovadas.", item: "5" },
+    { titulo: "Reativa os leads parados", como: "Retoma os cerca de 500 contatos em lotes, pela API oficial do WhatsApp, com mensagens aprovadas.", item: "5" },
     { titulo: "Avisa a equipe na hora certa", como: "Alerta quando aparece um lead quente, uma visita sem confirmação ou um documento parado.", item: "7" },
     { titulo: "Atende a locação no dia a dia", como: "Segunda via, pedido de manutenção e dúvida do proprietário, encaminhados ao responsável com o caso já descrito.", item: "1, 8" }
   ],
@@ -340,7 +384,7 @@ const ORIGINAL = {
     { nome: "Tempo até a primeira resposta", hoje: "1 a 30 min, ou nenhuma", orbi: "Segundos, 24 horas" },
     { nome: "Atendimento fora do horário", hoje: "Bot com falhas", orbi: "Atendimento completo, com qualificação" },
     { nome: "Follow-up executado", hoje: "Quando dá tempo", orbi: "100% na cadência definida" },
-    { nome: "Leads parados", hoje: "≈ 1.200", orbi: "Retomados em lotes, com resultado medido" },
+    { nome: "Leads parados", hoje: "≈ 500", orbi: "Retomados em lotes, com resultado medido" },
     { nome: "Histórico para o corretor", hoje: "Pesquisa no sistema", orbi: "Resumo entregue no repasse" }
   ],
   atencao: [
@@ -354,14 +398,14 @@ const ORIGINAL = {
     { pergunta: "Das cerca de 80 visitas de setembro, quantas viraram proposta e quantas viraram venda?", por_que: "É o ponto de partida para medir o resultado." },
     { pergunta: "Do que conversamos, o que mais incomoda vocês hoje?", por_que: "Define o que entra primeiro." },
     { pergunta: "Qual o nome exato do sistema de triagem e ele permite integração ou exportação dos leads?", por_que: "Define se o agente trabalha conectado ou em paralelo." },
-    { pergunta: "Onde estão os 1.200 leads parados e dá para exportar a lista?", por_que: "Condição para a reativação." },
+    { pergunta: "Onde estão os cerca de 500 leads parados e dá para exportar a lista?", por_que: "Condição para a reativação." },
     { pergunta: "Qual número de WhatsApp atende hoje, e ele usa a API oficial?", por_que: "A reativação só pode ser feita pela API oficial." },
     { pergunta: "A carteira de imóveis está em algum sistema ou site com exportação?", por_que: "Permite ao agente sugerir imóveis compatíveis." }
   ],
   respostas: []
 };
 
-const CHAVE = "orbi-dombarreto-desenho-v1";
+const CHAVE = "orbi-dombarreto-desenho-v2";
 const SECOES = ["sintese", "numeros", "problemas", "agente", "fluxo_atual", "fluxo_proposto", "acoes", "fases", "indicadores", "atencao", "perguntas"];
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -493,6 +537,64 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("drawer"
 $("dataDoc").textContent = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 carregar();
 render();
+
+// ===== Orçamento =====
+// Valores definidos pelo Jonei. A IA nunca mexe aqui.
+// opcoes: cada pacote/plano. implantacao: pagamento único. mensal: por mês. anual: cobrança extra a cada 12 meses.
+const PRECOS = null; /* preencher: {
+  opcoes: [
+    { nome: "", descricao: "", implantacao: 0, mensal: 0, anual: 0, parcelas: 0, destaque: false }
+  ],
+  condicoes: ["..."],
+  validade_dias: 15
+} */
+const PASSO_ESCOPO = 0.15;   // cada clique em "Ajuste de escopo" soma 15% do valor original
+const DESCONTO_VISTA = 0.15; // à vista: 15% a menos só na implantação
+
+const CHAVE_ORC = "orbi-dombarreto-orcamento-v1";
+let orc = { visivel: false, ajustes: 0, avista: false };
+try { orc = Object.assign(orc, JSON.parse(localStorage.getItem(CHAVE_ORC) || "{}")); } catch (e) {}
+function salvarOrc() { try { localStorage.setItem(CHAVE_ORC, JSON.stringify(orc)); } catch (e) {} }
+
+const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const arred = (v) => Math.round(v * 100) / 100;
+
+function renderOrc() {
+  const sec = $("secInvest");
+  sec.classList.toggle("on", !!(orc.visivel && PRECOS));
+  $("aVista").classList.toggle("on", orc.avista);
+  $("orcInfo").textContent = !PRECOS ? "Valores ainda não cadastrados." :
+    `Ajustes de escopo: ${orc.ajustes} (+${Math.round(orc.ajustes * PASSO_ESCOPO * 100)}%) · ${orc.avista ? "à vista" : "parcelado"}`;
+  $("menosEscopo").disabled = orc.ajustes === 0;
+  if (!PRECOS || !orc.visivel) return;
+  const fator = 1 + orc.ajustes * PASSO_ESCOPO;
+  $("planos").innerHTML = arr(PRECOS.opcoes).map((o) => {
+    const impl = arred(o.implantacao * fator);
+    const implFinal = orc.avista ? arred(impl * (1 - DESCONTO_VISTA)) : impl;
+    const mensal = arred(o.mensal * fator);
+    const anual = arred((o.anual || 0) * fator);
+    const parc = !orc.avista && o.parcelas > 1 ? `<div class="parc">ou ${o.parcelas}x de ${brl(arred(impl / o.parcelas))}</div>` : "";
+    return `<div class="plano ${o.destaque ? "dest" : ""}"><h3>${esc(o.nome)}</h3><p class="desc">${esc(o.descricao)}</p>
+      <div class="linha"><span>Implantação${orc.avista ? " à vista" : ""}</span><div><b>${orc.avista ? `<span class="de">${brl(impl)}</span>` : ""}${brl(implFinal)}</b>${parc}</div></div>
+      <div class="linha"><span>Mensalidade</span><b>${brl(mensal)}</b></div>
+      ${anual ? `<div class="linha"><span>Anual (a cada 12 meses)</span><b>${brl(anual)}</b></div>` : ""}
+    </div>`;
+  }).join("");
+  $("condicoes").innerHTML = arr(PRECOS.condicoes).map((c) => `<li>${esc(c)}</li>`).join("") +
+    (PRECOS.validade_dias ? `<li>Proposta válida por ${PRECOS.validade_dias} dias.</li>` : "");
+  $("ajusteInfo").textContent = orc.ajustes ? "Valores ajustados ao escopo combinado nesta reunião." : "";
+}
+$("gerarOrc").onclick = () => {
+  if (!PRECOS) { status("Os valores ainda não foram cadastrados nesta página.", true); return; }
+  orc.visivel = true; salvarOrc(); renderOrc();
+  $("drawer").classList.remove("on");
+  setTimeout(() => $("secInvest").scrollIntoView({ behavior: "smooth" }), 250);
+};
+$("maisEscopo").onclick = () => { orc.ajustes++; salvarOrc(); renderOrc(); };
+$("menosEscopo").onclick = () => { if (orc.ajustes > 0) orc.ajustes--; salvarOrc(); renderOrc(); };
+$("aVista").onclick = () => { orc.avista = !orc.avista; salvarOrc(); renderOrc(); };
+$("ocultarOrc").onclick = () => { orc.visivel = false; salvarOrc(); renderOrc(); };
+renderOrc();
 </script>
 </body>
 </html>
