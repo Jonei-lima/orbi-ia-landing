@@ -270,7 +270,11 @@
   @media print {
     .fab, .drawer, .mudou { display: none !important; }
     body { background: #fff; font-size: 13px; }
-    main section { padding: 28px 0; break-inside: avoid; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    main section { padding: 28px 0; }
+    .card, .fase, .inv, .prob, .num, .probs li, .atencao li, .est-in, .est-out, .meta-box, .resumo-inv { break-inside: avoid; }
+    section[data-sec="investimento"] { break-before: page; }
+    .est-in input[type=range] { display: none; }
     .hero { padding: 24px 0 30px; }
     .hero h1 { font-size: 30px; }
   }
