@@ -653,8 +653,10 @@ $("desfazer").onclick = () => {
   estado.versoes.pop(); estado.mudou = []; estado.alteradas = []; salvar(); render(); status("Última atualização desfeita.");
 };
 $("original").onclick = () => {
-  if (!confirm("Voltar ao desenho original? As atualizações desta reunião serão descartadas.")) return;
-  estado = { versoes: [clone(ORIGINAL)], mudou: [], alteradas: [] }; salvar(); render(); status("Desenho original restaurado.");
+  if (!confirm("Voltar tudo ao original? Respostas, valores ajustados e números da estimativa serão descartados.")) return;
+  estado = { versoes: [clone(ORIGINAL)], mudou: [], alteradas: [] }; salvar(); render();
+  if (typeof orc !== "undefined") { orc = { visivel: false, ajustes: 0, avista: false, fase: null, aba: "dinheiro", est: {}, casa: {} }; salvarOrc(); montarCampos(); renderOrc(); }
+  status("Tudo voltou ao original: desenho, valores e estimativa.");
 };
 $("imprimir").onclick = () => { $("drawer").classList.remove("on"); setTimeout(() => window.print(), 300); };
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("drawer").classList.remove("on"); });
@@ -917,6 +919,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "v" || e.key === "V") condicao();
   else if (e.key === "+" || e.key === "=") escopo(1);
   else if (e.key === "-" || e.key === "_") escopo(-1);
+  else if (e.key === "0") { orc.ajustes = 0; orc.avista = false; salvarOrc(); renderOrc(); }
   else if (e.key === "i" || e.key === "I") { orc.visivel = !orc.visivel; salvarOrc(); renderOrc(); if (orc.visivel) setTimeout(() => $("secInvest").scrollIntoView({ behavior: "smooth" }), 150); }
 });
 $("gerarOrc").onclick = () => {
