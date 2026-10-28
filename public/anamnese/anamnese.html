@@ -73,6 +73,13 @@
     padding: 13px 14px; font-size: 16px; line-height: 1.4;
   }
   textarea { min-height: 104px; resize: vertical; }
+  .tel-wrap { display: flex; align-items: stretch; background: var(--sheet); border: 1px solid var(--rule-strong); border-radius: 6px; overflow: hidden; }
+  .tel-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .tel-pfx { display: flex; align-items: center; gap: 8px; padding: 0 12px 0 14px; background: var(--field); border-right: 1px solid var(--rule); font-size: 16px; color: var(--ink-2); white-space: nowrap; user-select: none; }
+  .tel-pfx svg { display: block; border-radius: 2px; }
+  .tel-wrap input[type=tel] { border: 0; border-radius: 0; flex: 1; min-width: 0; }
+  .tel-wrap input[type=tel]:focus { box-shadow: none; }
+  .invalid .tel-wrap { border-color: var(--error); }
   input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
   .invalid input, .invalid textarea { border-color: var(--error); }
   .err { display: none; color: var(--error); font-size: 13.5px; margin-top: 6px; }
@@ -248,7 +255,8 @@
     { k: "cargo", label: "Cargo", type: "text", auto: "organization-title" },
     { k: "empresa", label: "Empresa", type: "text", req: true, auto: "organization" },
     { k: "cidade", label: "Cidade", type: "text", auto: "address-level2" },
-    { k: "whatsapp", label: "WhatsApp", type: "tel", req: true, hint: "É por aqui que você recebe o retorno", auto: "tel" },
+    { k: "whatsapp", label: "WhatsApp", type: "tel", req: true, hint: "Com DDD. É por aqui que você recebe o retorno", auto: "tel" },
+    { k: "email", label: "E-mail", type: "email", hint: "Opcional", auto: "email" },
     { k: "ramo", label: "Ramo da empresa", type: "radio", req: true, wide: true,
       options: ["Imobiliária", "Clínica ou saúde", "Advocacia", "Contabilidade", "Comércio e varejo", "Restaurante e alimentação", "Construção e indústria", "Prestação de serviços", "Minha atividade não está na lista"] },
     { k: "porte", label: "Quantas pessoas trabalham na empresa", type: "radio", cols: true,
@@ -382,10 +390,12 @@
     var lab = '<span class="label">' + esc(q.label) + (q.req ? '<span class="req">obrigatório</span>' : "") + '</span>';
     var hint = q.hint ? '<span class="hint">' + esc(q.hint) + '</span>' : "";
     var html = '<div class="q" id="' + id + '" data-key="' + key + '"' + (q.req ? ' data-req="1"' : "") + '>';
-    if (q.type === "text" || q.type === "tel") {
-      html += '<label class="label" for="' + id + '_i">' + esc(q.label) + (q.req ? '<span class="req">obrigatório</span>' : "") + '</label>' + hint +
-        '<input type="' + q.type + '" id="' + id + '_i" data-key="' + key + '"' + (q.auto ? ' autocomplete="' + q.auto + '"' : "") +
-        (q.type === "tel" ? ' inputmode="tel" placeholder="(00) 00000-0000"' : "") + '>';
+    if (q.type === "text" || q.type === "tel" || q.type === "email") {
+      var inp = '<input type="' + q.type + '" id="' + id + '_i" data-key="' + key + '"' + (q.auto ? ' autocomplete="' + (q.type === "tel" ? "tel-national" : q.auto) + '"' : "") +
+        (q.type === "tel" ? ' inputmode="tel" placeholder="(19) 99999-9999"' : "") +
+        (q.type === "email" ? ' inputmode="email" autocapitalize="off" spellcheck="false" placeholder="nome@empresa.com.br"' : "") + '>';
+      if (q.type === "tel") inp = '<div class="tel-wrap"><span class="tel-pfx" aria-label="Brasil, +55"><svg width="22" height="15" viewBox="0 0 22 15" aria-hidden="true"><rect width="22" height="15" rx="2" fill="#229E45"/><path d="M11 2 L20 7.5 L11 13 L2 7.5 Z" fill="#F8E509"/><circle cx="11" cy="7.5" r="3.4" fill="#2B49A3"/><path d="M7.8 6.9 Q11 6.1 14.2 8" stroke="#fff" stroke-width="0.7" fill="none"/></svg><span>+55</span></span>' + inp + '</div>';
+      html += '<label class="label" for="' + id + '_i">' + esc(q.label) + (q.req ? '<span class="req">obrigatório</span>' : "") + '</label>' + hint + inp;
     } else if (q.type === "area") {
       html += '<label class="label" for="' + id + '_i">' + esc(q.label) + (q.req ? '<span class="req">obrigatório</span>' : "") + '</label>' + hint +
         '<textarea id="' + id + '_i" data-key="' + key + '"></textarea>';
@@ -398,7 +408,7 @@
       });
       html += '</div>';
     }
-    html += '<span class="err">' + (q.type === "tel" ? "Informe um WhatsApp com DDD." : "Este campo é obrigatório.") + '</span></div>';
+    html += '<span class="err">' + (q.type === "tel" ? "Confira o número: DDD + 9 dígitos, ex.: (19) 99999-9999." : q.type === "email" ? "Confira o e-mail, ex.: nome@empresa.com.br." : "Este campo é obrigatório.") + '</span></div>';
     return html;
   }
   function renderBlock(el, prefix, list) {
@@ -428,8 +438,17 @@
     });
   }
   function clearErr(inp) { var q = inp.closest(".q"); if (q) q.classList.remove("invalid"); }
+  // Tira +55 / 0 na frente e devolve no máximo DDD + 9 dígitos
+  function phoneDigits(v) {
+    var d = String(v || "").replace(/\D/g, "");
+    if (d.length > 11 && d.indexOf("55") === 0) d = d.slice(2);
+    if (d.charAt(0) === "0") d = d.slice(1);
+    return d.slice(0, 11);
+  }
+  function phoneOk(v) { return /^[1-9][1-9]9\d{8}$/.test(phoneDigits(v)); }
+  function emailOk(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v || "").trim()); }
   function maskPhone(v) {
-    var d = v.replace(/\D/g, "").slice(0, 11);
+    var d = phoneDigits(v);
     if (d.length <= 2) return d.length ? "(" + d : "";
     if (d.length <= 6) return "(" + d.slice(0, 2) + ") " + d.slice(2);
     if (d.length <= 10) return "(" + d.slice(0, 2) + ") " + d.slice(2, 6) + "-" + d.slice(6);
@@ -477,9 +496,16 @@
     sec.querySelectorAll('.q[data-req="1"]').forEach(function (q) {
       var k = q.dataset.key, v = state[k];
       var ok = Array.isArray(v) ? v.length > 0 : !!(v && String(v).trim());
-      if (ok && q.querySelector('input[type="tel"]')) ok = String(v).replace(/\D/g, "").length >= 10;
+      if (ok && q.querySelector('input[type="tel"]')) ok = phoneOk(v);
+
       q.classList.toggle("invalid", !ok);
       if (!ok && !firstBad) firstBad = q;
+    });
+    sec.querySelectorAll('input[type="email"]').forEach(function (inp) {
+      var q = inp.closest(".q"), v = inp.value.trim();
+      var bad = v && !emailOk(v);
+      q.classList.toggle("invalid", !!bad);
+      if (bad && !firstBad) firstBad = q;
     });
     if (n === LAST_INPUT && !document.getElementById("consent").checked) {
       var c = document.getElementById("q_consent"); c.classList.add("invalid"); if (!firstBad) firstBad = c;
@@ -514,7 +540,8 @@
       contato: {
         nome: state["perfil.nome"] || "", cargo: state["perfil.cargo"] || "",
         empresa: state["perfil.empresa"] || "", cidade: state["perfil.cidade"] || "",
-        whatsapp: (state["perfil.whatsapp"] || "").replace(/\D/g, ""),
+        whatsapp: phoneDigits(state["perfil.whatsapp"]),
+        email: (state["perfil.email"] || "").trim().toLowerCase(),
         ramo: outro ? "Outra atividade" : (ramo || ""), porte: state["perfil.porte"] || "",
         atividade: outro ? (state[ramoPrefix + ".atividade"] || "").trim() : ""
       },
@@ -531,7 +558,7 @@
     out.push("*Pré-diagnóstico ORBI IA*");
     out.push(c.nome + (c.cargo ? ", " + c.cargo : "") + " | " + c.empresa + (c.cidade ? " | " + c.cidade : ""));
     out.push("Ramo: " + c.ramo + (c.atividade ? " (" + c.atividade + ")" : "") + (c.porte ? " | " + c.porte + " pessoas" : ""));
-    out.push("WhatsApp: " + c.whatsapp + " | Origem: " + d.origem);
+    out.push("WhatsApp: " + c.whatsapp + " | E-mail: " + c.email + " | Origem: " + d.origem);
     [["Atendimento", d.atendimento], ["Ramo", d.ramo], ["Prioridade", d.prioridade]].forEach(function (b) {
       out.push(""); out.push("*" + b[0] + "*");
       b[1].forEach(function (x) { out.push("- " + x.pergunta + ": " + x.resposta); });

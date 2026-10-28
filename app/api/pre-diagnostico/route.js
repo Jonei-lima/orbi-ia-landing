@@ -16,6 +16,14 @@ function db() {
   return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
+// Celular BR: tira +55 / 0 na frente; resultado DDD + 9 dígitos
+function normalizaFone(v) {
+  let d = String(v || "").replace(/\D/g, "");
+  if (d.length > 11 && d.startsWith("55")) d = d.slice(2);
+  if (d.startsWith("0")) d = d.slice(1);
+  return d;
+}
+
 const txt = (v, max = 500) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
 function limparLista(lista) {
@@ -63,7 +71,7 @@ async function enviarEmail({ c, link, analise, erro }) {
       html: `<div style="font-family:Arial,sans-serif;color:#16212C;max-width:600px">
         <p style="color:#677685;margin:0">Novo pré-diagnóstico ORBI IA</p>
         <h2 style="margin:4px 0 16px">${esc(c.empresa)}</h2>
-        <p style="margin:0 0 16px">${esc(c.nome)}${c.cargo ? `, ${esc(c.cargo)}` : ""} · WhatsApp ${esc(c.whatsapp)}<br>
+        <p style="margin:0 0 16px">${esc(c.nome)}${c.cargo ? `, ${esc(c.cargo)}` : ""} · WhatsApp ${esc(c.whatsapp)}${c.email ? ` · ${esc(c.email)}` : ""}<br>
         Ramo: ${esc(c.ramo)}${c.atividade ? ` (${esc(c.atividade)})` : ""}${c.porte ? ` · ${esc(c.porte)} pessoas` : ""}</p>
         ${corpo}
         <p style="margin:24px 0"><a href="${link}" style="background:#16212C;color:#fff;padding:12px 20px;border-radius:6px;text-decoration:none">Abrir diagnóstico e desenho</a></p>
@@ -81,7 +89,7 @@ async function avisarWhatsApp({ c, link, ok }) {
     headers: { "Content-Type": "application/json", apikey: process.env.EVOLUTION_API_KEY },
     body: JSON.stringify({
       number: AVISO_WHATSAPP,
-      text: `Novo pré-diagnóstico\n\n${c.empresa} (${c.atividade || c.ramo})\n${c.nome} · ${c.whatsapp}\n\n${ok ? "Análise pronta" : "Análise falhou, gere de novo"}: ${link}`,
+      text: `Novo pré-diagnóstico\n\n${c.empresa} (${c.atividade || c.ramo})\n${c.nome} · ${c.whatsapp}${c.email ? `\n${c.email}` : ""}\n\n${ok ? "Análise pronta" : "Análise falhou, gere de novo"}: ${link}`,
     }),
   });
   if (!r.ok) console.error("Aviso WhatsApp falhou:", r.status, (await r.text()).slice(0, 500));
@@ -102,7 +110,7 @@ export async function POST(request) {
     origem: txt(body?.origem, 200) || "direto",
     contato: {
       nome: txt(c.nome, 120), cargo: txt(c.cargo, 120), empresa: txt(c.empresa, 160),
-      cidade: txt(c.cidade, 120), whatsapp: txt(c.whatsapp, 20).replace(/\D/g, ""),
+      cidade: txt(c.cidade, 120), whatsapp: normalizaFone(txt(c.whatsapp, 30)), email: (() => { const e = txt(c.email, 160).toLowerCase(); return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e) ? e : ""; })(),
       ramo: txt(c.ramo, 80), porte: txt(c.porte, 40), atividade: txt(c.atividade, 200),
     },
     atendimento: limparLista(body?.atendimento),
@@ -110,7 +118,7 @@ export async function POST(request) {
     prioridade: limparLista(body?.prioridade),
   };
   const k = dados.contato;
-  if (!k.nome || !k.empresa || k.whatsapp.length < 10 || !k.ramo || body?.consentimentoLGPD !== true) {
+  if (!k.nome || !k.empresa || !/^[1-9][1-9]9\d{8}$/.test(k.whatsapp) || !k.ramo || body?.consentimentoLGPD !== true) {
     return Response.json({ ok: false, error: "Campos obrigatórios ausentes." }, { status: 400 });
   }
 
@@ -122,7 +130,7 @@ export async function POST(request) {
     .from("pre_diagnosticos")
     .insert([{
       origem: dados.origem, nome: k.nome, cargo: k.cargo, empresa: k.empresa, cidade: k.cidade,
-      whatsapp: k.whatsapp, ramo: k.ramo, atividade: k.atividade, porte: k.porte,
+      whatsapp: k.whatsapp, email: k.email, ramo: k.ramo, atividade: k.atividade, porte: k.porte,
       respostas: { atendimento: dados.atendimento, ramo: dados.ramo, prioridade: dados.prioridade },
       ficha, consentimento_lgpd: true,
     }])
