@@ -275,6 +275,20 @@
     .card, .fase, .inv, .prob, .num, .probs li, .atencao li, .est-in, .est-out, .meta-box, .resumo-inv { break-inside: avoid; }
     section[data-sec="investimento"] { break-before: page; }
     .est-in input[type=range] { display: none; }
+    .inv-fases { grid-template-columns: 1fr !important; gap: 10px; }
+    .inv { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; padding: 16px 18px; }
+    .inv .et, .inv h3 { grid-column: 1 / -1; }
+    .inv h3 { margin-bottom: 6px; }
+    .inv .bloco + .bloco { margin-top: 4px; }
+    .inv .val { font-size: 22px; }
+    .inv li { font-size: 12px; margin-bottom: 2px; }
+    .resumo-inv, .inv-dupla { grid-template-columns: 1fr 1fr 1fr; }
+    .inv-dupla { grid-template-columns: 1fr; gap: 14px; }
+    .mapa { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .mapa .prob { opacity: 1 !important; padding: 10px 12px; }
+    .mapa .prob .pc { max-height: none !important; }
+    .seletor, .mapa-frase { display: none !important; }
+    .est { grid-template-columns: 1fr 1fr; gap: 14px; }
     .hero { padding: 24px 0 30px; }
     .hero h1 { font-size: 30px; }
   }
