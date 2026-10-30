@@ -1,0 +1,73 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Check-in · Cozinha Gourmet</title><meta name="robots" content="noindex">
+<link rel="icon" href="/cozinhagourmet/img/cg-logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Manrope:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>:root{--bg:#141D13;--panel:#1C281A;--bone:#EFE7D7;--muted:#B5B8A3;--gold:#E3A63E;--line:rgba(239,231,215,.16);--err:#E8806B}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--bone);font-family:Manrope,system-ui,-apple-system,sans-serif;min-height:100svh;display:flex;justify-content:center}
+main{width:100%;max-width:460px;padding:28px 20px 40px}
+.logo{display:block;width:210px;margin:6px auto 22px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 8px;text-align:center}
+h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:30px;line-height:1.1;margin:0 0 10px;text-align:center}
+.sub{color:var(--muted);font-size:15px;line-height:1.5;text-align:center;margin:0 0 20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:18px;display:flex;gap:16px;align-items:center}
+.date{font-family:Fraunces,serif;font-weight:800;font-size:38px;line-height:.9;color:var(--gold);text-align:center;min-width:64px}
+.date small{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--bone);margin-top:6px;font-weight:500}
+.card strong{display:block;font-family:Fraunces,serif;font-weight:600;font-size:16px}
+.card span{color:var(--muted);font-size:13.5px;line-height:1.4}
+.card a{color:var(--gold);font-size:13px}
+label{display:block;font-size:13px;color:var(--muted);margin:14px 0 6px}
+label b{color:var(--bone);font-weight:600}
+input[type=text],input[type=tel],input[type=email]{width:100%;background:#0F160E;border:1px solid var(--line);border-radius:10px;color:var(--bone);font:inherit;font-size:16px;padding:13px 14px;outline:none}
+input:focus{border-color:var(--gold)}
+.check{display:flex;gap:10px;align-items:flex-start;margin:18px 0 6px;font-size:12.5px;color:var(--muted);line-height:1.45}
+.check input{margin-top:2px;accent-color:var(--gold);width:18px;height:18px;flex:none}
+button{width:100%;margin-top:18px;background:var(--gold);color:#1A1A12;border:0;border-radius:999px;font:inherit;font-weight:700;font-size:16px;padding:15px;cursor:pointer}
+button[disabled]{opacity:.6}
+.alt{display:block;text-align:center;margin-top:14px;color:var(--muted);font-size:13px;background:none;border:0;padding:0;width:auto;margin-left:auto;margin-right:auto;text-decoration:underline;cursor:pointer;font-weight:400}
+.msg{margin-top:14px;font-size:14px;color:var(--err);text-align:center;min-height:1em}
+.hp{position:absolute;left:-9999px;opacity:0}
+.done{text-align:center;padding-top:10px}
+.done .ok{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;margin:8px auto 16px;color:var(--gold);font-size:30px}
+.hidden{display:none}
+footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26px;line-height:1.5}
+</style></head><body><main>
+<img class="logo" src="/cozinhagourmet/img/cg-logo.png" alt="Cozinha Gourmet">
+<section id="wrap">
+<p class="eyebrow">Check-in</p>
+<h1>Bem-vindo ao Cozinha Gourmet.</h1>
+<p class="sub">Digite seu WhatsApp para registrar sua chegada.</p>
+<form id="f" novalidate>
+<input class="hp" type="text" name="site" tabindex="-1" autocomplete="off">
+<label for="whatsapp"><b>WhatsApp</b> com DDD</label><input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" placeholder="(19) 99999-9999" autocomplete="tel" required>
+<div id="extra" class="hidden">
+<p class="sub" style="margin:16px 0 0">Não encontramos seu número na lista. Complete seu cadastro:</p>
+<label for="nome"><b>Nome completo</b></label><input id="nome" name="nome" type="text" autocomplete="name">
+<label for="instagram"><b>Instagram</b></label><input id="instagram" name="instagram" type="text" placeholder="@seuperfil" autocapitalize="none">
+<label class="check"><input type="checkbox" name="consentimento" required><span>Autorizo o <b>Cozinha Gourmet</b> a guardar meus dados para contato sobre o evento, conforme a LGPD, e a usar minha imagem e voz nos conteúdos gravados no jantar e publicados na websérie do programa.</span></label>
+</div>
+<button id="go" type="submit">Registrar chegada</button>
+<p class="msg" id="msg"></p>
+</form>
+</section>
+<section id="ok" class="done hidden"><div class="ok">✓</div><h1 id="okt">Chegada registrada.</h1><p class="sub">Aproveite a noite. Boa comida, boas conversas e novas conexões.</p></section>
+<footer>Cozinha Gourmet</footer>
+</main><script>
+const qs=new URLSearchParams(location.search);const EV=qs.get('e')||'';
+function masc(el){el.addEventListener('input',()=>{let d=el.value.replace(/\D/g,'').slice(0,11);if(d.length>6)el.value=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;else if(d.length>2)el.value=`(${d.slice(0,2)}) ${d.slice(2)}`;else el.value=d;});}
+</script>
+<script>
+const f=document.getElementById('f'),msg=document.getElementById('msg'),extra=document.getElementById('extra');masc(document.getElementById('whatsapp'));
+f.addEventListener('submit',async e=>{e.preventDefault();msg.textContent='';
+ const fd=Object.fromEntries(new FormData(f));fd.consentimento=f.consentimento.checked;fd.evento=EV;
+ if(fd.whatsapp.replace(/\D/g,'').length<10){msg.textContent='Digite seu WhatsApp com DDD.';return}
+ if(!extra.classList.contains('hidden')&&(!fd.nome||!fd.instagram||!fd.consentimento)){msg.textContent='Preencha nome, Instagram e marque a autorização.';return}
+ const b=document.getElementById('go');b.disabled=true;b.textContent='Registrando...';
+ try{const r=await fetch('/api/cg/checkin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fd)});const j=await r.json();
+  if(j.precisaCadastro){extra.classList.remove('hidden');b.disabled=false;b.textContent='Registrar chegada';return}
+  if(!j.ok)throw new Error(j.error||'Erro');
+  document.getElementById('wrap').classList.add('hidden');document.getElementById('ok').classList.remove('hidden');
+  if(j.nome)document.getElementById('okt').textContent='Seja bem-vindo, '+j.nome+'.';
+ }catch(e){msg.textContent=e.message;b.disabled=false;b.textContent='Registrar chegada'}
+});
+</script></body></html>
