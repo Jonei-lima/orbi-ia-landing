@@ -30,6 +30,7 @@ button[disabled]{opacity:.6}
 .done{text-align:center;padding-top:10px}
 .done .ok{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;margin:8px auto 16px;color:var(--gold);font-size:30px}
 .hidden{display:none}
+.orbi{display:flex;flex-direction:column;align-items:center;gap:6px;margin:30px auto 8px;text-decoration:none;color:rgba(239,231,215,.5);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;transition:opacity .2s}.orbi:hover{opacity:1}.orbi img{height:24px;width:auto;display:block}.orbi small{font-size:10.5px;letter-spacing:.02em;text-transform:none;color:rgba(239,231,215,.45)}
 footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26px;line-height:1.5}
 </style></head><body><main>
 <img class="logo" src="/cozinhagourmet/img/cg-logo.png" alt="Cozinha Gourmet">
@@ -52,6 +53,8 @@ footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26
 </section>
 <section id="ok" class="done hidden"><div class="ok">✓</div><h1 id="okt">Chegada registrada.</h1><p class="sub">Aproveite a noite. Boa comida, boas conversas e novas conexões.</p></section>
 <footer>Cozinha Gourmet</footer>
+<a class="orbi" href="https://www.agenteorbiia.com" target="_blank" rel="noopener"><span>Desenvolvido por</span><img src="/cozinhagourmet/img/orbi-ia.png" alt="ORBI IA"><small>Automação de agentes de IA</small></a>
+
 </main><script>
 const qs=new URLSearchParams(location.search);const EV=qs.get('e')||'';
 function masc(el){el.addEventListener('input',()=>{let d=el.value.replace(/\D/g,'').slice(0,11);if(d.length>6)el.value=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;else if(d.length>2)el.value=`(${d.slice(0,2)}) ${d.slice(2)}`;else el.value=d;});}
