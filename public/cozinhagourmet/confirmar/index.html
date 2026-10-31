@@ -20,6 +20,7 @@ label{display:block;font-size:13px;color:var(--muted);margin:14px 0 6px}
 label b{color:var(--bone);font-weight:600}
 input[type=text],input[type=tel],input[type=email]{width:100%;background:#0F160E;border:1px solid var(--line);border-radius:10px;color:var(--bone);font:inherit;font-size:16px;padding:13px 14px;outline:none}
 input:focus{border-color:var(--gold)}
+.req{color:var(--muted);font-weight:400}.erro{border-color:var(--err)!important}
 select{width:100%;background:#0F160E;border:1px solid var(--line);border-radius:10px;color:var(--bone);font:inherit;font-size:16px;padding:13px 40px 13px 14px;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23E3A63E' stroke-width='1.6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
 select:focus{border-color:var(--gold)}select:invalid{color:#7f8573}option{color:#141D13;background:#EFE7D7}
 
@@ -44,11 +45,11 @@ footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26
 <div class="card"><div class="date">11<small>NOV · QUA</small></div><div><strong>19h30 · Lar Brasileiro</strong><span>Rua Antônio Lapa, 240 · Cambuí, Campinas</span><br><a href="https://maps.app.goo.gl/oJUG9NQyQiiCt1Dq7" target="_blank" rel="noopener">Ver no mapa</a></div></div>
 <form id="f" novalidate>
 <input class="hp" type="text" name="site" tabindex="-1" autocomplete="off">
-<label for="nome"><b>Nome completo</b></label><input id="nome" name="nome" type="text" autocomplete="name" required>
-<label for="instagram"><b>Instagram</b></label><input id="instagram" name="instagram" type="text" placeholder="@seuperfil" autocapitalize="none" required>
-<label for="perfil"><b>Você é</b></label><select id="perfil" name="perfil" required><option value="" selected disabled>Selecione</option><option value="arquiteto">Arquiteto(a)</option><option value="designer_interiores">Designer de interiores</option><option value="decorador">Decorador(a)</option><option value="paisagista">Paisagista</option><option value="engenheiro">Engenheiro(a)</option><option value="construtora">Construtora ou incorporadora</option><option value="imobiliaria">Imobiliária ou corretor(a)</option><option value="empresario">Empresário(a)</option><option value="patrocinador">Patrocinador</option><option value="influenciador">Influenciador(a)</option><option value="imprensa">Imprensa</option><option value="chef">Chef</option><option value="fornecedor">Fornecedor ou parceiro</option><option value="equipe">Equipe do projeto</option><option value="acompanhante">Acompanhante de convidado</option><option value="outro">Outro</option></select>
-<div id="outro-wrap" class="hidden"><label for="perfil_outro"><b>Qual?</b></label><input id="perfil_outro" name="perfil_outro" type="text" maxlength="60"></div>
-<label for="whatsapp"><b>WhatsApp</b> com DDD</label><input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" placeholder="(19) 99999-9999" autocomplete="tel" required>
+<label for="nome"><b>Nome completo</b> <span class="req">(obrigatório)</span></label><input id="nome" name="nome" type="text" autocomplete="name" required>
+<label for="instagram"><b>Instagram</b> <span class="req">(obrigatório)</span></label><input id="instagram" name="instagram" type="text" placeholder="@seuperfil" autocapitalize="none" required>
+<label for="perfil"><b>Você é</b> <span class="req">(obrigatório)</span></label><select id="perfil" name="perfil" required><option value="" selected disabled>Selecione</option><option value="arquiteto">Arquiteto(a)</option><option value="designer_interiores">Designer de interiores</option><option value="decorador">Decorador(a)</option><option value="paisagista">Paisagista</option><option value="engenheiro">Engenheiro(a)</option><option value="construtora">Construtora ou incorporadora</option><option value="imobiliaria">Imobiliária ou corretor(a)</option><option value="empresario">Empresário(a)</option><option value="patrocinador">Patrocinador</option><option value="influenciador">Influenciador(a)</option><option value="imprensa">Imprensa</option><option value="chef">Chef</option><option value="fornecedor">Fornecedor ou parceiro</option><option value="equipe">Equipe do projeto</option><option value="acompanhante">Acompanhante de convidado</option><option value="outro">Outro</option></select>
+<div id="outro-wrap" class="hidden"><label for="perfil_outro"><b>Qual?</b> <span class="req">(obrigatório)</span></label><input id="perfil_outro" name="perfil_outro" type="text" maxlength="60"></div>
+<label for="whatsapp"><b>WhatsApp</b> com DDD <span class="req">(obrigatório)</span></label><input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" placeholder="(19) 99999-9999" autocomplete="tel" required>
 <label for="email"><b>E-mail</b> (opcional)</label><input id="email" name="email" type="email" autocomplete="email">
 <label class="check"><input type="checkbox" name="consentimento" required><span>Autorizo o <b>Cozinha Gourmet</b> a guardar meus dados para contato sobre o evento, conforme a LGPD, e a usar minha imagem e voz nos conteúdos gravados no jantar e publicados na websérie do programa.</span></label>
 <button id="go" type="submit">Confirmar presença</button>
@@ -70,9 +71,14 @@ masc(document.getElementById('whatsapp'));
 const w=qs.get('w');if(w){let d=w.replace(/\D/g,'');if(d.startsWith('55'))d=d.slice(2);const el=document.getElementById('whatsapp');el.value=d;el.dispatchEvent(new Event('input'));}
 async function enviar(status){
  msg.textContent='';const fd=Object.fromEntries(new FormData(f));fd.consentimento=f.consentimento.checked;fd.evento=EV;fd.status=status;
- if(!fd.nome||!fd.instagram||fd.whatsapp.replace(/\D/g,'').length<10){msg.textContent='Preencha nome, Instagram e WhatsApp com DDD.';return}
- if(!fd.perfil){msg.textContent='Selecione o que você é.';return}
- if(fd.perfil==='outro'&&!fd.perfil_outro){msg.textContent='Conte qual é o seu perfil.';return}
+ const falta=[];document.querySelectorAll('.erro').forEach(el=>el.classList.remove('erro'));
+ const marca=(id,nome)=>{document.getElementById(id).classList.add('erro');falta.push(nome)};
+ if(!fd.nome.trim())marca('nome','nome');
+ if(!fd.instagram.trim())marca('instagram','Instagram');
+ if(!fd.perfil)marca('perfil','o que você é');
+ else if(fd.perfil==='outro'&&!fd.perfil_outro.trim())marca('perfil_outro','qual é o seu perfil');
+ if(fd.whatsapp.replace(/\D/g,'').length<10)marca('whatsapp','WhatsApp com DDD');
+ if(falta.length){msg.textContent='Falta preencher: '+falta.join(', ')+'.';return}
  if(!fd.consentimento){msg.textContent='Para continuar, marque a autorização.';return}
  const b=document.getElementById('go');b.disabled=true;b.textContent='Enviando...';
  try{const r=await fetch('/api/cg/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fd)});const j=await r.json();
