@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase, whatsBR, insta, getEvento } from "../_lib";
+import { supabase, whatsBR, insta, getEvento, perfilDe, semColunaPerfil } from "../_lib";
 
 export async function POST(req: Request) {
   try {
@@ -19,11 +19,12 @@ export async function POST(req: Request) {
       if (!nome || !instagram || !b?.consentimento) {
         return NextResponse.json({ ok: false, precisaCadastro: true }, { status: 200 });
       }
-      const { data: novo, error } = await supabase
-        .from("cg_contatos")
-        .insert({ whatsapp, nome, instagram, origem: "checkin", consentimento_lgpd: true, consentimento_imagem: true })
-        .select("id,nome")
-        .single();
+      const { perfil, tipo } = perfilDe(b?.perfil, b?.perfil_outro);
+      const base: Record<string, unknown> = { whatsapp, nome, instagram, origem: "checkin", consentimento_lgpd: true, consentimento_imagem: true };
+      if (tipo) base.tipo = tipo;
+      const inserir = (dados: Record<string, unknown>) => supabase.from("cg_contatos").insert(dados).select("id,nome").single();
+      let { data: novo, error } = await inserir(perfil ? { ...base, perfil } : base);
+      if (error && semColunaPerfil(error)) ({ data: novo, error } = await inserir(base));
       if (error || !novo) throw error;
       contato = novo;
     }

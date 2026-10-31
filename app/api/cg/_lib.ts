@@ -49,3 +49,36 @@ export function quando(iso: string) {
   const hora = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" }).replace(":", "h");
   return `${dia}, às ${hora}`;
 }
+
+// Perfil de quem confirma (lista do formulário)
+const PERFIS: Record<string, string> = {
+  arquiteto: "Arquiteto(a)",
+  designer_interiores: "Designer de interiores",
+  decorador: "Decorador(a)",
+  paisagista: "Paisagista",
+  engenheiro: "Engenheiro(a)",
+  construtora: "Construtora ou incorporadora",
+  imobiliaria: "Imobiliária ou corretor(a)",
+  empresario: "Empresário(a)",
+  patrocinador: "Patrocinador",
+  influenciador: "Influenciador(a)",
+  imprensa: "Imprensa",
+  chef: "Chef",
+  fornecedor: "Fornecedor ou parceiro",
+  equipe: "Equipe do projeto",
+  acompanhante: "Acompanhante de convidado",
+  outro: "Outro",
+};
+export function perfilDe(raw: unknown, outro: unknown): { perfil: string | null; tipo: string | null } {
+  const v = String(raw || "");
+  if (!PERFIS[v]) return { perfil: null, tipo: null };
+  const perfil = v === "outro" ? `Outro: ${String(outro || "").trim().slice(0, 60) || "não informado"}` : PERFIS[v];
+  const tipo = v === "patrocinador" ? "patrocinador" : v === "imprensa" ? "imprensa" : null;
+  return { perfil, tipo };
+}
+
+// Grava mesmo se a coluna "perfil" ainda não existir no banco
+export function semColunaPerfil(e: unknown) {
+  const m = String((e as { message?: string })?.message || "");
+  return m.includes("perfil");
+}

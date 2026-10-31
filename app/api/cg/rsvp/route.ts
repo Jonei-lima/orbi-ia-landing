@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase, whatsBR, insta, getEvento, sendWhats, quando } from "../_lib";
+import { supabase, whatsBR, insta, getEvento, sendWhats, quando, perfilDe, semColunaPerfil } from "../_lib";
 
 export async function POST(req: Request) {
   try {
@@ -20,14 +20,13 @@ export async function POST(req: Request) {
     const evento = await getEvento(String(b?.evento || ""));
     if (!evento) return NextResponse.json({ ok: false, error: "Evento não encontrado." }, { status: 404 });
 
-    const { data: contato, error: e1 } = await supabase
-      .from("cg_contatos")
-      .upsert(
-        { whatsapp, nome, instagram, email: email || null, origem: "formulario", consentimento_lgpd: true, consentimento_imagem: true },
-        { onConflict: "whatsapp" }
-      )
-      .select("id")
-      .single();
+    const { perfil, tipo } = perfilDe(b?.perfil, b?.perfil_outro);
+    const base: Record<string, unknown> = { whatsapp, nome, instagram, email: email || null, origem: "formulario", consentimento_lgpd: true, consentimento_imagem: true };
+    if (tipo) base.tipo = tipo;
+    const salvar = (dados: Record<string, unknown>) =>
+      supabase.from("cg_contatos").upsert(dados, { onConflict: "whatsapp" }).select("id").single();
+    let { data: contato, error: e1 } = await salvar(perfil ? { ...base, perfil } : base);
+    if (e1 && semColunaPerfil(e1)) ({ data: contato, error: e1 } = await salvar(base));
     if (e1 || !contato) throw e1;
 
     const { error: e2 } = await supabase.from("cg_presencas").upsert(
@@ -40,11 +39,11 @@ export async function POST(req: Request) {
     if (status === "confirmado") {
       await sendWhats(
         whatsapp,
-        `Oi, ${primeiro}! Aqui é a Clara, do Cozinha Gourmet. Sua presença está confirmada.\n\n${quando(evento.data_hora)}\n${evento.local} · ${evento.endereco}\n${evento.maps_url || ""}\n\nNa chegada, é só ler o QR Code da recepção para registrar sua entrada. Qualquer dúvida, é só me chamar por aqui.`
+        `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Sua presença está confirmada.\n\n${quando(evento.data_hora)}\n${evento.local} · ${evento.endereco}\n${evento.maps_url || ""}\n\nNa chegada, é só ler o QR Code da recepção para registrar sua entrada. Te esperamos!`
       );
     }
     const admin = process.env.CG_ADMIN_NUMBER;
-    if (admin) await sendWhats(admin, `Cozinha Gourmet · ${status === "confirmado" ? "nova confirmação" : "recusa"}\n${nome} · ${instagram} · ${whatsapp}`);
+    if (admin) await sendWhats(admin, `Cozinha Gourmet · ${status === "confirmado" ? "nova confirmação" : "recusa"}\n${nome}${perfil ? " · " + perfil : ""}\n${instagram} · wa.me/${whatsapp}`);
 
     return NextResponse.json({ ok: true, nome: primeiro, status });
   } catch (e) {
