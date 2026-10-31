@@ -49,7 +49,7 @@ footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26
 <label for="perfil"><b>Você é</b></label><select id="perfil" name="perfil" required><option value="" selected disabled>Selecione</option><option value="arquiteto">Arquiteto(a)</option><option value="designer_interiores">Designer de interiores</option><option value="decorador">Decorador(a)</option><option value="paisagista">Paisagista</option><option value="engenheiro">Engenheiro(a)</option><option value="construtora">Construtora ou incorporadora</option><option value="imobiliaria">Imobiliária ou corretor(a)</option><option value="empresario">Empresário(a)</option><option value="patrocinador">Patrocinador</option><option value="influenciador">Influenciador(a)</option><option value="imprensa">Imprensa</option><option value="chef">Chef</option><option value="fornecedor">Fornecedor ou parceiro</option><option value="equipe">Equipe do projeto</option><option value="acompanhante">Acompanhante de convidado</option><option value="outro">Outro</option></select>
 <div id="outro-wrap" class="hidden"><label for="perfil_outro"><b>Qual?</b></label><input id="perfil_outro" name="perfil_outro" type="text" maxlength="60"></div>
 <label for="whatsapp"><b>WhatsApp</b> com DDD</label><input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" placeholder="(19) 99999-9999" autocomplete="tel" required>
-<label for="email">E-mail <span>(opcional)</span></label><input id="email" name="email" type="email" autocomplete="email">
+<label for="email"><b>E-mail</b> (opcional)</label><input id="email" name="email" type="email" autocomplete="email">
 <label class="check"><input type="checkbox" name="consentimento" required><span>Autorizo o <b>Cozinha Gourmet</b> a guardar meus dados para contato sobre o evento, conforme a LGPD, e a usar minha imagem e voz nos conteúdos gravados no jantar e publicados na websérie do programa.</span></label>
 <button id="go" type="submit">Confirmar presença</button>
 <button class="alt" id="nao" type="button">Não poderei ir</button>
@@ -71,7 +71,7 @@ const w=qs.get('w');if(w){let d=w.replace(/\D/g,'');if(d.startsWith('55'))d=d.sl
 async function enviar(status){
  msg.textContent='';const fd=Object.fromEntries(new FormData(f));fd.consentimento=f.consentimento.checked;fd.evento=EV;fd.status=status;
  if(!fd.nome||!fd.instagram||fd.whatsapp.replace(/\D/g,'').length<10){msg.textContent='Preencha nome, Instagram e WhatsApp com DDD.';return}
- if(status!=='recusado'&&!fd.perfil){msg.textContent='Selecione o que você é.';return}
+ if(!fd.perfil){msg.textContent='Selecione o que você é.';return}
  if(fd.perfil==='outro'&&!fd.perfil_outro){msg.textContent='Conte qual é o seu perfil.';return}
  if(!fd.consentimento){msg.textContent='Para continuar, marque a autorização.';return}
  const b=document.getElementById('go');b.disabled=true;b.textContent='Enviando...';
