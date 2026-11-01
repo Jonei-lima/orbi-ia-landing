@@ -82,3 +82,19 @@ export function semColunaPerfil(e: unknown) {
   const m = String((e as { message?: string })?.message || "");
   return m.includes("perfil");
 }
+
+// Restrição alimentar (lista do formulário)
+const RESTRICOES: Record<string, string> = {
+  nenhuma: "Nenhuma",
+  celiaco: "Doença celíaca (sem glúten)",
+  lactose: "Intolerância à lactose",
+  frutos_do_mar: "Alergia a frutos do mar",
+  amendoim_castanhas: "Alergia a amendoim ou castanhas",
+  vegetariano: "Vegetariano(a)",
+  vegano: "Vegano(a)",
+  outra: "Outra",
+};
+export function restricaoDe(raw: unknown): string | null {
+  const v = String(raw || "");
+  return RESTRICOES[v] && v !== "nenhuma" ? RESTRICOES[v] : null;
+}

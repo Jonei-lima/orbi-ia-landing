@@ -51,6 +51,8 @@ footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26
 <div id="outro-wrap" class="hidden"><label for="perfil_outro"><b>Qual?</b> <span class="req">(obrigatório)</span></label><input id="perfil_outro" name="perfil_outro" type="text" maxlength="60"></div>
 <label for="whatsapp"><b>WhatsApp</b> com DDD <span class="req">(obrigatório)</span></label><input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" placeholder="(19) 99999-9999" autocomplete="tel" required>
 <label for="email"><b>E-mail</b> (opcional)</label><input id="email" name="email" type="email" autocomplete="email">
+<label for="restricao"><b>Restrição alimentar ou alergia</b> <span class="req">(obrigatório)</span></label><select id="restricao" name="restricao"><option value="" selected disabled>Selecione</option><option value="nenhuma">Nenhuma</option><option value="celiaco">Doença celíaca (sem glúten)</option><option value="lactose">Intolerância à lactose</option><option value="frutos_do_mar">Alergia a frutos do mar</option><option value="amendoim_castanhas">Alergia a amendoim ou castanhas</option><option value="vegetariano">Vegetariano(a)</option><option value="vegano">Vegano(a)</option><option value="outra">Outra</option></select>
+<label for="restricao_obs"><b>Observação</b> <span class="req" id="obs-req">(opcional)</span></label><input id="restricao_obs" name="restricao_obs" type="text" maxlength="200" placeholder="Ex.: não como camarão, alergia a corante">
 <label class="check"><input type="checkbox" name="consentimento" required><span>Autorizo o <b>Cozinha Gourmet</b> a guardar meus dados para contato sobre o evento, conforme a LGPD, e a usar minha imagem e voz nos conteúdos gravados no jantar e publicados na websérie do programa.</span></label>
 <button id="go" type="submit">Confirmar presença</button>
 <button class="alt" id="nao" type="button">Não poderei ir</button>
@@ -66,7 +68,7 @@ const qs=new URLSearchParams(location.search);const EV=qs.get('e')||'';
 function masc(el){el.addEventListener('input',()=>{let d=el.value.replace(/\D/g,'').slice(0,11);if(d.length>6)el.value=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;else if(d.length>2)el.value=`(${d.slice(0,2)}) ${d.slice(2)}`;else el.value=d;});}
 </script>
 <script>
-const f=document.getElementById('f'),msg=document.getElementById('msg');const pf=document.getElementById('perfil'),ow=document.getElementById('outro-wrap');pf.addEventListener('change',()=>ow.classList.toggle('hidden',pf.value!=='outro'));
+const f=document.getElementById('f'),msg=document.getElementById('msg');const pf=document.getElementById('perfil'),ow=document.getElementById('outro-wrap');pf.addEventListener('change',()=>ow.classList.toggle('hidden',pf.value!=='outro'));const rs=document.getElementById('restricao');rs.addEventListener('change',()=>{document.getElementById('obs-req').textContent=rs.value==='outra'?'(obrigatório)':'(opcional)'});
 masc(document.getElementById('whatsapp'));
 const w=qs.get('w');if(w){let d=w.replace(/\D/g,'');if(d.startsWith('55'))d=d.slice(2);const el=document.getElementById('whatsapp');el.value=d;el.dispatchEvent(new Event('input'));}
 async function enviar(status){
@@ -78,6 +80,7 @@ async function enviar(status){
  if(!fd.perfil)marca('perfil','o que você é');
  else if(fd.perfil==='outro'&&!fd.perfil_outro.trim())marca('perfil_outro','qual é o seu perfil');
  if(fd.whatsapp.replace(/\D/g,'').length<10)marca('whatsapp','WhatsApp com DDD');
+ if(status!=='recusado'){if(!fd.restricao)marca('restricao','restrição alimentar (ou "Nenhuma")');else if(fd.restricao==='outra'&&!fd.restricao_obs.trim())marca('restricao_obs','qual é a restrição');}
  if(falta.length){msg.textContent='Falta preencher: '+falta.join(', ')+'.';return}
  if(!fd.consentimento){msg.textContent='Para continuar, marque a autorização.';return}
  const b=document.getElementById('go');b.disabled=true;b.textContent='Enviando...';
@@ -85,6 +88,7 @@ async function enviar(status){
   if(!j.ok)throw new Error(j.error||'Erro');
   document.getElementById('form-wrap').classList.add('hidden');document.getElementById('ok').classList.remove('hidden');
   if(status==='recusado'){document.getElementById('okt').textContent='Obrigado por avisar, '+j.nome+'.';document.getElementById('oks').textContent='Sentiremos sua falta. Vamos te avisar sobre os próximos jantares.';}
+  else if(j.status==='lista_espera'){document.getElementById('okt').textContent='Você está na lista de espera, '+j.nome+'.';document.getElementById('oks').textContent='Os lugares deste jantar acabaram. Se abrir uma vaga, a Clara te avisa pelo WhatsApp.';}
   else document.getElementById('okt').textContent='Presença confirmada, '+j.nome+'.';
   scrollTo(0,0);
  }catch(e){msg.textContent=e.message;b.disabled=false;b.textContent='Confirmar presença'}
