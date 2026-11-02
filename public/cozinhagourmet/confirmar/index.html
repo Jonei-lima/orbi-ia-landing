@@ -36,6 +36,7 @@ button[disabled]{opacity:.6}
 .hidden{display:none}
 .orbi{display:flex;flex-direction:column;align-items:center;gap:6px;margin:30px auto 8px;text-decoration:none;color:rgba(239,231,215,.5);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;transition:opacity .2s}.orbi:hover{opacity:1}.orbi img{height:24px;width:auto;display:block}.orbi small{font-size:10.5px;letter-spacing:.02em;text-transform:none;color:rgba(239,231,215,.45)}
 .nexo{display:flex;align-items:center;justify-content:center;gap:10px;margin:-10px auto 22px;color:rgba(239,231,215,.55);font-size:11px;letter-spacing:.12em;text-transform:uppercase}.nexo img{height:26px;width:auto;display:block}
+.hint{font-size:12px;color:var(--muted);line-height:1.45;margin:8px 0 0}
 footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26px;line-height:1.5}
 </style></head><body><main>
 <img class="logo" src="/cozinhagourmet/img/cg-logo.png" alt="Cozinha Gourmet">
@@ -55,6 +56,7 @@ footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26
 <label for="whatsapp"><b>WhatsApp</b> com DDD <span class="req">(obrigatório)</span></label><input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" placeholder="(19) 99999-9999" autocomplete="tel" required>
 <label for="email"><b>E-mail</b> (opcional)</label><input id="email" name="email" type="email" autocomplete="email">
 <label for="restricao"><b>Restrição alimentar ou alergia</b> <span class="req">(obrigatório)</span></label><select id="restricao" name="restricao"><option value="" selected disabled>Selecione</option><option value="nenhuma">Nenhuma</option><option value="celiaco">Doença celíaca (sem glúten)</option><option value="lactose">Intolerância à lactose</option><option value="frutos_do_mar">Alergia a frutos do mar</option><option value="amendoim_castanhas">Alergia a amendoim ou castanhas</option><option value="vegetariano">Vegetariano(a)</option><option value="vegano">Vegano(a)</option><option value="outra">Outra</option></select>
+<p class="hint">O cardápio é único, definido pelo chef e servido igual para todos, sem substituições. A informação é só para a organização saber.</p>
 <label for="restricao_obs"><b>Observação</b> <span class="req" id="obs-req">(opcional)</span></label><input id="restricao_obs" name="restricao_obs" type="text" maxlength="200" placeholder="Ex.: não como camarão, alergia a corante">
 <label class="check"><input type="checkbox" name="consentimento" required><span>Autorizo o <b>Cozinha Gourmet</b> a guardar meus dados para contato sobre o evento, conforme a LGPD, e a usar minha imagem e voz nos conteúdos gravados no jantar e publicados na websérie do programa.</span></label>
 <button id="go" type="submit">Confirmar presença</button>
