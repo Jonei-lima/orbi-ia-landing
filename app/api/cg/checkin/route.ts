@@ -11,7 +11,21 @@ export async function POST(req: Request) {
     const evento = await getEvento(String(b?.evento || ""));
     if (!evento) return NextResponse.json({ ok: false, error: "Evento não encontrado." }, { status: 404 });
 
-    let { data: contato } = await supabase.from("cg_contatos").select("id,nome").eq("whatsapp", whatsapp).maybeSingle();
+    let { data: contato } = await supabase.from("cg_contatos").select("id,nome,consentimento_imagem").eq("whatsapp", whatsapp).maybeSingle();
+    let semImagem = false;
+
+    // Quem já estava na lista (confirmou pelo WhatsApp, por exemplo) precisa autorizar imagem e voz na chegada
+    if (contato && !contato.consentimento_imagem) {
+      const resp = String(b?.imagem || "");
+      if (resp !== "sim" && resp !== "nao") {
+        return NextResponse.json({ ok: false, precisaAutorizacao: true, nome: (contato.nome || "").split(" ")[0] }, { status: 200 });
+      }
+      if (resp === "sim") {
+        await supabase.from("cg_contatos").update({ consentimento_imagem: true, consentimento_lgpd: true }).eq("id", contato.id);
+      } else {
+        semImagem = true;
+      }
+    }
 
     if (!contato) {
       const nome = String(b?.nome || "").trim().slice(0, 120);
@@ -26,16 +40,17 @@ export async function POST(req: Request) {
       let { data: novo, error } = await inserir(perfil ? { ...base, perfil } : base);
       if (error && semColunaPerfil(error)) ({ data: novo, error } = await inserir(base));
       if (error || !novo) throw error;
-      contato = novo;
+      contato = { ...novo, consentimento_imagem: true };
     }
 
     const { error: e2 } = await supabase.from("cg_presencas").upsert(
-      { evento_id: evento.id, contato_id: contato.id, status: "presente", checkin_em: new Date().toISOString() },
+      { evento_id: evento.id, contato_id: contato!.id, status: "presente", checkin_em: new Date().toISOString(),
+        ...(semImagem ? { observacao: "Não autorizou o uso de imagem e voz (check-in)" } : {}) },
       { onConflict: "evento_id,contato_id" }
     );
     if (e2) throw e2;
 
-    return NextResponse.json({ ok: true, nome: (contato.nome || "").split(" ")[0] });
+    return NextResponse.json({ ok: true, semImagem, nome: (contato!.nome || "").split(" ")[0] });
   } catch (e) {
     console.error("CG checkin", e);
     return NextResponse.json({ ok: false, error: "Não foi possível registrar agora. Tente de novo." }, { status: 500 });

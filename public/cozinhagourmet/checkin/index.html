@@ -56,11 +56,16 @@ footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26
 <div id="outro-wrap" class="hidden"><label for="perfil_outro"><b>Qual?</b> <span class="req">(obrigatório)</span></label><input id="perfil_outro" name="perfil_outro" type="text" maxlength="60"></div>
 <label class="check"><input type="checkbox" name="consentimento" required><span>Autorizo o <b>Cozinha Gourmet</b> a guardar meus dados para contato sobre o evento, conforme a LGPD, e a usar minha imagem e voz nos conteúdos gravados no jantar e publicados na websérie do programa.</span></label>
 </div>
+<div id="autoriza" class="hidden">
+<p class="sub" id="auth-t" style="margin:16px 0 0">Antes de entrar: a noite será gravada para a websérie do programa.</p>
+<label class="check"><input type="radio" name="imagem" value="sim"><span>Autorizo o <b>Cozinha Gourmet</b> a usar minha imagem e voz nos conteúdos gravados no jantar e publicados na websérie do programa, e a guardar meus dados para contato sobre o evento, conforme a LGPD.</span></label>
+<label class="check"><input type="radio" name="imagem" value="nao"><span>Prefiro não aparecer nos vídeos.</span></label>
+</div>
 <button id="go" type="submit">Registrar chegada</button>
 <p class="msg" id="msg"></p>
 </form>
 </section>
-<section id="ok" class="done hidden"><div class="ok">✓</div><h1 id="okt">Chegada registrada.</h1><p class="sub">Aproveite a noite. Boa comida, boas conversas e novas conexões.</p></section>
+<section id="ok" class="done hidden"><div class="ok">✓</div><h1 id="okt">Chegada registrada.</h1><p class="sub">Aproveite a noite. Boa comida, boas conversas e novas conexões.</p><p class="sub hidden" id="semimg">Anotamos que você prefere não aparecer nos vídeos. Avise também a equipe de gravação na recepção.</p></section>
 <footer>Cozinha Gourmet</footer>
 <a class="orbi" href="https://www.agenteorbiia.com" target="_blank" rel="noopener"><span>Desenvolvido por</span><img src="/cozinhagourmet/img/orbi-ia.png" alt="ORBI IA"><small>Automação de agentes de IA</small></a>
 
@@ -74,13 +79,17 @@ masc(document.getElementById('whatsapp'));
 f.addEventListener('submit',async e=>{e.preventDefault();msg.textContent='';
  const fd=Object.fromEntries(new FormData(f));fd.consentimento=f.consentimento.checked;fd.evento=EV;
  if(fd.whatsapp.replace(/\D/g,'').length<10){msg.textContent='Digite seu WhatsApp com DDD.';return}
+ const au=document.getElementById('autoriza');
+ if(!au.classList.contains('hidden')&&!fd.imagem){msg.textContent='Escolha uma das opções sobre a gravação.';return}
  if(!extra.classList.contains('hidden')&&(!fd.nome||!fd.instagram||!fd.perfil||(fd.perfil==='outro'&&!fd.perfil_outro)||!fd.consentimento)){msg.textContent='Preencha nome, Instagram, o que você é e marque a autorização.';return}
  const b=document.getElementById('go');b.disabled=true;b.textContent='Registrando...';
  try{const r=await fetch('/api/cg/checkin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fd)});const j=await r.json();
   if(j.precisaCadastro){extra.classList.remove('hidden');b.disabled=false;b.textContent='Registrar chegada';return}
+  if(j.precisaAutorizacao){au.classList.remove('hidden');if(j.nome)document.getElementById('auth-t').textContent='Que bom ter você aqui, '+j.nome+'! Antes de entrar: a noite será gravada para a websérie do programa.';b.disabled=false;b.textContent='Registrar chegada';return}
   if(!j.ok)throw new Error(j.error||'Erro');
   document.getElementById('wrap').classList.add('hidden');document.getElementById('ok').classList.remove('hidden');
   if(j.nome)document.getElementById('okt').textContent='Seja bem-vindo, '+j.nome+'.';
+  if(j.semImagem)document.getElementById('semimg').classList.remove('hidden');
  }catch(e){msg.textContent=e.message;b.disabled=false;b.textContent='Registrar chegada'}
 });
 </script></body></html>
