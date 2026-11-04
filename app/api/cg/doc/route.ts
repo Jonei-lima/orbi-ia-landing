@@ -31,6 +31,9 @@ async function evento(doc: Doc, req: Request, tipo: string, detalhe: unknown = n
 async function whats(number: string, text: string) {
   const url = process.env.EVOLUTION_URL, key = process.env.EVOLUTION_API_KEY, inst = process.env.CG_EVOLUTION_INSTANCE;
   if (!url || !key || !inst || !number) return;
+  // Marca o envio como da Clara (sem texto) para o n8n não tratar como resposta manual
+  // e para o código de assinatura não entrar no histórico de conversa dela
+  await supabase.from("cg_mensagens").insert({ whatsapp: number, direcao: "out", tipo: "documento", conteudo: null });
   try {
     await fetch(`${url}/message/sendText/${inst}`, {
       method: "POST", headers: { "Content-Type": "application/json", apikey: key },
