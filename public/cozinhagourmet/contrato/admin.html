@@ -78,6 +78,7 @@ function render(ev){
   $('edicao').classList.toggle('hidden',!editavel);$('liberar').classList.toggle('hidden',d.status!=='rascunho');
   $('ed-dica').textContent=d.status==='rascunho'?'Ajuste o que precisar antes de liberar. Item com texto vazio é removido.':'O patrocinador já tem o link. Se você mudar o texto, ele verá a versão nova ao abrir.';
   if(editavel)$('editor').innerHTML=d.clausulas.map((c,i)=>`<div class="cl"><input type="text" data-ct="${i}" value="${esc(c.titulo)}" style="font-family:Fraunces,serif;font-size:17px;font-weight:600">${c.itens.map((it,j)=>`<div class="it"><span class="n">${it.n}</span><textarea data-c="${i}" data-i="${j}">${esc(it.texto)}</textarea></div>`).join('')}<div style="padding-left:56px"><button class="link" data-add="${i}">+ adicionar item</button></div></div>`).join('');
+  document.querySelectorAll('#editor textarea').forEach(t=>{const fit=()=>{t.style.height='auto';t.style.height=(t.scrollHeight+4)+'px'};fit();t.addEventListener('input',fit)});
   document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{coletar();D.clausulas[+b.dataset.add].itens.push({n:'novo',texto:' '});render(ev)});
   const an=d.status==='alteracao'&&d.proposta;$('analise').classList.toggle('hidden',!an);
   if(an){$('comentario-parte').innerHTML=d.proposta.comentario?`<div class="banner"><b>Comentário do patrocinador:</b> ${esc(d.proposta.comentario)}</div>`:'';
