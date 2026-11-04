@@ -1,0 +1,52 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Novo documento · Cozinha Gourmet</title><meta name="robots" content="noindex">
+<link rel="icon" href="/cozinhagourmet/img/cg-logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Manrope:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="/cozinhagourmet/contrato/doc.css">
+</head><body><main style="max-width:680px">
+<img class="logo" src="/cozinhagourmet/img/cg-logo.png" alt="Cozinha Gourmet">
+<p class="eyebrow" style="text-align:center">Área da organização · não compartilhe este link</p>
+<h1>Novo contrato ou termo</h1>
+<p class="muted">Preencha os dados do patrocinador. O documento nasce como rascunho: na próxima tela você revisa o texto e libera o link.</p>
+<form id="f">
+  <label for="modelo"><b>Modelo</b></label>
+  <select id="modelo" required>
+    <option value="termo_entrada">Termo de compromisso · Cota Entrada</option>
+    <option value="termo_prato">Termo de compromisso · Cota Prato Principal</option>
+    <option value="termo_anfitriao">Termo de compromisso · Cota Anfitrião</option>
+    <option value="contrato_anfitriao">Contrato de patrocínio e cessão de espaço (Anfitrião que recebe o jantar)</option>
+  </select>
+  <div class="row two">
+    <div><label for="razao"><b>Razão social</b></label><input id="razao" type="text"></div>
+    <div><label for="fantasia"><b>Nome da marca</b> (como aparece no texto)</label><input id="fantasia" type="text"></div>
+  </div>
+  <div class="row two">
+    <div><label for="cnpj"><b>CNPJ</b></label><input id="cnpj" type="text" inputmode="numeric"></div>
+    <div><label for="segmento"><b>Segmento exclusivo</b></label><input id="segmento" type="text" placeholder="Ex.: pneus e serviços automotivos"></div>
+  </div>
+  <label for="endereco"><b>Endereço</b></label><input id="endereco" type="text">
+  <div class="row two">
+    <div><label for="representante"><b>Representante</b> (nome completo)</label><input id="representante" type="text"></div>
+    <div><label for="whatsapp"><b>WhatsApp do representante</b></label><input id="whatsapp" type="tel" inputmode="numeric" placeholder="(19) 99999-9999"></div>
+  </div>
+  <div class="row two">
+    <div><label for="valor"><b>Valor</b> (R$)</label><input id="valor" type="text" inputmode="decimal" placeholder="1.797,00"></div>
+    <div><label for="pagamento"><b>Forma de pagamento</b> (opcional)</label><input id="pagamento" type="text" placeholder="à vista, até 5 dias antes do evento, por PIX"></div>
+  </div>
+  <div style="margin-top:18px"><button class="btn" id="go" type="submit">Criar rascunho</button></div>
+  <p class="msg e" id="msg"></p>
+</form>
+<section class="box"><h2 style="margin-top:0">Documentos criados</h2><div id="lista" class="muted">Carregando…</div></section>
+<footer>Cozinha Gourmet · ORBI IA</footer>
+</main>
+<script>
+const K=new URLSearchParams(location.search).get('k')||'';const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function api(body){const r=await fetch('/api/cg/doc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({k:K,...body})});const j=await r.json();if(!j.ok)throw new Error(j.error||'Erro');return j}
+const ST={rascunho:'Rascunho',enviado:'Aguardando patrocinador',alteracao:'Sugestões para analisar',assinado_parte:'Falta sua assinatura',concluido:'Concluído',cancelado:'Cancelado'};
+$('f').onsubmit=async e=>{e.preventDefault();const b=$('go');b.disabled=true;$('msg').textContent='';
+  const v=id=>$(id).value.trim();
+  try{const j=await api({acao:'novo',modelo:v('modelo'),valor:v('valor'),pagamento:v('pagamento'),parte:{razao:v('razao'),fantasia:v('fantasia'),cnpj:v('cnpj'),endereco:v('endereco'),representante:v('representante'),whatsapp:v('whatsapp'),segmento:v('segmento')}});location.href=j.admin}
+  catch(err){$('msg').textContent=err.message;b.disabled=false}};
+api({acao:'listar'}).then(j=>{$('lista').innerHTML=j.docs.length?j.docs.map(d=>`<div style="padding:8px 0;border-bottom:1px solid var(--line)"><a href="${d.admin}" style="color:var(--bone)">${esc(d.parte.fantasia)} · ${esc(d.titulo)}</a><br><span class="small">${ST[d.status]||d.status} · R$ ${Number(d.valor).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span></div>`).join(''):'Nenhum ainda.'}).catch(e=>{$('lista').textContent=e.message;$('f').classList.add('hidden')});
+</script></body></html>
