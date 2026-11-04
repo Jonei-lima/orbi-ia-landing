@@ -46,7 +46,7 @@ const COTAS: Record<string, { nome: string; filme: string; extra: string[]; conv
       "Encaminhamento dos contatos de quem pedir informações sobre a {{EMPRESA}} pelo WhatsApp do programa, respeitada a LGPD.",
       "Relatório de alcance do episódio, em até 30 (trinta) dias após a publicação.",
     ],
-    convites: "3 (três)",
+    convites: "4 (quatro)",
   },
 };
 
