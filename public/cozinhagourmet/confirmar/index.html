@@ -70,6 +70,7 @@ footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:26
 
 </main><script>
 const qs=new URLSearchParams(location.search);const EV=qs.get('e')||'';
+addEventListener('DOMContentLoaded',()=>{const pv=qs.get('p');const sel=document.getElementById('perfil');if(pv&&sel&&[...sel.options].some(o=>o.value===pv)){sel.value=pv;sel.dispatchEvent(new Event('change'))}});
 function masc(el){el.addEventListener('input',()=>{let d=el.value.replace(/\D/g,'').slice(0,11);if(d.length>6)el.value=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;else if(d.length>2)el.value=`(${d.slice(0,2)}) ${d.slice(2)}`;else el.value=d;});}
 </script>
 <script>
