@@ -17,12 +17,12 @@
     <option value="contrato_anfitriao">Contrato de patrocínio e cessão de espaço (Anfitrião que recebe o jantar)</option>
   </select>
   <div class="row two">
-    <div><label for="razao"><b>Razão social</b></label><input id="razao" type="text"></div>
-    <div><label for="fantasia"><b>Nome da marca</b> (como aparece no texto)</label><input id="fantasia" type="text"></div>
+    <div><label for="cnpj"><b>CNPJ</b> (preenche razão social e endereço)</label><input id="cnpj" type="text" inputmode="numeric"></div>
+    <div><label for="segmento"><b>Segmento exclusivo</b></label><input id="segmento" type="text" placeholder="Ex.: pneus e serviços automotivos"></div>
   </div>
   <div class="row two">
-    <div><label for="cnpj"><b>CNPJ</b></label><input id="cnpj" type="text" inputmode="numeric"></div>
-    <div><label for="segmento"><b>Segmento exclusivo</b></label><input id="segmento" type="text" placeholder="Ex.: pneus e serviços automotivos"></div>
+    <div><label for="razao"><b>Razão social</b></label><input id="razao" type="text"></div>
+    <div><label for="fantasia"><b>Nome da marca</b> (como aparece no texto)</label><input id="fantasia" type="text"></div>
   </div>
   <label for="endereco"><b>Endereço</b></label><input id="endereco" type="text">
   <div class="row two">
@@ -44,6 +44,11 @@ const K=new URLSearchParams(location.search).get('k')||'';const $=id=>document.g
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 async function api(body){const r=await fetch('/api/cg/doc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({k:K,...body})});const j=await r.json();if(!j.ok)throw new Error(j.error||'Erro');return j}
 const ST={rascunho:'Rascunho',enviado:'Aguardando patrocinador',alteracao:'Sugestões para analisar',assinado_parte:'Falta sua assinatura',concluido:'Concluído',cancelado:'Cancelado'};
+$('cnpj').addEventListener('blur',async()=>{const c=$('cnpj').value.replace(/\D/g,'');if(c.length!==14||$('razao').value)return;$('msg').textContent='Buscando dados do CNPJ…';
+  try{const r=await fetch('https://brasilapi.com.br/api/cnpj/v1/'+c);if(!r.ok)throw 0;const j=await r.json();
+   $('razao').value=j.razao_social||'';if(!$('fantasia').value)$('fantasia').value=(j.nome_fantasia||'').replace(/\b\w+/g,w=>w[0]+w.slice(1).toLowerCase());
+   const end=[[j.descricao_tipo_de_logradouro,j.logradouro].filter(Boolean).join(' '),j.numero,j.complemento,j.bairro,(j.municipio||'')+'/'+(j.uf||''),j.cep?'CEP '+String(j.cep).replace(/(\d{5})(\d{3})/,'$1-$2'):''].filter(x=>x&&String(x).trim()).join(', ');
+   if(!$('endereco').value)$('endereco').value=end;$('msg').textContent=''}catch(e){$('msg').textContent='Não achei esse CNPJ automaticamente. Preencha à mão.'}});
 $('f').onsubmit=async e=>{e.preventDefault();const b=$('go');b.disabled=true;$('msg').textContent='';
   const v=id=>$(id).value.trim();
   try{const j=await api({acao:'novo',modelo:v('modelo'),valor:v('valor'),pagamento:v('pagamento'),parte:{razao:v('razao'),fantasia:v('fantasia'),cnpj:v('cnpj'),endereco:v('endereco'),representante:v('representante'),whatsapp:v('whatsapp'),segmento:v('segmento')}});location.href=j.admin}

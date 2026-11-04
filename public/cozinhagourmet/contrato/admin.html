@@ -3,6 +3,7 @@
 <link rel="icon" href="/cozinhagourmet/img/cg-logo.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Manrope:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="/cozinhagourmet/contrato/doc.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head><body><main>
 <img class="logo" src="/cozinhagourmet/img/cg-logo.png" alt="Cozinha Gourmet">
 <p class="eyebrow" style="text-align:center">Área da organização · não compartilhe este link</p>
@@ -15,6 +16,7 @@
   <!-- Link para o patrocinador -->
   <section class="box hidden" id="link-box">
     <h2 style="margin-top:0">Link para o patrocinador</h2>
+    <div id="qr-wrap" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px"><div id="qr" style="background:#EFE7D7;padding:10px;border-radius:12px;line-height:0"></div><p class="muted" style="flex:1;min-width:200px;margin:0">Está com o cliente? Peça para ele apontar a câmera do celular dele para este código. Ele lê e assina no aparelho dele, com o código chegando no WhatsApp dele.</p></div>
     <input type="text" id="link" readonly>
     <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="copiar">Copiar link</button><a class="btn sec" id="wa" target="_blank" rel="noopener">Enviar pelo WhatsApp</a><a class="btn sec" id="ver" target="_blank" rel="noopener">Ver como o patrocinador</a></div>
   </section>
@@ -70,6 +72,7 @@ function render(ev){
   $('status').innerHTML=`<div class="banner ${d.status==='concluido'?'ok':d.status==='cancelado'?'err':''}">${NOMES[d.status]||d.status}</div>`;
   const lib=d.status!=='rascunho'&&d.status!=='cancelado';
   $('link-box').classList.toggle('hidden',!lib);$('link').value=d.link;
+  const aberto=['enviado','alteracao'].includes(d.status);$('qr-wrap').classList.toggle('hidden',!aberto);if(aberto&&window.QRCode&&!$('qr').dataset.ok){new QRCode($('qr'),{text:d.link,width:170,height:170,colorDark:'#141D13',colorLight:'#EFE7D7'});$('qr').dataset.ok='1'}
   $('wa').href='https://wa.me/'+d.parte.whatsapp+'?text='+encodeURIComponent(`Olá! Segue o ${d.titulo} do Cozinha Gourmet para leitura e assinatura: ${d.link}`);$('ver').href=d.link;
   const editavel=['rascunho','enviado'].includes(d.status)&&!d.assinaturas.length;
   $('edicao').classList.toggle('hidden',!editavel);$('liberar').classList.toggle('hidden',d.status!=='rascunho');
