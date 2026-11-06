@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     if (statusFinal === "confirmado") {
       await sendWhats(
         whatsapp,
-        `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Sua presença está confirmada.\n\n${quando(evento.data_hora)}\n${evento.local} · ${evento.endereco}\n${evento.maps_url || ""}\n\nNa chegada, é só ler o QR Code da recepção para registrar sua entrada. Te esperamos!`
+        `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Sua presença está confirmada.\n\n${quando(evento.data_hora)}\n${evento.local} · ${evento.endereco}\n${evento.maps_url || ""}\n\nTraje: esporte fino. Na chegada, é só ler o QR Code da recepção para registrar sua entrada.\n\nSalve este número: é por aqui que mando os lembretes. E siga o programa no Instagram para acompanhar os bastidores: instagram.com/programacozinhagourmet\n\nTe esperamos!`
       );
     } else if (statusFinal === "lista_espera") {
       await sendWhats(
