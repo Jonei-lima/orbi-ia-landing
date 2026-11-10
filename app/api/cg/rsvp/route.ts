@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import { supabase, whatsBR, insta, getEvento, sendWhats, quando, perfilDe, semColunaPerfil, restricaoDe } from "../_lib";
 
 // Grupos com limite de lugares por jantar (o limite vem do banco)
-const GRUPOS: Record<string, string> = { profissionais: "profissionais de arquitetura e design", influenciadores: "influenciadores" };
+const GRUPOS: Record<string, string> = { profissionais: "profissionais de arquitetura, design e engenharia", influenciadores: "influenciadores" };
 function textoEspera(primeiro: string, data: string, motivo?: string, limite?: number) {
   const g = GRUPOS[motivo || ""];
+  const pergunta = "Se houver alguma desistência, você quer que eu te avise para decidir se ainda quer ir? É só me responder por aqui.";
   if (g && limite) {
-    return `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Obrigada pelo carinho em confirmar! Para manter a mesa equilibrada, o jantar de ${data} tem ${limite} lugares para ${g}, e eles já foram preenchidos.\n\nVocê está na nossa lista de espera. Se houver algum cancelamento, eu entro em contato por aqui para saber se você ainda tem interesse em ir.`;
+    return `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Obrigada pelo carinho em confirmar! Para manter a mesa equilibrada, o jantar de ${data} tem ${limite} lugares para ${g}, e eles já foram preenchidos.\n\n${pergunta}`;
   }
-  return `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Os lugares do jantar de ${data} já foram preenchidos, mas você está na nossa lista de espera. Se houver algum cancelamento, eu entro em contato por aqui para saber se você ainda tem interesse em ir.`;
+  return `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Obrigada pelo carinho em confirmar! Os lugares do jantar de ${data} já foram preenchidos.\n\n${pergunta}`;
 }
 
 export async function POST(req: Request) {
@@ -82,7 +83,7 @@ export async function POST(req: Request) {
     if (admin) await sendWhats(admin, `Cozinha Gourmet · ${rotulo}\n${nome}${perfil ? " · " + perfil : ""}\n${instagram} · wa.me/${whatsapp}${rest}`);
 
     const aviso = statusFinal === "lista_espera" && GRUPOS[motivo || ""]
-      ? `Este jantar tem ${limite} lugares para ${GRUPOS[motivo || ""]}, e eles já foram preenchidos. Se houver um cancelamento, a Clara entra em contato pelo WhatsApp para saber se você ainda tem interesse em ir.`
+      ? `Este jantar tem ${limite} lugares para ${GRUPOS[motivo || ""]}, e eles já foram preenchidos. A Clara vai te perguntar no WhatsApp se você quer ser avisado(a) caso alguém desista.`
       : undefined;
     return NextResponse.json({ ok: true, nome: primeiro, status: statusFinal, aviso });
   } catch (e) {
