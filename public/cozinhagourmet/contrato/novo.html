@@ -49,7 +49,7 @@ $('cnpj').addEventListener('blur',async()=>{const c=$('cnpj').value.replace(/\D/
   try{const r=await fetch('https://brasilapi.com.br/api/cnpj/v1/'+c);if(!r.ok)throw 0;const j=await r.json();
    $('razao').value=j.razao_social||'';if(!$('fantasia').value)$('fantasia').value=(j.nome_fantasia||'').replace(/\b\w+/g,w=>w[0]+w.slice(1).toLowerCase());
    const end=[[j.descricao_tipo_de_logradouro,j.logradouro].filter(Boolean).join(' '),j.numero,j.complemento,j.bairro,(j.municipio||'')+'/'+(j.uf||''),j.cep?'CEP '+String(j.cep).replace(/(\d{5})(\d{3})/,'$1-$2'):''].filter(x=>x&&String(x).trim()).join(', ');
-   if(!$('endereco').value)$('endereco').value=end;$('msg').textContent=''}catch(e){$('msg').textContent='Não achei esse CNPJ automaticamente. Preencha à mão.'}});
+   if(!$('endereco').value)$('endereco').value=end;$('msg').textContent=j.logradouro?'Confira o endereço antes de criar.':'Atenção: o CNPJ não trouxe a rua e o número. Complete o endereço à mão.'}catch(e){$('msg').textContent='Não achei esse CNPJ automaticamente. Preencha à mão.'}});
 $('f').onsubmit=async e=>{e.preventDefault();const b=$('go');b.disabled=true;$('msg').textContent='';
   const v=id=>$(id).value.trim();
   try{const j=await api({acao:'novo',modelo:v('modelo'),valor:v('valor'),pagamento:v('pagamento'),parte:{razao:v('razao'),fantasia:v('fantasia'),cnpj:v('cnpj'),endereco:v('endereco'),representante:v('representante'),whatsapp:v('whatsapp'),segmento:v('segmento')}});location.href=j.admin}

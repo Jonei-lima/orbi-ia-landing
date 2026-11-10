@@ -51,14 +51,18 @@ label b{color:var(--bone);font-weight:600}
 footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:36px}
 @media print{
   @page{margin:16mm}
-  body{background:#fff;color:#111}main{max-width:none;padding:0}
+  /* impressão em preto no branco, sem cores */
+  *{color:#000!important;background:#fff!important;box-shadow:none!important;text-shadow:none!important}
+  img{background:transparent!important}
+  body{background:#fff}main{max-width:none;padding:0}
   .noprint,.acts,.link,.btn{display:none!important}
-  .parte,.box,.banner{background:#fff;border-color:#bbb;color:#111}
-  .it .n,.eyebrow,.parte b{color:#7a5a12}.muted,.small{color:#555}
-  .logo{filter:brightness(0)}.nexo img{filter:invert(1)}
+  .parte,.box,.banner,.sig{border-color:#999!important}
+  .banner{border-left-color:#000!important}
+  .logo,.nexo img{filter:grayscale(1) brightness(0)!important}
+  .nexo{color:#000!important;font-size:9pt}
   .cl{break-inside:auto;margin-top:14px}
-  .cl h3{break-after:avoid;font-size:15pt;margin-bottom:4px}
-  .it{break-inside:avoid;padding:3px 0;grid-template-columns:36px 1fr}
+  .cl h3{break-after:avoid;font-size:14pt;margin-bottom:4px}
+  .it{break-inside:avoid;padding:3px 0;grid-template-columns:36px 1fr;border:0!important}
   .it .t{font-size:10.5pt;line-height:1.45}.it .n{font-size:9pt}
   .partes{grid-template-columns:1fr 1fr;break-inside:avoid}.parte{font-size:10pt;padding:10px 12px}
   .logo{width:140px}.nexo{margin-bottom:14px}h1{font-size:20pt}
