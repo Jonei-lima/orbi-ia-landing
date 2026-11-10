@@ -165,11 +165,67 @@ const ANFITRIAO_LOCAL: Bruta[] = [
   ]},
 ];
 
+
+// Patrocínio em dinheiro + fornecimento de brindes (ex.: café em sachê com etiqueta personalizada)
+const PARCEIRO_BRINDE: Bruta[] = [
+  { titulo: "Objeto", itens: [
+    "Patrocínio da {{EMPRESA}} ao episódio do Cozinha Gourmet de {{DATA}}, um jantar com chef convidado, gravado com qualidade de cinema e publicado como episódio de websérie, com início às 19h30, no showroom da Lar Brasileiro, Rua Antônio Lapa, 240, Cambuí, Campinas/SP.",
+    "O patrocínio é composto por um valor em dinheiro (Cláusula 4) e pelo fornecimento de brindes aos convidados (Cláusula 3).",
+    "Exclusividade da {{EMPRESA}} no segmento de {{SEGMENTO}} neste episódio.",
+  ]},
+  { titulo: "Contrapartidas da ORBI", itens: [
+    "1 (um) filme de 30 segundos da {{EMPRESA}}, gravado durante o jantar e entregue em até 15 (quinze) dias após o evento, nos formatos horizontal (16:9) e vertical (9:16), com 1 (uma) rodada de ajustes.",
+    "Distribuição dos brindes da {{EMPRESA}} aos convidados durante o jantar, com a identificação \"Produzido por\" e o perfil da {{EMPRESA}} na etiqueta.",
+    "Exposição da marca da {{EMPRESA}} na noite do jantar e distribuição de cartões e materiais de divulgação aos convidados.",
+    "Logo da {{EMPRESA}} no cardápio entregue a cada convidado e nos créditos do episódio.",
+    "Presença da marca da {{EMPRESA}} no episódio da websérie.",
+    "Menção da {{EMPRESA}} nas redes sociais do programa, com marcação do seu perfil.",
+    "Arte da etiqueta personalizada dos brindes, criada pela Agência Nexo e enviada à {{EMPRESA}} para aprovação em até 5 (cinco) dias antes do evento.",
+    "Emissão de recibo do valor recebido.",
+  ]},
+  { titulo: "Obrigações da {{EMPRESA}}", itens: [
+    "Pagar o valor previsto na Cláusula 4.",
+    "Produzir e entregar 40 (quarenta) sachês de café com a etiqueta personalizada aprovada, embalados e prontos para distribuição, em até 1 (um) dia antes do evento, em local combinado com a produção.",
+    "Garantir a qualidade, a validade e as condições de consumo dos produtos fornecidos, que são de sua inteira responsabilidade.",
+    "Imprimir e aplicar as etiquetas, por sua conta, a partir da arte enviada pela ORBI.",
+    "Enviar a marca em alta resolução e o perfil de redes sociais a ser marcado em até 5 (cinco) dias antes do evento.",
+    "Aprovar ou pedir ajustes no vídeo em até 5 (cinco) dias úteis do recebimento; sem manifestação nesse prazo, o vídeo será considerado aprovado.",
+  ]},
+  { titulo: "Valor e pagamento", itens: [
+    "Pelo patrocínio, a {{EMPRESA}} pagará à ORBI o valor de R$ {{VALOR}} ({{EXTENSO}}).",
+    "Forma de pagamento: {{PAGAMENTO}}.",
+    "O fornecimento dos 40 (quarenta) sachês é contrapartida em produto, não é descontado do valor em dinheiro e não gera cobrança de parte a parte.",
+    "O atraso no pagamento sujeita a {{EMPRESA}} a multa de 2% e juros de 1% ao mês.",
+  ]},
+  { titulo: "Desistência, remarcação e cancelamento", itens: [
+    "Se a {{EMPRESA}} desistir do patrocínio após a assinatura deste contrato, em qualquer data, pagará à ORBI multa de 30% (trinta por cento) do valor previsto na Cláusula 4. Se o valor já tiver sido pago, a ORBI reterá a multa e devolverá o restante em até 15 (quinze) dias.",
+    "Se a {{EMPRESA}} não entregar os sachês no prazo do item 3.2, a ORBI poderá retirar do episódio as contrapartidas ligadas aos brindes, sem devolução de valores.",
+    "Se a ORBI precisar remarcar o episódio, o patrocínio vale para a nova data. Se a {{EMPRESA}} não puder participar na nova data, poderá optar, sem multa, pelo episódio seguinte ou pela devolução integral do valor pago.",
+    "Se a ORBI cancelar o episódio sem nova data, devolverá integralmente o valor pago em até 15 (quinze) dias.",
+    "Nos casos de caso fortuito ou força maior, as partes definem nova data em até 30 (trinta) dias, sem multa.",
+  ]},
+  { titulo: "Imagem, marca e uso dos conteúdos", itens: [
+    "A {{EMPRESA}} autoriza o uso da sua marca, dos seus produtos e das imagens gravadas no evento no episódio, nos cortes e na divulgação do Cozinha Gourmet, por prazo indeterminado.",
+    "A {{EMPRESA}} poderá usar o vídeo que receber em seus canais próprios, por prazo indeterminado. O uso em mídia paga ou em peças de terceiros depende de autorização prévia da ORBI, em razão dos direitos de imagem de chef, apresentadora e convidados.",
+    "Cada parte autoriza a outra a usar sua marca exclusivamente para os fins deste contrato.",
+    "Os direitos autorais sobre o formato Cozinha Gourmet, o episódio e as gravações pertencem à ORBI e à Agência Nexo.",
+  ]},
+  { titulo: "Proteção de dados", itens: [
+    "As partes tratarão os dados pessoais de convidados e contatos apenas para os fins deste contrato, conforme a Lei nº 13.709/2018 (LGPD), e não os repassarão a terceiros.",
+  ]},
+  { titulo: "Disposições gerais", itens: [
+    "Este contrato não gera vínculo trabalhista, societário ou de representação entre as partes. Alterações só valem por escrito.",
+    "As partes reconhecem a validade da assinatura eletrônica deste contrato, feita com confirmação por código enviado ao WhatsApp de cada signatário e registro de data, hora, IP e código de verificação do documento, nos termos do art. 10, § 2º, da MP nº 2.200-2/2001 e da Lei nº 14.063/2020.",
+    "Fica eleito o foro da Comarca de Campinas/SP para dirimir questões deste contrato.",
+  ]},
+];
+
 export const MODELOS: Record<string, { titulo: string; cota: string; bruto: () => Bruta[] }> = {
   contrato_anfitriao: { titulo: "Contrato de Patrocínio e Cessão de Espaço", cota: "Anfitrião", bruto: () => ANFITRIAO_LOCAL },
   termo_anfitriao: { titulo: "Termo de Compromisso de Patrocínio · Cota Anfitrião", cota: "Anfitrião", bruto: () => termo("termo_anfitriao") },
   termo_prato: { titulo: "Termo de Compromisso de Patrocínio · Cota Prato Principal", cota: "Prato Principal", bruto: () => termo("termo_prato") },
   termo_entrada: { titulo: "Termo de Compromisso de Patrocínio · Cota Entrada", cota: "Entrada", bruto: () => termo("termo_entrada") },
+  contrato_brinde: { titulo: "Contrato de Patrocínio e Fornecimento de Brindes", cota: "Parceiro", bruto: () => PARCEIRO_BRINDE },
 };
 
 export function gerar(modelo: string, ctx: Ctx): { titulo: string; clausulas: Clausula[] } {
