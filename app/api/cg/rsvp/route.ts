@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 import { supabase, whatsBR, insta, getEvento, sendWhats, quando, perfilDe, semColunaPerfil, restricaoDe } from "../_lib";
 
+// Grupos com limite de lugares por jantar (o limite vem do banco)
+const GRUPOS: Record<string, string> = { profissionais: "profissionais de arquitetura e design", influenciadores: "influenciadores" };
+function textoEspera(primeiro: string, data: string, motivo?: string, limite?: number) {
+  const g = GRUPOS[motivo || ""];
+  if (g && limite) {
+    return `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Obrigada pelo carinho em confirmar! Para manter a mesa equilibrada, o jantar de ${data} tem ${limite} lugares para ${g}, e eles já foram preenchidos.\n\nVocê está na nossa lista de espera. Se houver algum cancelamento, eu entro em contato por aqui para saber se você ainda tem interesse em ir.`;
+  }
+  return `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Os lugares do jantar de ${data} já foram preenchidos, mas você está na nossa lista de espera. Se houver algum cancelamento, eu entro em contato por aqui para saber se você ainda tem interesse em ir.`;
+}
+
 export async function POST(req: Request) {
   try {
     const b = await req.json();
@@ -39,10 +49,12 @@ export async function POST(req: Request) {
     // Presença com lotação (função do banco); se ainda não existir, grava do jeito antigo
     let statusFinal: string = status;
     let vaga: { whatsapp?: string; texto?: string } = {};
+    let motivo: string | undefined; let limite: number | undefined;
     const { data: pres, error: ep } = await supabase.rpc("cg_presenca_site", { p_whatsapp: whatsapp, p_slug: evento.slug, p_status: status });
     if (!ep && pres && !pres.erro) {
       statusFinal = pres.status || status;
       vaga = { whatsapp: pres.vaga_whatsapp || undefined, texto: pres.vaga_texto || undefined };
+      motivo = pres.motivo || undefined; limite = pres.limite || undefined;
     } else {
       const { error: e2 } = await supabase.from("cg_presencas").upsert(
         { evento_id: evento.id, contato_id: contato.id, status, confirmado_em: status === "confirmado" ? new Date().toISOString() : null },
@@ -58,19 +70,21 @@ export async function POST(req: Request) {
         `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Sua presença está confirmada.\n\n${quando(evento.data_hora)}\n${evento.local} · ${evento.endereco}\n${evento.maps_url || ""}\n\nTraje: esporte fino. Na chegada, é só ler o QR Code da recepção para registrar sua entrada.\n\nSalve este número: é por aqui que mando os lembretes. E siga o programa no Instagram para acompanhar os bastidores: instagram.com/programacozinhagourmet\n\nTe esperamos!`
       );
     } else if (statusFinal === "lista_espera") {
-      await sendWhats(
-        whatsapp,
-        `Oi, ${primeiro}! Aqui é a Clara, do *Projeto Cozinha Gourmet*. Os lugares do jantar de ${quando(evento.data_hora)} já foram preenchidos, mas você está na nossa lista de espera. Se abrir uma vaga, eu te aviso por aqui.`
-      );
+      await sendWhats(whatsapp, textoEspera(primeiro, quando(evento.data_hora), motivo, limite));
     }
     if (vaga.whatsapp && vaga.texto) await sendWhats(vaga.whatsapp, vaga.texto);
 
     const admin = process.env.CG_ADMIN_NUMBER;
-    const rotulo = statusFinal === "confirmado" ? "nova confirmação" : statusFinal === "lista_espera" ? "lista de espera (lotado)" : "recusa";
+    const rotulo = statusFinal === "confirmado" ? "nova confirmação"
+      : statusFinal === "lista_espera" ? (GRUPOS[motivo || ""] ? `lista de espera (${limite} lugares para ${GRUPOS[motivo || ""]} já preenchidos)` : "lista de espera (lotado)")
+      : "recusa";
     const rest = statusFinal === "confirmado" && (restricao || restricaoObs) ? `\nRestrição alimentar: ${[restricao, restricaoObs].filter(Boolean).join(" · ")}` : "";
     if (admin) await sendWhats(admin, `Cozinha Gourmet · ${rotulo}\n${nome}${perfil ? " · " + perfil : ""}\n${instagram} · wa.me/${whatsapp}${rest}`);
 
-    return NextResponse.json({ ok: true, nome: primeiro, status: statusFinal });
+    const aviso = statusFinal === "lista_espera" && GRUPOS[motivo || ""]
+      ? `Este jantar tem ${limite} lugares para ${GRUPOS[motivo || ""]}, e eles já foram preenchidos. Se houver um cancelamento, a Clara entra em contato pelo WhatsApp para saber se você ainda tem interesse em ir.`
+      : undefined;
+    return NextResponse.json({ ok: true, nome: primeiro, status: statusFinal, aviso });
   } catch (e) {
     console.error("CG rsvp", e);
     return NextResponse.json({ ok: false, error: "Não foi possível salvar agora. Tente de novo em instantes." }, { status: 500 });
