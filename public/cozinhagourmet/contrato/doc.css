@@ -56,5 +56,11 @@ footer{text-align:center;color:rgba(239,231,215,.4);font-size:11px;margin-top:36
   .parte,.box,.banner{background:#fff;border-color:#bbb;color:#111}
   .it .n,.eyebrow,.parte b{color:#7a5a12}.muted,.small{color:#555}
   .logo{filter:brightness(0)}.nexo img{filter:invert(1)}
-  .cl{break-inside:avoid-page}
+  .cl{break-inside:auto;margin-top:14px}
+  .cl h3{break-after:avoid;font-size:15pt;margin-bottom:4px}
+  .it{break-inside:avoid;padding:3px 0;grid-template-columns:36px 1fr}
+  .it .t{font-size:10.5pt;line-height:1.45}.it .n{font-size:9pt}
+  .partes{grid-template-columns:1fr 1fr;break-inside:avoid}.parte{font-size:10pt;padding:10px 12px}
+  .logo{width:140px}.nexo{margin-bottom:14px}h1{font-size:20pt}
+  .box,.sig{break-inside:avoid}
 }
