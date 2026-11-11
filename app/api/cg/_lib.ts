@@ -7,8 +7,9 @@ export const supabase = createClient(
 
 export function whatsBR(raw: string): string {
   const d = (raw || "").replace(/\D/g, "");
-  if (d.length < 10) return "";
-  return d.startsWith("55") ? d : `55${d}`;
+  // DDD + número: 10 ou 11 dígitos; com o 55 na frente, 12 ou 13
+  const n = d.startsWith("55") && d.length >= 12 ? d : `55${d}`;
+  return n.length === 12 || n.length === 13 ? n : "";
 }
 
 export function insta(raw: string): string {
@@ -31,11 +32,12 @@ export async function sendWhats(number: string, text: string) {
   const inst = process.env.CG_EVOLUTION_INSTANCE;
   if (!url || !key || !inst) return;
   try {
-    await fetch(`${url}/message/sendText/${inst}`, {
+    const r = await fetch(`${url}/message/sendText/${inst}`, {
       method: "POST",
       headers: { "Content-Type": "application/json", apikey: key },
       body: JSON.stringify({ number, text }),
     });
+    if (!r.ok) { console.error("CG sendWhats falhou", number, r.status, (await r.text()).slice(0, 300)); return; }
     // Registra no histórico para a Clara saber o que já foi dito
     await supabase.from("cg_mensagens").insert({ whatsapp: number, direcao: "out", tipo: "texto", conteudo: text });
   } catch (e) {

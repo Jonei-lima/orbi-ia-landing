@@ -24,6 +24,9 @@ export async function POST(req: Request) {
     const consent = !!b?.consentimento;
     const status = b?.status === "recusado" ? "recusado" : "confirmado";
 
+    if (String(b?.whatsapp || "").trim() && !whatsapp) {
+      return NextResponse.json({ ok: false, error: "Confira o WhatsApp: digite o DDD e o número completo, por exemplo (19) 99999-9999." }, { status: 400 });
+    }
     if (!nome || !instagram || !whatsapp || !consent) {
       return NextResponse.json({ ok: false, error: "Preencha nome, Instagram, WhatsApp e aceite os termos." }, { status: 400 });
     }

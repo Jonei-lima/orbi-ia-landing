@@ -94,7 +94,7 @@ async function enviar(status){
   if(!j.ok)throw new Error(j.error||'Erro');
   document.getElementById('form-wrap').classList.add('hidden');document.getElementById('ok').classList.remove('hidden');
   if(status==='recusado'){document.getElementById('okt').textContent='Obrigado por avisar, '+j.nome+'.';document.getElementById('oks').textContent='Sentiremos sua falta. Vamos te avisar sobre os próximos jantares.';}
-  else if(j.status==='lista_espera'){document.getElementById('okt').textContent='Obrigado por confirmar, '+j.nome+'.';document.getElementById('oks').textContent=j.aviso||'Os lugares deste jantar acabaram. A Clara vai te perguntar no WhatsApp se você quer ser avisado(a) caso alguém desista.';}
+  else if(j.status==='lista_espera'){document.querySelector('#ok .ok').textContent='…';document.getElementById('okt').textContent='Obrigado pelo interesse, '+j.nome+'.';document.getElementById('oks').textContent=j.aviso||'Os lugares deste jantar acabaram. A Clara vai te perguntar no WhatsApp se você quer ser avisado(a) caso alguém desista.';}
   else document.getElementById('okt').textContent='Presença confirmada, '+j.nome+'.';
   scrollTo(0,0);
  }catch(e){msg.textContent=e.message;b.disabled=false;b.textContent='Confirmar presença'}
