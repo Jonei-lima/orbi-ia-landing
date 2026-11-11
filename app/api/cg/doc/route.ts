@@ -182,6 +182,8 @@ export async function POST(req: Request) {
         const cn = String(x.cnaes || "5").replace(/\D/g, "") || "5";
         extras = { MENSALIDADE: moeda(mens), MENSALIDADE_EXTENSO: extenso(mens),
           ...(querRen ? { RENOVACAO: moeda(ren), RENOVACAO_EXTENSO: extenso(ren) } : {}),
+          // Implantação à vista com 10% de desconto (usado no modelo da imobiliária)
+          AVISTA: moeda(Math.round(valor * 90) / 100), AVISTA_EXTENSO: extenso(Math.round(valor * 90) / 100),
           VENCIMENTO: venc, FORO: foro, VOLUME: `${vol} (${extenso(Number(vol)).replace(/ rea(l|is)$/, "")})`, CNAES: `${cn} (${extenso(Number(cn)).replace(/ rea(l|is)$/, "")})` };
         parte.mensalidade = moeda(mens); if (querRen) parte.renovacao = moeda(ren);
       }
