@@ -1,0 +1,7 @@
+/* Tema ORBI IA sobre a base doc.css */
+:root{--bg:#0F1418;--panel:#161D23;--panel2:#1D262D;--bone:#ECF1EE;--muted:#9AA7A1;--gold:#5DBE6E;--line:rgba(236,241,238,.14);--ok:#5DBE6E}
+h1,h2,.cl h3{font-family:Manrope,system-ui,sans-serif!important;font-weight:800!important;letter-spacing:-.01em}
+.logo{width:200px!important}
+textarea,input[type=text],input[type=tel],input[type=number],select{background:#0B0F12!important}
+.btn{color:#0F1418!important}
+@media print{.logo{width:150px!important}}

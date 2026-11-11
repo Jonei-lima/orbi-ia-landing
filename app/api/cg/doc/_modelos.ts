@@ -6,6 +6,7 @@ export type Clausula = { n: string; titulo: string; itens: Item[] };
 export type Ctx = {
   empresa: string; cota: string; data: string; valor: string; extenso: string;
   pagamento: string; segmento: string;
+  extras?: Record<string, string>; // {{MENSALIDADE}}, {{RENOVACAO}}, {{FORO}} etc. (contratos da ORBI)
 };
 
 type Bruta = { titulo: string; itens: string[] };
@@ -220,7 +221,102 @@ const PARCEIRO_BRINDE: Bruta[] = [
   ]},
 ];
 
-export const MODELOS: Record<string, { titulo: string; cota: string; bruto: () => Bruta[] }> = {
+
+// ---------- ORBI IA: agentes de IA para WhatsApp (SDR de prospecção + atendimento) ----------
+const ORBI_SDR: Bruta[] = [
+  { titulo: "Objeto", itens: [
+    "Prestação, pela ORBI, de serviço de automação comercial com inteligência artificial no WhatsApp da {{EMPRESA}}, composto por dois agentes: (a) Agente SDR, de prospecção ativa de empresas; e (b) Agente de Atendimento, que responde os contatos recebidos.",
+    "O serviço é prestado por licença de uso durante a vigência deste contrato. Não há venda, cessão ou transferência do software, dos fluxos ou dos agentes à {{EMPRESA}}.",
+  ]},
+  { titulo: "Agente SDR (prospecção)", itens: [
+    "Busca automática de empresas ativas em bases públicas de CNPJ, por até {{CNAES}} códigos de atividade (CNAEs) e pelas cidades ou regiões indicadas pela {{EMPRESA}}.",
+    "A {{EMPRESA}} pode trocar os CNAEs e as cidades a qualquer tempo, por pedido escrito (WhatsApp ou e-mail). A troca é aplicada em até 3 (três) dias úteis.",
+    "Busca do telefone de cada empresa em fontes públicas (como Google e o site da empresa), com descarte das empresas sem telefone validado.",
+    "Controle de repetição: a mesma empresa não é abordada de novo antes de 90 (noventa) dias.",
+    "A primeira mensagem é enviada por modelos de mensagem (templates) aprovados pela Meta, pela conta WhatsApp Business API (WABA) da {{EMPRESA}}.",
+    "Volume: início gradual, com até 5 (cinco) abordagens por dia útil, aumentando conforme a qualidade do número, até o limite de {{VOLUME}} abordagens por dia útil. Volume acima desse limite depende de orçamento à parte.",
+    "Proteção automática: antes de cada envio, o sistema confere a qualidade do número na Meta e o volume de pedidos de saída. Se houver risco, os envios são pausados e a ORBI é avisada.",
+  ]},
+  { titulo: "Agente de Atendimento", itens: [
+    "Responde automaticamente, 24 horas por dia, quem responder à prospecção e quem chamar o número da {{EMPRESA}} diretamente.",
+    "Entende mensagens de áudio, mantém o histórico da conversa, qualifica o contato e coleta as informações previstas no roteiro aprovado pela {{EMPRESA}}.",
+    "Encaminha o contato para o atendimento humano da {{EMPRESA}} quando necessário, com aviso no WhatsApp indicado por ela. Quando uma pessoa da {{EMPRESA}} assume a conversa, o agente pausa.",
+    "Respeita os pedidos de saída (\"PARAR\" ou equivalentes): o contato deixa de receber mensagens de prospecção.",
+  ]},
+  { titulo: "Implantação", itens: [
+    "A implantação inclui a configuração da WABA, a criação e o envio dos templates para aprovação da Meta, o roteiro e as instruções dos agentes, as integrações e os testes.",
+    "Prazo estimado de até 15 (quinze) dias úteis, contados do pagamento da implantação e da entrega, pela {{EMPRESA}}, de tudo o que está na Cláusula 6.",
+    "A aprovação de templates, a verificação da empresa e os limites de envio são decisões exclusivas da Meta. O tempo de análise da Meta não conta no prazo da ORBI.",
+  ]},
+  { titulo: "Obrigações da ORBI", itens: [
+    "Manter os agentes funcionando, com monitoramento e correção de falhas.",
+    "Prestar suporte por WhatsApp, de segunda a sexta, das 9h às 18h, com resposta em até 1 (um) dia útil.",
+    "Fazer, sem custo adicional, ajustes de textos, roteiro, CNAEs e cidades. Novas funcionalidades e integrações com outros sistemas são orçadas à parte.",
+    "Manter sigilo e segurança sobre os dados tratados, conforme a Cláusula 10.",
+  ]},
+  { titulo: "Obrigações da {{EMPRESA}}", itens: [
+    "Fornecer um número de WhatsApp exclusivo para o serviço, a conta Meta Business verificada e os documentos pedidos pela Meta.",
+    "Manter um meio de pagamento válido na conta da Meta para as cobranças das mensagens.",
+    "Fornecer informações corretas sobre a empresa, os produtos, os preços e a oferta, e aprovar os templates e o roteiro.",
+    "Atender os contatos encaminhados pelo agente.",
+    "Usar o serviço apenas para fins lícitos e dentro das políticas da Meta, sem enviar conteúdo enganoso, ofensivo ou ilegal.",
+    "Pagar os valores da Cláusula 7 nas datas previstas.",
+  ]},
+  { titulo: "Valores e pagamento", itens: [
+    "Implantação: R$ {{VALOR}} ({{EXTENSO}}), {{PAGAMENTO}}. O valor da implantação não é reembolsável e não transfere à {{EMPRESA}} a propriedade dos agentes.",
+    "Mensalidade: R$ {{MENSALIDADE}} ({{MENSALIDADE_EXTENSO}}), com vencimento todo dia {{VENCIMENTO}} de cada mês, por boleto. A primeira mensalidade vence no dia {{VENCIMENTO}} do mês seguinte ao início da operação.",
+    "Renovação: R$ {{RENOVACAO}} ({{RENOVACAO_EXTENSO}}) a cada 12 (doze) meses, devidos no início de cada novo período de 12 meses.",
+    "Estão incluídos na mensalidade os custos de inteligência artificial, bases de dados e infraestrutura, dentro do volume previsto no item 2.6. Não estão incluídas as cobranças da Meta pelas mensagens, pagas diretamente pela {{EMPRESA}} à Meta.",
+    "O atraso sujeita a {{EMPRESA}} a multa de 2% (dois por cento) e juros de 1% (um por cento) ao mês. Após 10 (dez) dias de atraso, a ORBI pode suspender o serviço até a regularização, sem prejuízo da cobrança.",
+    "Os valores da mensalidade e da renovação são reajustados a cada 12 meses pelo IPCA do período.",
+  ]},
+  { titulo: "Prazo, renovação e cancelamento", itens: [
+    "Este contrato vale por 12 (doze) meses a partir da assinatura e é renovado por iguais períodos com o pagamento da renovação.",
+    "A {{EMPRESA}} pode cancelar a qualquer tempo, sem multa, com aviso por escrito com 30 (trinta) dias de antecedência e sem débitos em aberto.",
+    "O aviso dado com menos de 30 (trinta) dias do próximo vencimento não dispensa esse vencimento: a mensalidade é devida, e o cancelamento vale a partir do ciclo seguinte.",
+    "Os valores de implantação e de renovação já pagos não são reembolsados.",
+    "A ORBI pode encerrar o contrato se houver uso ilícito do serviço ou atraso superior a 30 (trinta) dias.",
+    "No encerramento, a ORBI desliga os agentes e, a pedido da {{EMPRESA}}, entrega em até 15 (quinze) dias a exportação dos contatos e das conversas da {{EMPRESA}}. A WABA e o número continuam sendo da {{EMPRESA}}.",
+  ]},
+  { titulo: "Uso do WhatsApp e riscos", itens: [
+    "A {{EMPRESA}} declara conhecer as políticas da Meta para o WhatsApp Business, inclusive a exigência de consentimento para mensagens iniciadas pela empresa, e que a prospecção ativa de empresas envolve risco de queda de qualidade do número, limitação de envios e bloqueio do número ou da conta.",
+    "A {{EMPRESA}} assume esse risco. Bloqueios, restrições ou suspensões aplicados pela Meta não são falha da ORBI e não geram reembolso, desconto ou indenização.",
+    "Em caso de bloqueio, a ORBI configura, sem custo de mão de obra, um novo número fornecido pela {{EMPRESA}}. O chip, a verificação e as cobranças da Meta ficam por conta da {{EMPRESA}}.",
+    "A ORBI pode pausar ou reduzir os envios a qualquer tempo para preservar o número, avisando a {{EMPRESA}}.",
+    "Todas as mensagens de prospecção oferecem ao destinatário a opção de não receber novos contatos.",
+  ]},
+  { titulo: "Proteção de dados (LGPD)", itens: [
+    "A {{EMPRESA}} é a controladora dos dados tratados na prospecção: ela define o público, a finalidade e a oferta, e responde pela base legal (legítimo interesse, na abordagem entre empresas), pelos pedidos dos titulares e perante a Autoridade Nacional de Proteção de Dados.",
+    "A ORBI é a operadora: trata os dados conforme as instruções da {{EMPRESA}} e guarda e opera a base em infraestrutura sob sua administração, com medidas de segurança adequadas.",
+    "A ORBI pode manter os registros mínimos (CNPJ, telefone, data do envio e pedido de saída) necessários ao controle de repetição e de pedidos de saída, inclusive após o encerramento, pelo prazo necessário a essa finalidade.",
+    "A parte que tomar conhecimento de incidente de segurança com os dados avisará a outra em até 2 (dois) dias úteis.",
+    "A {{EMPRESA}} responde por reclamações, autuações e indenizações decorrentes da abordagem que definiu, e ressarcirá a ORBI por valores que ela venha a pagar por esse motivo.",
+  ]},
+  { titulo: "Propriedade intelectual e licença", itens: [
+    "Os fluxos, as instruções (prompts), as integrações, o código e a estrutura dos agentes são de propriedade exclusiva da ORBI. A {{EMPRESA}} recebe licença de uso não exclusiva e intransferível durante a vigência deste contrato.",
+    "O pagamento da implantação, da mensalidade ou da renovação não transfere a propriedade dos agentes nem dá direito a cópia, código-fonte ou exportação dos fluxos.",
+    "É proibido copiar, revender, sublicenciar ou fazer engenharia reversa dos agentes.",
+    "Os contatos e as conversas gerados pertencem à {{EMPRESA}}, observado o item 10.3.",
+  ]},
+  { titulo: "Responsabilidades", itens: [
+    "A ORBI presta o serviço com diligência, mas não garante número de respostas, contatos qualificados, reuniões ou vendas.",
+    "Respostas geradas por inteligência artificial podem conter imprecisões. A {{EMPRESA}} revisa o roteiro e acompanha os atendimentos.",
+    "Indisponibilidades de serviços de terceiros (como Meta, provedores de inteligência artificial e de hospedagem) não são falha da ORBI, que trabalhará para restabelecer o serviço assim que possível.",
+    "A responsabilidade total da ORBI por este contrato fica limitada ao valor das 3 (três) últimas mensalidades pagas, salvo dolo.",
+  ]},
+  { titulo: "Confidencialidade", itens: [
+    "As partes manterão sigilo sobre as informações comerciais, técnicas e de clientes a que tiverem acesso, durante a vigência e por 2 (dois) anos após o encerramento.",
+  ]},
+  { titulo: "Disposições gerais", itens: [
+    "Este contrato não gera vínculo trabalhista, societário ou de representação entre as partes.",
+    "Alterações só valem por escrito. Mensagens de WhatsApp e e-mails trocados entre os representantes valem como forma escrita.",
+    "As partes reconhecem a validade da assinatura eletrônica deste contrato, feita com confirmação por código enviado ao WhatsApp de cada signatário e registro de data, hora, IP e código de verificação do documento, nos termos do art. 10, § 2º, da MP nº 2.200-2/2001 e da Lei nº 14.063/2020.",
+    "Fica eleito o foro da Comarca de {{FORO}} para dirimir questões deste contrato.",
+  ]},
+];
+
+export const MODELOS: Record<string, { titulo: string; cota: string; bruto: () => Bruta[]; marca?: "orbi" }> = {
+  orbi_sdr: { titulo: "Contrato de Prestação de Serviços · Agentes de IA para WhatsApp (SDR e Atendimento)", cota: "Mensal", bruto: () => ORBI_SDR, marca: "orbi" },
   contrato_anfitriao: { titulo: "Contrato de Patrocínio e Cessão de Espaço", cota: "Anfitrião", bruto: () => ANFITRIAO_LOCAL },
   termo_anfitriao: { titulo: "Termo de Compromisso de Patrocínio · Cota Anfitrião", cota: "Anfitrião", bruto: () => termo("termo_anfitriao") },
   termo_prato: { titulo: "Termo de Compromisso de Patrocínio · Cota Prato Principal", cota: "Prato Principal", bruto: () => termo("termo_prato") },
@@ -233,7 +329,8 @@ export function gerar(modelo: string, ctx: Ctx): { titulo: string; clausulas: Cl
   const sub = (t: string) => t
     .replaceAll("{{EMPRESA}}", ctx.empresa).replaceAll("{{COTA}}", ctx.cota).replaceAll("{{DATA}}", ctx.data)
     .replaceAll("{{VALOR}}", ctx.valor).replaceAll("{{EXTENSO}}", ctx.extenso)
-    .replaceAll("{{PAGAMENTO}}", ctx.pagamento).replaceAll("{{SEGMENTO}}", ctx.segmento);
+    .replaceAll("{{PAGAMENTO}}", ctx.pagamento).replaceAll("{{SEGMENTO}}", ctx.segmento)
+    .replace(/\{\{([A-Z_]+)\}\}/g, (m, k) => (ctx.extras && ctx.extras[k] !== undefined ? ctx.extras[k] : m));
   const clausulas = m.bruto().map((c, i) => ({
     n: String(i + 1),
     titulo: sub(c.titulo),

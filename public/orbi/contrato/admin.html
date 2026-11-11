@@ -1,0 +1,108 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gerenciar documento · ORBI IA</title><meta name="robots" content="noindex">
+<link rel="icon" href="/orbi/img/orbi-logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Manrope:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="/cozinhagourmet/contrato/doc.css">
+<link rel="stylesheet" href="/orbi/contrato/orbi.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head><body><main>
+<img class="logo" src="/orbi/img/orbi-logo-branco.png" alt="ORBI IA">
+<p class="eyebrow" style="text-align:center">Área da organização · não compartilhe este link</p>
+<div id="erro" class="banner err hidden"></div>
+<div id="app" class="hidden">
+  <h1 id="titulo"></h1>
+  <p id="sub" class="muted"></p>
+  <div id="status"></div>
+
+  <!-- Link para o contratante -->
+  <section class="box hidden" id="link-box">
+    <h2 style="margin-top:0">Link para o contratante</h2>
+    <div id="qr-wrap" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px"><div id="qr" style="background:#EFE7D7;padding:10px;border-radius:12px;line-height:0"></div><p class="muted" style="flex:1;min-width:200px;margin:0">Está com o cliente? Peça para ele apontar a câmera do celular dele para este código. Ele lê e assina no aparelho dele, com o código chegando no WhatsApp dele.</p></div>
+    <input type="text" id="link" readonly>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="copiar">Copiar link</button><a class="btn sec" id="wa" target="_blank" rel="noopener">Enviar pelo WhatsApp</a><a class="btn sec" id="ver" target="_blank" rel="noopener">Ver como o contratante</a></div>
+  </section>
+
+  <!-- Análise de sugestões -->
+  <section class="box hidden" id="analise">
+    <h2 style="margin-top:0">Sugestões do contratante</h2>
+    <p class="muted">Para cada item, escolha aceitar, manter o texto original ou escrever um texto seu. Depois de enviar a resposta, o contratante recebe a versão atualizada e pode assinar.</p>
+    <div id="comentario-parte"></div>
+    <div id="propostas"></div>
+    <label for="nota"><b>Recado para o contratante</b> (opcional)</label>
+    <textarea id="nota" placeholder="Ex.: o prazo de entrega ficou em 15 dias porque a edição leva esse tempo."></textarea>
+    <div style="margin-top:14px"><button class="btn" id="decidir">Enviar resposta e liberar assinatura</button></div>
+    <p class="msg" id="msg-an"></p>
+  </section>
+
+  <!-- Edição do texto -->
+  <section class="box hidden" id="edicao">
+    <h2 style="margin-top:0">Texto do documento</h2>
+    <p class="muted" id="ed-dica">Ajuste o que precisar antes de liberar. Item com texto vazio é removido.</p>
+    <div id="editor"></div>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn sec" id="salvar">Salvar texto</button><button class="btn hidden" id="liberar">Salvar e liberar para o contratante</button></div>
+    <p class="msg" id="msg-ed"></p>
+  </section>
+
+  <!-- Assinatura da ORBI -->
+  <section class="box hidden" id="orbi-ass">
+    <h2 style="margin-top:0">Assinar pela ORBI</h2>
+    <p class="muted">O contratante já assinou. O código vai para o seu WhatsApp de administrador.</p>
+    <label class="check"><input type="checkbox" id="aceite"><span>Li a versão final e assino pela ORBI.</span></label>
+    <div style="margin-top:12px"><button class="btn" id="pedir">Receber código</button></div>
+    <div id="cod-wrap" class="hidden"><label for="codigo"><b>Código</b></label><input id="codigo" type="tel" inputmode="numeric" maxlength="6">
+      <div style="margin-top:12px"><button class="btn" id="assinar">Assinar</button></div></div>
+    <p class="msg" id="msg-ass"></p>
+  </section>
+
+  <section class="box"><h2 style="margin-top:0">Histórico</h2><div id="eventos" class="small"></div>
+    <div style="margin-top:16px"><button class="link" id="cancelar">Cancelar este documento</button></div></section>
+</div>
+<footer>ORBI IA · J. Marcelio Lima Ltda</footer>
+</main>
+<script>
+const A=new URLSearchParams(location.search).get('a')||'';let D=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dt=s=>new Date(s).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'});
+async function api(body){const r=await fetch('/api/cg/doc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({a:A,...body})});const j=await r.json();if(!j.ok)throw new Error(j.error||'Erro');return j}
+const NOMES={rascunho:'Rascunho: ainda não liberado para o contratante',enviado:'Liberado: aguardando o contratante ler e assinar',alteracao:'O contratante sugeriu alterações: analise abaixo',assinado_parte:'O contratante assinou: falta a sua assinatura',concluido:'Concluído: assinado pelas duas partes',cancelado:'Cancelado'};
+const EV={criado:'Documento criado',liberado:'Liberado para o contratante',visualizado:'Contratante abriu o link',alteracao_sugerida:'Contratante sugeriu alterações',alteracao_analisada:'Você respondeu às sugestões',editado_orbi:'Você editou o texto',codigo_enviado:'Código de assinatura enviado',assinado_parte:'Contratante assinou',concluido:'ORBI assinou: documento concluído',cancelado:'Documento cancelado'};
+function texto(n){for(const c of D.clausulas)for(const i of c.itens)if(i.n===n)return i.texto;return ''}
+function render(ev){
+  const d=D;$('titulo').textContent=d.titulo;$('sub').textContent=`${d.parte.fantasia} · ${d.parte.razao} · CNPJ ${d.parte.cnpj} · R$ ${d.valor} · versão ${d.versao}`;
+  $('status').innerHTML=`<div class="banner ${d.status==='concluido'?'ok':d.status==='cancelado'?'err':''}">${NOMES[d.status]||d.status}</div>`;
+  const lib=d.status!=='rascunho'&&d.status!=='cancelado';
+  $('link-box').classList.toggle('hidden',!lib);$('link').value=d.link;
+  const aberto=['enviado','alteracao'].includes(d.status);$('qr-wrap').classList.toggle('hidden',!aberto);if(aberto&&window.QRCode&&!$('qr').dataset.ok){new QRCode($('qr'),{text:d.link,width:170,height:170,colorDark:'#141D13',colorLight:'#EFE7D7'});$('qr').dataset.ok='1'}
+  $('wa').href='https://wa.me/'+d.parte.whatsapp+'?text='+encodeURIComponent(`Olá! Segue o ${d.titulo} da ORBI IA para leitura e assinatura: ${d.link}`);$('ver').href=d.link;
+  const editavel=['rascunho','enviado'].includes(d.status)&&!d.assinaturas.length;
+  $('edicao').classList.toggle('hidden',!editavel);$('liberar').classList.toggle('hidden',d.status!=='rascunho');
+  $('ed-dica').textContent=d.status==='rascunho'?'Ajuste o que precisar antes de liberar. Item com texto vazio é removido.':'O contratante já tem o link. Se você mudar o texto, ele verá a versão nova ao abrir.';
+  if(editavel)$('editor').innerHTML=d.clausulas.map((c,i)=>`<div class="cl"><input type="text" data-ct="${i}" value="${esc(c.titulo)}" style="font-family:Fraunces,serif;font-size:17px;font-weight:600">${c.itens.map((it,j)=>`<div class="it"><span class="n">${it.n}</span><textarea data-c="${i}" data-i="${j}">${esc(it.texto)}</textarea></div>`).join('')}<div style="padding-left:56px"><button class="link" data-add="${i}">+ adicionar item</button></div></div>`).join('');
+  document.querySelectorAll('#editor textarea').forEach(t=>{const fit=()=>{t.style.height='auto';t.style.height=(t.scrollHeight+4)+'px'};fit();t.addEventListener('input',fit)});
+  document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{coletar();D.clausulas[+b.dataset.add].itens.push({n:'novo',texto:' '});render(ev)});
+  const an=d.status==='alteracao'&&d.proposta;$('analise').classList.toggle('hidden',!an);
+  if(an){$('comentario-parte').innerHTML=d.proposta.comentario?`<div class="banner"><b>Comentário do contratante:</b> ${esc(d.proposta.comentario)}</div>`:'';
+    $('propostas').innerHTML=Object.entries(d.proposta.itens).map(([n,t])=>`<div class="cl"><h3>Item ${n}</h3><div class="diff"><div class="a"><small>Texto atual</small>${esc(texto(n))}</div><div class="d"><small>Sugerido</small>${esc(t)}</div></div>
+    <div class="opts"><label><input type="radio" name="d${n}" value="aceitar" checked> Aceitar a sugestão</label><label><input type="radio" name="d${n}" value="recusar"> Manter o original</label><label><input type="radio" name="d${n}" value="editar"> Escrever outro texto</label></div>
+    <textarea class="hidden" data-f="${n}">${esc(t)}</textarea></div>`).join('')||'<p class="muted">Sem alterações de texto, só comentário.</p>';
+    document.querySelectorAll('.opts input').forEach(r=>r.onchange=()=>{const n=r.name.slice(1);document.querySelector(`[data-f="${n}"]`).classList.toggle('hidden',r.value!=='editar'||!r.checked)})}
+  $('orbi-ass').classList.toggle('hidden',d.status!=='assinado_parte');
+  if(ev)$('eventos').innerHTML=ev.map(e=>`<div style="padding:4px 0;border-bottom:1px solid var(--line)">${dt(e.created_at)} · ${EV[e.tipo]||e.tipo}${e.ip?' · IP '+esc(e.ip):''}</div>`).join('');
+  $('cancelar').classList.toggle('hidden',['concluido','cancelado'].includes(d.status));
+}
+function coletar(){document.querySelectorAll('[data-ct]').forEach(i=>D.clausulas[+i.dataset.ct].titulo=i.value);document.querySelectorAll('[data-c]').forEach(t=>D.clausulas[+t.dataset.c].itens[+t.dataset.i].texto=t.value)}
+async function salvar(){coletar();await api({acao:'admin_salvar',clausulas:D.clausulas})}
+$('salvar').onclick=async()=>{const m=$('msg-ed');m.className='msg e';try{await salvar();await carregar();m.className='msg o';m.textContent='Texto salvo.'}catch(e){m.textContent=e.message}};
+$('liberar').onclick=async()=>{const m=$('msg-ed');m.className='msg e';try{await salvar();await api({acao:'admin_enviar'});await carregar();scrollTo(0,0)}catch(e){m.textContent=e.message}};
+$('copiar').onclick=()=>{navigator.clipboard.writeText($('link').value);$('copiar').textContent='Copiado'};
+$('decidir').onclick=async()=>{const m=$('msg-an');m.className='msg e';const decisoes={},finais={};
+  Object.keys(D.proposta.itens).forEach(n=>{const r=document.querySelector(`input[name="d${n}"]:checked`);decisoes[n]=r?r.value:'recusar';finais[n]=document.querySelector(`[data-f="${n}"]`).value});
+  try{await api({acao:'admin_decidir',decisoes,finais,nota:$('nota').value});await carregar();scrollTo(0,0)}catch(e){m.textContent=e.message}};
+$('pedir').onclick=async()=>{const m=$('msg-ass');m.className='msg e';if(!$('aceite').checked){m.textContent='Marque que leu a versão final.';return}
+  try{await api({acao:'admin_codigo'});$('cod-wrap').classList.remove('hidden');m.className='msg o';m.textContent='Código enviado para o seu WhatsApp.'}catch(e){m.textContent=e.message}};
+$('assinar').onclick=async()=>{const m=$('msg-ass');m.className='msg e';try{await api({acao:'admin_assinar',codigo:$('codigo').value,aceite:$('aceite').checked});await carregar();scrollTo(0,0)}catch(e){m.textContent=e.message}};
+$('cancelar').onclick=async()=>{if(!confirm('Cancelar este documento? O link do contratante deixa de aceitar assinatura.'))return;try{await api({acao:'admin_cancelar'});await carregar()}catch(e){alert(e.message)}};
+async function carregar(){try{const j=await api({acao:'admin_ver'});D=j.doc;$('app').classList.remove('hidden');render(j.eventos)}catch(e){$('erro').textContent=e.message;$('erro').classList.remove('hidden')}}
+carregar();
+</script></body></html>

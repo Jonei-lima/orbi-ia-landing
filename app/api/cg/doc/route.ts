@@ -3,9 +3,12 @@ import { createHash, randomInt } from "crypto";
 import { supabase, whatsBR, getEvento } from "../_lib";
 import { gerar, extenso, moeda, MODELOS, type Clausula } from "./_modelos";
 
-const BASE = "https://www.agenteorbiia.com/cozinhagourmet/contrato";
-const linkParte = (t: string) => `${BASE}?t=${t}`;
-const linkAdmin = (a: string) => `${BASE}/admin?a=${a}`;
+// Cada modelo pertence a uma marca: Cozinha Gourmet (padrão) ou ORBI IA (modelos com marca "orbi")
+const ehOrbi = (modelo: string) => MODELOS[modelo]?.marca === "orbi";
+const baseDe = (modelo: string) => `https://www.agenteorbiia.com/${ehOrbi(modelo) ? "orbi" : "cozinhagourmet"}/contrato`;
+const doDe = (modelo: string) => (ehOrbi(modelo) ? "da ORBI IA" : "do Cozinha Gourmet");
+const linkParte = (d: { modelo: string; token: string }) => `${baseDe(d.modelo)}?t=${d.token}`;
+const linkAdmin = (d: { modelo: string; admin_token: string }) => `${baseDe(d.modelo)}/admin?a=${d.admin_token}`;
 
 type Doc = {
   id: string; token: string; admin_token: string; modelo: string; titulo: string;
@@ -86,7 +89,7 @@ async function enviarCodigo(doc: Doc, papel: string, numero: string) {
   await supabase.from("cg_doc_codigos").update({ usado: true }).eq("doc_id", doc.id).eq("papel", papel).eq("usado", false);
   await supabase.from("cg_doc_codigos").insert({ doc_id: doc.id, papel, whatsapp: numero, codigo_hash: sha(doc.id + codigo),
     expira_em: new Date(Date.now() + 10 * 60_000).toISOString() });
-  await whats(numero, `Seu código para assinar o documento "${doc.titulo}" do Cozinha Gourmet é ${codigo}. Ele vale por 10 minutos. Não compartilhe com ninguém.`);
+  await whats(numero, `Seu código para assinar o documento "${doc.titulo}" ${doDe(doc.modelo)} é ${codigo}. Ele vale por 10 minutos. Não compartilhe com ninguém.`);
 }
 
 async function conferirCodigo(doc: Doc, papel: string, codigo: string) {
@@ -122,16 +125,19 @@ export async function POST(req: Request) {
     if (acao === "novo" || acao === "listar") {
       if (!b?.k || b.k !== orbi.docs_chave) return err("Acesso negado.", 403);
       if (acao === "listar") {
-        const { data } = await supabase.from("cg_docs").select("titulo,parte,valor,status,admin_token,created_at").order("created_at", { ascending: false }).limit(50);
-        return NextResponse.json({ ok: true, docs: (data || []).map((d: Record<string, unknown>) => ({ ...d, admin: linkAdmin(String(d.admin_token)) })) });
+        const { data } = await supabase.from("cg_docs").select("modelo,titulo,parte,valor,status,admin_token,created_at").order("created_at", { ascending: false }).limit(100);
+        const querOrbi = b.marca === "orbi";
+        const docs = ((data || []) as { modelo: string; admin_token: string }[]).filter(d => ehOrbi(d.modelo) === querOrbi);
+        return NextResponse.json({ ok: true, docs: docs.slice(0, 50).map(d => ({ ...d, admin: linkAdmin(d) })) });
       }
       const modelo = String(b.modelo || "");
       if (!MODELOS[modelo]) return err("Escolha o modelo.");
       const p = b.parte || {};
-      const parte = {
+      const orbiDoc = ehOrbi(modelo);
+      const parte: Record<string, string> = {
         razao: String(p.razao || "").trim(), fantasia: String(p.fantasia || "").trim(), cnpj: String(p.cnpj || "").trim(),
         endereco: String(p.endereco || "").trim(), representante: String(p.representante || "").trim(),
-        whatsapp: whatsBR(String(p.whatsapp || "")), segmento: String(p.segmento || "").trim(),
+        whatsapp: whatsBR(String(p.whatsapp || "")), segmento: String(p.segmento || (orbiDoc ? "-" : "")).trim(),
       };
       if (!parte.razao || !parte.fantasia || !parte.cnpj || !parte.endereco || !parte.representante || !parte.whatsapp || !parte.segmento)
         return err("Preencha todos os dados da empresa.");
@@ -139,12 +145,29 @@ export async function POST(req: Request) {
       if (!valor || valor <= 0) return err("Informe o valor.");
       const ev = await getEvento(String(b.evento || ""));
       const data = ev ? new Date(ev.data_hora).toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: "America/Sao_Paulo" }) : "[data do episódio]";
+      // Contratos da ORBI: mensalidade, renovação, vencimento, volume, CNAEs e foro
+      let extras: Record<string, string> | undefined;
+      if (orbiDoc) {
+        const num = (v: unknown) => Number(String(v || "").replace(/\./g, "").replace(",", "."));
+        const x = b.extras || {};
+        const mens = num(x.mensalidade), ren = num(x.renovacao);
+        if (!mens || !ren) return err("Informe a mensalidade e a renovação.");
+        const foro = String(x.foro || "").trim();
+        if (!foro) return err("Informe o foro (cidade/UF).");
+        const venc = String(x.vencimento || "10").replace(/\D/g, "") || "10";
+        const vol = String(x.volume || "30").replace(/\D/g, "") || "30";
+        const cn = String(x.cnaes || "5").replace(/\D/g, "") || "5";
+        extras = { MENSALIDADE: moeda(mens), MENSALIDADE_EXTENSO: extenso(mens), RENOVACAO: moeda(ren), RENOVACAO_EXTENSO: extenso(ren),
+          VENCIMENTO: venc, FORO: foro, VOLUME: `${vol} (${extenso(Number(vol)).replace(/ rea(l|is)$/, "")})`, CNAES: `${cn} (${extenso(Number(cn)).replace(/ rea(l|is)$/, "")})` };
+        parte.mensalidade = moeda(mens); parte.renovacao = moeda(ren);
+      }
       const g = gerar(modelo, { empresa: parte.fantasia, cota: MODELOS[modelo].cota, data, valor: moeda(valor), extenso: extenso(valor),
-        pagamento: String(b.pagamento || "").trim() || "à vista, até 5 (cinco) dias antes do evento, por PIX ou transferência bancária", segmento: parte.segmento });
+        pagamento: String(b.pagamento || "").trim() || (orbiDoc ? "à vista ou em até 3 (três) vezes no cartão de crédito" : "à vista, até 5 (cinco) dias antes do evento, por PIX ou transferência bancária"),
+        segmento: parte.segmento, extras });
       const { data: novo, error } = await supabase.from("cg_docs").insert({ modelo, titulo: g.titulo, parte, valor, clausulas: g.clausulas }).select("*").single();
       if (error) throw error;
       await evento(novo as Doc, req, "criado", { modelo });
-      return NextResponse.json({ ok: true, admin: linkAdmin((novo as Doc).admin_token) });
+      return NextResponse.json({ ok: true, admin: linkAdmin(novo as Doc) });
     }
 
     // ---------- Patrocinador (link com t=) ----------
@@ -172,7 +195,7 @@ export async function POST(req: Request) {
         await supabase.from("cg_docs").update({ proposta, status: "alteracao", updated_at: new Date().toISOString() }).eq("id", doc.id);
         await evento(doc, req, "alteracao_sugerida", proposta);
         const linhas = Object.entries(itens).map(([n, t]) => `• Item ${n}\nAntes: ${corta(itemTexto(doc, n) || "")}\nSugerido: ${corta(t)}`);
-        await whats(admin(), `${doc.parte.fantasia} sugeriu alterações no "${doc.titulo}" e não pode assinar até você analisar.\n\n${linhas.join("\n\n")}${comentario ? `\n\nComentário: ${corta(comentario, 400)}` : ""}\n\nAnalise aqui: ${linkAdmin(doc.admin_token)}`);
+        await whats(admin(), `${doc.parte.fantasia} sugeriu alterações no "${doc.titulo}" e não pode assinar até você analisar.\n\n${linhas.join("\n\n")}${comentario ? `\n\nComentário: ${corta(comentario, 400)}` : ""}\n\nAnalise aqui: ${linkAdmin(doc)}`);
         return NextResponse.json({ ok: true });
       }
 
@@ -196,8 +219,8 @@ export async function POST(req: Request) {
         if (error) throw error;
         await supabase.from("cg_docs").update({ status: "assinado_parte", hash, updated_at: new Date().toISOString() }).eq("id", doc.id);
         await evento(doc, req, "assinado_parte", { nome, versao: doc.versao, hash });
-        await whats(admin(), `${doc.parte.fantasia} assinou o "${doc.titulo}" (versão ${doc.versao}, assinado por ${nome}).\n\nFalta a sua assinatura pela ORBI: ${linkAdmin(doc.admin_token)}`);
-        await whats(numero, `Recebemos a sua assinatura no "${doc.titulo}" do Cozinha Gourmet. Assim que a ORBI assinar, você recebe o link do documento final.`);
+        await whats(admin(), `${doc.parte.fantasia} assinou o "${doc.titulo}" (versão ${doc.versao}, assinado por ${nome}).\n\nFalta a sua assinatura pela ORBI: ${linkAdmin(doc)}`);
+        await whats(numero, `Recebemos a sua assinatura no "${doc.titulo}" ${doDe(doc.modelo)}. Assim que a ORBI assinar, você recebe o link do documento final.`);
         return NextResponse.json({ ok: true });
       }
     }
@@ -210,7 +233,7 @@ export async function POST(req: Request) {
 
       if (acao === "admin_ver") {
         const { data: evs } = await supabase.from("cg_doc_eventos").select("tipo,detalhe,ip,created_at").eq("doc_id", doc.id).order("created_at", { ascending: false }).limit(40);
-        return NextResponse.json({ ok: true, doc: { ...publico(doc, orbi, ass), modelo: doc.modelo, link: linkParte(doc.token) }, eventos: evs || [] });
+        return NextResponse.json({ ok: true, doc: { ...publico(doc, orbi, ass), modelo: doc.modelo, link: linkParte(doc) }, eventos: evs || [] });
       }
 
       if (acao === "admin_salvar") {
@@ -230,7 +253,7 @@ export async function POST(req: Request) {
         if (doc.status !== "rascunho") return err("Este documento já foi liberado.");
         await supabase.from("cg_docs").update({ status: "enviado", updated_at: new Date().toISOString() }).eq("id", doc.id);
         await evento(doc, req, "liberado");
-        return NextResponse.json({ ok: true, link: linkParte(doc.token) });
+        return NextResponse.json({ ok: true, link: linkParte(doc) });
       }
 
       if (acao === "admin_decidir") {
@@ -253,7 +276,7 @@ export async function POST(req: Request) {
         await evento(doc, req, "alteracao_analisada", ultima);
         const nomes: Record<string, string> = { aceitar: "sugestão aceita", recusar: "mantido como estava", editar: "ajustado pela organização" };
         const linhas = resumo.map(r => `• Item ${r.n}: ${nomes[r.decisao] || "mantido como estava"}`);
-        await whats(doc.parte.whatsapp, `Analisamos as suas sugestões no "${doc.titulo}" do Cozinha Gourmet:\n${linhas.join("\n")}${nota ? `\n\n${nota}` : ""}\n\nA versão atualizada já está no link. Se estiver tudo certo, é só assinar: ${linkParte(doc.token)}`);
+        await whats(doc.parte.whatsapp, `Analisamos as suas sugestões no "${doc.titulo}" ${doDe(doc.modelo)}:\n${linhas.join("\n")}${nota ? `\n\n${nota}` : ""}\n\nA versão atualizada já está no link. Se estiver tudo certo, é só assinar: ${linkParte(doc)}`);
         return NextResponse.json({ ok: true });
       }
 
@@ -275,8 +298,8 @@ export async function POST(req: Request) {
         if (error) throw error;
         await supabase.from("cg_docs").update({ status: "concluido", hash, updated_at: new Date().toISOString() }).eq("id", doc.id);
         await evento(doc, req, "concluido", { hash });
-        const final = linkParte(doc.token);
-        await whats(doc.parte.whatsapp, `O "${doc.titulo}" do Cozinha Gourmet está assinado pelas duas partes. Veja e salve o documento final: ${final}`);
+        const final = linkParte(doc);
+        await whats(doc.parte.whatsapp, `O "${doc.titulo}" ${doDe(doc.modelo)} está assinado pelas duas partes. Veja e salve o documento final: ${final}`);
         await whats(admin(), `Documento concluído com ${doc.parte.fantasia}: ${final}`);
         return NextResponse.json({ ok: true });
       }
