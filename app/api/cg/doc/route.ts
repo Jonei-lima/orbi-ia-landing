@@ -15,7 +15,11 @@ type Doc = {
   parte: Record<string, string>; valor: number; clausulas: Clausula[]; versao: number; status: string;
   proposta: null | { itens: Record<string, string>; comentario?: string; em: string; versao: number };
   ultima_decisao: unknown; hash: string | null; created_at: string; updated_at: string;
+  contratada: Contratada | null;
 };
+// Dados da contratada gravados no documento na criação. Assim, quando a cg_config mudar
+// (ex.: Nexo com CNPJ próprio), os contratos antigos continuam mostrando quem de fato assinou.
+type Contratada = { razao: string; fantasia: string; cnpj: string; endereco: string; representante: string; cpf: string };
 
 const err = (msg: string, status = 400) => NextResponse.json({ ok: false, error: msg }, { status });
 const sha = (s: string) => createHash("sha256").update(s).digest("hex");
@@ -30,13 +34,16 @@ async function evento(doc: Doc, req: Request, tipo: string, detalhe: unknown = n
   await supabase.from("cg_doc_eventos").insert({ doc_id: doc.id, tipo, detalhe, ip: ipDe(req) });
 }
 
-// WhatsApp pela instância da Clara, sem registrar no histórico de conversa dela
-async function whats(number: string, text: string) {
-  const url = process.env.EVOLUTION_URL, key = process.env.EVOLUTION_API_KEY, inst = process.env.CG_EVOLUTION_INSTANCE;
+// WhatsApp por marca: documentos da ORBI saem pela ORBI_EVOLUTION_INSTANCE; se ela não existir,
+// e para os do Cozinha Gourmet, saem pela instância da Clara (CG_EVOLUTION_INSTANCE)
+async function whats(modelo: string, number: string, text: string) {
+  const url = process.env.EVOLUTION_URL, key = process.env.EVOLUTION_API_KEY;
+  const instOrbi = ehOrbi(modelo) ? process.env.ORBI_EVOLUTION_INSTANCE : "";
+  const inst = instOrbi || process.env.CG_EVOLUTION_INSTANCE;
   if (!url || !key || !inst || !number) return;
-  // Marca o envio como da Clara (sem texto) para o n8n não tratar como resposta manual
+  // Só quando sai pela Clara: marca o envio (sem texto) para o n8n não tratar como resposta manual
   // e para o código de assinatura não entrar no histórico de conversa dela
-  await supabase.from("cg_mensagens").insert({ whatsapp: number, direcao: "out", tipo: "documento", conteudo: null });
+  if (!instOrbi) await supabase.from("cg_mensagens").insert({ whatsapp: number, direcao: "out", tipo: "documento", conteudo: null });
   try {
     await fetch(`${url}/message/sendText/${inst}`, {
       method: "POST", headers: { "Content-Type": "application/json", apikey: key },
@@ -46,10 +53,21 @@ async function whats(number: string, text: string) {
 }
 const admin = () => process.env.CG_ADMIN_NUMBER || "";
 
-function hashDoc(doc: Doc, orbi: Record<string, string>) {
+const contratadaDaConfig = (cfg: Record<string, string>): Contratada => ({
+  razao: cfg.orbi_razao, fantasia: cfg.orbi_fantasia, cnpj: cfg.orbi_cnpj, endereco: cfg.orbi_endereco,
+  representante: cfg.orbi_representante, cpf: cfg.orbi_cpf });
+// Documento sem a coluna preenchida (anterior à mudança e ainda sem o SQL) cai na cg_config
+const contratadaDe = (doc: Doc, cfg: Record<string, string>) => doc.contratada || contratadaDaConfig(cfg);
+
+// A estrutura do JSON (chave "orbi", com razao e cnpj nesta ordem) é a mesma de antes,
+// para os hashes dos contratos já assinados continuarem batendo
+function hashDoc(doc: Doc, cfg: Record<string, string>) {
+  const c = contratadaDe(doc, cfg);
   return sha(JSON.stringify({ titulo: doc.titulo, parte: doc.parte, valor: doc.valor, clausulas: doc.clausulas, versao: doc.versao,
-    orbi: { razao: orbi.orbi_razao, cnpj: orbi.orbi_cnpj } }));
+    orbi: { razao: c.razao, cnpj: c.cnpj } }));
 }
+// "(19) •••••-7920"
+const mascaraWhats = (w: string) => { const d = String(w || "").replace(/^55/, ""); return d.length >= 10 ? `(${d.slice(0, 2)}) •••••-${d.slice(-4)}` : ""; };
 
 function cpfOk(c: string) {
   const d = c.replace(/\D/g, "");
@@ -89,7 +107,7 @@ async function enviarCodigo(doc: Doc, papel: string, numero: string) {
   await supabase.from("cg_doc_codigos").update({ usado: true }).eq("doc_id", doc.id).eq("papel", papel).eq("usado", false);
   await supabase.from("cg_doc_codigos").insert({ doc_id: doc.id, papel, whatsapp: numero, codigo_hash: sha(doc.id + codigo),
     expira_em: new Date(Date.now() + 10 * 60_000).toISOString() });
-  await whats(numero, `Seu código para assinar o documento "${doc.titulo}" ${doDe(doc.modelo)} é ${codigo}. Ele vale por 10 minutos. Não compartilhe com ninguém.`);
+  await whats(doc.modelo, numero, `Seu código para assinar o documento "${doc.titulo}" ${doDe(doc.modelo)} é ${codigo}. Ele vale por 10 minutos. Não compartilhe com ninguém.`);
 }
 
 async function conferirCodigo(doc: Doc, papel: string, codigo: string) {
@@ -106,11 +124,13 @@ async function conferirCodigo(doc: Doc, papel: string, codigo: string) {
   return data.whatsapp as string;
 }
 
-function publico(doc: Doc, orbi: Record<string, string>, ass: Awaited<ReturnType<typeof assinaturas>>) {
+// Link do cliente: WhatsApp do contrato vai mascarado. A página admin recebe o número completo à parte.
+function publico(doc: Doc, cfg: Record<string, string>, ass: Awaited<ReturnType<typeof assinaturas>>) {
+  const c = contratadaDe(doc, cfg);
   return {
-    titulo: doc.titulo, parte: doc.parte, valor: moeda(Number(doc.valor)), clausulas: doc.clausulas, versao: doc.versao,
+    titulo: doc.titulo, parte: { ...doc.parte, whatsapp: mascaraWhats(doc.parte.whatsapp) }, valor: moeda(Number(doc.valor)), clausulas: doc.clausulas, versao: doc.versao,
     status: doc.status, proposta: doc.proposta, ultima_decisao: doc.ultima_decisao, hash: doc.hash,
-    orbi: { razao: orbi.orbi_razao, fantasia: orbi.orbi_fantasia, cnpj: orbi.orbi_cnpj, endereco: orbi.orbi_endereco, representante: orbi.orbi_representante },
+    orbi: { razao: c.razao, fantasia: c.fantasia, cnpj: c.cnpj, endereco: c.endereco, representante: c.representante },
     assinaturas: ass.map(a => ({ papel: a.papel, nome: a.nome, cpf: mascaraCpf(a.cpf), assinado_em: a.assinado_em, ip: a.ip, hash: a.hash, versao: a.versao })),
   };
 }
@@ -123,11 +143,13 @@ export async function POST(req: Request) {
 
     // ---------- Criação (chave do Jonei) ----------
     if (acao === "novo" || acao === "listar") {
-      if (!b?.k || b.k !== orbi.docs_chave) return err("Acesso negado.", 403);
+      // Chave por marca: ORBI usa docs_chave_orbi, Cozinha Gourmet usa docs_chave. Sem a chave no banco, ninguém entra.
+      const marcaOrbi = acao === "listar" ? b.marca === "orbi" : ehOrbi(String(b.modelo || ""));
+      const chave = marcaOrbi ? orbi.docs_chave_orbi : orbi.docs_chave;
+      if (!chave || !b?.k || b.k !== chave) return err("Acesso negado.", 403);
       if (acao === "listar") {
         const { data } = await supabase.from("cg_docs").select("modelo,titulo,parte,valor,status,admin_token,created_at").order("created_at", { ascending: false }).limit(100);
-        const querOrbi = b.marca === "orbi";
-        const docs = ((data || []) as { modelo: string; admin_token: string }[]).filter(d => ehOrbi(d.modelo) === querOrbi);
+        const docs = ((data || []) as { modelo: string; admin_token: string }[]).filter(d => ehOrbi(d.modelo) === marcaOrbi);
         return NextResponse.json({ ok: true, docs: docs.slice(0, 50).map(d => ({ ...d, admin: linkAdmin(d) })) });
       }
       const modelo = String(b.modelo || "");
@@ -164,7 +186,8 @@ export async function POST(req: Request) {
       const g = gerar(modelo, { empresa: parte.fantasia, cota: MODELOS[modelo].cota, data, valor: moeda(valor), extenso: extenso(valor),
         pagamento: String(b.pagamento || "").trim() || (orbiDoc ? "à vista ou em até 3 (três) vezes no cartão de crédito" : "à vista, até 5 (cinco) dias antes do evento, por PIX ou transferência bancária"),
         segmento: parte.segmento, extras });
-      const { data: novo, error } = await supabase.from("cg_docs").insert({ modelo, titulo: g.titulo, parte, valor, clausulas: g.clausulas }).select("*").single();
+      const { data: novo, error } = await supabase.from("cg_docs").insert({ modelo, titulo: g.titulo, parte, valor, clausulas: g.clausulas,
+        contratada: contratadaDaConfig(orbi) }).select("*").single();
       if (error) throw error;
       await evento(novo as Doc, req, "criado", { modelo });
       return NextResponse.json({ ok: true, admin: linkAdmin(novo as Doc) });
@@ -195,13 +218,14 @@ export async function POST(req: Request) {
         await supabase.from("cg_docs").update({ proposta, status: "alteracao", updated_at: new Date().toISOString() }).eq("id", doc.id);
         await evento(doc, req, "alteracao_sugerida", proposta);
         const linhas = Object.entries(itens).map(([n, t]) => `• Item ${n}\nAntes: ${corta(itemTexto(doc, n) || "")}\nSugerido: ${corta(t)}`);
-        await whats(admin(), `${doc.parte.fantasia} sugeriu alterações no "${doc.titulo}" e não pode assinar até você analisar.\n\n${linhas.join("\n\n")}${comentario ? `\n\nComentário: ${corta(comentario, 400)}` : ""}\n\nAnalise aqui: ${linkAdmin(doc)}`);
+        await whats(doc.modelo, admin(), `${doc.parte.fantasia} sugeriu alterações no "${doc.titulo}" e não pode assinar até você analisar.\n\n${linhas.join("\n\n")}${comentario ? `\n\nComentário: ${corta(comentario, 400)}` : ""}\n\nAnalise aqui: ${linkAdmin(doc)}`);
         return NextResponse.json({ ok: true });
       }
 
       if (acao === "codigo") {
-        const numero = whatsBR(String(b.whatsapp || ""));
-        if (!numero) return err("Digite o WhatsApp com DDD.");
+        // Sempre o WhatsApp do contrato. O que vier da tela é ignorado.
+        const numero = whatsBR(String(doc.parte.whatsapp || ""));
+        if (!numero) return err("Este documento está sem WhatsApp cadastrado. Fale com a ORBI.");
         await enviarCodigo(doc, "parte", numero);
         await evento(doc, req, "codigo_enviado", { papel: "parte", whatsapp: numero });
         return NextResponse.json({ ok: true });
@@ -219,8 +243,8 @@ export async function POST(req: Request) {
         if (error) throw error;
         await supabase.from("cg_docs").update({ status: "assinado_parte", hash, updated_at: new Date().toISOString() }).eq("id", doc.id);
         await evento(doc, req, "assinado_parte", { nome, versao: doc.versao, hash });
-        await whats(admin(), `${doc.parte.fantasia} assinou o "${doc.titulo}" (versão ${doc.versao}, assinado por ${nome}).\n\nFalta a sua assinatura pela ORBI: ${linkAdmin(doc)}`);
-        await whats(numero, `Recebemos a sua assinatura no "${doc.titulo}" ${doDe(doc.modelo)}. Assim que a ORBI assinar, você recebe o link do documento final.`);
+        await whats(doc.modelo, admin(), `${doc.parte.fantasia} assinou o "${doc.titulo}" (versão ${doc.versao}, assinado por ${nome}).\n\nFalta a sua assinatura pela ORBI: ${linkAdmin(doc)}`);
+        await whats(doc.modelo, numero, `Recebemos a sua assinatura no "${doc.titulo}" ${doDe(doc.modelo)}. Assim que a ORBI assinar, você recebe o link do documento final.`);
         return NextResponse.json({ ok: true });
       }
     }
@@ -233,7 +257,7 @@ export async function POST(req: Request) {
 
       if (acao === "admin_ver") {
         const { data: evs } = await supabase.from("cg_doc_eventos").select("tipo,detalhe,ip,created_at").eq("doc_id", doc.id).order("created_at", { ascending: false }).limit(40);
-        return NextResponse.json({ ok: true, doc: { ...publico(doc, orbi, ass), modelo: doc.modelo, link: linkParte(doc) }, eventos: evs || [] });
+        return NextResponse.json({ ok: true, doc: { ...publico(doc, orbi, ass), parte: doc.parte, modelo: doc.modelo, link: linkParte(doc) }, eventos: evs || [] });
       }
 
       if (acao === "admin_salvar") {
@@ -276,7 +300,7 @@ export async function POST(req: Request) {
         await evento(doc, req, "alteracao_analisada", ultima);
         const nomes: Record<string, string> = { aceitar: "sugestão aceita", recusar: "mantido como estava", editar: "ajustado pela organização" };
         const linhas = resumo.map(r => `• Item ${r.n}: ${nomes[r.decisao] || "mantido como estava"}`);
-        await whats(doc.parte.whatsapp, `Analisamos as suas sugestões no "${doc.titulo}" ${doDe(doc.modelo)}:\n${linhas.join("\n")}${nota ? `\n\n${nota}` : ""}\n\nA versão atualizada já está no link. Se estiver tudo certo, é só assinar: ${linkParte(doc)}`);
+        await whats(doc.modelo, doc.parte.whatsapp, `Analisamos as suas sugestões no "${doc.titulo}" ${doDe(doc.modelo)}:\n${linhas.join("\n")}${nota ? `\n\n${nota}` : ""}\n\nA versão atualizada já está no link. Se estiver tudo certo, é só assinar: ${linkParte(doc)}`);
         return NextResponse.json({ ok: true });
       }
 
@@ -290,17 +314,18 @@ export async function POST(req: Request) {
       if (acao === "admin_assinar") {
         if (doc.status !== "assinado_parte") return err("O patrocinador ainda não assinou.");
         if (!b.aceite) return err("Marque que leu e concorda com o documento.");
-        if (!cpfOk(orbi.orbi_cpf || "") || /\[/.test(orbi.orbi_representante || "[")) return err("Preencha o nome e o CPF do representante da ORBI no Supabase (tabela cg_config) antes de assinar.");
+        const c = contratadaDe(doc, orbi);
+        if (!cpfOk(c.cpf || "") || /\[/.test(c.representante || "[")) return err("Este documento está sem nome ou CPF válido do representante da contratada (coluna contratada em cg_docs).");
         const numero = await conferirCodigo(doc, "orbi", String(b.codigo || ""));
         const hash = hashDoc(doc, orbi);
-        const { error } = await supabase.from("cg_doc_assinaturas").insert({ doc_id: doc.id, papel: "orbi", nome: orbi.orbi_representante, cpf: orbi.orbi_cpf,
+        const { error } = await supabase.from("cg_doc_assinaturas").insert({ doc_id: doc.id, papel: "orbi", nome: c.representante, cpf: c.cpf,
           whatsapp: numero, versao: doc.versao, hash, ip: ipDe(req), user_agent: (req.headers.get("user-agent") || "").slice(0, 300) });
         if (error) throw error;
         await supabase.from("cg_docs").update({ status: "concluido", hash, updated_at: new Date().toISOString() }).eq("id", doc.id);
         await evento(doc, req, "concluido", { hash });
         const final = linkParte(doc);
-        await whats(doc.parte.whatsapp, `O "${doc.titulo}" ${doDe(doc.modelo)} está assinado pelas duas partes. Veja e salve o documento final: ${final}`);
-        await whats(admin(), `Documento concluído com ${doc.parte.fantasia}: ${final}`);
+        await whats(doc.modelo, doc.parte.whatsapp, `O "${doc.titulo}" ${doDe(doc.modelo)} está assinado pelas duas partes. Veja e salve o documento final: ${final}`);
+        await whats(doc.modelo, admin(), `Documento concluído com ${doc.parte.fantasia}: ${final}`);
         return NextResponse.json({ ok: true });
       }
 

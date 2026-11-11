@@ -35,7 +35,8 @@
       <div><label for="nome"><b>Nome completo</b></label><input id="nome" type="text" autocomplete="name"></div>
       <div><label for="cpf"><b>CPF</b></label><input id="cpf" type="tel" inputmode="numeric" placeholder="000.000.000-00"></div>
     </div>
-    <label for="whats"><b>WhatsApp</b> com DDD</label><input id="whats" type="tel" inputmode="numeric" placeholder="(19) 99999-9999">
+    <p id="whats-info" style="margin:14px 0 0">Vamos enviar o código para o WhatsApp <b id="whats-num"></b>, cadastrado neste documento.</p>
+    <p class="small" style="margin:4px 0 0">Se esse número não for o seu, não peça o código: fale com a ORBI IA para corrigir.</p>
     <label class="check"><input type="checkbox" id="aceite"><span>Li e concordo com todas as cláusulas deste documento, e assino como representante da empresa indicada.</span></label>
     <div style="margin-top:14px"><button class="btn" id="pedir">Receber código no WhatsApp</button></div>
     <div id="cod-wrap" class="hidden">
@@ -57,7 +58,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 async function api(body){const r=await fetch('/api/cg/doc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:T,...body})});const j=await r.json();if(!j.ok)throw new Error(j.error||'Erro');return j}
 function masc(el,cpf){el.addEventListener('input',()=>{let d=el.value.replace(/\D/g,'').slice(0,11);if(cpf){el.value=d.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2')}else{if(d.length>6)el.value=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;else if(d.length>2)el.value=`(${d.slice(0,2)}) ${d.slice(2)}`;else el.value=d}})}
-masc($('cpf'),true);masc($('whats'),false);
+masc($('cpf'),true);
 const dt=s=>new Date(s).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'});
 
 function render(){
@@ -87,7 +88,7 @@ function render(){
   $('assinaturas').innerHTML=d.assinaturas.length?d.assinaturas.sort((a,b)=>a.papel==='parte'?-1:1).map(a=>`<div class="sig"><b>${esc(a.nome)}</b><br>${a.papel==='orbi'?esc(o.razao):esc(pt.razao)} · CPF ${esc(a.cpf)}<br><span class="small">Assinado eletronicamente em ${dt(a.assinado_em)} · IP ${esc(a.ip||'-')} · versão ${a.versao}</span></div>`).join(''):'<p class="muted">Ainda sem assinaturas.</p>';
   $('hash').textContent=d.hash?'Código de verificação do documento (SHA-256): '+d.hash:'';
   $('pdf').classList.toggle('hidden',!['concluido','assinado_parte'].includes(d.status));
-  if(pt.whatsapp&&!$('whats').value){const w=pt.whatsapp.replace(/^55/,'');$('whats').value=w.length>=10?`(${w.slice(0,2)}) ${w.slice(2,w.length-4)}-${w.slice(-4)}`:w}
+  $('whats-num').textContent=pt.whatsapp||'(sem número cadastrado)';
 }
 function texto(n){for(const c of D.clausulas)for(const i of c.itens)if(i.n===n)return i.texto;return ''}
 function mudancas(){return Object.keys(sug).filter(n=>sug[n].trim()&&sug[n].trim()!==texto(n))}
@@ -105,12 +106,11 @@ $('enviar-sug').onclick=async()=>{const m=mudancas(),com=$('comentario').value.t
   const itens={};m.forEach(n=>itens[n]=sug[n].trim());const b=$('enviar-sug');b.disabled=true;
   try{await api({acao:'propor',itens,comentario:com,versao:D.versao});for(const k in sug)delete sug[k];$('comentario').value='';await carregar();scrollTo(0,0)}catch(e){msg.textContent=e.message;b.disabled=false}};
 async function pedir(){const msg=$('msg-ass');msg.className='msg e';msg.textContent='';
-  const nome=$('nome').value.trim(),cpf=$('cpf').value.replace(/\D/g,''),w=$('whats').value.replace(/\D/g,'');
+  const nome=$('nome').value.trim(),cpf=$('cpf').value.replace(/\D/g,'');
   if(nome.split(' ').length<2){msg.textContent='Digite seu nome completo.';return}
   if(cpf.length!==11){msg.textContent='Digite o CPF.';return}
-  if(w.length<10){msg.textContent='Digite o WhatsApp com DDD.';return}
   if(!$('aceite').checked){msg.textContent='Marque que leu e concorda com o documento.';return}
-  try{await api({acao:'codigo',whatsapp:w,versao:D.versao});$('cod-wrap').classList.remove('hidden');$('pedir').classList.add('hidden');msg.className='msg o';msg.textContent='Enviamos um código de 6 dígitos para o seu WhatsApp.';$('codigo').focus()}catch(e){msg.textContent=e.message}}
+  try{await api({acao:'codigo',versao:D.versao});$('cod-wrap').classList.remove('hidden');$('pedir').classList.add('hidden');msg.className='msg o';msg.textContent='Enviamos um código de 6 dígitos para o WhatsApp '+D.parte.whatsapp+'.';$('codigo').focus()}catch(e){msg.textContent=e.message}}
 $('pedir').onclick=pedir;$('reenviar').onclick=pedir;
 $('confirmar').onclick=async()=>{const msg=$('msg-ass');msg.className='msg e';const b=$('confirmar');b.disabled=true;
   try{await api({acao:'assinar',nome:$('nome').value.trim(),cpf:$('cpf').value,codigo:$('codigo').value,aceite:$('aceite').checked,versao:D.versao});await carregar();scrollTo(0,document.body.scrollHeight)}catch(e){msg.textContent=e.message;b.disabled=false}};
