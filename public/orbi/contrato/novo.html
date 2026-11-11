@@ -13,6 +13,7 @@
   <label for="modelo"><b>Modelo</b></label>
   <select id="modelo" required>
     <option value="orbi_sdr">Contrato de prestação de serviços · Agentes SDR e Atendimento (WhatsApp)</option>
+    <option value="orbi_imobiliaria">Contrato de implantação e licença · Agente para imobiliária (Módulo 1: atendimento e locação)</option>
   </select>
   <div class="row two">
     <div><label for="cnpj"><b>CNPJ</b> (preenche razão social e endereço)</label><input id="cnpj" type="text" inputmode="numeric"></div>
@@ -35,11 +36,11 @@
     <div><label for="mensalidade"><b>Mensalidade</b> (R$)</label><input id="mensalidade" type="text" inputmode="decimal" placeholder="275,00"></div>
     <div><label for="vencimento"><b>Dia de vencimento</b></label><input id="vencimento" type="text" inputmode="numeric" value="10"></div>
   </div>
-  <div class="row two">
+  <div class="row two sdr">
     <div><label for="renovacao"><b>Renovação a cada 12 meses</b> (R$)</label><input id="renovacao" type="text" inputmode="decimal" placeholder="760,00"></div>
     <div><label for="volume"><b>Limite de abordagens por dia útil</b></label><input id="volume" type="text" inputmode="numeric" value="30"></div>
   </div>
-  <div class="row two">
+  <div class="row two sdr">
     <div><label for="cnaes"><b>Quantidade de CNAEs</b></label><input id="cnaes" type="text" inputmode="numeric" value="5"></div>
     <div></div>
   </div>
@@ -59,6 +60,12 @@ $('cnpj').addEventListener('blur',async()=>{const c=$('cnpj').value.replace(/\D/
    $('razao').value=j.razao_social||'';if(!$('fantasia').value)$('fantasia').value=(j.nome_fantasia||'').replace(/\b\w+/g,w=>w[0]+w.slice(1).toLowerCase());
    const end=[[j.descricao_tipo_de_logradouro,j.logradouro].filter(Boolean).join(' '),j.numero,j.complemento,j.bairro,(j.municipio||'')+'/'+(j.uf||''),j.cep?'CEP '+String(j.cep).replace(/(\d{5})(\d{3})/,'$1-$2'):''].filter(x=>x&&String(x).trim()).join(', ');
    if(!$('endereco').value)$('endereco').value=end;$('msg').textContent=j.logradouro?'Confira o endereço antes de criar.':'Atenção: o CNPJ não trouxe a rua e o número. Complete o endereço à mão.'}catch(e){$('msg').textContent='Não achei esse CNPJ automaticamente. Preencha à mão.'}});
+// Campos só do SDR; forma de pagamento padrão por modelo
+const PAG={orbi_sdr:'à vista ou em até 3 (três) vezes no cartão de crédito',orbi_imobiliaria:'em 3 (três) parcelas, sendo a primeira na assinatura e as demais a cada 30 (trinta) dias, ou à vista com 10% (dez por cento) de desconto'};
+function trocaModelo(){const m=$('modelo').value;document.querySelectorAll('.sdr').forEach(e=>e.classList.toggle('hidden',m!=='orbi_sdr'));
+  if(Object.values(PAG).includes($('pagamento').value))$('pagamento').value=PAG[m]||$('pagamento').value;
+  if(m==='orbi_imobiliaria'&&!$('foro').value)$('foro').value='Campinas/SP'}
+$('modelo').addEventListener('change',trocaModelo);trocaModelo();
 $('f').onsubmit=async e=>{e.preventDefault();const b=$('go');b.disabled=true;$('msg').textContent='';
   const v=id=>$(id).value.trim();
   try{const j=await api({acao:'novo',modelo:v('modelo'),valor:v('valor'),pagamento:v('pagamento'),extras:{mensalidade:v('mensalidade'),renovacao:v('renovacao'),vencimento:v('vencimento'),volume:v('volume'),cnaes:v('cnaes'),foro:v('foro')},parte:{razao:v('razao'),fantasia:v('fantasia'),cnpj:v('cnpj'),endereco:v('endereco'),representante:v('representante'),whatsapp:v('whatsapp')}});location.href=j.admin}

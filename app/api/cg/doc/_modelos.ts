@@ -315,8 +315,128 @@ const ORBI_SDR: Bruta[] = [
   ]},
 ];
 
-export const MODELOS: Record<string, { titulo: string; cota: string; bruto: () => Bruta[]; marca?: "orbi" }> = {
-  orbi_sdr: { titulo: "Contrato de Prestação de Serviços · Agentes de IA para WhatsApp (SDR e Atendimento)", cota: "Mensal", bruto: () => ORBI_SDR, marca: "orbi" },
+
+// ---------- ORBI IA: agente de IA para imobiliária (Módulo 1: atendimento comercial e locação) ----------
+// Itens com [PREENCHER] precisam ser completados (ou apagados) na página admin: a liberação fica bloqueada até lá.
+const ORBI_IMOBILIARIA: Bruta[] = [
+  { titulo: "Objeto e natureza", itens: [
+    "Este contrato tem por objeto a implantação, a licença de uso e o suporte de um agente de inteligência artificial para o atendimento comercial e o processo de locação da {{EMPRESA}}, conforme o escopo da Cláusula 2 (Módulo 1).",
+    "A tecnologia da solução, compreendendo código, roteiros, fluxos, regras de funcionamento, instruções e documentação, foi desenvolvida e pertence à ORBI.",
+    "Com o pagamento integral da implantação, a {{EMPRESA}} recebe licença de uso perpétua, não exclusiva e intransferível da solução, para uso no CNPJ contratante, nos termos da Cláusula 8.",
+    "A mensalidade remunera a hospedagem, a manutenção, o suporte e as melhorias contínuas da solução durante a vigência deste contrato.",
+    "Os demais módulos do projeto (vistoria, administração, captação, venda e financeiro) não fazem parte deste contrato e, se contratados, serão formalizados em aditivo.",
+  ]},
+  { titulo: "Escopo do Módulo 1: atendimento comercial e processo de locação", itens: [
+    "O agente atende de forma contínua pelo WhatsApp oficial da {{EMPRESA}} (API oficial da Meta) e identifica a necessidade de cada interessado.",
+    "Para quem procura um imóvel específico: identifica o imóvel, checa a disponibilidade e apresenta características, localização, aluguel, encargos, condições e fotos.",
+    "Para quem ainda não tem imóvel definido: levanta as preferências e apresenta opções compatíveis da carteira.",
+    "Apresenta, compara e refina as opções, mantendo o histórico do atendimento.",
+    "Agenda visitas, com retirada de chaves ou visita acompanhada, conforme as regras da {{EMPRESA}}.",
+    "No início da locação: informa os documentos exigidos para cada modalidade de garantia, recebe, organiza e checa se estão completos e legíveis.",
+    "Encaminha para análise cadastral e de crédito nas plataformas contratadas pela {{EMPRESA}}, somente com autorização do titular dos dados. O resultado vai sempre para avaliação humana.",
+    "Preenche o modelo de contrato de locação da {{EMPRESA}} com os dados coletados.",
+    "Envia o contrato aprovado à plataforma de assinatura eletrônica e acompanha as assinaturas.",
+    "Registra o histórico e passa o atendimento para a etapa de vistoria, que pertence ao Módulo 2 e não faz parte deste contrato.",
+    "A solução inclui painel para a equipe da {{EMPRESA}}, no qual qualquer colaborador autorizado pode assumir a conversa a qualquer momento, e o registro das ações realizadas pelo agente.",
+    "A implantação será concluída em até [PREENCHER] dias úteis, contados do pagamento da primeira parcela da implantação e da entrega, pela {{EMPRESA}}, do que está previsto nos itens 5.1 a 5.6. Antes de ser ligado ao número oficial, o atendimento será testado e aprovado pela {{EMPRESA}} em ambiente de simulação.",
+  ]},
+  { titulo: "Limites do agente", itens: [
+    "O agente não valida, não interpreta e não aprova contratos: todo contrato passa por aprovação humana antes de ser enviado para assinatura.",
+    "O agente não aprova nem reprova cadastros e não comunica aprovação definitiva ao interessado.",
+    "O agente não negocia valores, descontos, garantias ou cláusulas.",
+    "Decisões sensíveis, com risco jurídico ou fora do padrão são encaminhadas para a equipe da {{EMPRESA}}.",
+    "A intermediação imobiliária continua sob responsabilidade de corretor habilitado no CRECI, nos termos da Lei nº 6.530/1978.",
+    "Respostas geradas por inteligência artificial podem conter imprecisões. Por isso, as etapas com efeito jurídico ou financeiro ficam sempre com a equipe, e a ORBI corrige as falhas que a {{EMPRESA}} apontar, conforme a Cláusula 4.",
+    "A ORBI se compromete com a qualidade da solução, mas não garante número de locações nem faturamento, que dependem também do mercado, da carteira e da operação da {{EMPRESA}}.",
+  ]},
+  { titulo: "Compromissos da ORBI", itens: [
+    "Implantar a solução conforme a Cláusula 2 e treinar a equipe da {{EMPRESA}} para o uso do painel.",
+    "Manter a solução funcionando, com monitoramento e correção de falhas.",
+    "Prestar suporte por WhatsApp, de segunda a sexta-feira, das 9h às 18h, com resposta em até 1 (um) dia útil. Falhas que impeçam o atendimento serão tratadas com prioridade.",
+    "Fazer, sem custo adicional, os ajustes de roteiro, regras e textos dentro do escopo da Cláusula 2. Novas funcionalidades, novos módulos e integrações não previstas serão orçados à parte.",
+    "Manter sigilo e segurança sobre os dados tratados, conforme as Cláusulas 9 e 13.",
+  ]},
+  { titulo: "Compromissos da {{EMPRESA}}", itens: [
+    "Fornecer o número oficial de WhatsApp e a conta Meta Business, com os documentos pedidos pela Meta.",
+    "Dar acesso ao sistema em que mantém a carteira de imóveis.",
+    "Contratar e pagar as plataformas de terceiros, como análise de crédito, assinatura eletrônica e as mensagens cobradas pela Meta.",
+    "Fornecer o seu modelo de contrato de locação.",
+    "Informar as suas regras internas sobre visitas, chaves, garantias e documentos.",
+    "Indicar um responsável para acompanhar a implantação e a validação.",
+    "Manter colaboradores para as etapas que dependem de pessoas.",
+    "Usar a solução para fins lícitos e dentro das políticas da Meta para o WhatsApp Business.",
+    "Restrições, limitações ou bloqueios aplicados pela Meta ao número ou à conta, inclusive por mudança nas políticas da Meta, não são falha da ORBI. Nesses casos, a ORBI trabalhará junto com a {{EMPRESA}} para restabelecer o atendimento, sem custo de mão de obra.",
+  ]},
+  { titulo: "Período de validação", itens: [
+    "Depois que o atendimento for ligado ao número oficial, haverá um período de validação de [PREENCHER] dias, em que as partes medirão juntas os resultados, comparando com a situação anterior à implantação.",
+    "Critério 1: tempo da primeira resposta ao interessado de até [PREENCHER].",
+    "Critério 2: pelo menos [PREENCHER]% dos atendimentos conduzidos pelo agente até o agendamento da visita.",
+    "Critério 3: redução de pelo menos [PREENCHER]% nas horas da equipe gastas por locação.",
+    "A medição da situação anterior será feita em conjunto, antes da ligação ao número oficial, e registrada por escrito pelas partes.",
+    "Se ao fim do período algum critério não tiver sido atingido, a ORBI fará os ajustes necessários e as partes medirão de novo em até [PREENCHER] dias. Se ainda assim os critérios não forem atingidos por razões ligadas à solução, a {{EMPRESA}} poderá encerrar este contrato sem a multa da Cláusula 12.",
+  ]},
+  { titulo: "Dados da {{EMPRESA}}", itens: [
+    "Pertencem à {{EMPRESA}}, em qualquer situação: os dados de clientes e interessados, as conversas, os imóveis, os documentos, o histórico de atendimento, o número de WhatsApp e a conta Meta.",
+    "A {{EMPRESA}} pode pedir a exportação desses dados a qualquer tempo, durante ou depois do contrato. A ORBI os entregará em formato padrão (como planilha ou arquivo CSV/JSON), em até 15 (quinze) dias, sem custo.",
+    "A ORBI não usa os dados da {{EMPRESA}} para nenhuma outra finalidade, nem para atender outros clientes.",
+  ]},
+  { titulo: "Licença de uso e continuidade", itens: [
+    "A licença do item 1.3 vale para o CNPJ da {{EMPRESA}}. O uso da solução em outras empresas, filiais ou unidades, inclusive do mesmo grupo, depende de contrato com a ORBI.",
+    "Como a licença é perpétua, se este contrato for encerrado, a {{EMPRESA}} poderá voltar a usar a solução a qualquer tempo, sem pagar nova implantação, bastando contratar novamente a hospedagem e o suporte nas condições vigentes da ORBI.",
+    "Se a ORBI encerrar suas atividades, entrar em falência ou interromper o serviço por mais de 30 (trinta) dias seguidos sem justificativa, entregará à {{EMPRESA}} o código e a documentação da solução, em até 30 (trinta) dias, para que ela a use e mantenha no próprio CNPJ, por conta própria ou com o fornecedor que escolher. Continuam valendo as demais condições da licença, inclusive a do item 8.1.",
+    "Fora da hipótese do item 8.3, a licença não inclui a entrega do código nem o direito de copiar, revender, sublicenciar ou fazer engenharia reversa da solução.",
+  ]},
+  { titulo: "Confidencialidade e exclusividade", itens: [
+    "As partes manterão sigilo sobre as informações uma da outra a que tiverem acesso: de um lado, os processos, os clientes e os dados da {{EMPRESA}}; de outro, os roteiros, as regras, os fluxos e o funcionamento da solução da ORBI. O sigilo vale durante o contrato e por 2 (dois) anos depois dele.",
+    "Em contrapartida à confiança da {{EMPRESA}}, a ORBI não implantará esta solução em imobiliárias que atuem com locação em [PREENCHER: cidades] durante [PREENCHER] meses, contados da assinatura, enquanto este contrato estiver em vigor.",
+  ]},
+  { titulo: "Expansão e parceria futura", itens: [
+    "As partes reconhecem o interesse comum em, depois da validação, avaliar a expansão do modelo de operação desenvolvido neste projeto para outras imobiliárias.",
+    "Se a {{EMPRESA}}, seus sócios ou empresas relacionadas vierem a estruturar essa expansão nos próximos 5 (cinco) anos, as partes negociarão entre si, com preferência sobre terceiros, antes de qualquer acordo com outro fornecedor de tecnologia.",
+    "Os termos da expansão, como a forma da sociedade ou da parceria, as participações e as responsabilidades de cada parte, serão definidos em aditivo a este contrato ou em instrumento próprio. Esta cláusula não obriga nenhuma das partes a fechar a parceria.",
+  ]},
+  { titulo: "Valores e pagamento", itens: [
+    "Implantação: R$ {{VALOR}} ({{EXTENSO}}), {{PAGAMENTO}}.",
+    "Mensalidade: R$ {{MENSALIDADE}} ({{MENSALIDADE_EXTENSO}}), com vencimento todo dia {{VENCIMENTO}} de cada mês. A primeira mensalidade vence no dia {{VENCIMENTO}} do mês seguinte à ligação do atendimento ao número oficial.",
+    "[PREENCHER: taxa anual de R$ ... a cada 12 meses, ou apague este item se não houver]",
+    "Estão incluídos na mensalidade a hospedagem, os custos de inteligência artificial e de infraestrutura, a manutenção, o suporte e as melhorias. Não estão incluídas as plataformas de terceiros do item 5.3, pagas diretamente pela {{EMPRESA}}.",
+    "A mensalidade será reajustada a cada 12 (doze) meses pela variação do IPCA do período.",
+    "O atraso no pagamento sujeita o valor devido a multa de 2% (dois por cento) e juros de 1% (um por cento) ao mês. Depois de 15 (quinze) dias de atraso, e com aviso prévio de 5 (cinco) dias, a ORBI poderá suspender o serviço até a regularização.",
+  ]},
+  { titulo: "Vigência e encerramento", itens: [
+    "Este contrato tem vigência mínima de [PREENCHER] meses, contados da assinatura. Depois desse prazo, continua valendo por tempo indeterminado, e qualquer parte pode encerrá-lo, sem multa, com aviso por escrito de 30 (trinta) dias.",
+    "Durante a vigência mínima, a parte que encerrar o contrato sem justa causa dará aviso por escrito de 30 (trinta) dias e pagará à outra multa de [PREENCHER]% sobre as mensalidades que faltarem até o fim da vigência mínima.",
+    "Não há multa no encerramento por justa causa, assim entendido o descumprimento relevante deste contrato que não seja corrigido em até 15 (quinze) dias depois do aviso da outra parte, nem na hipótese do item 6.6.",
+    "No encerramento, por qualquer motivo, a hospedagem e o suporte são encerrados, ressalvado o item 8.2.",
+    "No encerramento, a ORBI entrega à {{EMPRESA}} a exportação dos dados da Cláusula 7, no prazo do item 7.2, e depois elimina esses dados de sua base, conforme a LGPD, guardando apenas o que a lei a obrigar a manter.",
+    "O número de WhatsApp e a conta Meta continuam sendo da {{EMPRESA}}.",
+    "O valor da implantação já pago não é devolvido, pois corresponde ao trabalho realizado e à licença perpétua concedida.",
+  ]},
+  { titulo: "Proteção de dados (LGPD)", itens: [
+    "A {{EMPRESA}} é a controladora dos dados pessoais tratados na solução: define as finalidades, responde pela base legal e atende aos pedidos dos titulares. A ORBI é a operadora e trata os dados somente conforme as instruções da {{EMPRESA}} e este contrato.",
+    "O encaminhamento para análise de crédito só ocorre com autorização expressa do titular, registrada na conversa.",
+    "A ORBI adotará medidas de segurança adequadas, como controle de acesso, criptografia em trânsito e registro das ações.",
+    "A ORBI utiliza provedores de hospedagem e de inteligência artificial, alguns com servidores fora do Brasil. Esses provedores atuam como suboperadores, com obrigações de segurança e sigilo equivalentes às deste contrato, e a lista atualizada será informada à {{EMPRESA}} sempre que pedida.",
+    "A parte que tomar conhecimento de incidente de segurança com os dados avisará a outra em até 48 (quarenta e oito) horas, com as informações disponíveis, e as partes colaborarão nas providências e comunicações exigidas pela lei.",
+  ]},
+  { titulo: "Responsabilidades", itens: [
+    "Cada parte responde pelos danos que causar à outra por descumprimento deste contrato.",
+    "A responsabilidade total da ORBI por este contrato fica limitada ao valor das 12 (doze) últimas mensalidades pagas, salvo dolo ou culpa grave.",
+    "Indisponibilidades de serviços de terceiros, como Meta, provedores de inteligência artificial e de hospedagem, não são falha da ORBI, que trabalhará para restabelecer o serviço o quanto antes e manterá a {{EMPRESA}} informada.",
+  ]},
+  { titulo: "Disposições gerais", itens: [
+    "Este contrato não cria vínculo trabalhista, societário ou de representação entre as partes.",
+    "Alterações só valem por escrito. Mensagens de WhatsApp e e-mails trocados entre os representantes valem como forma escrita.",
+    "A tolerância de uma parte com o descumprimento da outra não altera este contrato.",
+    "As partes reconhecem a validade da assinatura eletrônica deste contrato, feita com confirmação por código enviado ao WhatsApp de cada signatário e registro de data, hora, IP e código de verificação do documento, nos termos do art. 10, § 2º, da MP nº 2.200-2/2001 e da Lei nº 14.063/2020.",
+    "Fica eleito o foro da Comarca de {{FORO}} para resolver as questões deste contrato.",
+  ]},
+];
+
+// renovacao: o modelo usa {{RENOVACAO}} e o formulário exige o valor
+export const MODELOS: Record<string, { titulo: string; cota: string; bruto: () => Bruta[]; marca?: "orbi"; renovacao?: boolean }> = {
+  orbi_sdr: { titulo: "Contrato de Prestação de Serviços · Agentes de IA para WhatsApp (SDR e Atendimento)", cota: "Mensal", bruto: () => ORBI_SDR, marca: "orbi", renovacao: true },
+  orbi_imobiliaria: { titulo: "Contrato de Implantação, Licença de Uso e Suporte · Agente de IA para Imobiliária (Módulo 1: Atendimento e Locação)", cota: "Mensal", bruto: () => ORBI_IMOBILIARIA, marca: "orbi" },
   contrato_anfitriao: { titulo: "Contrato de Patrocínio e Cessão de Espaço", cota: "Anfitrião", bruto: () => ANFITRIAO_LOCAL },
   termo_anfitriao: { titulo: "Termo de Compromisso de Patrocínio · Cota Anfitrião", cota: "Anfitrião", bruto: () => termo("termo_anfitriao") },
   termo_prato: { titulo: "Termo de Compromisso de Patrocínio · Cota Prato Principal", cota: "Prato Principal", bruto: () => termo("termo_prato") },

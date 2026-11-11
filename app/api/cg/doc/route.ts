@@ -172,16 +172,18 @@ export async function POST(req: Request) {
       if (orbiDoc) {
         const num = (v: unknown) => Number(String(v || "").replace(/\./g, "").replace(",", "."));
         const x = b.extras || {};
-        const mens = num(x.mensalidade), ren = num(x.renovacao);
-        if (!mens || !ren) return err("Informe a mensalidade e a renovação.");
+        const mens = num(x.mensalidade), ren = num(x.renovacao), querRen = !!MODELOS[modelo].renovacao;
+        if (!mens) return err("Informe a mensalidade.");
+        if (querRen && !ren) return err("Informe a renovação.");
         const foro = String(x.foro || "").trim();
         if (!foro) return err("Informe o foro (cidade/UF).");
         const venc = String(x.vencimento || "10").replace(/\D/g, "") || "10";
         const vol = String(x.volume || "30").replace(/\D/g, "") || "30";
         const cn = String(x.cnaes || "5").replace(/\D/g, "") || "5";
-        extras = { MENSALIDADE: moeda(mens), MENSALIDADE_EXTENSO: extenso(mens), RENOVACAO: moeda(ren), RENOVACAO_EXTENSO: extenso(ren),
+        extras = { MENSALIDADE: moeda(mens), MENSALIDADE_EXTENSO: extenso(mens),
+          ...(querRen ? { RENOVACAO: moeda(ren), RENOVACAO_EXTENSO: extenso(ren) } : {}),
           VENCIMENTO: venc, FORO: foro, VOLUME: `${vol} (${extenso(Number(vol)).replace(/ rea(l|is)$/, "")})`, CNAES: `${cn} (${extenso(Number(cn)).replace(/ rea(l|is)$/, "")})` };
-        parte.mensalidade = moeda(mens); parte.renovacao = moeda(ren);
+        parte.mensalidade = moeda(mens); if (querRen) parte.renovacao = moeda(ren);
       }
       const g = gerar(modelo, { empresa: parte.fantasia, cota: MODELOS[modelo].cota, data, valor: moeda(valor), extenso: extenso(valor),
         pagamento: String(b.pagamento || "").trim() || (orbiDoc ? "à vista ou em até 3 (três) vezes no cartão de crédito" : "à vista, até 5 (cinco) dias antes do evento, por PIX ou transferência bancária"),
@@ -275,6 +277,9 @@ export async function POST(req: Request) {
 
       if (acao === "admin_enviar") {
         if (doc.status !== "rascunho") return err("Este documento já foi liberado.");
+        // Não libera com campo em aberto ou marcador que não foi trocado
+        const abertos = doc.clausulas.flatMap(c => c.itens).filter(i => /\[PREENCHER|\{\{[A-Z_]+\}\}/.test(i.texto)).map(i => i.n);
+        if (abertos.length) return err(`Ainda há campos em aberto ([PREENCHER]) nos itens ${abertos.join(", ")}. Complete o texto ou apague o item antes de liberar.`);
         await supabase.from("cg_docs").update({ status: "enviado", updated_at: new Date().toISOString() }).eq("id", doc.id);
         await evento(doc, req, "liberado");
         return NextResponse.json({ ok: true, link: linkParte(doc) });
