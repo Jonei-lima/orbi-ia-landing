@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase, whatsBR, insta, getEvento, perfilDe, semColunaPerfil } from "../_lib";
+import { supabase, whatsBR, insta, getEvento, perfilDe, semColunaPerfil, sendWhats } from "../_lib";
 
 export async function POST(req: Request) {
   try {
@@ -49,6 +49,20 @@ export async function POST(req: Request) {
       { onConflict: "evento_id,contato_id" }
     );
     if (e2) throw e2;
+
+    // Boas-vindas no WhatsApp (só na primeira leitura do QR, para não repetir se a pessoa ler de novo)
+    const primeiro = (contato!.nome || "").split(" ")[0];
+    const { count: jaRecebeu } = await supabase.from("cg_mensagens").select("id", { count: "exact", head: true })
+      .eq("whatsapp", whatsapp).eq("direcao", "out").like("conteudo", "%Sua chegada está registrada%")
+      .gte("created_at", new Date(Date.now() - 12 * 3600 * 1000).toISOString());
+    if (!jaRecebeu) {
+      await sendWhats(whatsapp,
+        `${primeiro ? "Que bom ter você aqui, " + primeiro + "!" : "Que bom ter você aqui!"} Aqui é a Clara, do *Projeto Cozinha Gourmet*. Sua chegada está registrada.\n\n` +
+        `Aproveite a noite: boa comida, boas conversas e novas conexões. 🥂` +
+        (semImagem
+          ? `\n\nAnotamos que você prefere não aparecer nos vídeos. Avise também a equipe de gravação, por favor.`
+          : `\n\nLembrando que a noite está sendo gravada para a websérie do programa.`));
+    }
 
     return NextResponse.json({ ok: true, semImagem, nome: (contato!.nome || "").split(" ")[0] });
   } catch (e) {
