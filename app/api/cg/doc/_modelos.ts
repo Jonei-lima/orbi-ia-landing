@@ -222,6 +222,64 @@ const PARCEIRO_BRINDE: Bruta[] = [
 ];
 
 
+// Patrocínio por permuta: a empresa cede material para a mesa posta (sem pagamento de parte a parte)
+// e recebe as contrapartidas da cota Entrada, mais o bate-bola com a apresentadora.
+const PERMUTA_MESA: Bruta[] = [
+  { titulo: "Objeto", itens: [
+    "Patrocínio da {{EMPRESA}}, por permuta, ao episódio do Cozinha Gourmet de {{DATA}}, um jantar com chef convidado, gravado com qualidade de cinema e publicado como episódio de websérie, com início às 19h30, no showroom da Lar Brasileiro, Rua Antônio Lapa, 240, Cambuí, Campinas/SP.",
+    "A {{EMPRESA}} cede, sem cobrança, o uso do material da mesa posta listado no item 1.3, conforme o seu Pedido para o evento de 18/11/2026, para uso exclusivo no jantar.",
+    "Material cedido: 30 pratos de refeição; 30 facas de refeição; 30 garfos de refeição; 30 pratos de sobremesa; 30 colheres de sobremesa; 30 taças Barone 200 ml; 20 taças Brunella 350 ml; 30 guardanapos brancos; 4 vasos de centro de mesa com arranjo artificial; e o frete de entrega e retirada.",
+    "Exclusividade da {{EMPRESA}} no segmento de {{SEGMENTO}} neste episódio.",
+  ]},
+  { titulo: "Contrapartidas da ORBI", itens: [
+    "1 (um) filme de 30 segundos da {{EMPRESA}}, gravado durante o jantar e entregue em até 15 (quinze) dias após o evento, nos formatos horizontal (16:9) e vertical (9:16), com 1 (uma) rodada de ajustes.",
+    "Bate-bola da apresentadora Wendy Meira com o responsável pela {{EMPRESA}}, gravado durante o jantar e incluído no episódio.",
+    "Crédito \"Mesa posta: {{EMPRESA}}\" no episódio e logo da {{EMPRESA}} nos créditos.",
+    "Exposição da marca da {{EMPRESA}} na noite do jantar e distribuição de cartões e materiais de divulgação aos convidados.",
+    "Logo da {{EMPRESA}} no cardápio entregue a cada convidado.",
+    "Presença da marca e do material da {{EMPRESA}} no episódio da websérie.",
+    "Menção da {{EMPRESA}} nas redes sociais do programa, com marcação do seu perfil.",
+    "2 (dois) convites para o jantar.",
+  ]},
+  { titulo: "Obrigações da {{EMPRESA}}", itens: [
+    "Entregar o material do item 1.3 no showroom no dia 17/11/2026, à tarde, em horário combinado com a produção, limpo e em condições de uso.",
+    "Retirar o material no dia 19/11/2026, em horário combinado com a produção.",
+    "Enviar a marca em alta resolução e o perfil de redes sociais a ser marcado em até 5 (cinco) dias antes do evento.",
+    "Indicar o responsável que gravará o bate-bola com a apresentadora e informar os nomes de quem usará os convites em até 2 (dois) dias antes do evento.",
+    "Aprovar ou pedir ajustes no vídeo em até 5 (cinco) dias úteis do recebimento; sem manifestação nesse prazo, o vídeo será considerado aprovado.",
+  ]},
+  { titulo: "Obrigações da ORBI sobre o material", itens: [
+    "Indicar um responsável para conferir o material, por contagem, na entrega e na retirada, com registro em fotos.",
+    "Guardar o material com cuidado entre a entrega e a retirada e usá-lo somente no jantar.",
+    "Devolver o material com higienização mínima, sem restos de alimentos ou bebidas.",
+    "Pagar à {{EMPRESA}}, em caso de quebra ou perda, o valor de reposição do item a preço de mercado, considerando como referência os valores do Pedido, com prazo de até 15 (quinze) dias após a conferência da retirada.",
+  ]},
+  { titulo: "Valor e pagamento", itens: [
+    "O patrocínio é feito por permuta: a {{EMPRESA}} não cobra pelo material cedido e a ORBI não cobra pelas contrapartidas. Não há pagamento de parte a parte, ressalvado o item 4.4.",
+    "Para registro, o valor de referência do material cedido é de R$ {{VALOR}} ({{EXTENSO}}), conforme o Pedido da {{EMPRESA}}.",
+  ]},
+  { titulo: "Desistência, remarcação e cancelamento", itens: [
+    "Se a {{EMPRESA}} não entregar o material no prazo do item 3.1, a ORBI poderá retirar do episódio as contrapartidas desta permuta, sem qualquer cobrança de parte a parte.",
+    "Se a ORBI precisar remarcar o episódio, a permuta vale para a nova data, desde que a {{EMPRESA}} tenha o material disponível. Se não tiver, as partes encerram este termo sem multa.",
+    "Nos casos de caso fortuito ou força maior, as partes definem nova data em até 30 (trinta) dias, sem multa.",
+  ]},
+  { titulo: "Imagem, marca e uso dos conteúdos", itens: [
+    "A {{EMPRESA}} autoriza o uso da sua marca, do seu material e das imagens gravadas no evento, inclusive as do bate-bola, no episódio, nos cortes e na divulgação do Cozinha Gourmet, por prazo indeterminado.",
+    "A {{EMPRESA}} poderá usar o vídeo que receber em seus canais próprios, por prazo indeterminado. O uso em mídia paga ou em peças de terceiros depende de autorização prévia da ORBI, em razão dos direitos de imagem de chef, apresentadora e convidados.",
+    "Cada parte autoriza a outra a usar sua marca exclusivamente para os fins deste termo.",
+    "Os direitos autorais sobre o formato Cozinha Gourmet, o episódio e as gravações pertencem à ORBI e à Agência Nexo.",
+  ]},
+  { titulo: "Proteção de dados", itens: [
+    "As partes tratarão os dados pessoais de convidados e contatos apenas para os fins deste termo, conforme a Lei nº 13.709/2018 (LGPD), e não os repassarão a terceiros.",
+  ]},
+  { titulo: "Disposições gerais", itens: [
+    "Este termo prevalece sobre as condições gerais do Pedido da {{EMPRESA}} no que for diferente, em especial quanto a pagamento, entrada e multas.",
+    "Este termo não gera vínculo trabalhista, societário ou de representação entre as partes. Alterações só valem por escrito.",
+    "As partes reconhecem a validade da assinatura eletrônica deste termo, feita com confirmação por código enviado ao WhatsApp de cada signatário e registro de data, hora, IP e código de verificação do documento, nos termos do art. 10, § 2º, da MP nº 2.200-2/2001 e da Lei nº 14.063/2020.",
+    "Fica eleito o foro da Comarca de Campinas/SP para dirimir questões deste termo.",
+  ]},
+];
+
 // ---------- ORBI IA: agentes de IA para WhatsApp (SDR de prospecção + atendimento) ----------
 const ORBI_SDR: Bruta[] = [
   { titulo: "Objeto", itens: [
@@ -460,6 +518,7 @@ export const MODELOS: Record<string, { titulo: string; cota: string; bruto: () =
   termo_prato: { titulo: "Termo de Compromisso de Patrocínio · Cota Prato Principal", cota: "Prato Principal", bruto: () => termo("termo_prato") },
   termo_entrada: { titulo: "Termo de Compromisso de Patrocínio · Cota Entrada", cota: "Entrada", bruto: () => termo("termo_entrada") },
   contrato_brinde: { titulo: "Contrato de Patrocínio e Fornecimento de Brindes", cota: "Parceiro", bruto: () => PARCEIRO_BRINDE },
+  termo_permuta_mesa: { titulo: "Termo de Compromisso de Patrocínio por Permuta · Mesa posta", cota: "Entrada (permuta)", bruto: () => PERMUTA_MESA },
 };
 
 export function gerar(modelo: string, ctx: Ctx): { titulo: string; clausulas: Clausula[] } {
