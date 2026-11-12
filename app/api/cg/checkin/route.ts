@@ -64,6 +64,15 @@ export async function POST(req: Request) {
           : `\n\nLembrando que a noite está sendo gravada para a websérie do programa.`));
     }
 
+    // Quem não autorizou imagem e voz: avisa na hora o Jonei e a equipe de gravação
+    if (semImagem) {
+      const { data: c2 } = await supabase.from("cg_contatos").select("nome,instagram,perfil").eq("id", contato!.id).maybeSingle();
+      const aviso = `Cozinha Gourmet · NÃO GRAVAR\n${c2?.nome || "Convidado"}${c2?.perfil ? " · " + c2.perfil : ""}${c2?.instagram ? "\n" + c2.instagram : ""}\nFez check-in agora e prefere não aparecer nos vídeos. Evitem essa pessoa no enquadramento.`;
+      const equipe = [process.env.CG_ADMIN_NUMBER, ...(process.env.CG_GRAVACAO_NUMBERS || "5519991101230").split(",")]
+        .map((n) => (n || "").trim()).filter(Boolean);
+      for (const n of Array.from(new Set(equipe))) await sendWhats(n, aviso);
+    }
+
     return NextResponse.json({ ok: true, semImagem, nome: (contato!.nome || "").split(" ")[0] });
   } catch (e) {
     console.error("CG checkin", e);
