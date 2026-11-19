@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cozinha Gourmet · Trama · Proposta Meneghel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Identidade Cozinha Gourmet. Layout: coluna editorial estreita, capa verde cheia, faixas de "trama" como divisores. */
+  --verde: #0E2A1E;
+  --verde-2: #173B2B;
+  --dourado: #C9A45C;
+  --creme: #F4EEDF;
+  --papel: #FBF8F0;
+  --tinta: #1C211E;
+  --cinza: #5E655F;
+  --linha: #DCD3BE;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --texto: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--creme);
+  color: var(--tinta);
+  font-family: var(--texto);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--display); font-weight: 500; line-height: 1.12; margin: 0; text-wrap: balance; color: var(--verde); }
+h2 { font-size: clamp(30px, 4.4vw, 44px); }
+h3 { font-size: 22px; }
+p { margin: 0; max-width: 64ch; }
+.wrap { width: min(1040px, 100% - 40px); margin: 0 auto; }
+
+/* Capa */
+.capa { background: var(--verde); color: var(--creme); padding: 40px 0 0; }
+.capa .topo { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--dourado); }
+.marca { display: flex; align-items: center; gap: 12px; color: var(--creme); }
+.logo-cg { height: 120px; width: auto; display: block; }
+@media (max-width: 760px) { .logo-cg { height: 88px; } }
+.marca .nome { font-family: var(--display); font-size: 20px; letter-spacing: .02em; text-transform: none; line-height: 1; }
+.marca .nome small { display: block; font-family: var(--texto); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--dourado); margin-top: 5px; }
+.capa .corpo { padding: 64px 0 72px; display: grid; gap: 28px; }
+.capa .rotulo { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--dourado); }
+.capa h1 { color: var(--creme); font-size: clamp(46px, 8vw, 92px); font-weight: 400; }
+.capa .lead { font-size: clamp(19px, 2.2vw, 23px); line-height: 1.5; color: #E7DFC9; max-width: 34ch; }
+.capa .meta { display: flex; gap: 32px; flex-wrap: wrap; font-size: 14px; color: #BDB49C; border-top: 1px solid rgba(201,164,92,.35); padding-top: 20px; }
+.capa .meta b { display: block; color: var(--creme); font-weight: 600; }
+.trama {
+  height: 18px;
+  background:
+    repeating-linear-gradient(90deg, rgba(201,164,92,.85) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(0deg, rgba(244,238,223,.18) 0 2px, transparent 2px 6px),
+    var(--verde);
+}
+.trama.clara {
+  background:
+    repeating-linear-gradient(90deg, rgba(14,42,30,.55) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(0deg, rgba(201,164,92,.5) 0 2px, transparent 2px 6px),
+    var(--creme);
+  height: 12px;
+}
+
+/* Seções */
+section { padding: 88px 0; }
+section + section { border-top: 1px solid var(--linha); }
+.sec { display: grid; grid-template-columns: 220px 1fr; gap: 40px; }
+.sec .num { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--cinza); padding-top: 12px; }
+.sec .num b { display: block; font-family: var(--display); font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--dourado); font-weight: 500; margin-bottom: 4px; }
+.conteudo { display: grid; gap: 22px; }
+.conteudo .grande { font-size: 21px; line-height: 1.55; color: var(--verde); }
+
+.fatos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--linha); border: 1px solid var(--linha); margin-top: 12px; }
+.fatos div { background: var(--papel); padding: 22px 20px; }
+.fatos b { display: block; font-family: var(--display); font-size: 26px; font-weight: 500; color: var(--verde); line-height: 1.1; margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.fatos span { font-size: 14px; color: var(--cinza); }
+
+/* Momento */
+.momento { background: var(--verde); color: var(--creme); border-top: 0 !important; }
+.momento h2, .momento h3 { color: var(--creme); }
+.momento .num { color: #A9A08A; }
+.momento .conteudo .grande { color: #EFE7D3; }
+.momento p { color: #D9D1BC; }
+.sim { margin: 14px 0 6px; max-width: 420px; }
+.sim img { display: block; width: 100%; border: 1px solid rgba(201,164,92,.45); }
+.sim figcaption { font-size: 12px; color: #A9A08A; margin-top: 8px; }
+.desfile-custos { background: var(--papel); border: 1px solid var(--linha); padding: 26px 28px; display: grid; gap: 14px; max-width: 720px; }
+.desfile-custos h3 { font-size: 22px; }
+.feira { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--linha); border: 1px solid var(--linha); }
+.feira div { background: var(--papel); padding: 20px; display: grid; gap: 6px; align-content: start; }
+.feira b { font-family: var(--display); font-weight: 500; font-size: 19px; color: var(--verde); }
+.feira span { font-size: 15px; color: var(--cinza); }
+@media (max-width: 760px) { .feira { grid-template-columns: 1fr; } }
+.guardanapo {
+  margin: 14px 0 6px; padding: 34px 28px; max-width: 520px;
+  background:
+    repeating-linear-gradient(45deg, rgba(201,164,92,.10) 0 3px, transparent 3px 7px),
+    repeating-linear-gradient(-45deg, rgba(201,164,92,.10) 0 3px, transparent 3px 7px),
+    var(--verde-2);
+  border: 1px solid rgba(201,164,92,.45);
+  outline: 6px solid var(--verde-2); outline-offset: -14px;
+  text-align: center;
+}
+.guardanapo .n { font-family: var(--display); font-size: 30px; color: var(--dourado); }
+.guardanapo .s { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: #BDB49C; margin-top: 8px; }
+.dois { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 18px; }
+.dois > div { display: grid; gap: 10px; align-content: start; border-top: 1px solid rgba(201,164,92,.4); padding-top: 18px; }
+
+/* Roteiro */
+.roteiro { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 0; }
+.roteiro li { display: grid; grid-template-columns: 92px 1fr; gap: 24px; padding: 24px 0; border-top: 1px solid var(--linha); }
+.roteiro li:last-child { border-bottom: 1px solid var(--linha); }
+.roteiro .hora { font-family: var(--display); font-size: 22px; color: var(--dourado); font-variant-numeric: tabular-nums; }
+.roteiro .onde { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--cinza); margin-top: 2px; }
+.roteiro h3 { margin-bottom: 6px; }
+
+/* Listas */
+.lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.lista li { padding-left: 22px; position: relative; max-width: 64ch; }
+.lista li::before { content: ""; position: absolute; left: 0; top: .72em; width: 10px; height: 2px; background: var(--dourado); }
+
+.regra { background: var(--papel); border-left: 3px solid var(--dourado); padding: 18px 22px; max-width: 64ch; }
+.regra b { color: var(--verde); }
+
+/* Tabela */
+.tabela { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 620px; }
+th, td { text-align: left; vertical-align: top; padding: 14px 16px; border-bottom: 1px solid var(--linha); }
+th { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--cinza); font-weight: 600; border-bottom: 2px solid var(--verde); }
+td:first-child { font-family: var(--display); font-size: 18px; color: var(--verde); white-space: nowrap; width: 150px; }
+td ul { margin: 0; padding-left: 18px; }
+td li + li { margin-top: 4px; }
+
+/* Datas */
+.prazos { display: grid; gap: 0; max-width: 640px; }
+.prazos div { display: flex; justify-content: space-between; gap: 20px; padding: 13px 0; border-bottom: 1px solid var(--linha); }
+.prazos span:last-child { font-variant-numeric: tabular-nums; color: var(--verde); font-weight: 600; white-space: nowrap; }
+.data-destaque { font-family: var(--display); font-size: clamp(28px, 4vw, 40px); color: var(--verde); }
+
+/* Investimento */
+.investimento { background: var(--papel); }
+.valor {
+  position: relative; margin-top: 8px; padding: 30px 28px; max-width: 560px;
+  border: 1px solid var(--linha); background: var(--creme);
+}
+.valor .rot { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--cinza); }
+.valor .preco { font-family: var(--display); font-size: clamp(40px, 6vw, 60px); color: var(--verde); line-height: 1.1; margin-top: 8px; font-variant-numeric: tabular-nums; min-height: 1.1em; }
+.valor .preco.oculto { font-size: 20px; color: var(--cinza); font-family: var(--texto); padding-top: 14px; }
+.valor input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; cursor: default; font-size: 16px; }
+.valor:focus-within { outline: 2px solid var(--dourado); outline-offset: 3px; }
+.miuda { font-size: 14px; color: var(--cinza); }
+
+/* Fotos */
+.foto { margin: 0; background: var(--verde); }
+.foto img { display: block; width: 100%; max-height: 620px; object-fit: cover; object-position: center 22%; }
+.foto figcaption { width: min(1040px, 100% - 40px); margin: 0 auto; padding: 14px 0 18px; font-size: 13px; color: #BDB49C; }
+.roteiro .foto-passo { margin-top: 14px; max-width: 460px; }
+.roteiro .foto-passo img { display: block; width: 100%; border: 1px solid var(--linha); }
+.sim-claro { margin: 6px 0 0; max-width: 760px; }
+.sim-claro img { display: block; width: 100%; border: 1px solid var(--linha); }
+.foto-passo figcaption { font-size: 12px; color: var(--cinza); margin-top: 6px; }
+.casa-logo { display: flex; align-items: center; gap: 18px; }
+.casa-logo img { height: 58px; width: auto; }
+
+
+/* Animações */
+.progresso { position: fixed; top: 0; left: 0; height: 3px; width: 100%; background: var(--dourado); transform-origin: 0 50%; transform: scaleX(0); z-index: 10; }
+@media (prefers-reduced-motion: no-preference) {
+  .capa .marca, .capa .topo > span, .capa .rotulo, .capa h1, .capa .lead, .capa .meta { animation: subir .9s cubic-bezier(.2,.7,.2,1) both; }
+  .capa .topo > span { animation-delay: .1s; }
+  .capa .rotulo { animation-delay: .25s; }
+  .capa h1 { animation-delay: .4s; }
+  .capa .lead { animation-delay: .6s; }
+  .capa .meta { animation-delay: .8s; }
+  @keyframes subir { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  .trama { animation: tecer 14s linear infinite; }
+  @keyframes tecer { from { background-position: 0 0, 0 0, 0 0; } to { background-position: 180px 0, 0 60px, 0 0; } }
+  .js-anim .rv { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+  .js-anim .rv.in { opacity: 1; transform: none; }
+  .foto { overflow: hidden; }
+  .js-anim .foto img, .js-anim .sim img, .js-anim .sim-claro img { transform: scale(1.08); transition: transform 2.4s cubic-bezier(.2,.7,.2,1); }
+  .js-anim .foto.in img, .js-anim .sim.in img, .js-anim .sim-claro.in img { transform: scale(1); }
+  .sim, .sim-claro { overflow: hidden; }
+  .roteiro li { position: relative; }
+  .roteiro li::after { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: 100%; background: var(--dourado); transform: scaleX(0); transform-origin: 0 50%; transition: transform 1.1s cubic-bezier(.2,.7,.2,1) .2s; }
+  .roteiro li.in::after { transform: scaleX(1); }
+  .feira div, .fatos div { transition: transform .35s ease, box-shadow .35s ease, opacity .8s ease; }
+  .feira div:hover, .fatos div:hover { transform: translateY(-4px); box-shadow: 0 14px 30px -18px rgba(14,42,30,.45); position: relative; z-index: 1; }
+  .preco.revelado { animation: brilho 1.6s ease both; }
+  @keyframes brilho { 0% { opacity: 0; letter-spacing: .12em; } 60% { opacity: 1; } 100% { letter-spacing: 0; } }
+  .valor.aberto { animation: moldura 1.4s ease both; }
+  @keyframes moldura { 0% { box-shadow: 0 0 0 0 rgba(201,164,92,.6); } 100% { box-shadow: 0 0 0 18px rgba(201,164,92,0); } }
+}
+
+/* Rodapé */
+footer { background: var(--verde); color: #CFC7B1; padding: 56px 0 64px; font-size: 14px; }
+footer .linha { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+footer b { color: var(--creme); font-weight: 600; }
+footer .equipe { display: grid; gap: 4px; }
+footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(201,164,92,.3); font-size: 12px; color: #9C9480; }
+
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  section { padding: 60px 0; }
+  .sec { grid-template-columns: 1fr; gap: 14px; }
+  .sec .num { padding-top: 0; }
+  .fatos, .dois { grid-template-columns: 1fr; }
+  .roteiro li { grid-template-columns: 1fr; gap: 6px; }
+  .capa .corpo { padding: 64px 0 48px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .preco { transition: opacity .4s ease; }
+}
+</style>
+</head>
+<body>
+<div class="progresso" id="progresso" aria-hidden="true"></div>
+
+<header class="capa">
+  <div class="wrap">
+    <div class="topo">
+      <div class="marca"><img src="/cozinhagourmet/trama/img/cozinha-logo.png" alt="Cozinha Gourmet · Sabores, Ambientes, Conexões" class="logo-cg"></div>
+      <span>Agência Nexo</span>
+    </div>
+    <div class="corpo">
+      <div class="rotulo">Proposta para a Têxtil Meneghel · Episódio 2</div>
+      <h1>Cozinha Gourmet · Trama</h1>
+      <p class="lead">O lançamento da linha de moda da Meneghel, produzido dentro da fábrica, para os convidados que a Meneghel escolher.</p>
+      <div class="meta">
+        <div class="casa-logo"><img src="/cozinhagourmet/trama/img/meneghel-creme.png" alt="Meneghel Indústria Têxtil"></div>
+        <div><b>Para</b>Neto e Fernanda</div>
+        <div><b>Apresentação</b>23 de novembro de 2026</div>
+        <div><b>Local do episódio</b>Têxtil Meneghel, Americana</div>
+      </div>
+    </div>
+  </div>
+  <div class="trama" aria-hidden="true"></div>
+</header>
+
+<main>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>01</b>A casa</div>
+    <div class="conteudo">
+      <h2>Desta vez, o anfitrião é você.</h2>
+      <p class="grande">O Cozinha Gourmet é um jantar fechado, com chef convidado, gravado com qualidade de cinema e publicado como websérie. No segundo episódio ele vai para dentro da Têxtil Meneghel e muda de público: passa a servir quem compra e faz moda.</p>
+      <p>A Meneghel não está comprando espaço no evento de outra empresa. A Nexo produz o lançamento da linha de moda da Meneghel, na casa da Meneghel, para os convidados da Meneghel. A Wendy Meira apresenta, o chef cozinha, a Produtora Coradini filma. A noite tem um dono, e quem escolhe com quem conversar é ele.</p>
+      <div class="fatos">
+        <div><b>A Casa</b><span>Meneghel é a anfitriã do episódio, com showroom, fábrica e área externa.</span></div>
+        <div><b>15 de 40</b><span>lugares indicados pela Meneghel, com convite e link próprios.</span></div>
+        <div><b>Exclusiva</b><span>única marca de têxtil e moda no episódio.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>02</b>O conceito</div>
+    <div class="conteudo">
+      <h2>Trama</h2>
+      <p class="grande">No jacquard, o desenho não é impresso sobre o tecido. Ele nasce do cruzamento dos fios, dentro do tear.</p>
+      <p>É o que a Meneghel faz desde 1950, e é o que a noite vai fazer com as pessoas: colocar confecção, lojista, estilista e comprador no mesmo fio, dentro da indústria que produz o tecido. Trama é o subtítulo do episódio e é também o roteiro. Cada parte da noite mostra algo que só uma fábrica consegue mostrar: tecido feito ali, para quem está ali.</p>
+    </div>
+  </div>
+</section>
+
+<figure class="foto">
+  <img src="/cozinhagourmet/trama/img/desfile.jpg" alt="Simulação do desfile no corredor da fábrica, com os teares ao fundo">
+  <figcaption>Imagem ilustrativa do desfile no corredor da fábrica, com os teares ao fundo.</figcaption>
+</figure>
+
+<section class="momento">
+  <div class="wrap sec">
+    <div class="num"><b>03</b>O momento da noite</div>
+    <div class="conteudo">
+      <h2>Cada convidado encontra o próprio nome tecido.</h2>
+      <p class="grande">Na mesa não há cartão de lugar. Há um guardanapo em jacquard com o nome de cada convidado, tecido nos teares da Meneghel nos dias anteriores ao jantar.</p>
+      <figure class="sim">
+        <img src="/cozinhagourmet/trama/img/guardanapo.jpg" alt="Simulação de guardanapo em jacquard com nome tecido sobre a mesa posta">
+        <figcaption>Imagem ilustrativa.</figcaption>
+      </figure>
+      <p>Quarenta peças, quarenta nomes, um único desenho criado para o episódio. É a demonstração mais curta possível do que a Meneghel quer vender para a moda: tecido personalizado, feito dentro da própria indústria. A confecção que senta à mesa leva a prova para casa.</p>
+      <div class="dois">
+        <div>
+          <h3>O tecido da noite</h3>
+          <p>O mesmo desenho veste a mesa posta e fecha o desfile. O último look sai do mesmo jacquard da toalha onde o jantar será servido. Os convidados percebem quando sentam.</p>
+        </div>
+        <div>
+          <h3>A entrada pelo pátio</h3>
+          <p>As modelos não saem de uma coxia. Chegam de carro pelo pátio, descem já vestidas e atravessam o portão da fábrica até o corredor do desfile. É a primeira cena do episódio.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>04</b>A noite</div>
+    <div class="conteudo">
+      <h2>Quatro tempos, do fio ao arremate.</h2>
+      <ol class="roteiro">
+        <li>
+          <div><div class="hora">19h00</div><div class="onde">Recepção</div></div>
+          <div><h3>Chegada</h3><p>Check-in por QR Code com a Clara. O Neto recebe cada convidado. Os tecidos da linha de moda ficam à mão, para tocar antes de ver o desfile.</p><figure class="foto-passo"><img src="/cozinhagourmet/trama/img/showroom.jpg" alt="Showroom da Meneghel com a parede de tecidos jacquard"></figure></div>
+        </li>
+        <li>
+          <div><div class="hora">19h45</div><div class="onde">Pátio e corredor da fábrica</div></div>
+          <div><h3>Desfile</h3><p>Os convidados saem para o pátio. As modelos chegam de carro, descem já vestidas e entram na fábrica. O desfile acontece no grande corredor, com os teares ao fundo, parados e iluminados, e os convidados acompanham por uma rota marcada. Looks da confecção própria e último look no jacquard da noite.</p><figure class="foto-passo"><img src="/cozinhagourmet/trama/img/chegada.jpg" alt="Simulação das modelos chegando de carro ao pátio da fábrica"><figcaption>Imagem ilustrativa.</figcaption></figure></div>
+        </li>
+        <li>
+          <div><div class="hora">20h30</div><div class="onde">Showroom</div></div>
+          <div><h3>Jantar</h3><p>Chef convidado cozinhando ao vivo em fogão de indução, no showroom, entre as peças e os tecidos da Casa. Mesa posta premium vestida com o jacquard da noite, o nome de cada convidado no guardanapo. Os lugares são definidos pela Casa: em cada mesa senta alguém da Meneghel.</p></div>
+        </li>
+        <li>
+          <div><div class="hora">22h00</div><div class="onde">Mesa</div></div>
+          <div><h3>Arremate</h3><p>Brinde do Neto e bate-bola gravado com a Wendy. Cada convidado leva o próprio guardanapo. No dia seguinte a Clara agradece em nome da Casa e envia as receitas da noite.</p></div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<figure class="foto">
+  <img src="/cozinhagourmet/trama/img/jantar.jpg" alt="Simulação do jantar no showroom, com o chef cozinhando, a apresentadora e a equipe de gravação">
+  <figcaption>Imagem ilustrativa do jantar no showroom da Meneghel.</figcaption>
+</figure>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>05</b>Quem está na sala</div>
+    <div class="conteudo">
+      <h2>Quarenta lugares para quem compra.</h2>
+      <ul class="lista">
+        <li><b>15 convidados indicados pela Meneghel:</b> confecções, lojistas, estilistas e compradores. Convite e link próprios, presença confirmada pela Clara.</li>
+        <li><b>Curadoria Nexo:</b> público de alto padrão de Americana e região, gente que veste, investe e compra, além de influenciadores de moda, imprensa e poucos arquitetos e designers escolhidos a dedo.</li>
+        <li><b>Convidados das Marcas Convidadas,</b> aprovados pela Nexo dentro do mesmo público.</li>
+      </ul>
+      <p class="regra"><b>Regra da Casa.</b> Nenhuma Marca Convidada faz abordagem comercial ao anfitrião durante o evento. A regra consta no contrato de cada marca.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>06</b>Marcas Convidadas</div>
+    <div class="conteudo">
+      <h2>Marcas que servem o seu público.</h2>
+      <p>Até quatro marcas premium da região completam a noite. Cada uma é exclusiva no seu segmento, nenhuma é do setor têxtil ou de confecção, e todas foram escolhidas pelo que oferecem a quem a Meneghel quer receber.</p>
+      <p>Elas entram na produção da noite com um papel definido, e não só com um logo no backdrop. A Meneghel segue como a Casa e como a única marca do seu segmento.</p>
+      <figure class="foto-passo sim-claro"><img src="/cozinhagourmet/trama/img/bastidores.jpg" alt="Simulação dos bastidores do desfile, com cabelo, maquiagem e joias"><figcaption>Imagem ilustrativa dos bastidores do desfile.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>07</b>Entregas</div>
+    <div class="conteudo">
+      <h2>O que a Meneghel recebe.</h2>
+      <ul class="lista">
+        <li>O episódio <i>Cozinha Gourmet · Trama</i> na websérie, com direção, fotografia e edição da Produtora Coradini.</li>
+        <li>O desfile filmado e fotografado na fábrica, com cortes para as redes da Meneghel.</li>
+        <li>Imagens aéreas da chegada no pátio, feitas com drone após análise técnica de luz, espaço e espaço aéreo, para garantir que as imagens sejam utilizáveis.</li>
+        <li>Bate-bola gravado da Wendy Meira com o Neto.</li>
+        <li>Posts e stories de divulgação nos canais do programa.</li>
+        <li>Marca no backdrop, no cardápio impresso e nos materiais do evento.</li>
+        <li>15 convites com link próprio e controle de presença pela Clara.</li>
+        <li>Exclusividade do segmento têxtil e moda no episódio.</li>
+        <li>Direito de uso do conteúdo nos canais próprios da Meneghel.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>08</b>Quem faz o quê</div>
+    <div class="conteudo">
+      <h2>Cada um no que faz melhor.</h2>
+      <div class="tabela">
+        <table>
+          <thead><tr><th>Quem</th><th>Responsabilidade</th></tr></thead>
+          <tbody>
+            <tr><td>Meneghel</td><td><ul>
+              <li>Espaço: showroom, fábrica e área externa.</li>
+              <li>Custos do desfile: cachê das modelos, maquiagem e cabelo, aluguel de iluminação e confecção dos looks.</li>
+              <li>Tecelagem do jacquard da noite: toalhas da mesa e guardanapos com os nomes.</li>
+              <li>Indicação dos 15 convidados.</li>
+              <li>Corredor do desfile liberado, máquinas paradas e rota dos convidados livre.</li>
+            </ul></td></tr>
+            <tr><td>Nexo</td><td><ul>
+              <li>Conceito e roteiro da noite.</li>
+              <li>Organização do desfile: seleção de modelos e fornecedores, orçamentos, cronograma, ensaio e condução na noite, com aprovação dos looks junto com a Casa.</li>
+              <li>Chef convidado cozinhando em fogão de indução, sem chama, cardápio e mesa posta premium.</li>
+              <li>Marcas Convidadas e curadoria dos demais convidados.</li>
+              <li>Convites, confirmações e check-in pela Clara.</li>
+              <li>Apresentação com a Wendy Meira, criação do conteúdo e divulgação.</li>
+            </ul></td></tr>
+            <tr><td>Coradini</td><td><ul>
+              <li>Direção de cena, captação, fotografia e edição do episódio e dos cortes.</li>
+              <li>Análise técnica para o drone (luz, espaço e espaço aéreo) antes de confirmar as imagens aéreas.</li>
+            </ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>09</b>Data</div>
+    <div class="conteudo">
+      <h2>Um pré-lançamento antes da feira.</h2>
+      <p class="data-destaque">Entre 18 e 20 de janeiro de 2027</p>
+      <p>Uma noite, em um desses três dias, definida na assinatura. Em dezembro o prazo seria curto demais e a noite disputaria agenda com Natal, Ano Novo e confraternizações. Em janeiro o público volta com a agenda aberta, e a Meneghel chega à feira de fevereiro com a coleção já lançada, vista e comentada.</p>
+      <figure class="foto-passo sim-claro"><img src="/cozinhagourmet/trama/img/feira.jpg" alt="Simulação do estande da Meneghel na feira com o vídeo do desfile no telão"><figcaption>Imagem ilustrativa do estande na feira, com o material da noite.</figcaption></figure>
+      <h3>O que a noite entrega para a feira</h3>
+      <div class="feira">
+        <div><b>Vídeo do desfile para o estande</b><span>Um filme curto do desfile na fábrica para rodar no telão, mostrando a coleção e a indústria que faz o tecido.</span></div>
+        <div><b>Depoimentos de quem viu primeiro</b><span>Lojistas, estilistas e compradores gravados na noite, falando da coleção. Na feira, quem passa pelo estande ouve quem já comprou a ideia.</span></div>
+        <div><b>Fotos de catálogo</b><span>Os looks fotografados com qualidade de cinema, prontos para lookbook, catálogo e redes durante a feira.</span></div>
+        <div><b>Peças gráficas do estande</b><span>Painéis e materiais com as imagens da noite, e um QR Code que leva ao episódio completo.</span></div>
+        <div><b>Personalização à mostra</b><span>Os guardanapos com nome viram peça de demonstração no estande: a prova do tecido personalizado feito na própria indústria.</span></div>
+        <div><b>Compradores já aquecidos</b><span>Os convidados da noite chegam à feira conhecendo a linha e a Casa. A conversa no estande começa no segundo passo.</span></div>
+      </div>
+      <div class="prazos">
+        <div><span>Assinatura do contrato e escolha do dia</span><span>04/12/2026</span></div>
+        <div><span>Visita técnica na fábrica e análise do drone</span><span>11/12/2026</span></div>
+        <div><span>Lista dos 15 convidados da Casa</span><span>11/12/2026</span></div>
+        <div><span>Equipe do desfile e looks confirmados</span><span>18/12/2026</span></div>
+        <div><span>Convites enviados, antes das festas</span><span>18/12/2026</span></div>
+        <div><span>Roteiro do desfile aprovado</span><span>08/01/2027</span></div>
+        <div><span>Episódio 2</span><span>18, 19 ou 20/01/2027</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="investimento">
+  <div class="wrap sec">
+    <div class="num"><b>10</b>Investimento</div>
+    <div class="conteudo">
+      <h2>Investimento da Casa.</h2>
+      <div class="valor">
+        <div class="rot">Valor fechado</div>
+        <div class="preco oculto" id="preco" aria-live="polite">Apresentado em reunião</div>
+        <input id="codigo" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Código">
+      </div>
+      <p>Inclui insumos, toda a produção do evento e a organização do desfile.</p>
+      <div class="desfile-custos">
+        <h3>O desfile: a Nexo organiza, a Meneghel investe.</h3>
+        <p>A Nexo cuida do desfile de ponta a ponta: seleciona modelos e fornecedores, levanta orçamentos, monta o cronograma, conduz o ensaio e o desfile na noite. Os custos do desfile não estão no valor acima e são pagos diretamente pela Meneghel:</p>
+        <ul class="lista">
+          <li>Cachê das modelos.</li>
+          <li>Maquiagem e cabelo.</li>
+          <li>Aluguel de iluminação.</li>
+          <li>Confecção dos looks.</li>
+        </ul>
+      </div>
+      <p class="miuda">Contrato emitido por ORBI IA · J. MARCELIO LIMA LTDA · CNPJ 68.308.327/0001-69.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="trama" aria-hidden="true"></div>
+<footer>
+  <div class="wrap">
+    <div class="linha">
+      <div class="equipe">
+        <b>Agência Nexo</b>
+        <span>Jonei Lima · estratégia e publicidade</span>
+        <span>Jonata Coradini · direção de cena, fotografia e edição</span>
+        <span>Vinicius Baumgartner · comercial</span>
+      </div>
+      <div class="equipe">
+        <b>Cozinha Gourmet</b>
+        <span>Sabores | Ambientes | Conexões</span>
+        <span>Apresentação: Wendy Meira</span>
+        <span>Tecnologia: ORBI IA</span>
+      </div>
+    </div>
+    <div class="legal">Proposta confidencial preparada para a Têxtil Meneghel. Novembro de 2026.</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Valores cifrados: o número não aparece no código-fonte.
+  var V = [{"iv":"daFXiW2B6QeCBfB3","ct":"stPmSKE3+X3SrpzizL/nPm94FrCaVQKv"},{"iv":"DwI8fQwZbj6sEYlQ","ct":"ggvMH69o9ULqHVv03whG/LL2lXr6zL+F"}];
+  var preco = document.getElementById('preco');
+  var campo = document.getElementById('codigo');
+  var buffer = '';
+  var aberto = false;
+
+  function b64(s) { return Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); }); }
+
+  async function tentar(cod) {
+    if (!(window.crypto && crypto.subtle)) return false;
+    var hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('trama:' + cod));
+    var chave = await crypto.subtle.importKey('raw', hash, 'AES-GCM', false, ['decrypt']);
+    for (var i = 0; i < V.length; i++) {
+      try {
+        var txt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(V[i].iv) }, chave, b64(V[i].ct));
+        mostrar(new TextDecoder().decode(txt));
+        return true;
+      } catch (e) {}
+    }
+    return false;
+  }
+
+  function mostrar(v) {
+    preco.classList.remove('oculto');
+    aberto = true;
+    var caixa = preco.parentNode;
+    caixa.classList.remove('aberto'); void caixa.offsetWidth; caixa.classList.add('aberto');
+    var alvo = parseInt(v.replace(/\D/g, ''), 10);
+    var calmo = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (calmo || !alvo) { preco.textContent = v; return; }
+    preco.classList.remove('revelado'); void preco.offsetWidth; preco.classList.add('revelado');
+    var t0 = performance.now(), dur = 1400;
+    function passo(t) {
+      var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      preco.textContent = 'R$ ' + Math.round(alvo * e).toLocaleString('pt-BR');
+      if (k < 1 && aberto) requestAnimationFrame(passo); else if (aberto) preco.textContent = v;
+    }
+    requestAnimationFrame(passo);
+  }
+  function esconder() {
+    preco.textContent = 'Apresentado em reunião';
+    preco.classList.remove('revelado');
+    preco.parentNode.classList.remove('aberto');
+    preco.classList.add('oculto');
+    aberto = false;
+  }
+
+  function registrar(ch) {
+    buffer = (buffer + ch.toUpperCase()).replace(/[^A-Z]/g, '').slice(-8);
+    for (var n = 4; n <= Math.min(8, buffer.length); n++) {
+      (function (c) {
+        tentar(c).then(function (ok) { if (ok) { buffer = ''; campo.value = ''; } });
+      })(buffer.slice(-n));
+    }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && aberto) { esconder(); return; }
+    if (document.activeElement === campo) return;
+    if (e.key && e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) registrar(e.key);
+  });
+  campo.addEventListener('input', function () {
+    var v = campo.value;
+    if (v) registrar(v.slice(-1));
+    if (v.length > 12) campo.value = '';
+  });
+})();
+</script>
+<script>
+(function () {
+  var barra = document.getElementById('progresso');
+  function rolar() {
+    var h = document.documentElement.scrollHeight - innerHeight;
+    barra.style.transform = 'scaleX(' + (h > 0 ? scrollY / h : 0) + ')';
+  }
+  addEventListener('scroll', rolar, { passive: true }); rolar();
+
+  var calmo = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (calmo || !('IntersectionObserver' in window)) return;
+  document.documentElement.classList.add('js-anim');
+  var alvos = document.querySelectorAll('main .num, main .conteudo > *, .roteiro li, .feira > div, .fatos > div, .prazos > div, .lista li, .foto, .sim, .sim-claro, tbody tr');
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  alvos.forEach(function (el) {
+    if (!el.classList.contains('foto') && !el.classList.contains('sim') && !el.classList.contains('sim-claro')) el.classList.add('rv');
+    var irmaos = Array.prototype.indexOf.call(el.parentNode.children, el);
+    el.style.transitionDelay = Math.min(irmaos, 6) * 0.08 + 's';
+    io.observe(el);
+  });
+
+  // contagem do "15 de 40"
+  var quinze = document.querySelector('.fatos div:nth-child(2) b');
+  if (quinze) {
+    var io2 = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting) return; io2.disconnect();
+      var t0 = performance.now();
+      (function f(t) { var k = Math.min(1, (t - t0) / 1200); quinze.textContent = Math.round(15 * (1 - Math.pow(1 - k, 3))) + ' de 40'; if (k < 1) requestAnimationFrame(f); })(t0);
+    }, { threshold: 0.5 });
+    io2.observe(quinze);
+  }
+})();
+</script>
+</body>
+</html>
