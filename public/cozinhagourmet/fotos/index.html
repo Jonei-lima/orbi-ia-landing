@@ -1,0 +1,113 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fotos da estreia · Cozinha Gourmet</title><meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/cozinhagourmet/img/cg-logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Manrope:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>:root{--bg:#141D13;--panel:#1C281A;--bone:#EFE7D7;--muted:#B5B8A3;--gold:#E3A63E;--line:rgba(239,231,215,.16);--err:#E8806B}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--bone);font-family:Manrope,system-ui,-apple-system,sans-serif;min-height:100svh}
+header{max-width:1200px;margin:0 auto;padding:30px 20px 10px;text-align:center}
+.logo{display:block;width:200px;margin:0 auto 14px}
+.nexo{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 22px;color:rgba(239,231,215,.55);font-size:11px;letter-spacing:.12em;text-transform:uppercase}.nexo img{height:24px;width:auto;display:block}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:34px;line-height:1.1;margin:0 0 10px}
+.sub{color:var(--muted);font-size:15px;line-height:1.5;margin:0 auto 6px;max-width:560px}
+.grid{max-width:1200px;margin:18px auto 0;padding:0 14px;columns:4 260px;column-gap:10px}
+.grid button{all:unset;display:block;width:100%;margin:0 0 10px;break-inside:avoid;cursor:zoom-in;border-radius:8px;overflow:hidden;background:var(--panel);min-height:120px}
+.grid img{display:block;width:100%;height:auto;transition:transform .3s,opacity .3s}
+.grid button:hover img{transform:scale(1.02);opacity:.92}
+.lb{position:fixed;inset:0;background:rgba(10,14,9,.96);display:none;flex-direction:column;z-index:20}
+.lb.on{display:flex}
+.lb .stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:0;padding:10px}
+.lb .stage img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
+.lb .bar{display:flex;gap:10px;justify-content:center;align-items:center;padding:12px 16px 20px}
+.btn{background:var(--gold);color:#1A1A12;border:0;border-radius:999px;font:inherit;font-weight:700;font-size:15px;padding:13px 24px;cursor:pointer}
+.ghost{background:none;border:1px solid var(--line);color:var(--bone);border-radius:999px;font:inherit;font-size:15px;padding:12px 18px;cursor:pointer}
+.nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(20,29,19,.6);border:1px solid var(--line);color:var(--bone);width:46px;height:46px;border-radius:50%;font-size:22px;cursor:pointer}
+.prev{left:12px}.next{right:12px}
+.close{position:absolute;top:12px;right:12px;z-index:2;background:rgba(20,29,19,.6);border:1px solid var(--line);color:var(--bone);width:42px;height:42px;border-radius:50%;font-size:20px;cursor:pointer}
+.count{color:var(--muted);font-size:13px;font-family:"IBM Plex Mono",monospace}
+.modal{position:fixed;inset:0;background:rgba(10,14,9,.8);display:none;align-items:center;justify-content:center;z-index:30;padding:16px}
+.modal.on{display:flex}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px 20px;width:100%;max-width:420px}
+.box h2{font-family:Fraunces,serif;font-weight:600;font-size:24px;margin:0 0 6px}
+label{display:block;font-size:13px;color:var(--muted);margin:14px 0 6px}label b{color:var(--bone);font-weight:600}
+input[type=text],input[type=tel]{width:100%;background:#0F160E;border:1px solid var(--line);border-radius:10px;color:var(--bone);font:inherit;font-size:16px;padding:13px 14px;outline:none}
+input:focus{border-color:var(--gold)}
+.check{display:flex;gap:10px;align-items:flex-start;margin:16px 0 4px;font-size:12.5px;color:var(--muted);line-height:1.45}
+.check input{margin-top:2px;accent-color:var(--gold);width:18px;height:18px;flex:none}
+.box .btn{width:100%;margin-top:16px}
+.msg{margin-top:10px;font-size:14px;color:var(--err);text-align:center;min-height:1em}
+.hp{position:absolute;left:-9999px;opacity:0}
+footer{text-align:center;color:rgba(239,231,215,.5);font-size:13px;margin:36px auto 10px;line-height:1.7;padding:0 20px}
+footer a{color:var(--gold);text-decoration:none}
+.orbi{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px auto 30px;text-decoration:none;color:rgba(239,231,215,.5);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}.orbi img{height:22px;width:auto;display:block}
+@media(max-width:600px){h1{font-size:28px}.grid{columns:2;column-gap:8px;padding:0 8px}.grid button{margin-bottom:8px}.nav{display:none}}
+</style></head><body>
+<header>
+<img class="logo" src="/cozinhagourmet/img/cg-logo.png" alt="Cozinha Gourmet">
+<div class="nexo"><span>Um projeto da</span><img src="/cozinhagourmet/img/nexo.png" alt="Agência Nexo"></div>
+<p class="eyebrow">Episódio 1 · 18 de novembro · Lar Brasileiro, Campinas</p>
+<h1>As fotos da estreia.</h1>
+<p class="sub">Encontre suas fotos, toque para ver em tamanho grande e baixe quantas quiser. Obrigado por fazer parte dessa noite.</p>
+</header>
+<div class="grid" id="grid"></div>
+<footer>Acompanhe o programa e os próximos episódios:<br><a href="https://instagram.com/programacozinhagourmet" target="_blank" rel="noopener">@programacozinhagourmet</a> · <a href="https://instagram.com/agencianexosumare" target="_blank" rel="noopener">@agencianexosumare</a><br>Fotos: Produtora Coradini</footer>
+<a class="orbi" href="https://www.agenteorbiia.com" target="_blank" rel="noopener"><span>Desenvolvido por</span><img src="/cozinhagourmet/img/orbi-ia.png" alt="ORBI IA"></a>
+
+<div class="lb" id="lb" role="dialog" aria-label="Foto ampliada">
+<button class="close" id="x" aria-label="Fechar">✕</button>
+<div class="stage" id="stage"><button class="nav prev" id="pv" aria-label="Anterior">‹</button><img id="big" alt="Foto da estreia"><button class="nav next" id="nx" aria-label="Próxima">›</button></div>
+<div class="bar"><span class="count" id="ct"></span><button class="btn" id="dl">Baixar foto</button></div>
+</div>
+
+<div class="modal" id="md" role="dialog" aria-label="Cadastro para baixar">
+<form class="box" id="f" novalidate>
+<h2>Antes de baixar</h2>
+<p class="sub" style="margin:0;text-align:left">É só uma vez. Depois você baixa quantas fotos quiser.</p>
+<input class="hp" type="text" name="site" tabindex="-1" autocomplete="off">
+<label for="nome"><b>Seu nome</b></label><input id="nome" name="nome" type="text" autocomplete="name">
+<label for="whatsapp"><b>WhatsApp</b> com DDD</label><input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" placeholder="(19) 99999-9999" autocomplete="tel">
+<label class="check"><input type="checkbox" name="consentimento"><span>Autorizo o <b>Cozinha Gourmet</b> a guardar meu contato e a me enviar novidades do programa pelo WhatsApp, conforme a LGPD.</span></label>
+<button class="btn" id="go" type="submit">Baixar foto</button>
+<button class="ghost" type="button" id="cn" style="width:100%;margin-top:10px">Agora não</button>
+<p class="msg" id="msg"></p>
+</form>
+</div>
+
+<script>
+const F=[["1y5Ofrg6OFpBVSX1glZvgTaiTSc51AD_O","013A2684"],["1h8oy8fsIKFSHcGbdJCm6P_B6hrHQ6Y1O","013A2685"],["1uP8nU-zQkN8Nw6P_huW5GCMO6lum00z_","013A2686"],["1WOlj4JnHdvyZlpOaxPp98ZMf5Qk2iLhl","013A2687"],["1vadHT5RkNfrhpubao3LmwjmcsKJzJlSg","013A2688"],["1e1eEOw_Km0mLqHE8ZWSYqhtXM9GvrFSR","013A2689"],["1x_IyBRhH6ylpjr4fYzuMw1eByFLwAfD_","013A2690"],["1d-CLAz9VPFdWgYTz2gA79VOvrbVYMtSe","013A2692"],["1NVS4bidk1zOmbCrDaXOXTSgH_tSTJzZg","013A2694"],["1O2E3H4TF1cK6FBeYQhGnp81JKO7DnPxm","013A2696"],["1mp79cBVFYK2ikcSZBra-jRT94Ub1DcwH","013A2698"],["1oUd-yc1_-kkgfIX0BBZJmUo7Ex5Xt0OU","013A2701"],["1QNK9KdSxHSGsVlpXRkytya6qa591RXlg","013A2704"],["1SOD2pTH5lmnwDEGon-457cb-a_eQ4Gl6","013A2706"],["11STXuE3kquieuCTbiGlxl6mtULvnyR2a","013A2708"],["13gZj04D4D7P0bimsKVqMM9xEfrVkr0IX","013A2709"],["1U2SHzGyLvwpovpUXoKRHTTcwqZTd0PC2","013A2711"],["1s9wptKiGjt0l-vvQI6p8nc3t7n0qKWgy","013A2712"],["1RyWp0J6isoUfvXikCxXbGfirNm_qQdAE","013A2713"],["16h42m9na87gr2W1NpafY4XwC4Y94YoSI","013A2717"],["1AVUMa0aZmyRp7AsCIUBy_gpRL3yXK6JO","013A2719"],["1i655-dEZMjiPDVAN0yjNtx3LdY0---yM","013A2721"],["1ZrMr4cmYG_qSL4JRHuJw_mfBbyl3HXn_","013A2724"],["1rbfDDaZ80WY-gF4oq0SMN_E2rWYOdjud","013A2726"],["12C4FnPsF4xcLyRvXG9_ytKJRkLQK0v8z","013A2727"],["1bQrAyOBOAFgv4-bAK5qiYIu1r6FrSR1Q","013A2732"],["1CVZDtw1Vt7-9ijcFzzI7QuS4pTR_OJNg","013A2733"],["1ddXaqe_o_gGeC8P-GmBOfSyeShuq-mHt","013A2735"],["19_MWrd3Ok3uNQ5QZkVn3RNbco55xj-Dz","013A2736"],["157pM5UaFMsCPSnIFCMb22a42cMFuNhnM","013A2740"],["1DxdmHEguVFL7yF4fr0dWyMjfm43N8OXG","013A2742"],["1-j4_tVNA-igb-g_xDTPjcA4GWuYv9-bv","013A2743"],["1cwWNFmeYXnaW1IK_g0WTvf4dSVS3714q","013A2747"],["1wG6mS2xVUlAZ0H_QWUIfy_YvSBZ7ywZ5","013A2751"],["13QlrTn5UcU_AlzCUqS5yA_bTK7xdxqi3","013A2752"],["1uWflQeiB8E13woRboZ_ivMHYQamRP214","013A2759"],["16bC6NJZKsRyoWZA8uplNBYC6yZ6QFK8X","013A2760"],["1PZXc6c3p3N6v64N6Sx7qy-MYXRJr5x_Z","013A2763"],["1688MA7tdmsjaqSRqnO1hssIVpN5dCCYS","013A2766"],["1szi9RoatxFiVR3JGvu7Ryk7FYnAi259F","013A2768"],["1skG9jST_LKKVX4E0hxZOqXGm0WbeA8E_","013A2772"],["1NVR0x902ZaNzIkVfUwFS9zurLJGZhpUQ","013A2775"],["1Zlb5uTamiVyVamgLFD1_-FHWtsGiz5JZ","013A2776"],["1I3sqq9suU6CAWcxKDYIgQswTvlbM6krR","013A2779"],["1lNDy9dX3ipJwKQfxRjkwCJk5nTZWA6hj","013A2781"],["116wcdBXy3EwRe_WxckW260Y8KbtYkW5A","013A2782"],["1WgY7dQ4kXZBEPYb7dLnVBmLMep_SgeLV","013A2784"],["1wymHppKx9VD9OXX3fET6efOFry_1EIAo","013A2789"],["1W02Vvx8gMmYESY71_6q7t9FMFTmtcvYs","013A2792"],["1OORriP-baSZdh3k7UuuqPfj7HGVkExXK","013A2795"],["1t1pShe0ojXp3d4C5fcX6HAS02EzpMGdv","013A2797"],["1FWHEgvGDqZKpWW5xBbfV6kD-a4Gz-L4r","013A2802"],["1edf0dIhAp1qCmf9YIa9-qcRaZ06UJHmt","013A2803"],["1C34DsPCStsYIwxwpm0i-WQZ6VJoVtip2","013A2809"],["1r9QYWbSILpsvb9nQWeux8xB2nQpJHbXz","013A2811"],["1NAb1wo4JGs4Yyxx-2D04YUxxyH5aF1yS","013A2819"],["15fuFyqnqziNuQOJRTyXYpFislt_AnPQX","013A2821"],["1kn7mN1FkN2_qma4zMHXr-G2QlsCA9Qo7","013A2823"],["19fzFohn1lNl3JIm9cDJaFlFMgPv6nQ7k","013A2826"],["1Em0zFCbCLR93SQo5gtZLdf9H6N58960e","013A2828"],["1PLwVBdtDLIpFTEt1wPQLBhyHhqnLFBER","013A2831"],["1ISCdw8l6mujqvW69u36s_ssDOfx77S4K","013A2832"],["1pWx0ZAUA82yvwtHbUphPO11xeaQjykag","013A2836"],["1DGp6qe4gEpzy3pwa2ePPr4PIoLb562hq","013A2841"],["11Ilxg7X4tq9eD8aRe-QPesvV_psJeqdW","013A2843"],["1L7Gnr0-D0tE0GbXpxXJRrp95MR6NaF_k","013A2845"],["138cCkr6xfJOdEqNdj902x_VadLmRWjH9","013A2846"],["10hEAo5EKEMA-IyPDQ9eFlCv9arZXL6LQ","013A2847"],["1OeJLOc8PqEYw1vyySz_kjSaZsHD57K4V","013A2850"],["1m8qPbC52h74cz3gnXnAXzaAq6qjOGGrb","013A2853"],["1tv9Mar1gqZoot69mz-7gzeBjtVK6izZO","013A2856"],["1Zpl3NUY9X78dEGrmtFV0UK02c0oq3uki","013A2858"],["1cRztZKcekEjLZz2QCwQTC8KoftqpUH5L","013A2862"],["1oVUswbr1ckCmiUDyDLDcENw_fjwqHGgC","013A2863"],["15JWEuGdxnBaUWLtunRJS1QIz2Oc2T_d4","013A2865"],["1-Abf4jDn_F5gyLxy_ci1GrkBBukGmAhF","013A2866"],["1nkWhjdEkcziHNP15w2BLraOvkcCsqrLE","013A2871"],["1aNCuvSTzKrVHaoVmhTAhLLhtwm8aCue6","013A2873"],["1jyACXUivc2-3JHuUv52xYtIBJvxlnR86","013A2874"],["1c2GhGGxxLAiF38zRNN2HhOWYK_DHlCtM","013A2876"],["17tDDKPFOU_p6vPvZzS1B83Yt80cNVaad","013A2879"],["1RABO4gUl0qvkF6_njkda3kCNYsIRWYXg","013A2880"],["1Hv6ICW3puoZ7FwAoTlxGh5eYZuv3_DVD","013A2882"],["1weWSc55fnY5KRitLPYSoOKLo0Wys9SI_","013A2886"],["1pkC8k5hAvZlUM4n0wFvk-n7wHyLoD7Fx","013A2887"],["1ZWjy9VnLU12KjnA3tD5JKllU6WHJc0C8","013A2891"],["1iAsHioIrA1DRhnZnvu4DcoD3XJSBInzr","013A2893"],["1E98KuKUK2KwioEM9OC0uzGpdjkhU1zds","013A2898"],["1QA117ZEYrVaBIp0AASeS3ehPhX9NRZtL","013A2902"],["1u0oCCBbWDUzn1WtMpiIh0wxHR6DhMEUI","013A2903"],["1OKfqyRiKN2Vc7Ye0bf3-tIOeDMsjhih-","013A2904"],["1IPC-aTO-3ozgQMXW3G10U3bjh8DXcK6g","013A2909"],["19ev8yt5tCLX1CytGszkkOSOKQvCpQAbl","013A2911"],["1dZSd9T8sBA3wx4z1VHuqw-m9Vye4tpXh","013A2913"],["1asg3jFAtK-lUMU0Go02AjDRkYomlzYrw","013A2916"],["1FERRT1A04j4UB0J3seAvroo-Izg0zeA4","013A2917"],["1HQT9H--0T5FMHo9yWodssFF8WQHDvgPx","013A2919"],["1wNXAekEihGlnjBEGZ6nzeOf7PKkL1Kaz","013A2920"],["10_w3lpl3v70ih1CM6vqNqCbR1Hi7eV1E","013A2922"],["1CeT9uvNdtT1VHdqGpyeI0WvTyr3v-vkW","013A2923"],["1lXRQo2a8EmnUfhZGXlyO4g_Ko5t7KJAI","013A2924"],["1L_rp_7pVcSrDjEZCQg01A-Ow7lQf0El3","013A2927"],["1rLG26Fgpk23b6aFJqVTbJQZrWkpjh7-O","013A2929"],["1YhEInXrCbj7cQSjNzJiTNZ69pUuDbtA6","013A2930"],["1UUIKaGHjuVryWAq1y1earx25OMVLqn2M","013A2931"],["1qax1esFRLTHcy3dfCponQTdnbMxvUUQs","013A2934"],["1aDoYn0webe5pXp34EUhzDXbCIeOqMs-w","013A2936"],["1s9Qb7xytUM8FSEOUIUsQMDqb2aczJj8Y","013A2938"],["1S0l0JfI_GihWes2gJGT9OBp6kRAdOre7","013A2942"],["1KIK2Ep3OC4DbWgMVwfdRDs0k-9Ufwa_D","013A2943"],["1_PfIfbe7cgHu4RsMAzNvxl11bo1hq55C","013A2944"],["1ZEoW9U3Dj62PE76R08F8yIPn1EysRwj-","013A2949"],["1K3hHqpheCmAy24HteNS_VXNyF9wglehV","013A2950"],["1E-uWc6Vd6SrJMICLni_hS5peKarDgfx7","013A2951"],["1HidhdRcvZnaayoQplAlh6dmPLE1fdblJ","013A2952"],["1-0q9CfLmHwn26FJATYLQtBXycD-wjisd","013A2953"],["1byYwgnEILo2jtcblKuG7en6YbJzn9oOd","013A2956"],["1LBkibqCTbitKtRVKU8aFyetscQ66DGBB","013A2961"],["1J21JR4JyS6Ze6r0mlo_CIYqqFZqdCl4M","013A2964"],["1M4YehgL-1QJ5j6-1b8C0OMmlPToqI9S4","013A2974"],["1lYoFSqzrKTQE9Ud6H87FmFLkWYqpqEas","013A2978"],["1ieJJc2qGFm9OtXqiEdIv3ShozHm-asZn","013A2979"],["1zzLCEqpdCUscXfmKzIKMIFRs9cR-WNcN","013A2984"],["18xYh1TlnGEpn1WX1zf3NGoYlikgF2B4f","013A2986"],["1DdwlfpRrKbYBo2U6lWCryncvQQkv55WD","013A2987"],["1YJoI9etlRllsxMyNh_IJzqCWyzxROqRQ","013A2991"],["1kw6EUogiSlzvg3lLF6ub7B6H01liH9jp","013A2992"],["10yDDQ1cbTx3xarw-mFdvmGRbjGXKCZob","013A2995"],["1zQ-wu2B0ydxJZ47Mormn1I87-KyyvDdU","013A2998"],["1sS4-OcKp9Q7Mj34LVy4239b3y9h4ngwd","013A2999"],["1BOiVaR_49-80earIUw1lukvTc2uKhh2r","013A3000"],["1RtQ2TEdCqNw69iPxVXnK5mcQCmCSNbVV","013A3001"],["1S9gtccsfZhHDTQ9ZdPuzPPFpHpRvYOZe","013A3008"],["19LCRAHPavvpQT2CoiT9IKeLIcegpxhyg","013A3010"],["17IAhL8Ft555tcfd9JCsb2GTyK00zM2zV","013A3015"],["1ViLc5x2PPhfhyf-t8gehANqUk8OM-g8f","013A3021"],["1Gkm6uyi0axJVqbl4s6YdBa_ercKeP4ac","013A3022"],["1pqk4dc4AtVmuRC5XO99SetRxKRBR5tE0","013A3026"],["1C-PUSUiuN-devEPA9TKB3qYDcgmv_jh7","013A3028"],["1tbLgwvN38DkpHVcIgFyeI4tT-XCCQA_J","013A3029"],["1hk_HGPhk4rJSQDixSwRDcuUgRYl1oZ9U","013A3031"],["1_5bHDIkVBtGTpRWlve5Z7lXk96BbD9uF","013A3032"],["1T46v3ZgdaWJCARJFs3uigwJhU6I8mwQf","013A3037"],["1PcKzX4PKyxHvQSrAGtm3efFiJL6NBEyJ","013A3043"],["19wSl398VTpFzIpjzroCHUwzHz-ja2Ayj","013A3046"],["193hpEh7RJ3yVaZp24IXM5jVOUEqUOaNj","013A3048"],["1GYuJETz5ji8ymPxQ4UaTPPLpgnUcUPX1","013A3054"],["1N8qQ3IqM3UNvdl87Sei75EEB0EETDlm5","013A3055"],["1CSpsz6mFRCDrKbvmFawFDUvDkGJsT2BH","013A3058"],["1ZcvEiP3OIMebALrLc_C0lOTTFdSkTFf-","013A3062"],["19mORLV6bsCNkcNDcf-YS0Pi_0fnyqFXZ","013A3063"],["1H5JAmjhnKReQqoq4L6tL4MBo2b1OL_fu","013A3065"],["1dm7lbW7GnIQ6D2lUhE89KEfdpbgvPneG","013A3068"],["1xO6WkNxuyOh-B1Ld9qO8Jg9wMkTYCiPt","013A3070"],["1ZuX55u4XsouVB081q5dfYiO-lr04gTQU","013A3072"],["1W0sBckscRHFhR8X9gnKIu6VH56fQ0XhH","013A3077"],["1mUcI6-isggIXMmc79z9YH51JEwOIp4Lc","013A3083"],["1LeL4O34c859h-mvjIWlJ5dCbrzcXWF7K","013A3085"],["1Yf1fKne4EBXEknuuNOua1upF-lP9xlj9","013A3086"],["1H0b15sXy6kUUCVUXlplXinBmUatg9sPz","013A3087"],["1fN3vKWywXxWA9yfkTSaqpr4rBjfMXO9G","013A3091"],["1SUW7lEPKROQta6Og9JnzPjq5RsZv-dXD","013A3093"],["1luHiy4VNI3oDBdigKDPFG_IYraupKI0Q","013A3096"],["1n_5Jz-nxj-9vOPsyxo8IL-H0mIIV3wGv","013A3100"],["16uEby1Szo11vTpxsSIMdsV-Y8VTfPl0a","013A3103"],["1InEKA_jA1Ni45g1hvfc16u11yvGd6uzY","013A3107"],["1bmbGZ2xHbi_bZXcVNilhGuNsG3G5k_UZ","013A3114"],["1QYnyb7bJQ1C-aRaCKRsAIeFXF0IFWquE","013A3115"],["1v7XIcwzbTlohJQt2fdc26dwGq4ffoJI1","013A3119"],["1PNcFXsSBykue6mGxfHHSS2gdlMAiz-Wv","013A3122"],["1A_8nzSlbQ3ZqSOeZ-3a2zndU80eXd1Kf","013A3125"],["1a9WNCIxAky4nRDK-EXVKDFdxew6gNxvv","013A3129"],["1qps1v1MqdETKmIEzln_Luq_qLbbabNDM","013A3131"],["1g_uG57rVY_SFlzg7Hk_6yHx9Lq7MnPtU","013A3132"],["1F0hNFgRZ86TvN81IGxFcT1ReYy5F5yAl","013A3133"],["1KLC8-q7dFv0ZqsYdSUi1T4x1O9HZhpe7","013A3136"],["1-Tzxpc4YOB53Z1zxgFfQ2JvLJQnRjltG","013A3138"],["1bh80v-3wZuy3dJ1-9VjQ9-3a0DKuwEMB","013A3142"],["1BxXqF4lvS7mIQWyhc9EZ3qPmRyZXZlf8","013A3143"],["1UhjGh2PD7jzbUnCa1WosdaCVkUtnSjLA","013A3144"],["1YvZFoWbwvBIw8nSTs4mogdYZMua0zbUq","013A3147"],["1dChREo6P-emDU-xwkyjsapYRLB4pvJ7b","013A3149"],["180l8_dQleYqePxT7WaSR7f7VJJzRfjIJ","013A3152"],["1ye0ZCg_sByGTUpk145_KJPT1TL7KeJS0","013A3158"],["1ZOHjlaVkCJ_YfwYxjlE1Dj6kBo61OP1-","013A3172"],["1dRfygCOgHgpaG4fl0GMl9cFt8MAJWYnD","013A3173"],["1nInzeu36wy5qigWQbIjcC3KBgmBpl0nO","013A3175"],["1DJ2_tlGOVxgcRZdanTSzR3S9WH0wHhW7","013A3178"],["1it0tBiXXDI1Fyfx4ss2m71D0YHk15OPw","013A3180"],["1vxFfJM9_OeZ6Wj2MidU18zTGYtLPERZ2","013A3193"],["1qtlxmfZ1khKR1bAsZSLkItZEVT7xx4j2","013A3194"],["1WgsAfMcnQrXNxZSvUBea9Gr4xFSIAFLh","013A3196"],["1hLjrn6BCn05EYk-xKxu6YAhKX4knIC7n","013A3200"],["1EkrPgXSZSecRBqDj82_RcCSSeMKfuQip","013A3202"],["1G0Xlt7_upMgZfY4seIHVSHhDeQ-WC5fQ","013A3204"],["1nu-SEuD3baJFXZRqU-AVrpCCP5fjMYiS","013A3206"],["1WN2eTB-V6dp070ebrq4ubaCGq7mAh0CA","013A3210"],["1UBYyKCnRYKdzSezSTZTPP7vt7ZDD7tZY","013A3212"],["1S2_S2otyV-LHoP_4WEJ_WraQTzOeDSCo","013A3216"],["1qGdLTrf_CXEC8npcqh-O_GKU54XiNUPC","013A3217"],["1AAMFsPF9hIeJD_1jcMCF2Va26JJ9qAmO","013A3224"],["1los3_Ln6g5_dn29FZS5ougqIy3-kYii_","013A3228"],["1SiW8EgTGWC1qxDvuM9-YLijpTsJ-g_yO","013A3236"],["1Td_H33U7t6vLqMnqgyYtO6kPuiNZ6_0c","013A3242"],["1j0FJ-wKWSScpl5WBMIojqmgh75PsibN4","013A3246"],["1zAeWrakd2IbmeE0DnIDxRBRx3r3IYjkt","013A3248"],["1tcuU-S91DxEpOQqRkjwPcvUbJeI23zId","013A3255"],["1ppGqbPNthPlyhihfiucePZPKqDV6-ezD","013A3260"],["1BA3l8iQedFwaF0YcuIXR0peCS2ghcjsg","013A3261"],["1OPikNpy9Q3C4noJ2B6idJMlGm7bG7clX","013A3263"],["115W6reIQhG1YSyT3pH0XAzBoaD7qrqO2","013A3268"],["15yoA85oNnAuBSlVoQ3-xtwHQ7NjoX4CN","013A3269"],["1fKPRB8XYMexFj1kKDH_5c8D47nDl8umQ","013A3270"],["10xWEL1AwscW1qbb3k58ImnZKQOMf5UZJ","013A3274"],["1CbaSFo4c8TbUnU9Ml9E6rgDpDnJ331GZ","013A3279"],["1cwnTw7_Gg1jI_vKrlyDn-MKdb2IIEuVp","013A3282"]];
+const T=id=>'https://drive.google.com/thumbnail?id='+id+'&sz=w600';
+const B=id=>'https://drive.google.com/thumbnail?id='+id+'&sz=w1600';
+const D=id=>'https://drive.usercontent.google.com/download?id='+id+'&export=download';
+const $=i=>document.getElementById(i);
+function lerW(){try{return localStorage.getItem('cgFotosW')||''}catch(e){return ''}}
+function gravarW(v){try{localStorage.setItem('cgFotosW',v)}catch(e){}}
+let W=lerW(),cur=0;
+const g=$('grid');
+F.forEach((f,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Abrir foto '+(i+1));
+ const im=new Image();im.loading='lazy';im.decoding='async';im.alt='Foto da estreia '+(i+1);im.src=T(f[0]);im.onerror=()=>b.remove();
+ b.appendChild(im);b.onclick=()=>abrir(i);g.appendChild(b);});
+function abrir(i){cur=(i+F.length)%F.length;$('big').src=B(F[cur][0]);$('ct').textContent=(cur+1)+' de '+F.length;$('lb').classList.add('on');document.body.style.overflow='hidden';
+ [cur+1,cur-1].forEach(j=>{const p=new Image();p.src=B(F[(j+F.length)%F.length][0])});}
+function fechar(){$('lb').classList.remove('on');document.body.style.overflow=''}
+$('x').onclick=fechar;$('pv').onclick=()=>abrir(cur-1);$('nx').onclick=()=>abrir(cur+1);
+document.addEventListener('keydown',e=>{if(!$('lb').classList.contains('on'))return;if(e.key==='Escape')fechar();if(e.key==='ArrowLeft')abrir(cur-1);if(e.key==='ArrowRight')abrir(cur+1)});
+let sx=0;$('stage').addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+$('stage').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)abrir(cur+(dx<0?1:-1))});
+function baixar(){const f=F[cur];
+ fetch('/api/cg/fotos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({whatsapp:W,foto:f[1],evento:'11nov'}),keepalive:true}).catch(()=>{});
+ location.href=D(f[0]);}
+$('dl').onclick=()=>{if(W)baixar();else{$('md').classList.add('on');$('nome').focus()}};
+$('cn').onclick=()=>$('md').classList.remove('on');
+const wi=$('whatsapp');wi.addEventListener('input',()=>{let d=wi.value.replace(/\D/g,'').slice(0,11);if(d.length>6)wi.value=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;else if(d.length>2)wi.value=`(${d.slice(0,2)}) ${d.slice(2)}`;else wi.value=d;});
+$('f').addEventListener('submit',async e=>{e.preventDefault();const m=$('msg');m.textContent='';
+ const fd=Object.fromEntries(new FormData(e.target));fd.consentimento=e.target.consentimento.checked;fd.foto=F[cur][1];fd.evento='11nov';
+ if(!fd.nome.trim()){m.textContent='Digite seu nome.';return}
+ if(fd.whatsapp.replace(/\D/g,'').length<10){m.textContent='Digite seu WhatsApp com DDD.';return}
+ if(!fd.consentimento){m.textContent='Marque a autorização para baixar.';return}
+ const b=$('go');b.disabled=true;b.textContent='Liberando...';
+ try{const r=await fetch('/api/cg/fotos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fd)});const j=await r.json();
+  if(!j.ok)throw new Error(j.error||'Erro');
+  W=fd.whatsapp;gravarW(W);$('md').classList.remove('on');location.href=D(F[cur][0]);
+ }catch(err){m.textContent=err.message}finally{b.disabled=false;b.textContent='Baixar foto'}});
+</script></body></html>
