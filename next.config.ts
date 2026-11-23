@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       { source: "/cozinhagourmet/contrato", destination: "/cozinhagourmet/contrato/index.html" },
       { source: "/cozinhagourmet/patrocinio", destination: "/cozinhagourmet/patrocinio/index.html" },
       { source: "/cozinhagourmet/trama", destination: "/cozinhagourmet/trama/index.html" },
+      { source: "/cozinhagourmet/parceria", destination: "/cozinhagourmet/parceria/index.html" },
       { source: "/cozinhagourmet/fotos", destination: "/cozinhagourmet/fotos/index.html" },
       { source: "/cozinhagourmet/contrato/admin", destination: "/cozinhagourmet/contrato/admin.html" },
       { source: "/cozinhagourmet/contrato/novo", destination: "/cozinhagourmet/contrato/novo.html" },

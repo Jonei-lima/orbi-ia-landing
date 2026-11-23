@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cozinha Gourmet · Parceria Cris</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Identidade Cozinha Gourmet. Layout: coluna editorial estreita, capa verde cheia, faixas de "trama" como divisores. */
+  --verde: #0E2A1E;
+  --verde-2: #173B2B;
+  --dourado: #C9A45C;
+  --creme: #F4EEDF;
+  --papel: #FBF8F0;
+  --tinta: #1C211E;
+  --cinza: #5E655F;
+  --linha: #DCD3BE;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --texto: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--creme);
+  color: var(--tinta);
+  font-family: var(--texto);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--display); font-weight: 500; line-height: 1.12; margin: 0; text-wrap: balance; color: var(--verde); }
+h2 { font-size: clamp(30px, 4.4vw, 44px); }
+h3 { font-size: 22px; }
+p { margin: 0; max-width: 64ch; }
+.wrap { width: min(1040px, 100% - 40px); margin: 0 auto; }
+
+/* Capa */
+.capa { background: var(--verde); color: var(--creme); padding: 40px 0 0; }
+.capa .topo { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--dourado); }
+.marca { display: flex; align-items: center; gap: 12px; color: var(--creme); }
+.logo-cg { height: 120px; width: auto; display: block; }
+@media (max-width: 760px) { .logo-cg { height: 88px; } }
+.marca .nome { font-family: var(--display); font-size: 20px; letter-spacing: .02em; text-transform: none; line-height: 1; }
+.marca .nome small { display: block; font-family: var(--texto); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--dourado); margin-top: 5px; }
+.capa .corpo { padding: 64px 0 72px; display: grid; gap: 28px; }
+.capa .rotulo { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--dourado); }
+.capa h1 { color: var(--creme); font-size: clamp(46px, 8vw, 92px); font-weight: 400; }
+.capa .lead { font-size: clamp(19px, 2.2vw, 23px); line-height: 1.5; color: #E7DFC9; max-width: 34ch; }
+.capa .meta { display: flex; gap: 32px; flex-wrap: wrap; font-size: 14px; color: #BDB49C; border-top: 1px solid rgba(201,164,92,.35); padding-top: 20px; }
+.capa .meta b { display: block; color: var(--creme); font-weight: 600; }
+.trama {
+  height: 18px;
+  background:
+    repeating-linear-gradient(90deg, rgba(201,164,92,.85) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(0deg, rgba(244,238,223,.18) 0 2px, transparent 2px 6px),
+    var(--verde);
+}
+.trama.clara {
+  background:
+    repeating-linear-gradient(90deg, rgba(14,42,30,.55) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(0deg, rgba(201,164,92,.5) 0 2px, transparent 2px 6px),
+    var(--creme);
+  height: 12px;
+}
+
+/* Seções */
+section { padding: 88px 0; }
+section + section { border-top: 1px solid var(--linha); }
+.sec { display: grid; grid-template-columns: 220px 1fr; gap: 40px; }
+.sec .num { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--cinza); padding-top: 12px; }
+.sec .num b { display: block; font-family: var(--display); font-size: 15px; letter-spacing: 0; text-transform: none; color: var(--dourado); font-weight: 500; margin-bottom: 4px; }
+.conteudo { display: grid; gap: 22px; }
+.conteudo .grande { font-size: 21px; line-height: 1.55; color: var(--verde); }
+
+.fatos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--linha); border: 1px solid var(--linha); margin-top: 12px; }
+.fatos div { background: var(--papel); padding: 22px 20px; }
+.fatos b { display: block; font-family: var(--display); font-size: 26px; font-weight: 500; color: var(--verde); line-height: 1.1; margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.fatos span { font-size: 14px; color: var(--cinza); }
+
+/* Momento */
+.momento { background: var(--verde); color: var(--creme); border-top: 0 !important; }
+.momento h2, .momento h3 { color: var(--creme); }
+.momento .num { color: #A9A08A; }
+.momento .conteudo .grande { color: #EFE7D3; }
+.momento p { color: #D9D1BC; }
+.sim { margin: 14px 0 6px; max-width: 420px; }
+.sim img { display: block; width: 100%; border: 1px solid rgba(201,164,92,.45); }
+.sim figcaption { font-size: 12px; color: #A9A08A; margin-top: 8px; }
+.desfile-custos { background: var(--papel); border: 1px solid var(--linha); padding: 26px 28px; display: grid; gap: 14px; max-width: 720px; }
+.desfile-custos h3 { font-size: 22px; }
+.feira { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--linha); border: 1px solid var(--linha); }
+.feira div { background: var(--papel); padding: 20px; display: grid; gap: 6px; align-content: start; }
+.feira b { font-family: var(--display); font-weight: 500; font-size: 19px; color: var(--verde); }
+.feira span { font-size: 15px; color: var(--cinza); }
+@media (max-width: 760px) { .feira { grid-template-columns: 1fr; } }
+.guardanapo {
+  margin: 14px 0 6px; padding: 34px 28px; max-width: 520px;
+  background:
+    repeating-linear-gradient(45deg, rgba(201,164,92,.10) 0 3px, transparent 3px 7px),
+    repeating-linear-gradient(-45deg, rgba(201,164,92,.10) 0 3px, transparent 3px 7px),
+    var(--verde-2);
+  border: 1px solid rgba(201,164,92,.45);
+  outline: 6px solid var(--verde-2); outline-offset: -14px;
+  text-align: center;
+}
+.guardanapo .n { font-family: var(--display); font-size: 30px; color: var(--dourado); }
+.guardanapo .s { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: #BDB49C; margin-top: 8px; }
+.dois { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 18px; }
+.dois > div { display: grid; gap: 10px; align-content: start; border-top: 1px solid rgba(201,164,92,.4); padding-top: 18px; }
+
+/* Roteiro */
+.roteiro { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 0; }
+.roteiro li { display: grid; grid-template-columns: 92px 1fr; gap: 24px; padding: 24px 0; border-top: 1px solid var(--linha); }
+.roteiro li:last-child { border-bottom: 1px solid var(--linha); }
+.roteiro .hora { font-family: var(--display); font-size: 22px; color: var(--dourado); font-variant-numeric: tabular-nums; }
+.roteiro .onde { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--cinza); margin-top: 2px; }
+.roteiro h3 { margin-bottom: 6px; }
+
+/* Listas */
+.lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.lista li { padding-left: 22px; position: relative; max-width: 64ch; }
+.lista li::before { content: ""; position: absolute; left: 0; top: .72em; width: 10px; height: 2px; background: var(--dourado); }
+
+.regra { background: var(--papel); border-left: 3px solid var(--dourado); padding: 18px 22px; max-width: 64ch; }
+.regra b { color: var(--verde); }
+
+/* Tabela */
+.tabela { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 620px; }
+th, td { text-align: left; vertical-align: top; padding: 14px 16px; border-bottom: 1px solid var(--linha); }
+th { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--cinza); font-weight: 600; border-bottom: 2px solid var(--verde); }
+td:first-child { font-family: var(--display); font-size: 18px; color: var(--verde); white-space: nowrap; width: 150px; }
+td ul { margin: 0; padding-left: 18px; }
+td li + li { margin-top: 4px; }
+
+/* Datas */
+.prazos { display: grid; gap: 0; max-width: 640px; }
+.prazos div { display: flex; justify-content: space-between; gap: 20px; padding: 13px 0; border-bottom: 1px solid var(--linha); }
+.prazos span:last-child { font-variant-numeric: tabular-nums; color: var(--verde); font-weight: 600; white-space: nowrap; }
+.data-destaque { font-family: var(--display); font-size: clamp(28px, 4vw, 40px); color: var(--verde); }
+
+/* Investimento */
+.investimento { background: var(--papel); }
+.valor {
+  position: relative; margin-top: 8px; padding: 30px 28px; max-width: 560px;
+  border: 1px solid var(--linha); background: var(--creme);
+}
+.valor .rot { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--cinza); }
+.valor .preco { font-family: var(--display); font-size: clamp(40px, 6vw, 60px); color: var(--verde); line-height: 1.1; margin-top: 8px; font-variant-numeric: tabular-nums; min-height: 1.1em; }
+.valor .preco.oculto { font-size: 20px; color: var(--cinza); font-family: var(--texto); padding-top: 14px; }
+.valor input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; cursor: default; font-size: 16px; }
+.valor:focus-within { outline: 2px solid var(--dourado); outline-offset: 3px; }
+.miuda { font-size: 14px; color: var(--cinza); }
+
+/* Fotos */
+.foto { margin: 0; background: var(--verde); }
+.foto img { display: block; width: 100%; max-height: 620px; object-fit: cover; object-position: center 22%; }
+.foto figcaption { width: min(1040px, 100% - 40px); margin: 0 auto; padding: 14px 0 18px; font-size: 13px; color: #BDB49C; }
+.roteiro .foto-passo { margin-top: 14px; max-width: 460px; }
+.roteiro .foto-passo img { display: block; width: 100%; border: 1px solid var(--linha); }
+.sim-claro { margin: 6px 0 0; max-width: 760px; }
+.sim-claro img { display: block; width: 100%; border: 1px solid var(--linha); }
+.foto-passo figcaption { font-size: 12px; color: var(--cinza); margin-top: 6px; }
+.casa-logo { display: flex; align-items: center; gap: 18px; }
+.casa-logo img { height: 58px; width: auto; }
+
+
+/* Animações */
+.progresso { position: fixed; top: 0; left: 0; height: 3px; width: 100%; background: var(--dourado); transform-origin: 0 50%; transform: scaleX(0); z-index: 10; }
+@media (prefers-reduced-motion: no-preference) {
+  .capa .marca, .capa .topo > span, .capa .rotulo, .capa h1, .capa .lead, .capa .meta { animation: subir .9s cubic-bezier(.2,.7,.2,1) both; }
+  .capa .topo > span { animation-delay: .1s; }
+  .capa .rotulo { animation-delay: .25s; }
+  .capa h1 { animation-delay: .4s; }
+  .capa .lead { animation-delay: .6s; }
+  .capa .meta { animation-delay: .8s; }
+  @keyframes subir { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  .trama { animation: tecer 14s linear infinite; }
+  @keyframes tecer { from { background-position: 0 0, 0 0, 0 0; } to { background-position: 180px 0, 0 60px, 0 0; } }
+  .js-anim .rv { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+  .js-anim .rv.in { opacity: 1; transform: none; }
+  .foto { overflow: hidden; }
+  .js-anim .foto img, .js-anim .sim img, .js-anim .sim-claro img { transform: scale(1.08); transition: transform 2.4s cubic-bezier(.2,.7,.2,1); }
+  .js-anim .foto.in img, .js-anim .sim.in img, .js-anim .sim-claro.in img { transform: scale(1); }
+  .sim, .sim-claro { overflow: hidden; }
+  .roteiro li { position: relative; }
+  .roteiro li::after { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: 100%; background: var(--dourado); transform: scaleX(0); transform-origin: 0 50%; transition: transform 1.1s cubic-bezier(.2,.7,.2,1) .2s; }
+  .roteiro li.in::after { transform: scaleX(1); }
+  .feira div, .fatos div { transition: transform .35s ease, box-shadow .35s ease, opacity .8s ease; }
+  .feira div:hover, .fatos div:hover { transform: translateY(-4px); box-shadow: 0 14px 30px -18px rgba(14,42,30,.45); position: relative; z-index: 1; }
+  .preco.revelado { animation: brilho 1.6s ease both; }
+  @keyframes brilho { 0% { opacity: 0; letter-spacing: .12em; } 60% { opacity: 1; } 100% { letter-spacing: 0; } }
+  .valor.aberto { animation: moldura 1.4s ease both; }
+  @keyframes moldura { 0% { box-shadow: 0 0 0 0 rgba(201,164,92,.6); } 100% { box-shadow: 0 0 0 18px rgba(201,164,92,0); } }
+}
+
+/* Rodapé */
+footer { background: var(--verde); color: #CFC7B1; padding: 56px 0 64px; font-size: 14px; }
+footer .linha { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+footer b { color: var(--creme); font-weight: 600; }
+footer .equipe { display: grid; gap: 4px; }
+footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(201,164,92,.3); font-size: 12px; color: #9C9480; }
+
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  section { padding: 60px 0; }
+  .sec { grid-template-columns: 1fr; gap: 14px; }
+  .sec .num { padding-top: 0; }
+  .fatos, .dois { grid-template-columns: 1fr; }
+  .roteiro li { grid-template-columns: 1fr; gap: 6px; }
+  .capa .corpo { padding: 64px 0 48px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .preco { transition: opacity .4s ease; }
+}
+
+/* Página Cris */
+.galeria { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; margin-top: 8px; }
+.galeria figure { margin: 0; overflow: hidden; background: var(--verde); }
+.galeria img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.g-a { grid-column: span 7; aspect-ratio: 3/2; }
+.g-b { grid-column: span 5; grid-row: span 2; }
+.g-c { grid-column: span 7; aspect-ratio: 3/2; }
+.g-d { grid-column: span 4; aspect-ratio: 2/3; }
+.g-e { grid-column: span 4; aspect-ratio: 2/3; }
+.g-f { grid-column: span 4; aspect-ratio: 2/3; }
+@media (max-width: 760px) { .galeria { grid-template-columns: 1fr 1fr; } .galeria figure { grid-column: span 1 !important; grid-row: auto !important; aspect-ratio: 3/4 !important; } .galeria .g-a { grid-column: span 2 !important; aspect-ratio: 3/2 !important; } }
+.video { position: relative; aspect-ratio: 16/9; background: var(--verde) center/cover no-repeat; border: 1px solid var(--linha); display: grid; place-items: center; overflow: hidden; }
+.video::before { content: ""; position: absolute; inset: 0; background: rgba(14,42,30,.55); }
+.video span { position: relative; color: var(--creme); font-family: var(--display); font-size: 22px; display: flex; align-items: center; gap: 14px; }
+.video span::before { content: ""; width: 54px; height: 54px; border-radius: 50%; border: 1.5px solid var(--dourado); background: linear-gradient(90deg, transparent 0 40%, var(--dourado) 40% 44%, transparent 44% 56%, var(--dourado) 56% 60%, transparent 60%); }
+.video video { position: relative; width: 100%; height: 100%; object-fit: cover; }
+.numeros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--linha); border: 1px solid var(--linha); }
+.numeros div { background: var(--papel); padding: 24px 20px; display: grid; gap: 6px; }
+.numeros b { font-family: var(--display); font-weight: 500; font-size: 36px; color: var(--verde); line-height: 1; font-variant-numeric: tabular-nums; }
+.numeros span { font-size: 14px; color: var(--cinza); }
+@media (max-width: 760px) { .numeros { grid-template-columns: 1fr 1fr; } }
+.depos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.depos blockquote { margin: 0; padding: 24px; background: var(--papel); border-top: 3px solid var(--dourado); display: grid; gap: 14px; align-content: space-between; }
+.depos p { font-family: var(--display); font-size: 19px; line-height: 1.45; color: var(--verde); }
+.depos cite { font-style: normal; font-size: 14px; color: var(--cinza); }
+@media (max-width: 760px) { .depos { grid-template-columns: 1fr; } }
+.pendente { color: var(--cinza) !important; opacity: .7; }
+.marcas { display: flex; flex-wrap: wrap; gap: 10px; }
+.marcas span { border: 1px solid var(--linha); background: var(--papel); padding: 8px 14px; font-size: 14px; }
+.marcas span b { color: var(--verde); font-weight: 600; }
+.fixo-muda { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.fixo-muda > div { display: grid; gap: 12px; align-content: start; border-top: 2px solid var(--verde); padding-top: 16px; }
+@media (max-width: 760px) { .fixo-muda { grid-template-columns: 1fr; } }
+.passos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--linha); border: 1px solid var(--linha); counter-reset: p; }
+.passos li { background: var(--papel); padding: 24px 22px; display: grid; gap: 8px; align-content: start; counter-increment: p; }
+.passos li::before { content: counter(p); font-family: var(--display); font-size: 30px; color: var(--dourado); line-height: 1; }
+.passos b { font-family: var(--display); font-weight: 500; font-size: 21px; color: var(--verde); }
+.passos span { font-size: 15px; color: var(--cinza); }
+@media (max-width: 760px) { .passos { grid-template-columns: 1fr; } }
+.lista-nomes { display: grid; gap: 8px; max-width: 760px; }
+.lista-nomes .linha-n { display: grid; grid-template-columns: 1.4fr 1fr .8fr; gap: 8px; }
+.lista-nomes input { font: inherit; font-size: 15px; padding: 11px 12px; border: 1px solid var(--linha); background: var(--papel); color: var(--tinta); min-width: 0; }
+.lista-nomes input:focus { outline: 2px solid var(--dourado); outline-offset: 1px; }
+.lista-nomes .cab { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--cinza); }
+.acoes { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { font: inherit; font-size: 14px; font-weight: 600; padding: 11px 18px; border: 1px solid var(--verde); background: var(--verde); color: var(--creme); cursor: pointer; }
+.btn.sec2 { background: transparent; color: var(--verde); }
+.btn:focus-visible { outline: 2px solid var(--dourado); outline-offset: 2px; }
+.aviso-copia { font-size: 14px; color: var(--verde); min-height: 1.4em; }
+
+.videos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 640px; }
+.videos figure, .depo-video figure { margin: 0; position: relative; background: var(--verde); }
+.videos video, .depo-video video { display: block; width: 100%; aspect-ratio: 9/16; object-fit: cover; background: var(--verde); }
+.videos figcaption { font-size: 13px; color: var(--cinza); padding-top: 8px; background: var(--creme); }
+.som { position: absolute; top: 10px; right: 10px; font: inherit; font-size: 12px; font-weight: 600; letter-spacing: .06em; padding: 6px 10px; border: 1px solid rgba(244,238,223,.6); background: rgba(14,42,30,.65); color: var(--creme); cursor: pointer; }
+.som.on { background: var(--dourado); color: var(--verde); border-color: var(--dourado); }
+.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.trio figure { margin: 0; overflow: hidden; }
+.trio img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; transition: transform .6s ease; }
+.trio figure:hover img { transform: scale(1.04); }
+.trio figcaption { padding-top: 10px; font-size: 14px; color: var(--cinza); display: grid; }
+.trio figcaption b { font-family: var(--display); font-weight: 500; font-size: 19px; color: var(--verde); }
+.g-c2 { grid-column: span 5; aspect-ratio: 3/2.1; }
+@media (max-width: 760px) { .trio { grid-template-columns: 1fr 1fr; } .trio figure:last-child { grid-column: span 2; } .trio figure:last-child img { aspect-ratio: 3/2; } }
+.numeros-sec { background: var(--verde); border-top: 0 !important; }
+.numeros-sec h2 { color: var(--creme); }
+.numeros-sec .num { color: #A9A08A; }
+.numeros-sec .miuda { color: #BDB49C; }
+.graf { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.graf-card { background: var(--verde-2); border: 1px solid rgba(201,164,92,.3); padding: 26px 24px; display: grid; gap: 8px; align-content: start; }
+.graf-card.largo { grid-column: span 2; }
+.graf-num { font-family: var(--display); font-size: clamp(44px, 6vw, 64px); color: var(--dourado); line-height: 1; font-variant-numeric: tabular-nums; }
+.graf-rot { color: #E7DFC9; font-size: 16px; }
+.graf-nota { color: #9C9480; font-size: 12px; letter-spacing: .04em; }
+.pontos { display: grid; grid-template-columns: repeat(auto-fill, minmax(14px, 1fr)); gap: 6px; margin-top: 12px; }
+.pontos i { display: block; aspect-ratio: 1; border-radius: 50%; background: var(--dourado); opacity: .12; transform: scale(.4); transition: opacity .3s ease, transform .4s cubic-bezier(.2,.7,.2,1.4); }
+.pontos.quad { grid-template-columns: repeat(auto-fill, minmax(10px, 1fr)); gap: 4px; }
+.pontos.quad i { border-radius: 2px; }
+.pontos i.on { opacity: 1; transform: scale(1); }
+.barras { display: grid; gap: 26px; }
+.trilho { height: 14px; background: rgba(244,238,223,.08); margin-top: 6px; overflow: hidden; }
+.trilho i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #A8873F, var(--dourado) 70%, #E3C98E); transition: width 2s cubic-bezier(.2,.7,.2,1); }
+.graf.vivo .trilho i { width: var(--w); }
+@media (max-width: 760px) { .graf { grid-template-columns: 1fr; } .graf-card.largo { grid-column: auto; } }
+.depo-video { display: grid; grid-template-columns: 260px 1fr; gap: 20px; align-items: start; }
+.depo-video .depos { grid-template-columns: 1fr; gap: 12px; }
+.depos .nota { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--dourado); }
+@media (max-width: 760px) { .depo-video { grid-template-columns: 1fr; } .depo-video figure { max-width: 300px; } }
+.cap-gleice { font-size: 14px; color: var(--cinza); padding-top: 8px; background: var(--creme); } .cap-gleice b { color: var(--verde); }
+</style>
+</head>
+<body>
+<div class="progresso" id="progresso" aria-hidden="true"></div>
+
+<header class="capa">
+  <div class="wrap">
+    <div class="topo">
+      <div class="marca"><img src="/cozinhagourmet/parceria/img/cozinha-logo.png" alt="Cozinha Gourmet · Sabores, Ambientes, Conexões" class="logo-cg"></div>
+      <span>Agência Nexo</span>
+    </div>
+    <div class="corpo">
+      <div class="rotulo">Cozinha Gourmet · Próximas edições</div>
+      <h1>Uma mesa nova a cada episódio.</h1>
+      <p class="lead">O que aconteceu em 18 de novembro, como o programa segue daqui para frente e por que faz sentido você estar com a gente.</p>
+      <div class="meta">
+        <div><b>Para</b>Cris</div>
+        <div><b>Encontro</b>23 de novembro de 2026</div>
+        <div><b>Episódio 1</b>18/11 · Showroom Lar Brasileiro, Campinas</div>
+      </div>
+    </div>
+  </div>
+  <div class="trama" aria-hidden="true"></div>
+</header>
+
+<main>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>01</b>A noite de 18/11</div>
+    <div class="conteudo">
+      <h2>Casa cheia, cozinha aberta, câmera ligada.</h2>
+      <p class="grande">O primeiro episódio da temporada reuniu arquitetos, designers de interiores, influenciadores e empresários no showroom da Lar Brasileiro, no Cambuí. O chef Ricardo Cleto cozinhou ao vivo, a Wendy Meira conduziu a noite e a Produtora Coradini gravou tudo com qualidade de cinema.</p>
+      <div class="videos">
+        <figure><video src="/cozinhagourmet/parceria/vid/episodio.mp4" poster="/cozinhagourmet/parceria/vid/episodio.jpg" muted loop playsinline autoplay preload="metadata"></video><figcaption>A noite, na cozinha e à mesa</figcaption><button class="som" type="button" aria-label="Ligar o som">Som</button></figure>
+        <figure><video src="/cozinhagourmet/parceria/vid/chegada.mp4" poster="/cozinhagourmet/parceria/vid/chegada.jpg" muted loop playsinline autoplay preload="metadata"></video><figcaption>A chegada dos convidados</figcaption><button class="som" type="button" aria-label="Ligar o som">Som</button></figure>
+      </div>
+      <h3>Quem fez a noite</h3>
+      <div class="trio">
+        <figure><img src="/cozinhagourmet/parceria/img/wendy.jpg" alt="Wendy Meira, apresentadora do programa"><figcaption><b>Wendy Meira</b>apresentadora</figcaption></figure>
+        <figure><img src="/cozinhagourmet/parceria/img/chef.jpg" alt="Chef Ricardo Cleto com o arroz de polvo"><figcaption><b>Ricardo Cleto</b>chef do episódio</figcaption></figure>
+        <figure><img src="/cozinhagourmet/parceria/img/prato.jpg" alt="Arroz de polvo servido no jantar"><figcaption><b>Arroz de polvo</b>prato principal</figcaption></figure>
+      </div>
+      <div class="galeria">
+        <figure class="g-a"><img src="/cozinhagourmet/parceria/img/mesa.jpg" alt="Convidadas rindo à mesa do jantar"></figure>
+        <figure class="g-b"><img src="/cozinhagourmet/parceria/img/cardapio.jpg" alt="Cardápio do Episódio 1 sobre a mesa"></figure>
+        <figure class="g-c"><img src="/cozinhagourmet/parceria/img/casal.jpg" alt="Convidados lendo o cardápio"></figure>
+        <figure class="g-d"><img src="/cozinhagourmet/parceria/img/conversa.jpg" alt="Duas convidadas conversando no showroom"></figure>
+        <figure class="g-e"><img src="/cozinhagourmet/parceria/img/sorriso.jpg" alt="Convidada sorrindo à mesa"></figure>
+        <figure class="g-f"><img src="/cozinhagourmet/parceria/img/convidado.jpg" alt="Convidado à mesa, com a equipe de gravação ao fundo"></figure>
+        <figure class="g-a"><img src="/cozinhagourmet/parceria/img/selfie.jpg" alt="Convidados registrando a noite com o celular"></figure>
+        <figure class="g-c2"><img src="/cozinhagourmet/parceria/img/duas.jpg" alt="Convidadas conversando"></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="numeros-sec">
+  <div class="wrap sec">
+    <div class="num"><b>02</b>Os números</div>
+    <div class="conteudo">
+      <h2>O que a noite já rendeu.</h2>
+      <div class="graf">
+        <div class="graf-card">
+          <div class="graf-num"><span class="cont" data-alvo="43">0</span></div>
+          <div class="graf-rot">pessoas presentes no jantar</div>
+          <div class="pontos" data-qtd="43" aria-hidden="true"></div>
+          <div class="graf-nota">cada ponto é uma pessoa</div>
+        </div>
+        <div class="graf-card">
+          <div class="graf-num">+<span class="cont" data-alvo="800">0</span></div>
+          <div class="graf-rot">novos seguidores do programa</div>
+          <div class="pontos quad" data-qtd="80" aria-hidden="true"></div>
+          <div class="graf-nota">cada quadrado são 10 seguidores</div>
+        </div>
+        <div class="graf-card largo">
+          <div class="barras">
+            <div class="barra-l">
+              <div class="graf-num">+<span class="cont" data-alvo="300">0</span> mil</div>
+              <div class="graf-rot">visualizações dos conteúdos</div>
+              <div class="trilho"><i style="--w:100%"></i></div>
+            </div>
+            <div class="barra-l">
+              <div class="graf-num">+<span class="cont" data-alvo="230">0</span> mil</div>
+              <div class="graf-rot">pessoas alcançadas</div>
+              <div class="trilho"><i style="--w:76.7%"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="miuda">Números de 28 de outubro até 23 de novembro de 2026. O episódio completo e os próximos cortes ainda vão somar a esses números.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>03</b>Quem esteve</div>
+    <div class="conteudo">
+      <h2>O que disseram depois do jantar.</h2>
+      <div class="depo-video">
+        <figure><video src="/cozinhagourmet/parceria/vid/gleice.mp4" poster="/cozinhagourmet/parceria/vid/gleice.jpg" controls playsinline preload="metadata"></video><figcaption class="cap-gleice"><b>Gleici Alves Maria</b> · Lar Brasileiro</figcaption></figure>
+        <div class="depos">
+          <blockquote><span class="nota">Nota 10</span><p>Achei maravilhoso tudo! Comida, lugar, conexões.</p><cite>Joyce · convidada</cite></blockquote>
+          <blockquote><span class="nota">Nota 10</span><p>O espaço escolhido foi perfeito, ambiente sofisticado e descontraído. Atendimento, comida e muita conexão. Adorei o formato.</p><cite>Milena · convidada</cite></blockquote>
+          <blockquote><span class="nota">Nota 10</span><p>A experiência foi de muito bom gosto. Todos servidos no tempo ideal, desde o atendimento na recepção até a finalização do evento.</p><cite>Fernando · convidado</cite></blockquote>
+        </div>
+      </div>
+      <p class="miuda">Respostas enviadas à Clara na pesquisa pós-evento, em que cada convidado deu nota de 0 a 10 para a experiência.</p>
+      <h3>Marcas que estiveram na mesa</h3>
+      <div class="marcas">
+        <span><b>Lar Brasileiro</b> · Casa do episódio</span>
+        <span><b>Garbo</b> · mesa posta</span>
+        <span><b>Discopo</b> · louças</span>
+        <span><b>Begiato Wine</b> · vinhos</span>
+        <span><b>CallFé</b> · café</span>
+        <span><b>Vini Colchões</b></span>
+        <span><b>Construcores</b></span>
+        <span><b>Grafismo</b> · impressão</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<figure class="foto">
+  <img src="/cozinhagourmet/parceria/img/risos.jpg" alt="Convidadas conversando e rindo no showroom">
+</figure>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>04</b>Daqui para frente</div>
+    <div class="conteudo">
+      <h2>O programa muda de casa a cada episódio.</h2>
+      <p class="grande">Cada edição acontece no espaço de uma empresa diferente, com um chef diferente e um público pensado para aquela casa. O que faz o Cozinha Gourmet ser o Cozinha Gourmet vai junto.</p>
+      <div class="fixo-muda">
+        <div>
+          <h3>Muda a cada episódio</h3>
+          <ul class="lista">
+            <li>A Casa: a empresa que recebe e assina o episódio.</li>
+            <li>O local, o chef e o cardápio.</li>
+            <li>Os convidados, escolhidos para o público daquela casa.</li>
+            <li>As marcas, uma por segmento, sempre.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Vai junto em toda edição</h3>
+          <ul class="lista">
+            <li>A Wendy Meira na apresentação.</li>
+            <li>A gravação com qualidade de cinema e a websérie.</li>
+            <li>A Clara, que convida, confirma e recebe cada convidado.</li>
+            <li>A Agência Nexo na produção, do convite ao episódio publicado.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="momento">
+  <div class="wrap sec">
+    <div class="num"><b>05</b>Por que você</div>
+    <div class="conteudo">
+      <h2>Quem conecta pessoas precisa de um bom lugar para reuni-las.</h2>
+      <p class="grande">Você conhece quem decide na região. O Cozinha Gourmet é uma mesa que vale a pena oferecer a essas pessoas.</p>
+      <div class="dois">
+        <div>
+          <h3>Um lugar em toda mesa</h3>
+          <p>Você está em todas as edições, como parceira do programa. Cada episódio reúne uma sala nova de empresários, arquitetos, influenciadores e convidados da Casa da vez.</p>
+        </div>
+        <div>
+          <h3>Algo bom para oferecer</h3>
+          <p>Quando você apresenta o Cozinha Gourmet a uma empresa, oferece um palco, não um pedido. Uma noite bem produzida e um episódio que fica no ar fortalecem a sua relação com quem você indicou.</p>
+        </div>
+        <div>
+          <h3>Sem negociação no seu colo</h3>
+          <p>Você apresenta e abre a porta. Proposta, valores, contrato e entrega ficam com a Nexo. A sua relação com o contato fica preservada.</p>
+        </div>
+        <div>
+          <h3>Um projeto que já provou</h3>
+          <p>O primeiro episódio aconteceu, encheu a casa e está gerando conteúdo. Você indica algo que já viu funcionar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap sec">
+    <div class="num"><b>06</b>Como funciona</div>
+    <div class="conteudo">
+      <h2>Três passos, um segmento por vez.</h2>
+      <ol class="passos">
+        <li><b>Você apresenta</b><span>Mostra o projeto a quem faz sentido e faz a ponte com a Nexo.</span></li>
+        <li><b>A Nexo fecha</b><span>Proposta, valores e contrato direto com a empresa.</span></li>
+        <li><b>A Nexo entrega</b><span>Produção da noite, convidados, gravação, episódio e conteúdo para as redes.</span></li>
+      </ol>
+      <p class="regra"><b>Um segmento por edição.</b> Cada episódio tem uma só marca de cada segmento. Quem fecha primeiro garante o seu lugar naquela edição.</p>
+    </div>
+  </div>
+</section>
+
+<section class="investimento">
+  <div class="wrap sec">
+    <div class="num"><b>07</b>Próximos passos</div>
+    <div class="conteudo">
+      <h2>Saindo daqui com nomes e datas.</h2>
+      <p>A próxima edição ainda não tem Casa. Antes de encerrar, listamos juntos as empresas que você pode apresentar: o nome, o segmento e até quando você conversa com cada uma. A lista sai daqui direto para o WhatsApp.</p>
+      <div class="lista-nomes" id="listaNomes">
+        <div class="linha-n cab"><span>Empresa ou contato</span><span>Segmento</span><span>Até quando</span></div>
+      </div>
+      <div class="acoes">
+        <button class="btn sec2" type="button" id="maisLinha">Adicionar linha</button>
+        <button class="btn" type="button" id="copiarLista">Copiar lista</button>
+      </div>
+      <div class="aviso-copia" id="avisoCopia" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="trama" aria-hidden="true"></div>
+<footer>
+  <div class="wrap">
+    <div class="linha">
+      <div class="equipe">
+        <b>Agência Nexo</b>
+        <span>Jonei Lima · estratégia e publicidade</span>
+        <span>Jonata Coradini · direção de cena, fotografia e edição</span>
+        <span>Vinicius Baumgartner · comercial</span>
+      </div>
+      <div class="equipe">
+        <b>Cozinha Gourmet</b>
+        <span>Sabores | Ambientes | Conexões</span>
+        <span>Apresentação: Wendy Meira</span>
+        <span>Tecnologia: ORBI IA</span>
+      </div>
+    </div>
+    <div class="legal">Material preparado para a Cris. Novembro de 2026.</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var lista = document.getElementById('listaNomes');
+  var n = 0;
+  function linha() {
+    n++;
+    var d = document.createElement('div'); d.className = 'linha-n';
+    d.innerHTML = '<input id="emp' + n + '" aria-label="Empresa ou contato ' + n + '" placeholder="Empresa ou contato">' +
+      '<input id="seg' + n + '" aria-label="Segmento ' + n + '" placeholder="Segmento">' +
+      '<input id="ate' + n + '" aria-label="Até quando ' + n + '" placeholder="dd/mm">';
+    lista.appendChild(d);
+  }
+  for (var i = 0; i < 5; i++) linha();
+  document.getElementById('maisLinha').addEventListener('click', linha);
+  document.getElementById('copiarLista').addEventListener('click', function () {
+    var linhas = [];
+    lista.querySelectorAll('.linha-n:not(.cab)').forEach(function (l) {
+      var v = Array.prototype.map.call(l.querySelectorAll('input'), function (x) { return x.value.trim(); });
+      if (v[0]) linhas.push('- ' + v[0] + (v[1] ? ' · ' + v[1] : '') + (v[2] ? ' · até ' + v[2] : ''));
+    });
+    var aviso = document.getElementById('avisoCopia');
+    if (!linhas.length) { aviso.textContent = 'Preencha ao menos um nome para copiar.'; return; }
+    var txt = 'Cozinha Gourmet · indicações da Cris\n' + linhas.join('\n');
+    navigator.clipboard.writeText(txt).then(function () { aviso.textContent = 'Lista copiada. Cole no WhatsApp ou nas notas.'; },
+      function () { aviso.textContent = 'Não consegui copiar automaticamente. Selecione os campos e copie à mão.'; });
+  });
+})();
+</script>
+<script>
+(function () {
+  var barra = document.getElementById('progresso');
+  function rolar() {
+    var h = document.documentElement.scrollHeight - innerHeight;
+    barra.style.transform = 'scaleX(' + (h > 0 ? scrollY / h : 0) + ')';
+  }
+  addEventListener('scroll', rolar, { passive: true }); rolar();
+
+  var calmo = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (calmo || !('IntersectionObserver' in window)) return;
+  document.documentElement.classList.add('js-anim');
+  var alvos = document.querySelectorAll('main .num, main .conteudo > *, .roteiro li, .feira > div, .fatos > div, .prazos > div, .lista li, .foto, .sim, .sim-claro, tbody tr');
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  alvos.forEach(function (el) {
+    if (!el.classList.contains('foto') && !el.classList.contains('sim') && !el.classList.contains('sim-claro')) el.classList.add('rv');
+    var irmaos = Array.prototype.indexOf.call(el.parentNode.children, el);
+    el.style.transitionDelay = Math.min(irmaos, 6) * 0.08 + 's';
+    io.observe(el);
+  });
+
+  // sem contagem nesta página
+  /*
+  var quinze = document.querySelector('.fatos div:nth-child(2) b');
+  if (quinze) {
+    var io2 = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting) return; io2.disconnect();
+      var t0 = performance.now();
+      (function f(t) { var k = Math.min(1, (t - t0) / 1200); quinze.textContent = Math.round(15 * (1 - Math.pow(1 - k, 3))) + ' de 40'; if (k < 1) requestAnimationFrame(f); })(t0);
+    }, { threshold: 0.5 });
+    io2.observe(quinze);
+  }*/
+})();
+</script>
+
+<script>
+(function () {
+  // som dos vídeos
+  document.querySelectorAll('.videos .som').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = b.parentNode.querySelector('video');
+      document.querySelectorAll('.videos video').forEach(function (o) { if (o !== v) { o.muted = true; } });
+      document.querySelectorAll('.videos .som').forEach(function (o) { if (o !== b) { o.classList.remove('on'); o.textContent = 'Som'; } });
+      v.muted = !v.muted; if (!v.muted) { v.currentTime = 0; v.play().catch(function(){}); }
+      b.classList.toggle('on', !v.muted); b.textContent = v.muted ? 'Som' : 'Mudo';
+    });
+  });
+  // pontos
+  document.querySelectorAll('.pontos').forEach(function (g) {
+    var q = +g.dataset.qtd; for (var i = 0; i < q; i++) g.appendChild(document.createElement('i'));
+  });
+  var calmo = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var graf = document.querySelector('.graf');
+  function animar() {
+    graf.classList.add('vivo');
+    graf.querySelectorAll('.cont').forEach(function (c) {
+      var alvo = +c.dataset.alvo, t0 = performance.now(), dur = 2000;
+      if (calmo) { c.textContent = alvo; return; }
+      (function f(t) { var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); c.textContent = Math.round(alvo * e).toLocaleString('pt-BR'); if (k < 1) requestAnimationFrame(f); })(t0);
+    });
+    graf.querySelectorAll('.pontos').forEach(function (g) {
+      var ps = g.querySelectorAll('i'), passo = 1800 / ps.length;
+      ps.forEach(function (p, i) { if (calmo) p.classList.add('on'); else setTimeout(function () { p.classList.add('on'); }, i * passo); });
+    });
+  }
+  if (!('IntersectionObserver' in window) || calmo) { animar(); return; }
+  var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); animar(); } }, { threshold: 0.3 });
+  io.observe(graf);
+})();
+</script>
+</body>
+</html>
