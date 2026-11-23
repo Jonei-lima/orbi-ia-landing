@@ -307,10 +307,27 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
 .depos .nota { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--dourado); }
 @media (max-width: 760px) { .depo-video { grid-template-columns: 1fr; } .depo-video figure { max-width: 300px; } }
 .cap-gleice { font-size: 14px; color: var(--cinza); padding-top: 8px; background: var(--creme); } .cap-gleice b { color: var(--verde); }
+
+.ampliar { position: absolute; left: 10px; bottom: 44px; font: inherit; font-size: 12px; font-weight: 600; letter-spacing: .04em; padding: 8px 12px; border: 1px solid var(--dourado); background: rgba(14,42,30,.75); color: var(--creme); cursor: pointer; }
+.depo-video .ampliar { bottom: 46px; }
+.ampliar:hover, .ampliar:focus-visible { background: var(--dourado); color: var(--verde); outline: none; }
+.videos video, .depo-video video { cursor: zoom-in; }
+.visor { position: fixed; inset: 0; z-index: 50; background: rgba(8,22,16,.92); display: grid; place-items: center; padding: 20px; }
+.visor[hidden] { display: none; }
+.visor-caixa { position: relative; height: min(88vh, calc((100vw - 40px) * 16 / 9)); aspect-ratio: 9/16; }
+.visor-caixa video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.visor-fechar { position: absolute; top: -2px; right: -2px; transform: translate(0, -110%); font: inherit; font-size: 14px; font-weight: 600; padding: 8px 14px; border: 1px solid var(--dourado); background: transparent; color: var(--creme); cursor: pointer; }
+@media (max-width: 760px) { .visor-fechar { transform: none; top: 8px; right: 8px; background: rgba(14,42,30,.8); } }
 </style>
 </head>
 <body>
 <div class="progresso" id="progresso" aria-hidden="true"></div>
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Vídeo ampliado" hidden>
+  <div class="visor-caixa">
+    <video id="visorVideo" controls playsinline controlslist="nofullscreen nodownload noremoteplayback" disablepictureinpicture></video>
+    <button class="visor-fechar" id="visorFechar" type="button" aria-label="Fechar vídeo">Fechar</button>
+  </div>
+</div>
 
 <header class="capa">
   <div class="wrap">
@@ -341,8 +358,8 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
       <h2>Casa cheia, cozinha aberta, câmera ligada.</h2>
       <p class="grande">O primeiro episódio da temporada reuniu arquitetos, designers de interiores, influenciadores e empresários no showroom da Lar Brasileiro, no Cambuí. O chef Ricardo Cleto cozinhou ao vivo, a Wendy Meira conduziu a noite e a Produtora Coradini gravou tudo com qualidade de cinema.</p>
       <div class="videos">
-        <figure><video src="/cozinhagourmet/parceria/vid/episodio.mp4" poster="/cozinhagourmet/parceria/vid/episodio.jpg" muted loop playsinline autoplay preload="metadata"></video><figcaption>A noite, na cozinha e à mesa</figcaption><button class="som" type="button" aria-label="Ligar o som">Som</button></figure>
-        <figure><video src="/cozinhagourmet/parceria/vid/chegada.mp4" poster="/cozinhagourmet/parceria/vid/chegada.jpg" muted loop playsinline autoplay preload="metadata"></video><figcaption>A chegada dos convidados</figcaption><button class="som" type="button" aria-label="Ligar o som">Som</button></figure>
+        <figure><video src="/cozinhagourmet/parceria/vid/episodio.mp4" poster="/cozinhagourmet/parceria/vid/episodio.jpg" muted loop playsinline autoplay preload="metadata"></video><figcaption>A noite, na cozinha e à mesa</figcaption><button class="ampliar" type="button">Ampliar com som</button></figure>
+        <figure><video src="/cozinhagourmet/parceria/vid/chegada.mp4" poster="/cozinhagourmet/parceria/vid/chegada.jpg" muted loop playsinline autoplay preload="metadata"></video><figcaption>A chegada dos convidados</figcaption><button class="ampliar" type="button">Ampliar com som</button></figure>
       </div>
       <h3>Quem fez a noite</h3>
       <div class="trio">
@@ -408,7 +425,7 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
     <div class="conteudo">
       <h2>O que disseram depois do jantar.</h2>
       <div class="depo-video">
-        <figure><video src="/cozinhagourmet/parceria/vid/gleice.mp4" poster="/cozinhagourmet/parceria/vid/gleice.jpg" controls playsinline preload="metadata"></video><figcaption class="cap-gleice"><b>Gleici Alves Maria</b> · Lar Brasileiro</figcaption></figure>
+        <figure><video src="/cozinhagourmet/parceria/vid/gleice.mp4" poster="/cozinhagourmet/parceria/vid/gleice.jpg" muted loop playsinline autoplay preload="metadata"></video><button class="ampliar" type="button">Ampliar com som</button><figcaption class="cap-gleice"><b>Gleici Alves Maria</b> · Lar Brasileiro</figcaption></figure>
         <div class="depos">
           <blockquote><span class="nota">Nota 10</span><p>Achei maravilhoso tudo! Comida, lugar, conexões.</p><cite>Joyce · convidada</cite></blockquote>
           <blockquote><span class="nota">Nota 10</span><p>O espaço escolhido foi perfeito, ambiente sofisticado e descontraído. Atendimento, comida e muita conexão. Adorei o formato.</p><cite>Milena · convidada</cite></blockquote>
@@ -616,16 +633,30 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
 
 <script>
 (function () {
-  // som dos vídeos
-  document.querySelectorAll('.videos .som').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var v = b.parentNode.querySelector('video');
-      document.querySelectorAll('.videos video').forEach(function (o) { if (o !== v) { o.muted = true; } });
-      document.querySelectorAll('.videos .som').forEach(function (o) { if (o !== b) { o.classList.remove('on'); o.textContent = 'Som'; } });
-      v.muted = !v.muted; if (!v.muted) { v.currentTime = 0; v.play().catch(function(){}); }
-      b.classList.toggle('on', !v.muted); b.textContent = v.muted ? 'Som' : 'Mudo';
-    });
+  // visor de vídeo em 9:16
+  var visor = document.getElementById('visor'), vv = document.getElementById('visorVideo'), ultimo = null;
+  function abrir(src, poster, origem) {
+    ultimo = origem;
+    document.querySelectorAll('.videos video, .depo-video video').forEach(function (o) { o.pause(); });
+    vv.src = src; vv.poster = poster || ''; vv.muted = false; vv.currentTime = 0;
+    visor.hidden = false; document.body.style.overflow = 'hidden';
+    vv.play().catch(function () {});
+    document.getElementById('visorFechar').focus();
+  }
+  function fechar() {
+    vv.pause(); vv.removeAttribute('src'); vv.load();
+    visor.hidden = true; document.body.style.overflow = '';
+    document.querySelectorAll('.videos video, .depo-video video').forEach(function (o) { o.play().catch(function () {}); });
+    if (ultimo) ultimo.focus();
+  }
+  document.querySelectorAll('.videos figure, .depo-video figure').forEach(function (f) {
+    var v = f.querySelector('video'), b = f.querySelector('.ampliar');
+    function go() { abrir(v.currentSrc || v.getAttribute('src'), v.getAttribute('poster'), b); }
+    v.addEventListener('click', go); if (b) b.addEventListener('click', go);
   });
+  document.getElementById('visorFechar').addEventListener('click', fechar);
+  visor.addEventListener('click', function (e) { if (e.target === visor) fechar(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !visor.hidden) fechar(); });
   // pontos
   document.querySelectorAll('.pontos').forEach(function (g) {
     var q = +g.dataset.qtd; for (var i = 0; i < q; i++) g.appendChild(document.createElement('i'));
