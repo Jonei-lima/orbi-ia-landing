@@ -110,6 +110,8 @@ section + section { border-top: 1px solid var(--linha); }
 .guardanapo .n { font-family: var(--display); font-size: 30px; color: var(--dourado); }
 .guardanapo .s { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: #BDB49C; margin-top: 8px; }
 .dois { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 18px; }
+.dois.tres-col { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 760px) { .dois.tres-col { grid-template-columns: 1fr; } }
 .dois > div { display: grid; gap: 10px; align-content: start; border-top: 1px solid rgba(201,164,92,.4); padding-top: 18px; }
 
 /* Roteiro */
@@ -254,7 +256,7 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
       <p>A Meneghel não está comprando espaço no evento de outra empresa. A Nexo produz o lançamento da linha de moda da Meneghel, na casa da Meneghel, para os convidados da Meneghel. A Wendy Meira apresenta, o chef cozinha, a Produtora Coradini filma. A noite tem um dono, e quem escolhe com quem conversar é ele.</p>
       <div class="fatos">
         <div><b>A Casa</b><span>Meneghel é a anfitriã do episódio, com showroom, fábrica e área externa.</span></div>
-        <div><b>15 de 40</b><span>lugares indicados pela Meneghel, com convite e link próprios.</span></div>
+        <div><b>15 a 40</b><span>convidados, com parte indicada pela Meneghel, com convite e link próprios.</span></div>
         <div><b>Exclusiva</b><span>única marca de têxtil e moda no episódio.</span></div>
       </div>
     </div>
@@ -273,8 +275,8 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
 </section>
 
 <figure class="foto">
-  <img src="/cozinhagourmet/trama/img/desfile.jpg" alt="Simulação do desfile no corredor da fábrica, com os teares ao fundo">
-  <figcaption>Imagem ilustrativa do desfile no corredor da fábrica, com os teares ao fundo.</figcaption>
+  <img src="/cozinhagourmet/trama/img/desfile.jpg" alt="Simulação do desfile com os teares ao fundo">
+  <figcaption>Imagem ilustrativa do desfile, com os teares ao fundo.</figcaption>
 </figure>
 
 <section class="momento">
@@ -287,15 +289,19 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
         <img src="/cozinhagourmet/trama/img/guardanapo.jpg" alt="Simulação de guardanapo em jacquard com nome tecido sobre a mesa posta">
         <figcaption>Imagem ilustrativa.</figcaption>
       </figure>
-      <p>Quarenta peças, quarenta nomes, um único desenho criado para o episódio. É a demonstração mais curta possível do que a Meneghel quer vender para a moda: tecido personalizado, feito dentro da própria indústria. A confecção que senta à mesa leva a prova para casa.</p>
-      <div class="dois">
+      <p>Uma peça para cada convidado, cada uma com um nome, todas com o mesmo desenho criado para o episódio. É a demonstração mais curta possível do que a Meneghel quer vender para a moda: tecido personalizado, feito dentro da própria indústria. A confecção que senta à mesa leva a prova para casa.</p>
+      <div class="dois tres-col">
+        <div>
+          <h3>O desfile nos fones</h3>
+          <p>Os teares da Meneghel nunca param, e o desfile não pede que parem. Cada convidado recebe um fone: ele protege do ruído e traz a narração de cada look, do fio à peça. A fábrica trabalhando vira o cenário.</p>
+        </div>
         <div>
           <h3>O tecido da noite</h3>
           <p>O mesmo desenho veste a mesa posta e fecha o desfile. O último look sai do mesmo jacquard da toalha onde o jantar será servido. Os convidados percebem quando sentam.</p>
         </div>
         <div>
           <h3>A entrada pelo pátio</h3>
-          <p>As modelos não saem de uma coxia. Chegam de carro pelo pátio, descem já vestidas e atravessam o portão da fábrica até o corredor do desfile. É a primeira cena do episódio.</p>
+          <p>As modelos não saem de uma coxia. Chegam de carro pelo pátio, descem já vestidas e entram direto na passarela. É a primeira cena do episódio.</p>
         </div>
       </div>
     </div>
@@ -306,19 +312,23 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
   <div class="wrap sec">
     <div class="num"><b>04</b>A noite</div>
     <div class="conteudo">
-      <h2>Quatro tempos, do fio ao arremate.</h2>
+      <h2>Cinco tempos, do fio ao arremate.</h2>
       <ol class="roteiro">
         <li>
-          <div><div class="hora">19h00</div><div class="onde">Recepção</div></div>
-          <div><h3>Chegada</h3><p>Check-in por QR Code com a Clara. O Neto recebe cada convidado. Os tecidos da linha de moda ficam à mão, para tocar antes de ver o desfile.</p><figure class="foto-passo"><img src="/cozinhagourmet/trama/img/showroom.jpg" alt="Showroom da Meneghel com a parede de tecidos jacquard"></figure></div>
+          <div><div class="hora">19h00</div><div class="onde">Pátio</div></div>
+          <div><h3>Chegada</h3><p>Check-in por QR Code com a Clara. Os convidados entram por um caminho próprio, direto para a fábrica, e recebem o fone na entrada.</p></div>
         </li>
         <li>
-          <div><div class="hora">19h45</div><div class="onde">Pátio e corredor da fábrica</div></div>
-          <div><h3>Desfile</h3><p>Os convidados saem para o pátio. As modelos chegam de carro, descem já vestidas e entram na fábrica. O desfile acontece no grande corredor, com os teares ao fundo, parados e iluminados, e os convidados acompanham por uma rota marcada. Looks da confecção própria e último look no jacquard da noite.</p><figure class="foto-passo"><img src="/cozinhagourmet/trama/img/chegada.jpg" alt="Simulação das modelos chegando de carro ao pátio da fábrica"><figcaption>Imagem ilustrativa.</figcaption></figure></div>
+          <div><div class="hora">19h30</div><div class="onde">Fábrica, atrás dos teares</div></div>
+          <div><h3>Desfile</h3><p>Uma plateia de até 20 cadeiras, de frente para os teares em produção. As modelos chegam de carro pelo pátio e entram direto na passarela. Nos fones, cada look é narrado ao vivo: o fio, o tecido, a peça. Looks da confecção própria e último look no jacquard da noite.</p><figure class="foto-passo"><img src="/cozinhagourmet/trama/img/chegada.jpg" alt="Simulação das modelos chegando de carro ao pátio da fábrica"><figcaption>Imagem ilustrativa.</figcaption></figure></div>
         </li>
         <li>
-          <div><div class="hora">20h30</div><div class="onde">Showroom</div></div>
-          <div><h3>Jantar</h3><p>Chef convidado cozinhando ao vivo em fogão de indução, no showroom, entre as peças e os tecidos da Casa. Mesa posta premium vestida com o jacquard da noite, o nome de cada convidado no guardanapo. Os lugares são definidos pela Casa: em cada mesa senta alguém da Meneghel.</p></div>
+          <div><div class="hora">20h15</div><div class="onde">Showroom</div></div>
+          <div><h3>Lançamentos</h3><p>Os convidados voltam ao showroom por outro caminho. No centro, entre os tecidos de lançamento, um palco com manequins mostra peças que não entraram no desfile. O Neto recebe cada convidado.</p><figure class="foto-passo"><img src="/cozinhagourmet/trama/img/showroom.jpg" alt="Showroom da Meneghel com a parede de tecidos jacquard"></figure></div>
+        </li>
+        <li>
+          <div><div class="hora">20h45</div><div class="onde">Showroom</div></div>
+          <div><h3>Jantar</h3><p>Chef convidado cozinhando ao vivo em fogão de indução, entre as peças e os tecidos da Casa. Mesa posta premium vestida com o jacquard da noite, o nome de cada convidado no guardanapo. Os lugares são definidos pela Casa: em cada mesa senta alguém da Meneghel.</p></div>
         </li>
         <li>
           <div><div class="hora">22h00</div><div class="onde">Mesa</div></div>
@@ -338,9 +348,9 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
   <div class="wrap sec">
     <div class="num"><b>05</b>Quem está na sala</div>
     <div class="conteudo">
-      <h2>Quarenta lugares para quem compra.</h2>
+      <h2>Entre 15 e 40 lugares, todos para quem compra.</h2>
       <ul class="lista">
-        <li><b>15 convidados indicados pela Meneghel:</b> confecções, lojistas, estilistas e compradores. Convite e link próprios, presença confirmada pela Clara.</li>
+        <li><b>Convidados indicados pela Meneghel:</b> confecções, lojistas, estilistas e compradores. Convite e link próprios, presença confirmada pela Clara.</li>
         <li><b>Curadoria Nexo:</b> público de alto padrão de Americana e região, gente que veste, investe e compra, além de influenciadores de moda, imprensa e poucos arquitetos e designers escolhidos a dedo.</li>
         <li><b>Convidados das Marcas Convidadas,</b> aprovados pela Nexo dentro do mesmo público.</li>
       </ul>
@@ -372,7 +382,7 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
         <li>Bate-bola gravado da Wendy Meira com o Neto.</li>
         <li>Posts e stories de divulgação nos canais do programa.</li>
         <li>Marca no backdrop, no cardápio impresso e nos materiais do evento.</li>
-        <li>15 convites com link próprio e controle de presença pela Clara.</li>
+        <li>Convites com link próprio para os convidados da Casa e controle de presença pela Clara.</li>
         <li>Exclusividade do segmento têxtil e moda no episódio.</li>
         <li>Direito de uso do conteúdo nos canais próprios da Meneghel.</li>
       </ul>
@@ -393,11 +403,13 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
               <li>Espaço: showroom, fábrica e área externa.</li>
               <li>Custos do desfile: cachê das modelos, maquiagem e cabelo, aluguel de iluminação e confecção dos looks.</li>
               <li>Tecelagem do jacquard da noite: toalhas da mesa e guardanapos com os nomes.</li>
-              <li>Indicação dos 15 convidados.</li>
-              <li>Corredor do desfile liberado, máquinas paradas e rota dos convidados livre.</li>
+              <li>Indicação dos convidados da Casa.</li>
+              <li>Espaço do desfile na primeira planta, atrás dos teares, com os teares em funcionamento e rota dos convidados livre e segura.</li>
+              <li>Palco com manequins e os tecidos de lançamento no showroom.</li>
             </ul></td></tr>
             <tr><td>Nexo</td><td><ul>
               <li>Conceito e roteiro da noite.</li>
+              <li>Roteiro da narração do desfile, com a equipe de estilo da Meneghel.</li>
               <li>Organização do desfile: seleção de modelos e fornecedores, orçamentos, cronograma, ensaio e condução na noite, com aprovação dos looks junto com a Casa.</li>
               <li>Chef convidado, cardápio e mesa posta premium.</li>
               <li>Marcas Convidadas e curadoria dos demais convidados.</li>
@@ -417,28 +429,18 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
   <div class="wrap sec">
     <div class="num"><b>09</b>Data</div>
     <div class="conteudo">
-      <h2>Um pré-lançamento antes da feira.</h2>
-      <p class="data-destaque">Entre 18 e 20 de janeiro de 2027</p>
-      <p>Uma noite, em um desses três dias, definida na assinatura. Em dezembro o prazo seria curto demais e a noite disputaria agenda com Natal, Ano Novo e confraternizações. Em janeiro o público volta com a agenda aberta, e a Meneghel chega à feira de fevereiro com a coleção já lançada, vista e comentada.</p>
-      <figure class="foto-passo sim-claro"><img src="/cozinhagourmet/trama/img/feira.jpg" alt="Simulação do estande da Meneghel na feira com o vídeo do desfile no telão"><figcaption>Imagem ilustrativa do estande na feira, com o material da noite.</figcaption></figure>
-      <h3>O que a noite entrega para a feira</h3>
-      <div class="feira">
-        <div><b>Vídeo do desfile para o estande</b><span>Um filme curto do desfile na fábrica para rodar no telão, mostrando a coleção e a indústria que faz o tecido.</span></div>
-        <div><b>Depoimentos de quem viu primeiro</b><span>Lojistas, estilistas e compradores gravados na noite, falando da coleção. Na feira, quem passa pelo estande ouve quem já comprou a ideia.</span></div>
-        <div><b>Fotos de catálogo</b><span>Os looks fotografados com qualidade de cinema, prontos para lookbook, catálogo e redes durante a feira.</span></div>
-        <div><b>Peças gráficas do estande</b><span>Painéis e materiais com as imagens da noite, e um QR Code que leva ao episódio completo.</span></div>
-        <div><b>Personalização à mostra</b><span>Os guardanapos com nome viram peça de demonstração no estande: a prova do tecido personalizado feito na própria indústria.</span></div>
-        <div><b>Compradores já aquecidos</b><span>Os convidados da noite chegam à feira conhecendo a linha e a Casa. A conversa no estande começa no segundo passo.</span></div>
-      </div>
+      <h2>Depois da feira, só moda.</h2>
+      <p class="data-destaque">Data em aberto, depois da ABUP</p>
+      <p>A Meneghel vai à ABUP, de 14 a 17 de fevereiro de 2027, com foco em decoração. O Cozinha Gourmet · Trama vem depois, como um evento dedicado exclusivamente à linha de moda. A data é definida em conjunto com a Casa.</p>
       <div class="prazos">
-        <div><span>Assinatura do contrato e escolha do dia</span><span>04/12/2026</span></div>
-        <div><span>Visita técnica na fábrica e análise do drone</span><span>11/12/2026</span></div>
-        <div><span>Lista dos 15 convidados da Casa</span><span>11/12/2026</span></div>
-        <div><span>Equipe do desfile e looks confirmados</span><span>18/12/2026</span></div>
-        <div><span>Convites enviados, antes das festas</span><span>18/12/2026</span></div>
-        <div><span>Roteiro do desfile aprovado</span><span>08/01/2027</span></div>
-        <div><span>Episódio 2</span><span>18, 19 ou 20/01/2027</span></div>
+        <div><span>Definição da data</span><span>em conjunto</span></div>
+        <div><span>Visita técnica na fábrica e análise do drone</span><span>6 semanas antes</span></div>
+        <div><span>Equipe do desfile e looks confirmados</span><span>4 semanas antes</span></div>
+        <div><span>Lista dos convidados da Casa</span><span>4 semanas antes</span></div>
+        <div><span>Convites enviados</span><span>3 semanas antes</span></div>
+        <div><span>Roteiro do desfile e da narração aprovados</span><span>2 semanas antes</span></div>
       </div>
+    </div>
     </div>
   </div>
 </section>
@@ -592,7 +594,7 @@ footer .legal { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(
     var io2 = new IntersectionObserver(function (es) {
       if (!es[0].isIntersecting) return; io2.disconnect();
       var t0 = performance.now();
-      (function f(t) { var k = Math.min(1, (t - t0) / 1200); quinze.textContent = Math.round(15 * (1 - Math.pow(1 - k, 3))) + ' de 40'; if (k < 1) requestAnimationFrame(f); })(t0);
+      (function f(t) { var k = Math.min(1, (t - t0) / 1200); quinze.textContent = Math.round(15 * (1 - Math.pow(1 - k, 3))) + ' a 40'; if (k < 1) requestAnimationFrame(f); })(t0);
     }, { threshold: 0.5 });
     io2.observe(quinze);
   }
