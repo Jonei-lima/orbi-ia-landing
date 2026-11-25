@@ -544,11 +544,11 @@ const ORBI_JURIDICO_TERMO: Bruta[] = [
     "Os arquivos guardados no Drive pertencem ao CONTRATANTE e seguem a política dele. O CONTRATANTE pode pedir o apagamento antes desse prazo.",
   ]},
   { titulo: "Direitos dos titulares", itens: [
-    "Os pedidos dos titulares (art. 18 da LGPD) são recebidos e decididos pelo CONTRATANTE. A CONTRATADA localiza e apaga os registros de um grupo ou de uma pessoa em até 5 (cinco) dias úteis depois do pedido por escrito do CONTRATANTE.",
+    "Os pedidos dos titulares (art. 18 da LGPD) são recebidos e decididos pelo CONTRATANTE. A CONTRATADA localiza e apaga os registros de um grupo ou de uma pessoa em até 10 (dez) dias úteis depois do pedido por escrito do CONTRATANTE.",
   ]},
   { titulo: "Segurança e incidentes", itens: [
     "O acesso ao banco de dados é restrito, por credencial de serviço, sem acesso público. A CONTRATADA troca as chaves de acesso do serviço antes do início com grupos reais e sempre que uma pessoa com acesso sair da equipe.",
-    "Se houver incidente com dados do CONTRATANTE, a CONTRATADA avisa em até 48 (quarenta e oito) horas da ciência, para que o CONTRATANTE avalie a comunicação à ANPD e aos titulares.",
+    "Se houver incidente com dados do CONTRATANTE, a CONTRATADA avisa em até 2 (dois) dias úteis da ciência, para que o CONTRATANTE avalie a comunicação à ANPD e aos titulares.",
   ]},
   { titulo: "Risco do chip e da conexão com o WhatsApp", itens: [
     "A conexão com o WhatsApp é feita por interface não oficial, que os termos do WhatsApp não autorizam. O número usado pelo agente pode ser restringido ou banido a qualquer momento, sem aviso e sem garantia de recurso.",
@@ -570,7 +570,9 @@ const ORBI_JURIDICO_TERMO: Bruta[] = [
     "A CONTRATADA mantém sigilo sobre os dados e documentos do CONTRATANTE e de seus clientes, limita o acesso ao que for necessário para operar e corrigir o serviço, e não os usa para treinar, testar ou demonstrar outros produtos.",
   ]},
   { titulo: "Responsabilidade", itens: [
-    "A CONTRATADA responde pelos danos que causar ao descumprir este termo. Ela não responde pelos riscos aceitos nas cláusulas 10 a 13, nem pelo uso que o CONTRATANTE fizer de documentos e contratos sem a conferência prevista na cláusula 12.",
+    "A CONTRATADA só responde por danos quando ficar comprovado que eles decorreram de descumprimento, por ela, de uma obrigação deste termo, como usar os dados para outra finalidade, não apagar dados no prazo pedido, deixar de avisar um incidente no prazo ou deixar o banco de dados sem as proteções da cláusula 9.",
+    "Nesses casos, a responsabilidade total da CONTRATADA fica limitada a R$ 1.000,00 (mil reais), somados todos os eventos, durante o piloto e depois dele, enquanto este termo valer, salvo dolo ou culpa grave.",
+    "A CONTRATADA não responde pelos riscos aceitos nas cláusulas 10 a 13 (bloqueio do número, desconexão, erros de leitura da inteligência artificial e falhas ou mudanças dos fornecedores), por falhas de segurança dos fornecedores indicados na cláusula 6, nem pelo uso que o CONTRATANTE fizer de documentos e contratos sem a conferência prevista na cláusula 12.",
   ]},
   { titulo: "Encerramento", itens: [
     "Ao fim da relação, a CONTRATADA apaga os dados do CONTRATANTE do banco de dados e, se ele pedir, entrega antes uma cópia. Os arquivos do Drive não são da CONTRATADA e não são copiados.",
