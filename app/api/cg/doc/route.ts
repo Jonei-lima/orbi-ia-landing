@@ -163,8 +163,10 @@ export async function POST(req: Request) {
       };
       if (!parte.razao || !parte.fantasia || !parte.cnpj || !parte.endereco || !parte.representante || !parte.whatsapp || !parte.segmento)
         return err("Preencha todos os dados da empresa.");
-      const valor = Number(String(b.valor || "").replace(/\./g, "").replace(",", "."));
-      if (!valor || valor <= 0) return err("Informe o valor.");
+      // Termos sem preço (semValor) gravam valor 0
+      const semValor = !!MODELOS[modelo].semValor;
+      const valor = semValor ? 0 : Number(String(b.valor || "").replace(/\./g, "").replace(",", "."));
+      if (!semValor && (!valor || valor <= 0)) return err("Informe o valor.");
       const ev = await getEvento(String(b.evento || ""));
       const data = ev ? new Date(ev.data_hora).toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: "America/Sao_Paulo" }) : "[data do episódio]";
       // Contratos da ORBI: mensalidade, renovação, vencimento, volume, CNAEs e foro
@@ -173,7 +175,7 @@ export async function POST(req: Request) {
         const num = (v: unknown) => Number(String(v || "").replace(/\./g, "").replace(",", "."));
         const x = b.extras || {};
         const mens = num(x.mensalidade), ren = num(x.renovacao), querRen = !!MODELOS[modelo].renovacao;
-        if (!mens) return err("Informe a mensalidade.");
+        if (!semValor && !mens) return err("Informe a mensalidade.");
         if (querRen && !ren) return err("Informe a renovação.");
         const foro = String(x.foro || "").trim();
         if (!foro) return err("Informe o foro (cidade/UF).");
@@ -185,7 +187,7 @@ export async function POST(req: Request) {
           // Implantação à vista com 10% de desconto (usado no modelo da imobiliária)
           AVISTA: moeda(Math.round(valor * 90) / 100), AVISTA_EXTENSO: extenso(Math.round(valor * 90) / 100),
           VENCIMENTO: venc, FORO: foro, VOLUME: `${vol} (${extenso(Number(vol)).replace(/ rea(l|is)$/, "")})`, CNAES: `${cn} (${extenso(Number(cn)).replace(/ rea(l|is)$/, "")})` };
-        parte.mensalidade = moeda(mens); if (querRen) parte.renovacao = moeda(ren);
+        if (mens) parte.mensalidade = moeda(mens); if (querRen) parte.renovacao = moeda(ren);
       }
       const g = gerar(modelo, { empresa: parte.fantasia, cota: MODELOS[modelo].cota, data, valor: moeda(valor), extenso: extenso(valor),
         pagamento: String(b.pagamento || "").trim() || (orbiDoc ? "à vista ou em até 3 (três) vezes no cartão de crédito" : "à vista, até 5 (cinco) dias antes do evento, por PIX ou transferência bancária"),

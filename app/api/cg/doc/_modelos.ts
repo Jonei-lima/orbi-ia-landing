@@ -509,9 +509,82 @@ const ORBI_IMOBILIARIA: Bruta[] = [
   ]},
 ];
 
+
+// ---------- ORBI IA: termo de tratamento de dados e aceite de riscos (piloto jurídico, captura em grupos) ----------
+// Sem valor: o termo não tem preço. A numeração das cláusulas é sequencial e bate com as referências do texto (10 a 13 e 12).
+const ORBI_JURIDICO_TERMO: Bruta[] = [
+  { titulo: "Objeto e finalidade", itens: [
+    "A CONTRATADA opera para o CONTRATANTE um agente de inteligência artificial que participa, em silêncio, de grupos de WhatsApp de negociação imobiliária de que o escritório faz parte. O agente lê os documentos enviados nos grupos, dá nome aos arquivos, guarda no Drive do escritório e avisa o responsável do escritório, no privado, quando algo precisa de decisão ou conferência.",
+    "Esse tratamento serve só para organizar os documentos e apoiar a elaboração de contratos pelo escritório. A CONTRATADA não usa os dados para nenhuma outra finalidade, própria ou de terceiros.",
+  ]},
+  { titulo: "Alcance e vigência", itens: [
+    "Este termo vale desde a assinatura para o piloto, com no máximo dois grupos reais.",
+    "Ele integra o contrato de prestação de serviços que as partes vierem a firmar e continua valendo enquanto houver tratamento de dados do CONTRATANTE.",
+    "Qualquer das partes pode encerrar o piloto a qualquer momento, por aviso por escrito, inclusive pelo WhatsApp.",
+  ]},
+  { titulo: "Papéis das partes", itens: [
+    "O CONTRATANTE é o controlador e decide o que é tratado. A CONTRATADA é operadora e trata os dados somente conforme este termo e as instruções por escrito do CONTRATANTE.",
+  ]},
+  { titulo: "Dados e titulares", itens: [
+    "São tratados nome, RG, CPF, filiação, naturalidade, data de nascimento, estado civil, endereço, documentos do imóvel, e nome e telefone de quem participa do grupo.",
+    "Os titulares são clientes do escritório, contrapartes das negociações e corretores ou funcionários das imobiliárias.",
+    "Dados pessoais sensíveis não são objeto do tratamento. Se algum aparecer num documento enviado ao grupo, o tratamento é acidental e o CONTRATANTE decide o que fazer com ele.",
+  ]},
+  { titulo: "Base legal e transparência", itens: [
+    "Cabe ao CONTRATANTE, como controlador, confirmar a base legal do tratamento. As partes entendem aplicáveis o art. 7º, V (procedimentos preliminares de contrato do qual o titular é parte) e, para contrapartes e corretores, o art. 7º, IX (legítimo interesse), da Lei 13.709/2018.",
+    "O CONTRATANTE também é responsável por informar seus clientes e as imobiliárias de que o escritório usa ferramentas de inteligência artificial para organizar documentos, nos termos da LGPD e das recomendações da OAB sobre o uso de IA na advocacia.",
+  ]},
+  { titulo: "Fornecedores e transferência internacional", itens: [
+    "O serviço depende destes fornecedores: Anthropic (leitura de imagens e PDFs e geração de texto, nos Estados Unidos), Google (Drive e Docs, para guardar arquivos e contratos), Supabase (banco de dados do agente), a hospedagem do fluxo e da conexão com o WhatsApp, e o próprio WhatsApp. Parte do tratamento ocorre, portanto, fora do Brasil.",
+    "A CONTRATADA informa por escrito qualquer troca de fornecedor e entrega ao CONTRATANTE, antes de ligar o agente em grupos reais, as condições de cada um sobre retenção e uso de dados para treinamento.",
+  ]},
+  { titulo: "Retenção e apagamento", itens: [
+    "As mensagens de um grupo que aguarda resposta do CONTRATANTE são guardadas apenas como identificador e são apagadas quando o grupo é ativado ou ignorado.",
+    "O texto lido dos documentos e das mensagens de grupos ativos fica no banco da CONTRATADA por até 12 (doze) meses depois do encerramento do grupo, e depois é apagado.",
+    "Os arquivos guardados no Drive pertencem ao CONTRATANTE e seguem a política dele. O CONTRATANTE pode pedir o apagamento antes desse prazo.",
+  ]},
+  { titulo: "Direitos dos titulares", itens: [
+    "Os pedidos dos titulares (art. 18 da LGPD) são recebidos e decididos pelo CONTRATANTE. A CONTRATADA localiza e apaga os registros de um grupo ou de uma pessoa em até 5 (cinco) dias úteis depois do pedido por escrito do CONTRATANTE.",
+  ]},
+  { titulo: "Segurança e incidentes", itens: [
+    "O acesso ao banco de dados é restrito, por credencial de serviço, sem acesso público. A CONTRATADA troca as chaves de acesso do serviço antes do início com grupos reais e sempre que uma pessoa com acesso sair da equipe.",
+    "Se houver incidente com dados do CONTRATANTE, a CONTRATADA avisa em até 48 (quarenta e oito) horas da ciência, para que o CONTRATANTE avalie a comunicação à ANPD e aos titulares.",
+  ]},
+  { titulo: "Risco do chip e da conexão com o WhatsApp", itens: [
+    "A conexão com o WhatsApp é feita por interface não oficial, que os termos do WhatsApp não autorizam. O número usado pelo agente pode ser restringido ou banido a qualquer momento, sem aviso e sem garantia de recurso.",
+    "Se isso ocorrer, o agente perde o acesso aos grupos em que estava, mas o número profissional do CONTRATANTE nunca é conectado ao agente e não é afetado.",
+    "Para reduzir o risco, o agente nunca envia mensagem em grupo, e o CONTRATANTE se compromete a não bloquear nem denunciar o número do agente.",
+  ]},
+  { titulo: "Desconexão e disponibilidade", itens: [
+    "O agente pode ficar desconectado sem aviso automático. Documentos enviados nesse período podem não ser capturados, e a CONTRATADA não garante recuperá-los depois.",
+    "Durante o piloto, o CONTRATANTE verifica o estado do agente pelo comando de status, de manhã e no fim do dia. A CONTRATADA não garante disponibilidade contínua do serviço no piloto.",
+  ]},
+  { titulo: "Erros da inteligência artificial e conferência", itens: [
+    "A inteligência artificial pode ler errado um documento, classificá-lo mal ou recusar como incompleto um documento válido. Os documentos duvidosos são guardados com o prefixo REVISAR_ e não entram no cadastro usado para gerar contratos.",
+    "O advogado do CONTRATANTE confere qualquer documento e qualquer contrato antes de usá-lo. O agente não substitui essa conferência, e o uso dos resultados é responsabilidade do CONTRATANTE.",
+  ]},
+  { titulo: "Dependência de terceiros", itens: [
+    "Se um fornecedor indicado neste termo ficar fora do ar, mudar suas regras ou encerrar o serviço, o agente pode parar ou mudar. A CONTRATADA avisa o CONTRATANTE assim que souber e procura uma alternativa, sem garantia de prazo.",
+  ]},
+  { titulo: "Sigilo", itens: [
+    "A CONTRATADA mantém sigilo sobre os dados e documentos do CONTRATANTE e de seus clientes, limita o acesso ao que for necessário para operar e corrigir o serviço, e não os usa para treinar, testar ou demonstrar outros produtos.",
+  ]},
+  { titulo: "Responsabilidade", itens: [
+    "A CONTRATADA responde pelos danos que causar ao descumprir este termo. Ela não responde pelos riscos aceitos nas cláusulas 10 a 13, nem pelo uso que o CONTRATANTE fizer de documentos e contratos sem a conferência prevista na cláusula 12.",
+  ]},
+  { titulo: "Encerramento", itens: [
+    "Ao fim da relação, a CONTRATADA apaga os dados do CONTRATANTE do banco de dados e, se ele pedir, entrega antes uma cópia. Os arquivos do Drive não são da CONTRATADA e não são copiados.",
+  ]},
+  { titulo: "Foro", itens: [
+    "Fica eleito o foro da comarca de {{FORO}} para resolver qualquer questão deste termo.",
+  ]},
+];
+
 // renovacao: o modelo usa {{RENOVACAO}} e o formulário exige o valor
-export const MODELOS: Record<string, { titulo: string; cota: string; bruto: () => Bruta[]; marca?: "orbi"; renovacao?: boolean }> = {
+// semValor: termo sem preço (sem implantação nem mensalidade)
+export const MODELOS: Record<string, { titulo: string; cota: string; bruto: () => Bruta[]; marca?: "orbi"; renovacao?: boolean; semValor?: boolean }> = {
   orbi_sdr: { titulo: "Contrato de Prestação de Serviços · Agentes de IA para WhatsApp (SDR e Atendimento)", cota: "Mensal", bruto: () => ORBI_SDR, marca: "orbi", renovacao: true },
+  orbi_juridico_termo: { titulo: "Termo de Tratamento de Dados Pessoais e Aceite de Riscos · Piloto de Captura de Documentos em Grupos de Negociação", cota: "Piloto", bruto: () => ORBI_JURIDICO_TERMO, marca: "orbi", semValor: true },
   orbi_imobiliaria: { titulo: "Contrato de Implantação, Licença de Uso e Suporte de Agente de IA para Imobiliária · Anexo I: Fase 1 (Atendimento e Qualificação)", cota: "Mensal", bruto: () => ORBI_IMOBILIARIA, marca: "orbi", renovacao: true },
   contrato_anfitriao: { titulo: "Contrato de Patrocínio e Cessão de Espaço", cota: "Anfitrião", bruto: () => ANFITRIAO_LOCAL },
   termo_anfitriao: { titulo: "Termo de Compromisso de Patrocínio · Cota Anfitrião", cota: "Anfitrião", bruto: () => termo("termo_anfitriao") },

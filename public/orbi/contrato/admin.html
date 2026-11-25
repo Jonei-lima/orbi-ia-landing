@@ -69,7 +69,7 @@ const NOMES={rascunho:'Rascunho: ainda não liberado para o contratante',enviado
 const EV={criado:'Documento criado',liberado:'Liberado para o contratante',visualizado:'Contratante abriu o link',alteracao_sugerida:'Contratante sugeriu alterações',alteracao_analisada:'Você respondeu às sugestões',editado_orbi:'Você editou o texto',codigo_enviado:'Código de assinatura enviado',assinado_parte:'Contratante assinou',concluido:'ORBI assinou: documento concluído',cancelado:'Documento cancelado'};
 function texto(n){for(const c of D.clausulas)for(const i of c.itens)if(i.n===n)return i.texto;return ''}
 function render(ev){
-  const d=D;$('titulo').textContent=d.titulo;$('sub').textContent=`${d.parte.fantasia} · ${d.parte.razao} · CNPJ ${d.parte.cnpj} · R$ ${d.valor} · versão ${d.versao}`;
+  const d=D;$('titulo').textContent=d.titulo;$('sub').textContent=`${d.parte.fantasia} · ${d.parte.razao} · CNPJ ${d.parte.cnpj} · ${d.valor==='0,00'?'sem valor':'R$ '+d.valor} · versão ${d.versao}`;
   $('status').innerHTML=`<div class="banner ${d.status==='concluido'?'ok':d.status==='cancelado'?'err':''}">${NOMES[d.status]||d.status}</div>`;
   const lib=d.status!=='rascunho'&&d.status!=='cancelado';
   $('link-box').classList.toggle('hidden',!lib);$('link').value=d.link;
