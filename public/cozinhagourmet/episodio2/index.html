@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cozinha Gourmet · Episódio 2 · Vini Colchões</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Deck paisagem 16:9. Fundo quase preto esverdeado, dourado como luz, creme no texto. Fotos em sangria. */
+  --noite: #08130E;
+  --verde: #0E2A1E;
+  --verde-2: #143726;
+  --dourado: #C9A45C;
+  --dourado-claro: #E6CC92;
+  --creme: #F4EEDF;
+  --nevoa: #A9A08A;
+  --display: "Fraunces", Georgia, serif;
+  --texto: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--noite); color: var(--creme); font-family: var(--texto); -webkit-font-smoothing: antialiased; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.palco-wrap { position: relative; width: 100%; overflow: hidden; }
+.palco { width: 1600px; position: absolute; top: 0; left: 0; transform-origin: top left; }
+.slide { position: relative; width: 1600px; height: 900px; overflow: hidden; background: var(--noite); }
+.slide + .slide { border-top: 1px solid rgba(201,164,92,.18); }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; line-height: 1.04; text-wrap: balance; }
+p { margin: 0; }
+.rot { font-size: 15px; letter-spacing: .22em; text-transform: uppercase; color: var(--dourado); font-weight: 600; }
+.pad { position: absolute; inset: 0; padding: 80px 110px 100px; }
+
+/* entrada dos elementos */
+.e { opacity: 0; transform: translateY(30px); transition: opacity .9s ease, transform 1s cubic-bezier(.2,.7,.2,1); }
+.ativo .e { opacity: 1; transform: none; }
+.ativo .e1 { transition-delay: .15s; } .ativo .e2 { transition-delay: .35s; } .ativo .e3 { transition-delay: .55s; } .ativo .e4 { transition-delay: .75s; } .ativo .e5 { transition-delay: .95s; } .ativo .e6 { transition-delay: 1.15s; }
+
+/* fotos em sangria com Ken Burns */
+.bg { position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.12); transition: transform 9s ease-out; }
+.ativo .bg { transform: scale(1); }
+.veu { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8,19,14,.94) 0%, rgba(8,19,14,.78) 42%, rgba(8,19,14,.15) 100%); }
+.veu.baixo { background: linear-gradient(0deg, rgba(8,19,14,.95) 0%, rgba(8,19,14,.55) 45%, rgba(8,19,14,.1) 100%); }
+
+/* 1 capa */
+.capa .logo { position: absolute; top: 70px; left: 110px; height: 150px; }
+.capa .meio { position: absolute; left: 110px; bottom: 120px; width: 900px; display: grid; gap: 28px; }
+.capa h1 { font-size: 104px; font-weight: 300; }
+.capa .sub { font-size: 24px; color: #DCD3BC; max-width: 640px; line-height: 1.5; }
+.capa .canto { position: absolute; right: 110px; bottom: 120px; text-align: right; font-size: 15px; color: var(--nevoa); line-height: 1.8; }
+.capa .canto b { color: var(--creme); font-weight: 600; }
+.capa .canto { display: grid; justify-items: end; gap: 12px; }
+.canto-rot { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--dourado); font-weight: 600; }
+.logo-casa { height: 210px; width: auto; filter: drop-shadow(0 6px 24px rgba(0,0,0,.55)); }
+.capa .canto { padding: 26px 30px 22px; background: rgba(8,19,14,.55); border-top: 2px solid var(--dourado); }
+
+/* frases grandes */
+.frase { display: grid; align-content: center; gap: 40px; height: 100%; max-width: 1200px; }
+.frase h2 { font-size: 78px; font-weight: 300; }
+.frase .apoio { font-size: 26px; line-height: 1.55; color: #D2C9B1; max-width: 900px; }
+.gancho { font-family: var(--display); font-size: 34px; color: var(--dourado); }
+.fio { width: 120px; height: 2px; background: var(--dourado); transform: scaleX(0); transform-origin: 0 50%; transition: transform 1.2s cubic-bezier(.2,.7,.2,1) .3s; }
+.ativo .fio { transform: scaleX(1); }
+
+/* origem */
+.origem { display: grid; grid-template-columns: 1.1fr .9fr; height: 100%; }
+.origem .txt { padding: 80px 80px 100px 110px; display: grid; align-content: center; gap: 34px; }
+.origem h2 { font-size: 72px; font-weight: 300; }
+.origem .apoio { font-size: 23px; line-height: 1.6; color: #D2C9B1; }
+.stats { display: grid; grid-template-columns: repeat(3, auto); gap: 56px; justify-content: start; }
+.stats b { display: block; font-family: var(--display); font-weight: 400; font-size: 76px; color: var(--dourado); line-height: 1; font-variant-numeric: tabular-nums; }
+.stats span { font-size: 16px; color: var(--nevoa); }
+.origem .foto { position: relative; overflow: hidden; }
+
+/* noite com vídeo */
+.noite { display: grid; grid-template-columns: 1fr 380px; gap: 70px; height: 100%; padding: 70px 110px 90px; align-items: center; }
+.noite .txt { display: grid; gap: 30px; }
+.noite h2 { font-size: 70px; font-weight: 300; }
+.noite .apoio { font-size: 23px; line-height: 1.6; color: #D2C9B1; }
+.mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.mini figure { margin: 0; overflow: hidden; }
+.mini img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; }
+.mini figcaption { font-size: 14px; color: var(--nevoa); padding-top: 8px; }
+.mini figcaption b { display: block; color: var(--creme); font-family: var(--display); font-weight: 400; font-size: 19px; }
+.vid { position: relative; margin: 0; height: 680px; aspect-ratio: 9/16; justify-self: end; border: 1px solid rgba(201,164,92,.35); }
+.vid video { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; background: var(--verde); }
+.ampliar { position: absolute; left: 14px; bottom: 14px; font: inherit; font-size: 14px; font-weight: 600; padding: 10px 14px; border: 1px solid var(--dourado); background: rgba(8,19,14,.75); color: var(--creme); cursor: pointer; }
+.ampliar:hover, .ampliar:focus-visible { background: var(--dourado); color: var(--noite); outline: none; }
+
+/* números */
+.nums { height: 100%; padding: 70px 110px 90px; display: grid; grid-template-rows: auto 1fr auto; gap: 40px; }
+.nums h2 { font-size: 64px; font-weight: 300; }
+.graf { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 22px; }
+.card { background: var(--verde); border: 1px solid rgba(201,164,92,.25); padding: 34px 30px; display: grid; gap: 10px; align-content: start; }
+.card .n { font-family: var(--display); font-size: 92px; color: var(--dourado); line-height: 1; font-variant-numeric: tabular-nums; }
+.card .l { font-size: 19px; color: #E7DFC9; }
+.card .nota { font-size: 13px; color: var(--nevoa); }
+.pontos { display: grid; grid-template-columns: repeat(auto-fill, minmax(18px, 1fr)); gap: 8px; margin-top: 18px; }
+.pontos.q { grid-template-columns: repeat(auto-fill, minmax(13px, 1fr)); gap: 5px; }
+.pontos i { display: block; aspect-ratio: 1; border-radius: 50%; background: var(--dourado); opacity: .1; transform: scale(.3); transition: opacity .3s, transform .45s cubic-bezier(.2,.7,.2,1.5); }
+.pontos.q i { border-radius: 2px; }
+.pontos i.on { opacity: 1; transform: scale(1); }
+.barras { display: grid; gap: 40px; align-content: center; }
+.trilho { height: 18px; background: rgba(244,238,223,.07); margin-top: 10px; }
+.trilho i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #9C7C38, var(--dourado) 70%, var(--dourado-claro)); transition: width 2.2s cubic-bezier(.2,.7,.2,1) .3s; }
+.ativo .trilho i { width: var(--w); }
+.nums .rodape { font-size: 15px; color: var(--nevoa); }
+
+/* depoimentos */
+.depo { display: grid; grid-template-columns: 380px 1fr; gap: 80px; height: 100%; padding: 70px 110px 90px; align-items: center; }
+.depo .vid { justify-self: start; }
+.depo .lado { display: grid; gap: 30px; }
+.depo h2 { font-size: 60px; font-weight: 300; }
+.quotes { display: grid; gap: 18px; }
+.quotes blockquote { margin: 0; padding: 22px 26px; border-left: 2px solid var(--dourado); background: rgba(14,42,30,.6); display: grid; gap: 8px; }
+.quotes .tag { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--dourado); font-weight: 700; }
+.quotes p { font-family: var(--display); font-size: 25px; line-height: 1.4; }
+.quotes cite { font-style: normal; font-size: 15px; color: var(--nevoa); }
+.depo .rodape { font-size: 15px; color: var(--nevoa); }
+.depo .rodape b { color: #E7DFC9; font-weight: 600; }
+
+/* episódio 2 */
+.casa2 { display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
+.casa2 .fotos { display: grid; grid-template-columns: 1.55fr 1fr; gap: 10px; padding: 70px 0 90px 110px; }
+.casa2 .fotos > div { position: relative; overflow: hidden; }
+.casa2 .txt { padding: 70px 110px 90px 80px; display: grid; align-content: center; gap: 30px; }
+.casa2 h2 { font-size: 66px; font-weight: 300; }
+.casa2 .apoio { font-size: 22px; line-height: 1.6; color: #D2C9B1; }
+.quando { display: grid; grid-template-columns: auto auto auto; gap: 40px; justify-content: start; align-items: end; border-top: 1px solid rgba(201,164,92,.35); padding-top: 26px; }
+.quando span { display: block; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--dourado); font-weight: 600; margin-bottom: 8px; }
+.quando b { font-family: var(--display); font-weight: 400; font-size: 40px; color: var(--creme); }
+.quando img { height: 96px; width: auto; display: block; }
+/* o que a marca ganha */
+.ganha { height: 100%; padding: 70px 110px 90px; display: grid; grid-template-rows: auto 1fr; gap: 50px; }
+.ganha h2 { font-size: 64px; font-weight: 300; max-width: 1150px; }
+.tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.tres div { border-top: 2px solid var(--dourado); padding-top: 24px; display: grid; gap: 14px; align-content: start; }
+.tres b { font-family: var(--display); font-weight: 400; font-size: 34px; }
+.tres span { font-size: 19px; line-height: 1.6; color: #D2C9B1; }
+.canais { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+.canais { gap: 14px; }
+.canais span { background: var(--dourado); color: var(--noite); padding: 14px 22px; font-size: 18px; font-weight: 700; letter-spacing: .01em; }
+.canais span b { font-family: var(--display); font-weight: 500; font-size: 26px; margin-right: 6px; }
+
+/* cotas */
+.cotas { height: 100%; padding: 56px 90px 70px; display: grid; grid-template-rows: auto 1fr auto; gap: 30px; }
+.cotas .topo { display: flex; justify-content: space-between; align-items: end; gap: 40px; }
+.cotas h2 { font-size: 58px; font-weight: 300; }
+.cotas .base { font-size: 15px; color: var(--nevoa); max-width: 520px; text-align: right; line-height: 1.6; }
+.grade { display: grid; grid-template-columns: 1fr 1fr 1fr 1.06fr; gap: 16px; }
+.cota { background: var(--verde); border: 1px solid rgba(201,164,92,.25); padding: 26px 28px 24px; display: grid; grid-template-rows: auto auto auto auto 1fr; gap: 14px; position: relative; }
+.cota.top { background: linear-gradient(180deg, #17402C, var(--verde)); border-color: var(--dourado); }
+.cota .nome { font-family: var(--display); font-size: 34px; }
+.cota .pra { font-size: 14.5px; color: var(--nevoa); }
+.mais-prod { font-size: 14px; color: var(--dourado); font-weight: 600; margin-top: 6px; }
+.cota .preco { font-family: var(--display); font-size: 42px; color: var(--dourado); font-variant-numeric: tabular-nums; line-height: 1; }
+.cota .preco.oculto { font-family: var(--texto); font-size: 18px; color: var(--nevoa); padding: 14px 0 12px; }
+.cota .preco.revelado { animation: brilho 1.4s ease both; }
+@keyframes brilho { 0% { opacity: 0; letter-spacing: .1em; } 100% { opacity: 1; letter-spacing: 0; } }
+.selo { justify-self: start; display: inline-flex; align-items: baseline; gap: 6px; background: var(--dourado); color: var(--noite); font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 9px 14px; white-space: nowrap; }
+.selo b { font-family: var(--display); font-size: 24px; letter-spacing: 0; line-height: 1; }
+.cota.top .selo { background: var(--dourado-claro); }
+.codigo { position: absolute; width: 1px; height: 1px; opacity: 0; border: 0; padding: 0; }
+.cota .preco small { font-family: var(--texto); font-size: 15px; color: var(--nevoa); margin-left: 6px; }
+.cota ul { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 7px; align-content: start; font-size: 14px; line-height: 1.4; color: #E7DFC9; }
+.cota li { padding-left: 18px; position: relative; }
+.cota li::before { content: ""; position: absolute; left: 0; top: .62em; width: 8px; height: 1.5px; background: var(--dourado); }
+.cota li.mais { padding-left: 0; color: var(--dourado); font-weight: 600; font-size: 14px; letter-spacing: .04em; }
+.cota li.mais::before { display: none; }
+.vagas { display: flex; align-items: center; gap: 12px; border-top: 1px solid rgba(201,164,92,.2); padding-top: 14px; font-size: 15px; color: #E7DFC9; }
+.vagas .cad { display: flex; gap: 6px; }
+.vagas .cad i { width: 16px; height: 16px; border: 1.5px solid var(--dourado); border-radius: 50%; display: block; }
+.vagas .cad i.on { background: var(--dourado); }
+.cotas .todas { max-width: 1180px; font-size: 15px; color: #D2C9B1; display: flex; gap: 10px 28px; flex-wrap: wrap; }
+.cotas .todas b { color: var(--dourado); font-weight: 600; }
+
+/* escassez */
+.mesa7 { display: grid; grid-template-columns: 1fr 1fr; height: 100%; padding: 80px 110px 100px; gap: 80px; align-items: center; }
+.mesa7 h2 { font-size: 70px; font-weight: 300; }
+.mesa7 .apoio { font-size: 25px; line-height: 1.55; color: #D2C9B1; }
+.mesa-svg { width: 100%; max-width: 620px; justify-self: center; }
+.mesa-svg .cad { fill: none; stroke: var(--dourado); stroke-width: 2; opacity: 0; transition: opacity .4s ease, fill .4s ease; }
+.ativo .mesa-svg .cad { opacity: 1; }
+.mesa-svg .cad.on { fill: var(--dourado); }
+
+/* fim */
+.fim .meio { position: absolute; left: 110px; top: 70px; bottom: 100px; width: 920px; align-content: center; display: grid; gap: 34px; }
+.fim h2 { font-size: 84px; font-weight: 300; }
+.fim .apoio { font-size: 25px; line-height: 1.55; color: #D2C9B1; }
+.contatos { display: grid; grid-template-columns: auto auto; gap: 48px; justify-content: start; }
+.contatos div { display: grid; gap: 4px; border-left: 2px solid var(--dourado); padding-left: 20px; }
+.contatos span { font-size: 15px; color: var(--nevoa); }
+.contatos b { font-family: var(--display); font-weight: 400; font-size: 30px; color: var(--creme); }
+.contatos em { font-style: normal; font-family: var(--display); font-size: 40px; color: var(--dourado); font-variant-numeric: tabular-nums; }
+.contato { display: grid; gap: 6px; font-size: 20px; }
+.contato b { font-family: var(--display); font-weight: 400; font-size: 46px; color: var(--dourado); }
+.equipe { position: absolute; right: 110px; bottom: 100px; text-align: right; font-size: 15px; color: var(--nevoa); line-height: 1.9; }
+.equipe b { color: var(--creme); font-weight: 600; }
+
+p b, .apoio b, .sub b { color: var(--creme); font-weight: 600; }
+.casa-selo { display: flex; align-items: center; gap: 24px; border-left: 2px solid var(--dourado); padding-left: 24px; }
+.casa-selo img { height: 110px; width: auto; }
+.casa-selo span { font-size: 15px; color: var(--nevoa); line-height: 1.6; letter-spacing: .04em; }
+.casa-selo b { color: var(--dourado); font-weight: 600; text-transform: uppercase; letter-spacing: .12em; font-size: 13px; }
+.casa-fim { position: absolute; right: 110px; top: 80px; display: grid; justify-items: end; gap: 14px; }
+.casa-fim span { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--dourado); font-weight: 600; }
+.casa-fim img { height: 170px; width: auto; filter: drop-shadow(0 6px 24px rgba(0,0,0,.6)); }
+/* navegação */
+.nav { position: fixed; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(244,238,223,.06); z-index: 5; }
+.nav i { display: block; height: 100%; background: var(--dourado); width: 0; transition: width .5s ease; }
+.setas { position: fixed; right: 22px; bottom: 20px; display: flex; gap: 8px; z-index: 6; align-items: center; }
+.setas button { font: inherit; font-size: 18px; width: 44px; height: 40px; border: 1px solid rgba(201,164,92,.5); background: rgba(8,19,14,.7); color: var(--creme); cursor: pointer; }
+.setas button:hover, .setas button:focus-visible { background: var(--dourado); color: var(--noite); outline: none; }
+.setas span { font-size: 13px; color: var(--nevoa); min-width: 54px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* visor de vídeo 9:16 */
+.visor { position: fixed; inset: 0; z-index: 50; background: rgba(4,10,7,.94); display: grid; place-items: center; padding: 20px; }
+.visor[hidden] { display: none; }
+.visor-caixa { position: relative; height: min(88vh, calc((100vw - 40px) * 16 / 9)); aspect-ratio: 9/16; }
+.visor-caixa video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.visor-fechar { position: absolute; top: 0; right: 0; transform: translateY(-110%); font: inherit; font-size: 14px; font-weight: 600; padding: 8px 14px; border: 1px solid var(--dourado); background: transparent; color: var(--creme); cursor: pointer; }
+
+@page { size: 1600px 900px; margin: 0; }
+@media print {
+  html, body { background: var(--noite); }
+  .palco-wrap { height: auto !important; overflow: visible; }
+  .palco { position: static; transform: none !important; }
+  .slide { break-after: page; page-break-after: always; border: 0 !important; }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .e, .fio, .bg, .trilho i, .pontos i, .mesa-svg .cad { transition: none !important; }
+  .e { opacity: 1 !important; transform: none !important; }
+  .fio { transform: none !important; }
+  .bg { transform: none !important; }
+  .trilho i { width: var(--w) !important; }
+  .pontos i { opacity: 1 !important; transform: none !important; }
+  .mesa-svg .cad { opacity: 1 !important; fill: var(--dourado) !important; }
+  .ampliar, .visor, .codigo { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .e, .bg, .fio, .trilho i, .slide { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="palco-wrap"><div class="palco" id="palco">
+
+<!-- 1 -->
+<section class="slide capa" aria-label="Capa">
+  <div class="bg" style="background-image:url('/cozinhagourmet/episodio2/img/vini-fachada.jpg'); background-position: 70% center"></div>
+  <div class="veu"></div>
+  <img class="logo e e1" src="/cozinhagourmet/episodio2/img/cozinha-logo.png" alt="Cozinha Gourmet · Sabores, Ambientes, Conexões">
+  <div class="meio">
+    <div class="rot e e2">Episódio 2 · Sumaré · 16 de dezembro, 19h30</div>
+    <h1 class="e e3">Agora, na nossa casa.</h1>
+    <p class="sub e e4">O <b>Cozinha Gourmet</b> chega a <b>Sumaré</b>. Um jantar fechado na <b>Vini Colchões</b>, um chef convidado e as marcas da cidade à mesa de quem decide.</p>
+  </div>
+  <div class="canto e e5"><span class="canto-rot">Casa do episódio</span><img class="logo-casa" src="/cozinhagourmet/episodio2/img/vini-branco.png" alt="Vini Colchões"></div>
+</section>
+
+<!-- 2 -->
+<section class="slide" aria-label="O que você está pensando">
+  <div class="pad"><div class="frase">
+    <div class="rot e e1">Antes de tudo</div>
+    <h2 class="e e2">Você deve estar pensando: mais um evento pedindo patrocínio.</h2>
+    <div class="fio"></div>
+    <p class="apoio e e3">Mais um logo num banner que ninguém lê. Mais uma noite em que a sua marca paga a conta e ninguém lembra do nome dela no dia seguinte. Se fosse só isso, você teria razão em recusar.</p>
+    <p class="gancho e e4">Então vamos falar do que você realmente quer.</p>
+  </div></div>
+</section>
+
+<!-- 3 -->
+<section class="slide" aria-label="O que você procura">
+  <div class="bg" style="background-image:url('/cozinhagourmet/episodio2/img/risos.jpg')"></div>
+  <div class="veu"></div>
+  <div class="pad"><div class="frase">
+    <div class="rot e e1">O que você realmente quer</div>
+    <h2 class="e e2">Parece que você quer mais do que aparecer. Quer ser lembrado por quem compra.</h2>
+    <div class="fio"></div>
+    <p class="apoio e e3">Estar na mesma mesa, na mesma conversa, na mesma noite que a pessoa que decide. E continuar aparecendo para ela depois que a noite acaba.</p>
+    <p class="gancho e e4">É para isso que o <b>Cozinha Gourmet</b> existe.</p>
+  </div></div>
+</section>
+
+<!-- 4 -->
+<section class="slide" aria-label="Origem">
+  <div class="origem">
+    <div class="txt">
+      <div class="rot e e1">De onde vem</div>
+      <h2 class="e e2">Nasceu em Rondonópolis. Hoje está em Campinas e região.</h2>
+      <p class="apoio e e3">O <b>Cozinha Gourmet</b> nasceu em 2018, em Rondonópolis-MT, de uma ideia simples: um chef cozinhando para convidados escolhidos a dedo, com tudo gravado e transformado em programa.</p>
+      <p class="apoio e e4">Hoje ele está em <b>Campinas e região</b>. Cada episódio acontece numa casa diferente, com um chef diferente, apresentação da <b>Wendy Meira</b> e produção da <b>Agência Nexo</b>.</p>
+    </div>
+    <div class="foto"><div class="bg" style="background-image:url('/cozinhagourmet/episodio2/img/cardapio.jpg')"></div></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide" aria-label="A noite de 18 de novembro">
+  <div class="noite">
+    <div class="txt">
+      <div class="rot e e1">18 de novembro de 2026</div>
+      <h2 class="e e2">A primeira noite já foi servida.</h2>
+      <p class="apoio e e3">Showroom da <b>Lar Brasileiro</b>, no Cambuí. O chef <b>Ricardo Cleto</b> cozinhando ao vivo, a <b>Wendy Meira</b> conduzindo a noite e tudo gravado com qualidade de cinema. Casa cheia.</p>
+      <div class="mini e e4">
+        <figure><img src="/cozinhagourmet/episodio2/img/wendy.jpg" alt="Wendy Meira"><figcaption><b>Wendy Meira</b>apresentadora</figcaption></figure>
+        <figure><img src="/cozinhagourmet/episodio2/img/chef.jpg" alt="Chef Ricardo Cleto"><figcaption><b>Ricardo Cleto</b>chef do episódio</figcaption></figure>
+        <figure><img src="/cozinhagourmet/episodio2/img/prato.jpg" alt="Arroz de polvo"><figcaption><b>Arroz de polvo</b>prato principal</figcaption></figure>
+      </div>
+    </div>
+    <figure class="vid e e3"><video src="/cozinhagourmet/episodio2/vid/episodio.mp4" poster="/cozinhagourmet/episodio2/vid/episodio.jpg" muted loop playsinline preload="metadata"></video><button class="ampliar" type="button">Ampliar com som</button></figure>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide" aria-label="Números">
+  <div class="nums">
+    <div>
+      <div class="rot e e1">O que já rendeu</div>
+      <h2 class="e e2" style="margin-top:14px">Números reais. Sem projeção.</h2>
+    </div>
+    <div class="graf e e3">
+      <div class="card"><div class="n"><span class="cont" data-alvo="43">0</span></div><div class="l">pessoas presentes no jantar</div><div class="pontos" data-qtd="43"></div><div class="nota">cada ponto é uma pessoa</div></div>
+      <div class="card"><div class="n">+<span class="cont" data-alvo="800">0</span></div><div class="l">novos seguidores do programa</div><div class="pontos q" data-qtd="80"></div><div class="nota">cada quadrado são 10 seguidores</div></div>
+      <div class="card barras">
+        <div><div class="n" style="font-size:72px">+<span class="cont" data-alvo="300">0</span> mil</div><div class="l">visualizações dos conteúdos</div><div class="trilho"><i style="--w:100%"></i></div></div>
+        <div><div class="n" style="font-size:72px">+<span class="cont" data-alvo="230">0</span> mil</div><div class="l">pessoas alcançadas</div><div class="trilho"><i style="--w:76.7%"></i></div></div>
+      </div>
+    </div>
+    <p class="rodape e e4">De 28 de outubro a 23 de novembro de 2026. O episódio completo e os próximos cortes ainda vão somar a esses números.</p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" aria-label="Depoimentos">
+  <div class="depo">
+    <figure class="vid e e2"><video src="/cozinhagourmet/episodio2/vid/gleice.mp4" poster="/cozinhagourmet/episodio2/vid/gleice.jpg" muted loop playsinline preload="metadata"></video><button class="ampliar" type="button">Ampliar com som</button></figure>
+    <div class="lado">
+      <div class="rot e e1">Não acredite em nós</div>
+      <h2 class="e e2">Acredite em quem estava lá.</h2>
+      <div class="quotes e e3">
+        <blockquote><span class="tag">Nota 10</span><p>O espaço escolhido foi perfeito, ambiente sofisticado e descontraído. Atendimento, comida e muita conexão. Adorei o formato.</p><cite>Milena · convidada</cite></blockquote>
+        <blockquote><span class="tag">Nota 10</span><p>A experiência foi de muito bom gosto. Todos servidos no tempo ideal, desde o atendimento na recepção até a finalização do evento.</p><cite>Fernando · convidado</cite></blockquote>
+        <blockquote><span class="tag">Nota 10</span><p>Achei maravilhoso tudo! Comida, lugar, conexões.</p><cite>Joyce · convidada</cite></blockquote>
+      </div>
+      <p class="rodape e e4">No vídeo, <b>Gleici Alves Maria</b>, da <b>Lar Brasileiro</b>, Casa do Episódio 1. As notas vieram da pesquisa que a <b>Clara</b> fez com os convidados depois do jantar.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- Episódio 2 -->
+<section class="slide" aria-label="Episódio 2 na Vini Colchões">
+  <div class="casa2">
+    <div class="fotos">
+      <div class="f1"><div class="bg" style="background-image:url('/cozinhagourmet/episodio2/img/vini-fachada.jpg')"></div></div>
+      <div class="f2"><div class="bg" style="background-image:url('/cozinhagourmet/episodio2/img/vini-lateral.jpg')"></div></div>
+    </div>
+    <div class="txt">
+      <div class="rot e e1">A próxima mesa é aqui</div>
+      <h2 class="e e2">Episódio 2, em Sumaré, na Vini Colchões.</h2>
+      <p class="apoio e e3">Uma empresa de Sumaré recebendo as marcas de Sumaré. A <b>Vini Colchões</b>, revenda <b>King Koil</b>, abre o showroom para o segundo episódio do <b>Cozinha Gourmet</b>, com chef convidado, a apresentação da <b>Wendy Meira</b> e a cidade à mesa.</p>
+      <div class="quando e e4">
+        <div><span>Data</span><b>16 de dezembro</b></div>
+        <div><span>Horário</span><b>19h30</b></div>
+        <div><span>Casa</span><img src="/cozinhagourmet/episodio2/img/vini-branco.png" alt="Vini Colchões"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" aria-label="O que sua marca ganha">
+  <div class="bg" style="background-image:url('/cozinhagourmet/episodio2/img/selfie.jpg'); opacity:.18"></div>
+  <div class="ganha">
+    <div>
+      <div class="rot e e1">O que sua marca leva</div>
+      <h2 class="e e2" style="margin-top:14px">A noite acaba às 22h. A sua marca continua no ar.</h2>
+    </div>
+    <div>
+      <div class="tres e e3">
+        <div><b>O público certo</b><span>Convidados escolhidos um a um: arquitetos, designers, empresários e influenciadores de Campinas e região.</span></div>
+        <div><b>A marca em cena</b><span>Exposição na noite, presença no episódio e, nas cotas maiores, produto em cena e a apresentadora falando da sua marca.</span></div>
+        <div><b>Conteúdo que fica com você</b><span>Um filme da sua marca, gravado durante o jantar com qualidade de cinema, pronto para as suas redes.</span></div>
+      </div>
+      <div class="rot e e4" style="margin-top:44px">Para onde o episódio vai</div>
+      <div class="canais e e4" style="margin-top:16px">
+        <span>Episódio completo na websérie</span><span><b>16</b>cortes por episódio</span><span>Influenciadores antes, durante e depois</span><span>Publicações das marcas parceiras</span><span>Impulsionamento para bairros e condomínios de alto padrão</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide" aria-label="Cotas">
+  <div class="cotas">
+    <div class="topo">
+      <div>
+        <div class="rot e e1">Como sua marca senta à mesa</div>
+        <h2 class="e e2" style="margin-top:12px">Onze lugares por episódio.</h2>
+      </div>
+      <p class="base e e2">Os nomes vêm do que o programa entrega: ingredientes, sabores, ambientes e conexões. Quanto mais conexão, mais protagonismo.</p>
+      <input class="codigo" id="codigo" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" aria-label="Código">
+    </div>
+    <div class="grade e e3">
+      <div class="cota">
+        <div class="selo"><b>4</b> patrocinadores por episódio</div>
+        <div class="nome">Ingredientes</div>
+        <div class="pra">Para a marca que entra com o que faz de melhor.</div>
+        <div><div class="preco oculto" data-i="3">Valor em conversa</div>
+        <div class="mais-prod">+ seu produto ou serviço na noite</div></div>
+        <ul>
+          <li>Seu produto ou serviço em uso no jantar: sobremesa, decoração, bebida, flores e o que mais fizer sentido</li>
+          <li>Crédito da sua marca durante a noite</li>
+          <li>Logo nos créditos do episódio</li>
+        </ul>
+      </div>
+      <div class="cota">
+        <div class="selo"><b>2</b> patrocinadores por episódio</div>
+        <div class="nome">Sabores</div>
+        <div class="pra">Para estar presente e ser vista por quem decide.</div>
+        <div class="preco oculto" data-i="0">Valor em conversa</div>
+        <ul>
+          <li>Filme da sua marca de 30 segundos, gravado durante o jantar</li>
+          <li>Logo nos créditos do episódio</li>
+          <li>2 convites para o jantar</li>
+        </ul>
+
+      </div>
+      <div class="cota">
+        <div class="selo"><b>3</b> patrocinadores por episódio</div>
+        <div class="nome">Ambientes</div>
+        <div class="pra">Protagonismo e conteúdo para usar depois.</div>
+        <div class="preco oculto" data-i="1">Valor em conversa</div>
+        <ul>
+          <li class="mais">Tudo da Sabores, mais:</li>
+          <li>Filme da sua marca de 1 minuto</li>
+          <li>Espaço de exposição em posição de destaque</li>
+          <li>Produto em cena durante o episódio</li>
+          <li>Menção nos stories do programa</li>
+          <li>1 corte do episódio com a sua marca, para as suas redes</li>
+          <li>Relatório de alcance da edição</li>
+          <li>2 convites para o jantar</li>
+        </ul>
+
+      </div>
+      <div class="cota top">
+        <div class="selo"><b>2</b> patrocinadores por episódio</div>
+        <div class="nome">Conexões</div>
+        <div class="pra">A marca que apresenta a edição.</div>
+        <div class="preco oculto" data-i="2">Valor em conversa</div>
+        <ul>
+          <li class="mais">Tudo da Ambientes, mais:</li>
+          <li>Filme da sua marca de 1min30, com produção dedicada</li>
+          <li>"[Sua marca] apresenta" na abertura e no encerramento do episódio</li>
+          <li>A Wendy fala sobre a sua marca durante o episódio</li>
+          <li>Bate-bola da Wendy com o responsável pela empresa</li>
+          <li>Fala de boas-vindas aos convidados</li>
+          <li>3 convites para o jantar</li>
+        </ul>
+
+      </div>
+    </div>
+    <div class="todas e e4"><span><b>Em todas:</b> exposição e demonstração de produtos na noite</span><span>brindes e materiais para os convidados</span><span>logo no cardápio</span><span>presença no episódio da websérie</span></div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide" aria-label="Um segmento por episódio">
+  <div class="mesa7">
+    <div style="display:grid; gap:34px">
+      <div class="rot e e1">A regra da mesa</div>
+      <h2 class="e e2">Uma marca por segmento. Quando o seu fecha, fecha.</h2>
+      <div class="fio"></div>
+      <div class="casa-selo e e3"><img src="/cozinhagourmet/episodio2/img/vini-branco.png" alt="Vini Colchões"><span>Casa do Episódio 2<br><b>segmento de colchões reservado</b></span></div>
+      <p class="apoio e e3">No Episódio 2, colchões já tem dono: a Casa. Os outros segmentos estão abertos para as marcas de Sumaré.</p>
+      <p class="gancho e e4">Seria um absurdo garantir o seu agora, antes que outra marca da sua área sente no seu lugar?</p>
+    </div>
+    <svg class="mesa-svg e e2" viewBox="0 0 600 420" aria-label="Mesa com onze lugares">
+      <rect x="110" y="150" width="380" height="120" rx="60" fill="#0E2A1E" stroke="#C9A45C" stroke-width="1.5"/>
+      <text x="300" y="218" text-anchor="middle" fill="#A9A08A" font-family="Manrope, sans-serif" font-size="16" letter-spacing="3">11 LUGARES</text>
+      <circle class="cad" cx="160" cy="105" r="20"/><circle class="cad" cx="230" cy="105" r="20"/><circle class="cad" cx="300" cy="105" r="20"/><circle class="cad" cx="370" cy="105" r="20"/><circle class="cad" cx="440" cy="105" r="20"/><circle class="cad" cx="535" cy="210" r="20"/><circle class="cad" cx="440" cy="315" r="20"/><circle class="cad" cx="370" cy="315" r="20"/><circle class="cad" cx="300" cy="315" r="20"/><circle class="cad" cx="230" cy="315" r="20"/><circle class="cad" cx="160" cy="315" r="20"/>
+    </svg>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide fim" aria-label="Próximo passo">
+  <div class="bg" style="background-image:url('/cozinhagourmet/episodio2/img/sorriso.jpg')"></div>
+  <div class="veu"></div>
+  <div class="meio">
+    <div class="rot e e1">Próximo passo</div>
+    <h2 class="e e2">Como a gente faz isso funcionar para a sua marca?</h2>
+    <p class="apoio e e3">Você conta o que a sua marca precisa. A gente mostra em qual cota ela vai render mais e reserva o seu segmento na mesa de Sumaré, no dia <b>16 de dezembro</b>.</p>
+    <p class="gancho e e3">Reservas até 5 de dezembro.</p>
+    <div class="contatos e e4">
+      <div><span>Fale direto comigo</span><b>Jonei Lima</b><em>(19) 98141-0667</em></div>
+      <div><span>Ou agende com a Clara, no WhatsApp</span><b>Clara</b><em>(19) 99891-3081</em></div>
+    </div>
+  </div>
+  <div class="casa-fim e e4"><span>Casa do Episódio 2 · 16 de dezembro</span><img src="/cozinhagourmet/episodio2/img/vini-branco.png" alt="Vini Colchões"></div>
+  <div class="equipe e e5"><b>Agência Nexo</b><br>Jonei Lima · estratégia e publicidade<br>Jonata Coradini · direção, fotografia e edição<br>Vinicius Baumgartner · comercial</div>
+</section>
+
+</div></div>
+
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Vídeo ampliado" hidden>
+  <div class="visor-caixa">
+    <video id="visorVideo" controls playsinline controlslist="nofullscreen nodownload noremoteplayback" disablepictureinpicture></video>
+    <button class="visor-fechar" id="visorFechar" type="button" aria-label="Fechar vídeo">Fechar</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var wrap = document.querySelector('.palco-wrap'), palco = document.getElementById('palco');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var calmo = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function escala() {
+    var sc = Math.min(1, wrap.clientWidth / 1600) || 1;
+    if (innerWidth > 1600) sc = innerWidth / 1600;
+    palco.style.transform = 'scale(' + sc + ')';
+    wrap.style.height = (palco.offsetHeight * sc) + 'px';
+  }
+  addEventListener('resize', escala); escala();
+
+  document.querySelectorAll('.pontos').forEach(function (g) {
+    for (var i = 0; i < +g.dataset.qtd; i++) g.appendChild(document.createElement('i'));
+  });
+  function finalizar() {
+    slides.forEach(function (sl) { sl.classList.add('ativo'); });
+    document.querySelectorAll('.cont').forEach(function (c) { c.textContent = (+c.dataset.alvo).toLocaleString('pt-BR'); c.dataset.feito = 1; });
+    document.querySelectorAll('.pontos i, .mesa-svg .cad').forEach(function (x) { x.classList.add('on'); });
+  }
+  addEventListener('beforeprint', finalizar);
+  if (window.matchMedia) { var mp = matchMedia('print'); if (mp.addEventListener) mp.addEventListener('change', function (e) { if (e.matches) finalizar(); }); }
+
+  function contar(el) {
+    if (el.dataset.feito) return; el.dataset.feito = 1;
+    var alvo = +el.dataset.alvo, t0 = performance.now(), dur = 1800;
+    if (calmo) { el.textContent = alvo.toLocaleString('pt-BR'); return; }
+    (function f(t) { var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(alvo * e).toLocaleString('pt-BR'); if (k < 1) requestAnimationFrame(f); })(t0);
+  }
+  function entrar(sl) {
+    if (sl.dataset.visto) return; sl.dataset.visto = 1;
+    sl.classList.add('ativo');
+    sl.querySelectorAll('.cont').forEach(contar);
+    sl.querySelectorAll('.pontos').forEach(function (g) {
+      var ps = g.querySelectorAll('i'), passo = 1600 / ps.length;
+      ps.forEach(function (p, i) { if (calmo) p.classList.add('on'); else setTimeout(function () { p.classList.add('on'); }, 500 + i * passo); });
+    });
+    sl.querySelectorAll('.mesa-svg .cad').forEach(function (c, i) { setTimeout(function () { c.classList.add('on'); }, calmo ? 0 : 700 + i * 260); });
+  }
+  var vids = document.querySelectorAll('.slide video');
+  if ('IntersectionObserver' in window && !calmo) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) entrar(e.target); }); }, { threshold: 0.25 });
+    slides.forEach(function (sl) { io.observe(sl); });
+    var iov = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) e.target.play().catch(function () {}); else e.target.pause(); }); }, { threshold: 0.3 });
+    vids.forEach(function (v) { iov.observe(v); });
+  } else { slides.forEach(entrar); }
+
+  var visor = document.getElementById('visor'), vv = document.getElementById('visorVideo'), ultimo = null;
+  function abrir(v, b) {
+    ultimo = b; v.pause();
+    vv.src = v.getAttribute('src'); vv.poster = v.getAttribute('poster') || ''; vv.muted = false; vv.currentTime = 0;
+    visor.hidden = false; document.body.style.overflow = 'hidden'; vv.play().catch(function () {});
+    document.getElementById('visorFechar').focus();
+  }
+  function fechar() {
+    vv.pause(); vv.removeAttribute('src'); vv.load(); visor.hidden = true; document.body.style.overflow = '';
+    if (ultimo) ultimo.focus();
+  }
+  document.querySelectorAll('.vid').forEach(function (f) {
+    var v = f.querySelector('video'), b = f.querySelector('.ampliar');
+    v.addEventListener('click', function () { abrir(v, b); }); b.addEventListener('click', function () { abrir(v, b); });
+  });
+  document.getElementById('visorFechar').addEventListener('click', fechar);
+  visor.addEventListener('click', function (e) { if (e.target === visor) fechar(); });
+
+  // preços: digite NEXO
+  var V = {"iv":"navOayDC499yV8UA","ct":"3uLMqjkPve3mtNfErZTPdLryED8Gkod8GJXdmd/OBxDc0fYB/xVJtznTsWl2c6D8AC7hLR1VrKRlUfk="}, precos = document.querySelectorAll('.preco[data-i]'), buf = '', aberto = false, campo = document.getElementById('codigo');
+  function b64(x) { return Uint8Array.from(atob(x), function (c) { return c.charCodeAt(0); }); }
+  async function tentar(cod) {
+    if (!(window.crypto && crypto.subtle)) return;
+    var h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('mesa:' + cod));
+    var k = await crypto.subtle.importKey('raw', h, 'AES-GCM', false, ['decrypt']);
+    try {
+      var t = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(V.iv) }, k, b64(V.ct));
+      var lista = JSON.parse(new TextDecoder().decode(t)); aberto = true; buf = '';
+      precos.forEach(function (p) { p.textContent = lista[+p.dataset.i]; p.classList.remove('oculto'); p.classList.remove('revelado'); void p.offsetWidth; p.classList.add('revelado'); });
+    } catch (e) {}
+  }
+  function esconder() { aberto = false; precos.forEach(function (p) { p.textContent = 'Valor em conversa'; p.classList.add('oculto'); p.classList.remove('revelado'); }); }
+  function letra(ch) { buf = (buf + ch.toUpperCase()).replace(/[^A-Z]/g, '').slice(-4); if (buf === 'NEXO') tentar(buf); }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { if (!visor.hidden) { fechar(); return; } if (aberto) { esconder(); return; } }
+    if (document.activeElement === campo) return;
+    if (e.key && e.key.length === 1 && /[a-zA-Z]/.test(e.key) && !e.metaKey && !e.ctrlKey && !e.altKey) letra(e.key);
+  });
+  campo.addEventListener('input', function () { var v = campo.value; if (v) letra(v.slice(-1)); if (v.length > 10) campo.value = ''; });
+  precos.forEach(function (p) { p.addEventListener('click', function () { campo.focus(); }); });
+})();
+</script>
+</body>
+</html>
