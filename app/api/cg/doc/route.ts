@@ -5,7 +5,7 @@ import { gerar, extenso, moeda, MODELOS, type Clausula } from "./_modelos";
 
 // Cada modelo pertence a uma marca: Cozinha Gourmet (padrão) ou ORBI IA (modelos com marca "orbi")
 const ehOrbi = (modelo: string) => MODELOS[modelo]?.marca === "orbi";
-const baseDe = (modelo: string) => `https://www.agenteorbiia.com/${ehOrbi(modelo) ? "orbi" : "cozinhagourmet"}/contrato`;
+const baseDe = (modelo: string) => ehOrbi(modelo) ? "https://www.agenteorbiia.com/orbi/contrato" : "https://www.programacozinhagourmet.com.br/contrato";
 const doDe = (modelo: string) => (ehOrbi(modelo) ? "da ORBI IA" : "do Cozinha Gourmet");
 const linkParte = (d: { modelo: string; token: string }) => `${baseDe(d.modelo)}?t=${d.token}`;
 const linkAdmin = (d: { modelo: string; admin_token: string }) => `${baseDe(d.modelo)}/admin?a=${d.admin_token}`;
