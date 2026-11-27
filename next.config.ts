@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       { source: "/cozinhagourmet/site", has: orbi, destination: `${CG}/`, permanent: true },
       { source: `/cozinhagourmet/:pagina(${paginas})`, has: orbi, destination: `${CG}/:pagina`, permanent: true },
       { source: "/cozinhagourmet/contrato", has: orbi, destination: `${CG}/contrato`, permanent: true },
+      { source: "/cozinhagourmet/episodios/:ep", has: orbi, destination: `${CG}/episodios/:ep`, permanent: true },
       { source: "/cozinhagourmet/contrato/:sub(admin|novo)", has: orbi, destination: `${CG}/contrato/:sub`, permanent: true },
       // no domínio novo, endereço curto
       { source: "/cozinhagourmet", has: novo, destination: "/", permanent: true },
@@ -38,6 +39,7 @@ const nextConfig: NextConfig = {
       { source: "/videos", has: cg, destination: "/cozinhagourmet/videos/index.html" },
       { source: "/direitos", has: cg, destination: "/cozinhagourmet/direitos/index.html" },
       { source: "/episodio2", has: cg, destination: "/cozinhagourmet/episodio2/index.html" },
+      { source: "/episodios/lar-brasileiro", has: cg, destination: "/cozinhagourmet/episodios/lar-brasileiro/index.html" },
       { source: "/contrato", has: cg, destination: "/cozinhagourmet/contrato/index.html" },
       { source: "/contrato/admin", has: cg, destination: "/cozinhagourmet/contrato/admin.html" },
       { source: "/contrato/novo", has: cg, destination: "/cozinhagourmet/contrato/novo.html" },
@@ -55,6 +57,7 @@ const nextConfig: NextConfig = {
       { source: "/cozinhagourmet/parceria", destination: "/cozinhagourmet/parceria/index.html" },
       { source: "/cozinhagourmet/episodio2", destination: "/cozinhagourmet/episodio2/index.html" },
       { source: "/cozinhagourmet/fotos", destination: "/cozinhagourmet/fotos/index.html" },
+      { source: "/cozinhagourmet/episodios/lar-brasileiro", destination: "/cozinhagourmet/episodios/lar-brasileiro/index.html" },
       { source: "/cozinhagourmet/contrato/admin", destination: "/cozinhagourmet/contrato/admin.html" },
       { source: "/cozinhagourmet/contrato/novo", destination: "/cozinhagourmet/contrato/novo.html" },
       { source: "/orbi/contrato", destination: "/orbi/contrato/index.html" },
