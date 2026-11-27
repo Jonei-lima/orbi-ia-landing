@@ -2,7 +2,19 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
-    return [
+    // Domínio próprio do programa: programacozinhagourmet.com.br (com e sem www)
+    const cg = [{ type: "host" as const, value: "(www\\.)?programacozinhagourmet\\.com\\.br" }];
+    const beforeFiles = [
+      { source: "/", has: cg, destination: "/cozinhagourmet/site/index.html" },
+      { source: "/fotos", has: cg, destination: "/cozinhagourmet/fotos/index.html" },
+      { source: "/checkin", has: cg, destination: "/cozinhagourmet/checkin/index.html" },
+      { source: "/confirmar", has: cg, destination: "/cozinhagourmet/confirmar/index.html" },
+      { source: "/patrocinio", has: cg, destination: "/cozinhagourmet/patrocinio/index.html" },
+      { source: "/parceria", has: cg, destination: "/cozinhagourmet/parceria/index.html" },
+      { source: "/trama", has: cg, destination: "/cozinhagourmet/trama/index.html" },
+    ];
+    const afterFiles = [
+      { source: "/cozinhagourmet/site", destination: "/cozinhagourmet/site/index.html" },
       { source: "/cozinhagourmet", destination: "/cozinhagourmet/index.html" },
       { source: "/cozinhagourmet/confirmar", destination: "/cozinhagourmet/confirmar/index.html" },
       { source: "/cozinhagourmet/checkin", destination: "/cozinhagourmet/checkin/index.html" },
@@ -22,6 +34,7 @@ const nextConfig: NextConfig = {
       { source: "/termos", destination: "/termos/index.html" },
       { source: "/dom-barreto-7q4k", destination: "/dom-barreto-7q4k/index.html" },
     ];
+    return { beforeFiles, afterFiles, fallback: [] };
   },
 };
 
