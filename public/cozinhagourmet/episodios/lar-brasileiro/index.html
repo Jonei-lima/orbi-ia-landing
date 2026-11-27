@@ -54,7 +54,10 @@ footer .ct b{display:block;color:var(--cream);font-size:13px;letter-spacing:.14e
 .hero .vid video{width:100%;height:100%;object-fit:cover}
 .hero .vid button{position:absolute;right:12px;bottom:12px;background:rgba(14,42,30,.75);color:var(--cream);border:1px solid rgba(244,238,223,.35);border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}
 
-.topo{position:relative;color:var(--cream);padding:150px 0 80px;background:linear-gradient(90deg,rgba(14,42,30,.96) 0%,rgba(14,42,30,.85) 45%,rgba(14,42,30,.35) 100%),url(/cozinhagourmet/img/ep1/chef-ceviche.jpg) 70% 12%/cover}
+.topo{position:relative;color:var(--cream);padding:150px 0 80px;background:#0E2A1E;overflow:hidden}
+.topo .ph{position:absolute;right:0;top:0;bottom:0;width:min(48%,680px);background:url(/cozinhagourmet/img/ep1/chef-ceviche-retrato.jpg) 50% 18%/cover;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 40%);mask-image:linear-gradient(90deg,transparent 0,#000 40%)}
+.topo:after{content:"";position:absolute;left:0;right:0;top:0;height:170px;background:linear-gradient(180deg,rgba(14,42,30,.92),rgba(14,42,30,0));pointer-events:none}
+.topo .wrap{position:relative;z-index:1}
 .topo h1{font-size:clamp(40px,6vw,72px);margin-top:12px;max-width:760px}
 .topo p.l{color:#d9d2c0;font-size:18px;max-width:600px;margin-top:18px}
 .sub{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
@@ -119,16 +122,20 @@ footer .logos img{height:30px;width:auto}
 footer .logos small{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px;color:#7f8a80}
 footer a{color:var(--gold);text-decoration:none}
 
+.menu a.ini{border-bottom:0;font-weight:500;opacity:.9}
+@media(max-width:440px){.menu a.cta[href="/#marcas"]{display:none}}
 @media(max-width:900px){.rh{grid-template-columns:1fr;gap:22px}.rh img.v{justify-self:start;max-width:100%;aspect-ratio:4/3}.noite,.rb,.menu-ep .cart{grid-template-columns:1fr}.noite video{margin:0 auto}.mg{grid-template-columns:1fr 1fr}.bloco{padding:64px 0}}
+@media(max-width:700px){.topo{padding-top:380px}.topo .ph{width:100%;bottom:auto;height:460px;background-position:50% 8%;-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent 100%);mask-image:linear-gradient(180deg,#000 55%,transparent 100%)}}
 @media(max-width:560px){.mg{grid-template-columns:1fr}.ficha{grid-template-columns:1fr 1fr}.nav img{height:44px}.nav a.cta{font-size:13px}.menu{gap:14px}.menu summary{font-size:13px}.wpp span{display:none}.wpp{width:54px;height:54px;right:14px;bottom:14px}}
 </style></head><body>
 <header class="nav"><div class="wrap"><a href="/"><img src="/cozinhagourmet/img/cg-logo.png" alt="Cozinha Gourmet"></a>
  <nav class="menu">
+  <a class="cta ini" href="/">← Início</a>
   <details><summary>Fotos</summary><div class="dd"><a href="/fotos">Primeiro Episódio · Lar Brasileiro</a></div></details>
   <details><summary>Vídeos</summary><div class="dd"><a href="/videos#ep1">Primeiro Episódio · Lar Brasileiro</a><a href="/episodios/lar-brasileiro">Episódio 1: cardápio e receitas</a><small>Arquivo</small><a href="/videos#rondonopolis">Episódios de Rondonópolis</a></div></details>
   <a class="cta" href="/#marcas">Para marcas</a>
  </nav></div></header>
-<section class="topo"><div class="wrap">
+<section class="topo"><div class="ph"></div><div class="wrap">
  <p class="k">Episódio 1 · 18 de novembro de 2026 · Campinas</p>
  <h1>Do Mediterrâneo ao Pacífico.</h1>
  <p class="l">A estreia do Cozinha Gourmet foi servida no showroom da Lar Brasileiro, no Cambuí. Aqui estão o cardápio, as receitas da noite e as marcas que fizeram parte dela.</p>
