@@ -1,0 +1,138 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vídeos · Cozinha Gourmet</title>
+<meta name="description" content="Vídeos do Cozinha Gourmet: o Primeiro Episódio, na Lar Brasileiro, e os episódios de Rondonópolis.">
+<link rel="icon" href="/cozinhagourmet/img/cg-logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Manrope:wght@400;500;700&display=swap">
+<style>
+
+:root{--g:#0E2A1E;--g2:#143628;--gold:#C9A45C;--cream:#F4EEDF;--paper:#FBF8F1;--ink:#1B2620;--muted:#5D6A63;--line:rgba(14,42,30,.14)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Manrope,system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
+img,video{display:block;max-width:100%}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.k{font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--gold)}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.08;margin:0}
+h2{font-size:clamp(30px,4vw,46px);margin-top:12px}
+p{margin:0}
+.btn{display:inline-block;background:var(--gold);color:#1A1A12;text-decoration:none;font-weight:700;padding:15px 26px;border-radius:999px;font-size:15px}
+.btn.o{background:transparent;color:var(--cream);border:1px solid rgba(244,238,223,.4)}
+section{padding:96px 0}
+/* topo */
+.nav{position:absolute;top:0;left:0;right:0;z-index:5}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:22px}
+.nav img{height:54px}
+.nav a.cta{color:var(--cream);text-decoration:none;font-size:14px;font-weight:700;border-bottom:1px solid var(--gold);padding-bottom:2px}
+.menu{display:flex;align-items:center;gap:26px}
+.menu details{position:relative}
+.menu summary{list-style:none;cursor:pointer;color:var(--cream);font-size:14px;font-weight:700}
+.menu summary::-webkit-details-marker{display:none}
+.menu summary::after{content:"";display:inline-block;margin-left:6px;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--gold);vertical-align:2px}
+.menu .dd{position:absolute;right:0;top:30px;min-width:230px;background:var(--cream);border-radius:12px;padding:8px;box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.menu .dd a{display:block;padding:10px 12px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:500}
+.menu .dd a:hover{background:#fff}
+.menu .dd small{display:block;padding:8px 12px 2px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.wpp{position:fixed;right:20px;bottom:20px;z-index:20;width:60px;height:60px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.wpp svg{width:32px;height:32px;fill:#fff}
+.wpp span{position:absolute;right:72px;white-space:nowrap;background:#fff;color:var(--ink);font-size:13px;font-weight:700;padding:8px 12px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.redes{display:flex;gap:12px;margin-top:14px}
+.redes a{width:38px;height:38px;border-radius:50%;border:1px solid rgba(201,164,92,.5);display:grid;place-items:center}
+.redes svg{width:18px;height:18px;fill:none;stroke:var(--gold);stroke-width:1.8}
+.redes svg.f{fill:var(--gold);stroke:none}
+footer .ct b{display:block;color:var(--cream);font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.hero{background:radial-gradient(1200px 700px at 20% 10%,#1d4a35 0%,var(--g) 60%);color:var(--cream);padding:150px 0 90px;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(40px,6vw,72px);margin:16px 0 22px}
+.hero p.l{font-size:19px;color:#d9d2c0;max-width:540px}
+.hero .acts{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+.hero .vid{position:relative;justify-self:center;width:min(360px,100%);aspect-ratio:9/16;border-radius:18px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.45);border:1px solid rgba(201,164,92,.35)}
+.hero .vid video{width:100%;height:100%;object-fit:cover}
+.hero .vid button{position:absolute;right:12px;bottom:12px;background:rgba(14,42,30,.75);color:var(--cream);border:1px solid rgba(244,238,223,.35);border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}
+
+.topo{background:radial-gradient(1200px 600px at 20% 0%,#1d4a35 0%,var(--g) 60%);color:var(--cream);padding:150px 0 70px}
+.topo h1{font-size:clamp(38px,5.5vw,64px);margin-top:12px}
+.topo p{color:#d9d2c0;font-size:18px;max-width:620px;margin-top:16px}
+.sub{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.sub a{color:var(--cream);text-decoration:none;font-size:14px;font-weight:700;border:1px solid rgba(244,238,223,.35);border-radius:999px;padding:9px 16px}
+.bloco{padding:80px 0;scroll-margin-top:10px}
+.bloco p.i{color:var(--muted);font-size:17px;max-width:680px;margin-top:14px}
+.v3{display:grid;grid-template-columns:repeat(3,minmax(0,300px));gap:22px;margin-top:40px}
+.v3 figure{margin:0}
+.v3 .f{border-radius:14px;overflow:hidden;background:#000;aspect-ratio:9/16}
+.v3 video{width:100%;height:100%;object-fit:cover}
+.v3 figcaption{font-size:14px;color:var(--muted);margin-top:10px}
+.arq{background:var(--g);color:var(--cream)}
+.arq p.i{color:#cfc8b6}
+.vg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.vc{position:relative;display:block;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#1d4a35,#0a1f16);border:1px solid rgba(201,164,92,.3);color:var(--cream);text-decoration:none}
+.vc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+.vc .pl{position:absolute;left:50%;top:42%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:var(--gold)}
+.vc .pl::after{content:"";position:absolute;left:23px;top:18px;border-left:17px solid var(--g);border-top:11px solid transparent;border-bottom:11px solid transparent}
+.vc .mt{position:absolute;left:0;right:0;bottom:0;padding:26px 18px 14px;background:linear-gradient(0deg,rgba(8,20,14,.92),rgba(8,20,14,0));font-family:Fraunces,serif;font-size:19px;line-height:1.2}
+.vc .mt small{display:block;font-family:Manrope,sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:4px}
+.vc iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.nota{font-size:13px;color:#a9b2a8;margin-top:22px}
+footer{background:#0a1f16;color:#a9b2a8;padding:44px 0 110px;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:center}
+footer .logos{display:flex;align-items:center;gap:26px}
+footer .logos img{height:30px;width:auto}
+footer .logos small{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px;color:#7f8a80}
+footer a{color:var(--gold);text-decoration:none}
+
+@media(max-width:900px){.v3{grid-template-columns:1fr 1fr}.vg{grid-template-columns:1fr 1fr}.bloco{padding:64px 0}}
+@media(max-width:520px){.vg{grid-template-columns:1fr}.nav img{height:44px}.nav a.cta{font-size:13px}.menu{gap:14px}.menu summary{font-size:13px}.wpp span{display:none}.wpp{width:54px;height:54px;right:14px;bottom:14px}}
+</style></head><body>
+<header class="nav"><div class="wrap"><a href="/cozinhagourmet/site"><img src="/cozinhagourmet/img/cg-logo.png" alt="Cozinha Gourmet"></a>
+ <nav class="menu">
+  <details><summary>Fotos</summary><div class="dd"><a href="/cozinhagourmet/fotos">Primeiro Episódio · Lar Brasileiro</a></div></details>
+  <details><summary>Vídeos</summary><div class="dd"><a href="/cozinhagourmet/videos#ep1">Primeiro Episódio · Lar Brasileiro</a><small>Arquivo</small><a href="/cozinhagourmet/videos#rondonopolis">Episódios de Rondonópolis</a></div></details>
+  <a class="cta" href="/cozinhagourmet/site#marcas">Para marcas</a>
+ </nav></div></header>
+<section class="topo"><div class="wrap">
+ <p class="k">Vídeos</p>
+ <h1>Assista ao Cozinha Gourmet.</h1>
+ <p>Os vídeos de cada episódio entram aqui depois de cada noite.</p>
+ <div class="sub"><a href="#ep1">Primeiro Episódio</a><a href="#rondonopolis">Episódios de Rondonópolis</a></div>
+</div></section>
+
+<section class="bloco" id="ep1"><div class="wrap">
+ <p class="k">Primeiro Episódio · 18 de novembro de 2026</p>
+ <h2>Lar Brasileiro, Campinas.</h2>
+ <p class="i">Chef Ricardo Cleto no comando da cozinha e Wendy Meira na apresentação, no showroom da Lar Brasileiro, no Cambuí.</p>
+ <div class="v3">
+  <figure><div class="f"><video src="/cozinhagourmet/parceria/vid/episodio.mp4" poster="/cozinhagourmet/parceria/vid/episodio.jpg" controls playsinline preload="none"></video></div><figcaption>A noite da estreia.</figcaption></figure>
+  <figure><div class="f"><video src="/cozinhagourmet/parceria/vid/chegada.mp4" poster="/cozinhagourmet/parceria/vid/chegada.jpg" controls playsinline preload="none"></video></div><figcaption>A chegada dos convidados.</figcaption></figure>
+  <figure><div class="f"><video src="/cozinhagourmet/parceria/vid/gleice.mp4" poster="/cozinhagourmet/parceria/vid/gleice.jpg" controls playsinline preload="none"></video></div><figcaption>Gleici Alves Maria, da Lar Brasileiro, a casa do episódio.</figcaption></figure>
+ </div>
+</div></section>
+
+<section class="bloco arq" id="rondonopolis"><div class="wrap">
+ <p class="k">Arquivo · Rondonópolis-MT</p>
+ <h2>Episódios de Rondonópolis.</h2>
+ <p class="i">Onde o programa começou, em parceria com a Todeschini. Cada edição com um chef da região e a cozinha funcionando de verdade.</p>
+ <div class="vg">
+  <a class="vc" href="https://www.facebook.com/cozinhagourmet.roo/videos/164959624064137/" target="_blank" rel="noopener"><img src="/cozinhagourmet/img/pat-2ed.jpg" alt="" loading="lazy"><span class="pl"></span><span class="mt"><small>2ª edição</small>Chef Luis Lima</span></a>
+  <a class="vc" href="https://www.facebook.com/cozinhagourmet.roo/videos/168730307020402/" target="_blank" rel="noopener"><span class="pl"></span><span class="mt"><small>3ª edição</small>Chef Zilma Guelere</span></a>
+  <a class="vc" href="https://www.facebook.com/cozinhagourmet.roo/videos/172666873293412/" target="_blank" rel="noopener"><img src="/cozinhagourmet/img/pat-braseiro.jpg" alt="" loading="lazy"><span class="pl"></span><span class="mt"><small>Edição especial</small>Braseiro · Chef Max</span></a>
+  <a class="vc" href="https://www.facebook.com/cozinhagourmet.roo/videos/187088351851264/" target="_blank" rel="noopener"><span class="pl"></span><span class="mt"><small>4ª edição</small>Cozinha Gourmet Rondonópolis</span></a>
+  <a class="vc" href="https://www.facebook.com/cozinhagourmet.roo/videos/196904134203019/" target="_blank" rel="noopener"><span class="pl"></span><span class="mt"><small>5ª edição</small>Chef Maurício Coelho</span></a>
+  <a class="vc" href="https://www.facebook.com/cozinhagourmet.roo/videos/207600479800051/" target="_blank" rel="noopener"><img src="/cozinhagourmet/img/pat-6ed.jpg" alt="" loading="lazy"><span class="pl"></span><span class="mt"><small>6ª edição</small>Chefs Jack Calhao e Carol Paiva</span></a>
+ </div>
+ <p class="nota">Os vídeos de Rondonópolis estão publicados na página do programa no Facebook.</p>
+</div></section>
+
+<footer><div class="wrap">
+ <div>Cozinha Gourmet é uma marca de Jonei Marcelio Lima.<br><a href="https://instagram.com/programacozinhagourmet" target="_blank" rel="noopener">@programacozinhagourmet</a> · <a href="https://instagram.com/agencianexosumare" target="_blank" rel="noopener">@agencianexosumare</a>
+  <div class="redes"><a href="https://instagram.com/programacozinhagourmet" target="_blank" rel="noopener" aria-label="Instagram do Cozinha Gourmet"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="#C9A45C"/></svg></a><a href="https://www.facebook.com/cozinhagourmet.roo" target="_blank" rel="noopener" aria-label="Facebook do Cozinha Gourmet"><svg class="f" viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.5 1.6-1.5h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg></a></div></div>
+ <div class="ct"><b>Fale com Jonei Lima</b><a href="https://wa.me/5566981320667" target="_blank" rel="noopener">(66) 98132-0667</a><br><a href="https://wa.me/5519981410667" target="_blank" rel="noopener">(19) 98141-0667</a></div>
+ <div class="logos"><div><small>Realização</small><img src="/cozinhagourmet/img/nexo-logo.png" alt="Agência Nexo"></div><div><small>Tecnologia</small><img src="/cozinhagourmet/img/orbi-ia.png" alt="ORBI IA"></div></div>
+</div></footer>
+<a class="wpp" href="https://wa.me/5519998913081?text=Ol%C3%A1%2C%20Clara!%20Vim%20pelo%20site%20do%20Cozinha%20Gourmet." target="_blank" rel="noopener" aria-label="Falar com a Clara no WhatsApp"><span>Fale com a Clara</span><svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.17-3.48-8.41"/></svg></a>
+<script>
+document.querySelectorAll('.menu details').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)document.querySelectorAll('.menu details').forEach(o=>{if(o!==d)o.open=false})}));
+document.addEventListener('click',e=>{if(!e.target.closest('.menu'))document.querySelectorAll('.menu details').forEach(o=>o.open=false)});
+document.querySelectorAll('.vc').forEach(c=>c.addEventListener('click',e=>{
+  e.preventDefault();
+  c.innerHTML='<iframe src="https://www.facebook.com/plugins/video.php?href='+encodeURIComponent(c.href)+'&show_text=false&autoplay=true&width=640" allow="autoplay; encrypted-media; picture-in-picture; web-share" allowfullscreen title="Vídeo do Cozinha Gourmet"></iframe>';
+}));
+</script>
+</body></html>

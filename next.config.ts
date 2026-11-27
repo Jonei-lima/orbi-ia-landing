@@ -12,9 +12,11 @@ const nextConfig: NextConfig = {
       { source: "/patrocinio", has: cg, destination: "/cozinhagourmet/patrocinio/index.html" },
       { source: "/parceria", has: cg, destination: "/cozinhagourmet/parceria/index.html" },
       { source: "/trama", has: cg, destination: "/cozinhagourmet/trama/index.html" },
+      { source: "/videos", has: cg, destination: "/cozinhagourmet/videos/index.html" },
     ];
     const afterFiles = [
       { source: "/cozinhagourmet/site", destination: "/cozinhagourmet/site/index.html" },
+      { source: "/cozinhagourmet/videos", destination: "/cozinhagourmet/videos/index.html" },
       { source: "/cozinhagourmet", destination: "/cozinhagourmet/index.html" },
       { source: "/cozinhagourmet/confirmar", destination: "/cozinhagourmet/confirmar/index.html" },
       { source: "/cozinhagourmet/checkin", destination: "/cozinhagourmet/checkin/index.html" },
