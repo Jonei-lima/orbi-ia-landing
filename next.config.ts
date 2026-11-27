@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     const cg = [{ type: "host" as const, value: "(www\\.)?programacozinhagourmet\\.com\\.br" }];
     const beforeFiles = [
       { source: "/", has: cg, destination: "/cozinhagourmet/site/index.html" },
+      { source: "/favicon.ico", has: cg, destination: "/cozinhagourmet/favicon.ico" },
       { source: "/fotos", has: cg, destination: "/cozinhagourmet/fotos/index.html" },
       { source: "/checkin", has: cg, destination: "/cozinhagourmet/checkin/index.html" },
       { source: "/confirmar", has: cg, destination: "/cozinhagourmet/confirmar/index.html" },
